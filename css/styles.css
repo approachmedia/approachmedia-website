@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
 .hero-body { font-size: 1.1rem; color: var(--text); max-width: 600px; margin-bottom: 52px; font-style: italic; opacity: 0.88; line-height: 1.85; }
 .hero-stats { display: flex; flex-wrap: wrap; gap: 48px; margin-bottom: 48px; }
 .stat-item { text-align: left; }
-.stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 700; color: var(--gold); line-height: 1; display: block; }
+.stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, hsl(230 80% 58%) 0%, hsl(110 55% 50%) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; display: block; }
 .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.07em; }
 .hero-subtext { font-size: 0.95rem; color: var(--muted); margin-bottom: 28px; font-style: italic; }
 .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -305,7 +305,7 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
 .intro-img-placeholder .ph-icon { font-size: 2.5rem; }
 .intro-col-stats { background: var(--navy-2); border: 1px solid var(--border); border-radius: var(--rad); padding: 36px 32px; }
 .mini-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.mini-stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--gold); line-height: 1; display: block; }
+.mini-stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, hsl(230 80% 58%) 0%, hsl(110 55% 50%) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; display: block; }
 .mini-stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; line-height: 1.4; }
 
 .service-def-intro { max-width: 720px; margin-bottom: 40px; }
