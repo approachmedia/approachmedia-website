@@ -8,6 +8,7 @@
   --dark:       #090B11;
   --navy:       #0F1319;
   --navy-2:     #161C27;
+  --navy-mid:   #11151D;
   --gold:       #1B6FFF;
   --gold-2:     #5BA3FF;
   --white:      #FFFFFF;
@@ -273,7 +274,8 @@ h1, h2, h3, h4, h5 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 
    INNER PAGE STYLES
    ============================================================ */
 .page-hero { position: relative; padding: 180px 0 100px; background: var(--navy); border-bottom: 1px solid var(--border); overflow: hidden; }
-.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%, rgba(27,111,255,0.1) 0%, transparent 60%), linear-gradient(160deg, #0F1319 0%, #090B11 100%); }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 75% 40%, rgba(27,111,255,0.20) 0%, transparent 55%), radial-gradient(ellipse at 10% 90%, rgba(27,111,255,0.08) 0%, transparent 55%), linear-gradient(160deg, #0F1420 0%, #090B11 100%); }
+.page-hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(27,111,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(27,111,255,0.045) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
 .page-hero-content { position: relative; z-index: 2; }
 .page-hero-breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; font-size: 0.8rem; color: var(--muted); }
 .page-hero-breadcrumb a { color: var(--muted); transition: color var(--transition); }
