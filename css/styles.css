@@ -511,3 +511,51 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
   .principles-grid { grid-template-columns: 1fr; }
   .stats-strip-inner { gap: 40px; }
 }
+
+/* ============================================================
+   SERVICE DETAIL PAGE — Reference design (Exhibition Stall Design)
+   ============================================================ */
+
+/* ── Hero green pill eyebrow ─────────────────────────────────── */
+.eyebrow-pill { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); border: 1px solid hsl(110 55% 50% / 0.35); background: hsl(110 55% 50% / 0.07); padding: 7px 16px; border-radius: 40px; margin-bottom: 26px; }
+
+/* ── Intro 2-col with dummy image ────────────────────────────── */
+.intro-media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.intro-media-text p { color: var(--muted); line-height: 1.9; font-size: 1rem; }
+.intro-media-text p + p { margin-top: 20px; }
+
+.media-frame { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, hsl(222 22% 12%) 0%, hsl(230 60% 20% / 0.4) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+.media-frame img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.media-frame .media-icon { font-size: 3rem; opacity: 0.5; }
+.media-frame .media-hint { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.media-tag { position: absolute; left: 20px; bottom: 56px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green); z-index: 2; }
+.media-caption { position: absolute; left: 20px; bottom: 22px; right: 20px; font-size: 0.95rem; font-weight: 600; color: var(--white); z-index: 2; }
+.media-frame::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, hsl(222 30% 6% / 0.85) 0%, transparent 45%); z-index: 1; }
+
+/* ── End-to-End: 2-col feature cards with green check ────────── */
+.feature-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.feature-check-card { display: grid; grid-template-columns: 28px 1fr; gap: 16px; align-items: start; border: 1px solid hsl(222 18% 18% / 0.7); background: hsl(222 24% 9% / 0.4); border-radius: 12px; padding: 24px 26px; transition: var(--transition); }
+.feature-check-card:hover { border-color: hsl(110 55% 50% / 0.4); }
+.feature-check-card .check { width: 26px; height: 26px; border-radius: 50%; background: hsl(110 55% 50% / 0.12); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+.feature-check-card h3 { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 7px; }
+.feature-check-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
+
+/* ── Why choose: 4-card flexible grid ────────────────────────── */
+.why4-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.why4-card { border: 1px solid hsl(222 18% 18% / 0.6); background: hsl(222 24% 9% / 0.4); border-radius: 16px; padding: 26px; transition: var(--transition); }
+.why4-card:hover { border-color: hsl(230 80% 58% / 0.4); }
+.why4-card h3 { font-size: 0.98rem; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+.why4-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.75; }
+
+/* ── Explore more services (3 cards) ─────────────────────────── */
+.explore-more-section { border-top: 1px solid var(--border); }
+
+/* ── Footer contact items ────────────────────────────────────── */
+.footer-contact-item { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.footer-contact-item span { color: var(--green); }
+
+@media (max-width: 900px) {
+  .intro-media-grid { grid-template-columns: 1fr; gap: 40px; }
+  .feature-check-grid { grid-template-columns: 1fr; }
+  .why4-grid { grid-template-columns: 1fr; }
+}
