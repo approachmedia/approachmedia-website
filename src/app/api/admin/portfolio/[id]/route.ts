@@ -3,15 +3,19 @@ import { ProjectUpdateSchema } from '@/lib/validations/portfolio'
 import { updateProject } from '@/lib/db/portfolio'
 import { cookies } from 'next/headers'
 
-function isAuthed() {
-  const store = cookies()
-  return (store as unknown as { get: (key: string) => { value: string } | undefined }).get('admin_auth')?.value === 'authenticated'
+async function isAuthed(): Promise<boolean> {
+  const store = await cookies()
+  return store.get('admin_auth')?.value === 'authenticated'
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  if (!isAuthed()) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAuthed())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
-  const id     = parseInt(params.id, 10)
+  const { id: idStr } = await params
+  const id     = parseInt(idStr, 10)
   const body   = await request.json()
   const parsed = ProjectUpdateSchema.safeParse({ ...body, id })
 

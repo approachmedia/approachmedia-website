@@ -4,7 +4,7 @@ import { getPublishedProjects } from '@/lib/db/portfolio'
 import ProjectCard from '@/components/portfolio/ProjectCard'
 import FilterBar from '@/components/portfolio/FilterBar'
 
-export const revalidate = 86400
+export const dynamic = 'force-dynamic'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 

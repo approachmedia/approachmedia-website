@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import LogoutButton from '@/components/admin/LogoutButton'
 
 export const metadata: Metadata = { title: 'Admin — Approach Media', robots: { index: false } }
 
@@ -18,13 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link href="/admin/portfolio/new" className="text-slate-400 hover:text-white transition">+ New Project</Link>
             </nav>
           </div>
-          <form action="/api/admin/login" method="post" onSubmit={async e => {
-            e.preventDefault()
-            await fetch('/api/admin/login', { method: 'DELETE' })
-            window.location.href = '/admin/login'
-          }}>
-            <button type="submit" className="text-xs text-slate-500 hover:text-slate-300 transition">Sign out</button>
-          </form>
+          <LogoutButton />
         </div>
       </header>
 

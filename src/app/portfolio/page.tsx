@@ -5,7 +5,8 @@ import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import ProjectCard from '@/components/portfolio/ProjectCard'
 import FilterBar from '@/components/portfolio/FilterBar'
 
-export const revalidate = 86400
+// force-dynamic: DB must be available at runtime, not build time
+export const dynamic = 'force-dynamic'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 

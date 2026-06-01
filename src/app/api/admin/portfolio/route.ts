@@ -3,13 +3,13 @@ import { ProjectSchema } from '@/lib/validations/portfolio'
 import { createProject } from '@/lib/db/portfolio'
 import { cookies } from 'next/headers'
 
-function isAuthed() {
-  const store = cookies()
-  return (store as unknown as { get: (key: string) => { value: string } | undefined }).get('admin_auth')?.value === 'authenticated'
+async function isAuthed(): Promise<boolean> {
+  const store = await cookies()
+  return store.get('admin_auth')?.value === 'authenticated'
 }
 
 export async function POST(request: NextRequest) {
-  if (!isAuthed()) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+  if (!(await isAuthed())) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   const body   = await request.json()
   const parsed = ProjectSchema.safeParse(body)
