@@ -2,6 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npx serve . --single --listen $PORT"
+startCommand = "npx serve . --listen $PORT"
 healthcheckPath = "/"
 healthcheckTimeout = 30
