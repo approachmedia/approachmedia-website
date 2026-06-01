@@ -1,0 +1,11 @@
+{
+  "name": "approachmedia-website",
+  "version": "1.0.0",
+  "description": "Approach Media – Exhibition Stall Design & Custom Booth Fabrication",
+  "scripts": {
+    "start": "serve . --single --listen $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
