@@ -107,7 +107,8 @@ export type SeoMetadataInput = z.infer<typeof SeoMetadataSchema>
 // CORE PROJECT SCHEMA
 // ─────────────────────────────────────────────
 
-export const ProjectSchema = z.object({
+// Base object — used by both full create and partial update schemas
+const ProjectSchemaBase = z.object({
   title: z
     .string()
     .min(10, 'Title must be at least 10 characters')
@@ -155,7 +156,9 @@ export const ProjectSchema = z.object({
   media:        z.array(MediaSchema).optional(),
   seoMetadata:  SeoMetadataSchema.optional(),
 })
-.refine(
+
+// Full create schema — adds cross-field sqm/sqft consistency check
+export const ProjectSchema = ProjectSchemaBase.refine(
   data => !data.stallAreaSqm || !data.stallAreaSqft || Math.abs(data.stallAreaSqm * 10.764 - data.stallAreaSqft) < 5,
   { message: 'sqm and sqft values do not match (1 sqm ≈ 10.764 sqft)', path: ['stallAreaSqft'] }
 )
@@ -164,9 +167,11 @@ export type ProjectInput = z.infer<typeof ProjectSchema>
 
 // ─────────────────────────────────────────────
 // PARTIAL UPDATE SCHEMA (PATCH operations)
+// .partial() requires ZodObject, not ZodEffects —
+// so we call it on the base before the refinement.
 // ─────────────────────────────────────────────
 
-export const ProjectUpdateSchema = ProjectSchema.partial().extend({ id: z.number().int().positive() })
+export const ProjectUpdateSchema = ProjectSchemaBase.partial().extend({ id: z.number().int().positive() })
 export type ProjectUpdateInput = z.infer<typeof ProjectUpdateSchema>
 
 // ─────────────────────────────────────────────
