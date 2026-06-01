@@ -8,6 +8,7 @@ import type { Industry, StallType, Exhibition, Client } from '@prisma/client'
 import { ProjectSchema, type ProjectInput, validateAiSummary } from '@/lib/validations/portfolio'
 import TagInput from './TagInput'
 import MediaSection from './MediaSection'
+import ComboBox, { type ComboOption } from './ComboBox'
 
 // ─────────────────────────────────────────────
 // PROPS
@@ -133,6 +134,34 @@ export default function PortfolioForm({ industries, stallTypes, exhibitions, cli
 
   const { register, control, watch, setValue, formState: { errors } } = methods
 
+  // ─── ComboBox option lists (client + exhibition) ────────────
+  const clientOptions: ComboOption[] = clients.map(c => ({ id: c.id, label: c.name }))
+  const exhibitionOptions: ComboOption[] = exhibitions.map(e => ({
+    id: e.id, label: e.name, sublabel: e.city ?? undefined,
+  }))
+
+  async function createClientInline(name: string): Promise<ComboOption> {
+    const res = await fetch('/api/admin/clients', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name }),
+    })
+    if (!res.ok) throw new Error('Failed to create client')
+    const c = await res.json()
+    return { id: c.id, label: c.name }
+  }
+
+  async function createExhibitionInline(name: string): Promise<ComboOption> {
+    const res = await fetch('/api/admin/exhibitions', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name }),
+    })
+    if (!res.ok) throw new Error('Failed to create exhibition')
+    const e = await res.json()
+    return { id: e.id, label: e.name, sublabel: e.city ?? undefined }
+  }
+
   // Live slug generation from title
   const title = watch('title') ?? ''
   function autoSlug() {
@@ -197,17 +226,29 @@ export default function PortfolioForm({ industries, stallTypes, exhibitions, cli
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Field label="Client">
-              <select {...register('clientId', { setValueAs: v => v === '' ? undefined : Number(v) })} className="field-input">
-                <option value="">— Select client —</option>
-                {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
+            <Field label="Client" hint="Search, or type a new name and click + Create">
+              <Controller name="clientId" control={control} render={({ field }) => (
+                <ComboBox
+                  options={clientOptions}
+                  value={field.value as number | undefined}
+                  onChange={field.onChange}
+                  placeholder="Search clients…"
+                  createLabel="Add client"
+                  onCreate={createClientInline}
+                />
+              )} />
             </Field>
-            <Field label="Exhibition / Trade Show">
-              <select {...register('exhibitionId', { setValueAs: v => v === '' ? undefined : Number(v) })} className="field-input">
-                <option value="">— Select exhibition —</option>
-                {exhibitions.map(e => <option key={e.id} value={e.id}>{e.name} — {e.city}</option>)}
-              </select>
+            <Field label="Exhibition / Trade Show" hint="Search, or type a new name and click + Create">
+              <Controller name="exhibitionId" control={control} render={({ field }) => (
+                <ComboBox
+                  options={exhibitionOptions}
+                  value={field.value as number | undefined}
+                  onChange={field.onChange}
+                  placeholder="Search exhibitions…"
+                  createLabel="Add exhibition"
+                  onCreate={createExhibitionInline}
+                />
+              )} />
             </Field>
           </div>
 

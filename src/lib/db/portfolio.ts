@@ -133,6 +133,52 @@ export async function updateProject(id: number, data: Partial<ProjectInput>) {
   })
 }
 
+// ─── Inline create: Client & Exhibition (used by combobox) ────
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 220)
+}
+
+export async function createClient(data: { name: string; industryId?: number; websiteUrl?: string }) {
+  let base = slugify(data.name)
+  let slug = base
+  // ensure unique slug
+  for (let i = 2; await prisma.client.findUnique({ where: { slug } }); i++) {
+    slug = `${base}-${i}`
+  }
+  return prisma.client.create({
+    data: {
+      name:       data.name.trim(),
+      slug,
+      industryId: data.industryId,
+      websiteUrl: data.websiteUrl || null,
+    },
+  })
+}
+
+export async function createExhibition(data: { name: string; city?: string; venueName?: string; startDate?: Date }) {
+  let base = slugify(data.name)
+  let slug = base
+  for (let i = 2; await prisma.exhibition.findUnique({ where: { slug } }); i++) {
+    slug = `${base}-${i}`
+  }
+  return prisma.exhibition.create({
+    data: {
+      name:      data.name.trim(),
+      slug,
+      city:      data.city || null,
+      venueName: data.venueName || null,
+      startDate: data.startDate,
+    },
+  })
+}
+
 // ─── Admin list ───────────────────────────────────────────────
 
 export async function getAdminProjectList() {
