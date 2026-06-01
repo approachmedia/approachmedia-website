@@ -1,12 +1,37 @@
 {
   "name": "approachmedia-website",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Approach Media – Exhibition Stall Design & Custom Booth Fabrication",
+  "private": true,
   "scripts": {
-    "build": "echo 'Static site — no build step required'",
-    "start": "serve . --listen $PORT"
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start -p ${PORT:-3000}",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force && tsx prisma/seed.ts"
   },
   "dependencies": {
-    "serve": "^14.2.4"
+    "@hookform/resolvers": "^3.9.1",
+    "@prisma/client": "^5.22.0",
+    "next": "^15.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }

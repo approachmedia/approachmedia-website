@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// LOOKUP TABLES
+// ─────────────────────────────────────────────
+
+model Industry {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  clients  Client[]
+  projects ProjectIndustry[]
+
+  @@map("industries")
+}
+
+model StallType {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  projects ProjectStallType[]
+
+  @@map("stall_types")
+}
+
+model Exhibition {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(200)
+  slug        String    @unique @db.VarChar(220)
+  venueName   String?   @map("venue_name") @db.VarChar(200)
+  city        String?   @db.VarChar(100)
+  state       String?   @db.VarChar(100)
+  country     String    @default("India") @db.VarChar(100)
+  startDate   DateTime? @map("start_date") @db.Date
+  endDate     DateTime? @map("end_date") @db.Date
+  organizer   String?   @db.VarChar(200)
+  websiteUrl  String?   @map("website_url") @db.VarChar(500)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  projects Project[]
+
+  @@map("exhibitions")
+}
+
+model Client {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(200)
+  slug        String   @unique @db.VarChar(220)
+  industryId  Int?     @map("industry_id")
+  websiteUrl  String?  @map("website_url") @db.VarChar(500)
+  logoUrl     String?  @map("logo_url") @db.VarChar(500)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  industry Industry? @relation(fields: [industryId], references: [id])
+  projects Project[]
+
+  @@map("clients")
+}
+
+// ─────────────────────────────────────────────
+// CORE PROJECT TABLE
+// ─────────────────────────────────────────────
+
+model Project {
+  id             Int      @id @default(autoincrement())
+  title          String   @db.VarChar(300)
+  slug           String   @unique @db.VarChar(320)
+
+  // Physical specs — parsed by AI crawlers as hard facts
+  stallAreaSqm   Decimal? @map("stall_area_sqm") @db.Decimal(8, 2)
+  stallAreaSqft  Decimal? @map("stall_area_sqft") @db.Decimal(8, 2)
+  stallHeightM   Decimal? @map("stall_height_m") @db.Decimal(5, 2)
+  floors         Int      @default(1)
+  buildYear      Int?     @map("build_year")
+
+  // Relations
+  exhibitionId Int? @map("exhibition_id")
+  clientId     Int? @map("client_id")
+
+  // Content
+  description  String  @db.Text
+  designBrief  String? @map("design_brief") @db.Text
+
+  // AI/LLM-optimised fields
+  aiSummary       String? @map("ai_summary") @db.Text       // ≤150 dense factual words
+  designStyle     String? @map("design_style") @db.VarChar(150)
+  materialsUsed   Json?   @map("materials_used")            // string[]
+  specialFeatures Json?   @map("special_features")          // string[]
+  awards          Json?                                     // string[]
+
+  // Admin
+  status       String   @default("published")               // draft | published | archived
+  isFeatured   Boolean  @default(false) @map("is_featured")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  exhibition  Exhibition?      @relation(fields: [exhibitionId], references: [id])
+  client      Client?          @relation(fields: [clientId], references: [id])
+  seoMetadata SeoMetadata?
+  media       Media[]
+  industries  ProjectIndustry[]
+  stallTypes  ProjectStallType[]
+
+  @@map("projects")
+}
+
+// ─────────────────────────────────────────────
+// SEO METADATA
+// ─────────────────────────────────────────────
+
+model SeoMetadata {
+  id        Int @id @default(autoincrement())
+  projectId Int @unique @map("project_id")
+
+  metaTitle        String? @map("meta_title") @db.VarChar(70)
+  metaDescription  String? @map("meta_description") @db.VarChar(165)
+
+  // AI engine fields
+  aiContextSummary  String? @map("ai_context_summary") @db.Text  // 250-word factual brief
+  focusEntities     Json?   @map("focus_entities")               // string[] — named entities
+  primaryKeywords   Json?   @map("primary_keywords")             // string[]
+  secondaryKeywords Json?   @map("secondary_keywords")           // string[]
+
+  // Open Graph
+  ogTitle       String? @map("og_title") @db.VarChar(100)
+  ogDescription String? @map("og_description") @db.VarChar(200)
+  ogImageUrl    String? @map("og_image_url") @db.VarChar(500)
+
+  // Overrides & technical
+  schemaOverride Json?   @map("schema_override")
+  canonicalUrl   String? @map("canonical_url") @db.VarChar(500)
+  noIndex        Boolean @default(false) @map("no_index")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("seo_metadata")
+}
+
+// ─────────────────────────────────────────────
+// RICH MEDIA
+// ─────────────────────────────────────────────
+
+model Media {
+  id        Int    @id @default(autoincrement())
+  projectId Int    @map("project_id")
+
+  mediaType    String  @map("media_type") @db.VarChar(20)  // image | render_3d | video | floor_plan | elevation
+  url          String  @db.VarChar(1000)
+  cdnUrl       String? @map("cdn_url") @db.VarChar(1000)
+  thumbnailUrl String? @map("thumbnail_url") @db.VarChar(1000)
+
+  // SEO-critical — altText is NON-NULLABLE (enforced at app + DB level)
+  altText   String  @map("alt_text") @db.VarChar(300)
+  caption   String? @db.VarChar(500)
+  titleAttr String? @map("title_attr") @db.VarChar(200)
+
+  // Layout
+  displayOrder Int     @default(0) @map("display_order")
+  isHero       Boolean @default(false) @map("is_hero")
+  isThumbnail  Boolean @default(false) @map("is_thumbnail")
+
+  // Technical
+  widthPx    Int?    @map("width_px")
+  heightPx   Int?    @map("height_px")
+  fileSizeKb Int?    @map("file_size_kb")
+  mimeType   String? @map("mime_type") @db.VarChar(60)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("media")
+}
+
+// ─────────────────────────────────────────────
+// JUNCTION TABLES
+// ─────────────────────────────────────────────
+
+model ProjectIndustry {
+  projectId  Int     @map("project_id")
+  industryId Int     @map("industry_id")
+  isPrimary  Boolean @default(false) @map("is_primary")
+
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  industry Industry @relation(fields: [industryId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, industryId])
+  @@map("project_industries")
+}
+
+model ProjectStallType {
+  projectId   Int     @map("project_id")
+  stallTypeId Int     @map("stall_type_id")
+  isPrimary   Boolean @default(true) @map("is_primary")
+
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stallType StallType @relation(fields: [stallTypeId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, stallTypeId])
+  @@map("project_stall_types")
+}
