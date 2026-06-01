@@ -1,5 +1,8 @@
 FROM node:20-slim
 
+# Install OpenSSL — required by Prisma's query engine at both build and runtime
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy lock file first for better layer caching
