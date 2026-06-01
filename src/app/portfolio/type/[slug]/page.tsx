@@ -8,11 +8,6 @@ export const dynamic = 'force-dynamic'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
-export async function generateStaticParams() {
-  const types = await prisma.stallType.findMany({ select: { slug: true } })
-  return types.map(t => ({ slug: t.slug }))
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug }    = await params
   const stallType   = await prisma.stallType.findUnique({ where: { slug } })
