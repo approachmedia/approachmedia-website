@@ -25,13 +25,13 @@ export default function AboutPage() {
                 <span className="about-hero-block-icon" aria-hidden="true">&#127758;</span>
                 <h3>Pan-India and Global Presence</h3>
                 <p>Operating across India's key exhibition cities and 14+ countries including USA, Germany, UAE, Singapore, France, Netherlands, and more.</p>
-                <a href="/global" className="btn btn-ghost btn-xs">View Our Reach</a>
+                <a href="/about" className="btn btn-ghost btn-xs">View Our Reach</a>
               </div>
               <div className="about-hero-block">
                 <span className="about-hero-block-icon" aria-hidden="true">&#127919;</span>
                 <h3>Industries Served</h3>
                 <p>Real estate, pharma, FMCG, technology, automotive, manufacturing, textile, healthcare, and construction — we understand the communication nuance of each.</p>
-                <a href="/industries" className="btn btn-ghost btn-xs">Explore Industries</a>
+                <a href="/portfolio" className="btn btn-ghost btn-xs">Explore Industries</a>
               </div>
             </div>
             <div className="hero-ctas">

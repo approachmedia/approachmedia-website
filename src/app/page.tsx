@@ -61,17 +61,17 @@ export default function HomePage() {
                 <h4>Where do we work?</h4>
                 <p>We have a footprint in multiple countries including USA, Germany, France, Netherlands, Italy, UAE (Dubai), Spain, Nepal, Bangladesh, Singapore, China, Malaysia and Kenya. Across India, our stalls feature in key exhibitions in cities like Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Ahmedabad, Rajkot, Surat, Baroda, Punjab and Haryana.</p>
                 <div className="about-inline-ctas">
-                  <a href="/global" className="btn btn-ghost btn-xs">Indian Presence</a>
-                  <a href="/global#international" className="btn btn-ghost btn-xs">International Presence</a>
+                  <a href="/about" className="btn btn-ghost btn-xs">Indian Presence</a>
+                  <a href="/about" className="btn btn-ghost btn-xs">International Presence</a>
                 </div>
               </div>
               <div className="about-block">
                 <h4>With whom do we work?</h4>
                 <p>We work across a range of industries. We understand each industry has a unique goal and audience, and tailor the exhibition stall based on what matters most.</p>
                 <div className="industry-tags">
-                  <a href="/industries#real-estate" className="tag">Real Estate</a><a href="/industries#pharma" className="tag">Pharma</a><a href="/industries#manufacturing" className="tag">Manufacturing</a><a href="/industries#fmcg" className="tag">FMCG</a><a href="/industries#textile" className="tag">Textile</a><a href="/industries#technology" className="tag">Technology</a><a href="/industries#automotive" className="tag">Automotive</a><a href="/industries#healthcare" className="tag">Healthcare</a><a href="/industries#construction" className="tag">Construction</a>
+                  <a href="/portfolio" className="tag">Real Estate</a><a href="/portfolio" className="tag">Pharma</a><a href="/portfolio" className="tag">Manufacturing</a><a href="/portfolio" className="tag">FMCG</a><a href="/portfolio" className="tag">Textile</a><a href="/portfolio" className="tag">Technology</a><a href="/portfolio" className="tag">Automotive</a><a href="/portfolio" className="tag">Healthcare</a><a href="/portfolio" className="tag">Construction</a>
                 </div>
-                <div style={{ marginTop: '18px' }}><a href="/industries" className="btn btn-ghost btn-xs">Explore by Industry</a></div>
+                <div style={{ marginTop: '18px' }}><a href="/portfolio" className="btn btn-ghost btn-xs">Explore by Industry</a></div>
               </div>
             </div>
             <div className="about-services-col animate-in delay-2">
@@ -193,7 +193,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <div className="exhibitions-all-cta animate-in"><a href="/exhibitions" className="btn btn-ghost">View All Upcoming Exhibitions</a></div>
+          <div className="exhibitions-all-cta animate-in"><a href="/contact" className="btn btn-ghost">View All Upcoming Exhibitions</a></div>
         </div>
       </section>
 

@@ -14,18 +14,15 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   {
     heading: 'Portfolio',
     links: [
-      { label: 'All Projects',      href: '/portfolio' },
-      { label: 'Industries',        href: '/industries' },
-      { label: 'Insights & Blog',   href: '/insights' },
+      { label: 'All Projects',          href: '/portfolio' },
+      { label: 'Immersive Experience',  href: '/services/immersive-brand-experience' },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About Us',              href: '/about' },
-      { label: 'Global Presence',       href: '/global' },
-      { label: 'Upcoming Exhibitions',  href: '/exhibitions' },
-      { label: 'Contact Us',            href: '/contact' },
+      { label: 'About Us',   href: '/about' },
+      { label: 'Contact Us', href: '/contact' },
     ],
   },
 ]
@@ -87,8 +84,8 @@ export default function SiteFooter() {
         <div className="mt-12 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">© {new Date().getFullYear()} Approach Media Pvt. Ltd. All rights reserved.</p>
           <div className="flex items-center gap-5 text-xs text-slate-500">
-            <Link href="/privacy" className="hover:text-slate-300 transition">Privacy Policy</Link>
-            <Link href="/terms"   className="hover:text-slate-300 transition">Terms &amp; Conditions</Link>
+            <Link href="/portfolio" className="hover:text-slate-300 transition">Portfolio</Link>
+            <Link href="/contact"   className="hover:text-slate-300 transition">Contact</Link>
             <a href="/sitemap.xml" className="hover:text-slate-300 transition">Sitemap</a>
           </div>
         </div>
