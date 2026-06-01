@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import './globals.css'
+import './legacy.css'
 import SiteChrome from '@/components/site/SiteChrome'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })

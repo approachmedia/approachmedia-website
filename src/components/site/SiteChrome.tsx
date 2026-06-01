@@ -2,6 +2,7 @@
 import { usePathname } from 'next/navigation'
 import SiteHeader from './SiteHeader'
 import SiteFooter from './SiteFooter'
+import LegacyScripts from './LegacyScripts'
 
 /**
  * Wraps public pages with the site header + footer.
@@ -15,6 +16,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex flex-col min-h-screen">
+      <LegacyScripts />
       <SiteHeader />
       <div className="flex-1">{children}</div>
       <SiteFooter />
