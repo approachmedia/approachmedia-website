@@ -1,6 +1,0 @@
-# Tell Nixpacks to install devDependencies so tsx + prisma CLI are available at build time
-[phases.install]
-cmds = ["npm install"]
-
-[phases.build]
-cmds = ["npm run build"]

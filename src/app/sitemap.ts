@@ -3,18 +3,26 @@ import { prisma } from '@/lib/db/prisma'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
-export const revalidate = 86400
+export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, industries, stallTypes] = await Promise.all([
-    prisma.project.findMany({
-      where:  { status: 'published' },
-      select: { slug: true, updatedAt: true, isFeatured: true },
-      orderBy: { updatedAt: 'desc' },
-    }),
-    prisma.industry.findMany({ select: { slug: true } }),
-    prisma.stallType.findMany({ select: { slug: true } }),
-  ])
+  let projects:    { slug: string; updatedAt: Date; isFeatured: boolean }[] = []
+  let industries:  { slug: string }[] = []
+  let stallTypes:  { slug: string }[] = []
+
+  try {
+    ;[projects, industries, stallTypes] = await Promise.all([
+      prisma.project.findMany({
+        where:  { status: 'published' },
+        select: { slug: true, updatedAt: true, isFeatured: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+      prisma.industry.findMany({ select: { slug: true } }),
+      prisma.stallType.findMany({ select: { slug: true } }),
+    ])
+  } catch {
+    // DB not reachable — return static pages only
+  }
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL,              lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },

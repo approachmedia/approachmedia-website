@@ -7,10 +7,14 @@ import ProjectDetail from '@/components/portfolio/ProjectDetail'
 // On-demand revalidation via: fetch('/api/revalidate?slug=...')
 export const revalidate = 86400
 
-// ── Pre-render all published project slugs at build time ───────
+// ── Pre-render published project slugs at build time (falls back to [] if DB unavailable) ──
 export async function generateStaticParams() {
-  const slugs = await getAllPublishedSlugs()
-  return slugs.map(slug => ({ slug }))
+  try {
+    const slugs = await getAllPublishedSlugs()
+    return slugs.map(slug => ({ slug }))
+  } catch {
+    return []
+  }
 }
 
 // ── Pull SEO fields from DB on the first byte ──────────────────
