@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Approach Media – Exhibition Stall Design & Custom Booth Fabrication",
   "scripts": {
+    "build": "echo 'Static site — no build step required'",
     "start": "serve . --single --listen $PORT"
   },
   "dependencies": {
