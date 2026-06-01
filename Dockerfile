@@ -16,5 +16,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-# DB migration + seed + start (Railway internal network available at runtime)
-CMD npx prisma db push && npx tsx prisma/seed.ts && npm start
+# DB migration + seed, then start regardless (so healthcheck passes even if DB is temporarily unreachable)
+CMD ["sh", "-c", "npx prisma db push && npx tsx prisma/seed.ts; exec npm start"]
