@@ -1,11 +1,8 @@
 [build]
-builder = "nixpacks"
+builder = "dockerfile"
 
 [deploy]
-# prisma db push + seed run at start time (Railway internal network is available here)
-# next start is the actual server
-startCommand = "npx prisma db push && npx tsx prisma/seed.ts && npm start"
 healthcheckPath = "/"
-healthcheckTimeout = 60
+healthcheckTimeout = 120
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
