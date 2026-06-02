@@ -23,8 +23,10 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   {
     heading: 'Company',
     links: [
-      { label: 'About Us',   href: '/about' },
-      { label: 'Contact Us', href: '/contact' },
+      { label: 'About Us',     href: '/about' },
+      { label: 'Work With Us', href: '/work-with-us' },
+      { label: 'Expos 2026',   href: '/expos' },
+      { label: 'Contact Us',   href: '/contact' },
     ],
   },
 ]

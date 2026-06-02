@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { prisma } from '@/lib/db/prisma'
+import expoData from '@/data/expo-pages.json'
+import type { ExpoPageData } from '@/components/expo/types'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
@@ -25,12 +27,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: SITE_URL,              lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${SITE_URL}/portfolio`,  lastModified: new Date(), changeFrequency: 'daily',   priority: 0.9 },
-    { url: `${SITE_URL}/services`,   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${SITE_URL}/about`,      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE_URL}/contact`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: SITE_URL,                        lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `${SITE_URL}/portfolio`,         lastModified: new Date(), changeFrequency: 'daily',   priority: 0.9 },
+    { url: `${SITE_URL}/services`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/about`,             lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/contact`,           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/work-with-us`,      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/expos`,             lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
   ]
+
+  const expoPages: MetadataRoute.Sitemap = (expoData as ExpoPageData[]).map(e => ({
+    url:             `${SITE_URL}/expos/${e.slug}`,
+    lastModified:    new Date(),
+    changeFrequency: 'monthly' as const,
+    priority:        0.7,
+  }))
 
   const projectPages: MetadataRoute.Sitemap = projects.map(p => ({
     url:             `${SITE_URL}/portfolio/${p.slug}`,
@@ -53,5 +64,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }))
 
-  return [...staticPages, ...projectPages, ...industryPages, ...typePages]
+  return [...staticPages, ...expoPages, ...projectPages, ...industryPages, ...typePages]
 }

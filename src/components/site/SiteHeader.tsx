@@ -4,12 +4,13 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 const NAV = [
-  { label: 'Home',        href: '/' },
-  { label: 'Services',    href: '/services' },
-  { label: 'Portfolio',   href: '/portfolio' },
-  { label: 'Tradeshows',  href: '/tradeshow-calendar' },
-  { label: 'About',       href: '/about' },
-  { label: 'Contact',     href: '/contact' },
+  { label: 'Home',         href: '/' },
+  { label: 'Services',     href: '/services' },
+  { label: 'Portfolio',    href: '/portfolio' },
+  { label: 'Expos 2026',   href: '/expos' },
+  { label: 'Tradeshows',   href: '/tradeshow-calendar' },
+  { label: 'Work With Us', href: '/work-with-us' },
+  { label: 'Contact',      href: '/contact' },
 ]
 
 export default function SiteHeader() {

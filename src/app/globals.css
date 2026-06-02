@@ -15,4 +15,7 @@
   .field-error {
     @apply mt-1 text-xs text-red-400;
   }
+  .expo-card-link:hover {
+    @apply border-blue-500/50;
+  }
 }
