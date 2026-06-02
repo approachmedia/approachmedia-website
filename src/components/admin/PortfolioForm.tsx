@@ -286,11 +286,14 @@ export default function PortfolioForm({ industries, stallTypes, exhibitions, cli
             </Field>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <Field label="Build Year" error={errors.buildYear?.message}>
               <input {...register('buildYear', { setValueAs: v => v === '' ? undefined : Number(v) })} type="number" placeholder="2024" className="field-input" />
             </Field>
-            <Field label="Design Style" hint="e.g. German Minimalist, Corporate Industrial, Luxury Retail" error={errors.designStyle?.message}>
+            <Field label="City" hint="e.g. Mumbai, Delhi, Surat" error={errors.city?.message}>
+              <input {...register('city')} placeholder="Mumbai" className="field-input" />
+            </Field>
+            <Field label="Design Style" hint="e.g. German Minimalist, Corporate Industrial" error={errors.designStyle?.message}>
               <input {...register('designStyle')} placeholder="German Minimalist Corporate" className="field-input" />
             </Field>
           </div>

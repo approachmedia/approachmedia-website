@@ -125,6 +125,7 @@ const ProjectSchemaBase = z.object({
   stallHeightM:  z.number().positive().max(20).optional(),
   floors:        z.number().int().min(1).max(5).default(1),
   buildYear:     z.number().int().min(2000).max(new Date().getFullYear() + 1).optional(),
+  city:          z.string().max(100).optional(),
 
   // Relations
   exhibitionId: z.number().int().positive().optional(),

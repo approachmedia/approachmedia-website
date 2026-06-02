@@ -87,6 +87,7 @@ model Project {
   stallHeightM   Decimal? @map("stall_height_m") @db.Decimal(5, 2)
   floors         Int      @default(1)
   buildYear      Int?     @map("build_year")
+  city           String?  @db.VarChar(100)
 
   // Relations
   exhibitionId Int? @map("exhibition_id")

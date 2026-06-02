@@ -57,7 +57,10 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
         stallTypes: { some: { stallType: { slug: opts.stallTypeSlug } } },
       }),
       ...(opts?.city && {
-        exhibition: { city: { contains: opts.city, mode: 'insensitive' } },
+        OR: [
+          { city: { contains: opts.city, mode: 'insensitive' as const } },
+          { exhibition: { city: { contains: opts.city, mode: 'insensitive' as const } } },
+        ],
       }),
     },
     include: {
