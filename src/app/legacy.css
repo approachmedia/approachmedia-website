@@ -559,4 +559,5 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
   .intro-media-grid { grid-template-columns: 1fr; gap: 40px; }
   .feature-check-grid { grid-template-columns: 1fr; }
   .why4-grid { grid-template-columns: 1fr; }
+  .two-col-stack { grid-template-columns: 1fr !important; }
 }

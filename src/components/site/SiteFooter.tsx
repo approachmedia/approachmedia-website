@@ -28,6 +28,20 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   },
 ]
 
+const CITIES = [
+  { label: 'Mumbai',    href: '/exhibition-agency-in-mumbai' },
+  { label: 'Delhi',     href: '/exhibition-agency-in-delhi' },
+  { label: 'Bangalore', href: '/exhibition-agency-in-bangalore' },
+  { label: 'Hyderabad', href: '/exhibition-agency-in-hyderabad' },
+  { label: 'Chennai',   href: '/exhibition-agency-in-chennai' },
+  { label: 'Pune',      href: '/exhibition-agency-in-pune' },
+  { label: 'Ahmedabad', href: '/exhibition-agency-in-ahmedabad' },
+  { label: 'Surat',     href: '/exhibition-agency-in-surat' },
+  { label: 'Jaipur',    href: '/exhibition-agency-in-jaipur' },
+  { label: 'Kolkata',   href: '/exhibition-agency-in-kolkata' },
+  { label: 'Noida',     href: '/exhibition-agency-in-noida' },
+]
+
 const SOCIAL = [
   { label: 'LinkedIn',  short: 'in' },
   { label: 'Instagram', short: 'ig' },
@@ -39,7 +53,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-slate-800 bg-[hsl(222,30%,5%)] mt-20">
       <div className="max-w-7xl mx-auto px-4 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
 
           {/* Brand */}
           <div className="col-span-2">
@@ -79,6 +93,20 @@ export default function SiteFooter() {
               </ul>
             </div>
           ))}
+
+          {/* Cities We Work */}
+          <div>
+            <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-4">Cities We Work</h5>
+            <ul className="space-y-2.5">
+              {CITIES.map(city => (
+                <li key={city.href}>
+                  <Link href={city.href} className="text-sm text-slate-400 hover:text-white transition">
+                    {city.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}

@@ -46,7 +46,7 @@ export async function getProjectById(id: number): Promise<ProjectWithRelations |
 
 // ─── Portfolio index (public ISR page) ───────────────────────
 
-export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; limit?: number }) {
+export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number }) {
   return prisma.project.findMany({
     where: {
       status: 'published',
@@ -55,6 +55,9 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
       }),
       ...(opts?.stallTypeSlug && {
         stallTypes: { some: { stallType: { slug: opts.stallTypeSlug } } },
+      }),
+      ...(opts?.city && {
+        exhibition: { city: { contains: opts.city, mode: 'insensitive' } },
       }),
     },
     include: {
