@@ -57,7 +57,7 @@ export const kolkataData: CityPageData = {
   featuredVenue: {
     name: 'Biswa Bangla Mela Prangan (BBMP)',
     address: 'Eastern Metropolitan Bypass, opposite Science City, Kolkata 700046',
-    imageUrl: '/images/venues/bbmp-kolkata.jpg',
+    imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/bbmp-kolkata.jpg',
     ctaLabel: 'Plan My Stall at Biswa Bangla Mela Prangan',
     specs: [
       { label: 'Total Exhibition Space', value: '31,894 sq. metres' },

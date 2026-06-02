@@ -44,7 +44,7 @@ export const ludhianaData: CityPageData = {
   venues: [
     {
       name: 'Ludhiana Exhibition Centre, Sahnewal',
-      imageUrl: '/images/venues/ludhiana-exhibition-centre.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/ludhiana-exhibition-centre.jpg',
       description: 'Ludhiana Exhibition Centre on G.T. Road, Sahnewal is the key venue for major industrial, agriculture, architecture and processing technology exhibitions in Ludhiana — including MachAuto Expo, India Agri Progress Expo, INTEXT Expo and Rice Grain Pro-Tech Expo.',
       bestFor: [
         'Machine tools and automation exhibitions',
@@ -59,7 +59,7 @@ export const ludhianaData: CityPageData = {
     },
     {
       name: 'Cattle Fair Ground, Jagraon',
-      imageUrl: '/images/venues/cattle-fair-ground-jagraon.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/cattle-fair-ground-jagraon.jpg',
       description: 'Cattle Fair Ground in Jagraon is closely linked with dairy and agriculture exhibitions, including PDFA International Dairy & Agri Expo. This venue needs practical stall planning for farmers, dairy professionals, equipment suppliers, feed companies and agri-business visitors.',
       bestFor: [
         'Dairy farming exhibitions',
@@ -72,7 +72,7 @@ export const ludhianaData: CityPageData = {
     },
     {
       name: 'Ranjit Avenue Grounds, Amritsar',
-      imageUrl: '/images/venues/ranjit-avenue-amritsar.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/ranjit-avenue-amritsar.jpg',
       description: 'Ranjit Avenue Grounds in Amritsar is associated with PITEX — Punjab International Trade Expo. Many Punjab-based businesses use PITEX as a regional trade and consumer fair platform. Approach Media Pvt Ltd can support exhibitors planning stalls for PITEX and similar Punjab trade fairs.',
       bestFor: [
         'International trade fair stalls',

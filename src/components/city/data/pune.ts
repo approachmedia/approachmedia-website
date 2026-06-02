@@ -44,7 +44,7 @@ export const puneData: CityPageData = {
   venues: [
     {
       name: 'Auto Cluster Exhibition Centre, Chinchwad',
-      imageUrl: '/images/venues/auto-cluster-pune.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/auto-cluster-pune.jpg',
       description: 'Auto Cluster Exhibition Centre in Chinchwad is a key Pune venue for engineering, manufacturing, automotive, metalworking, automation and industrial trade exhibitions. It is especially relevant for companies from Pimpri-Chinchwad, Chakan, Talegaon, Bhosari and the wider automotive manufacturing belt.',
       bestFor: [
         'Automotive and EV exhibitions',
@@ -59,7 +59,7 @@ export const puneData: CityPageData = {
     },
     {
       name: 'Pune International Exhibition and Convention Centre (PIECC), Moshi',
-      imageUrl: '/images/venues/piecc-pune.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/piecc-pune.jpg',
       description: 'PIECC in Moshi is a major venue for large-format national trade shows, multi-sector industrial exhibitions and conference-linked events. It is well suited for large booths, machinery displays, industrial expos and trade events that attract buyers from across Maharashtra and India.',
       bestFor: [
         'Machine tool and manufacturing exhibitions',
@@ -74,7 +74,7 @@ export const puneData: CityPageData = {
     },
     {
       name: 'MCCIA Trade Tower, Senapati Bapat Road',
-      imageUrl: '/images/venues/mccia-pune.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/mccia-pune.jpg',
       description: 'MCCIA Trade Tower is useful for B2B conferences, association-led exhibitions, product launches, industry meets, trade delegations and professional events. It is suitable for compact stalls, branded display zones and networking-led exhibition formats.',
       bestFor: [
         'Industry association events',

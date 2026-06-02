@@ -43,7 +43,7 @@ export const goaData: CityPageData = {
   venues: [
     {
       name: 'Dr. Shyama Prasad Mukherjee Indoor Stadium, Panaji',
-      imageUrl: '/images/venues/spm-stadium-goa.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/spm-stadium-goa.jpg',
       description: 'Dr. Shyama Prasad Mukherjee Indoor Stadium is Goa\'s premier multipurpose indoor arena and is used for large-scale exhibitions, hospitality design fairs, pharma and lab expos, public events and major indoor trade shows including HIDE and Goa Pharma and Lab Expo.',
       bestFor: [
         'Hospitality Interior & Design Expo (HIDE)',
@@ -56,7 +56,7 @@ export const goaData: CityPageData = {
     },
     {
       name: 'Goa Convention & Exhibition Centre, Bambolim',
-      imageUrl: '/images/venues/gcc-bambolim-goa.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/gcc-bambolim-goa.jpg',
       description: 'Goa Convention & Exhibition Centre near Goa University is a dedicated MICE facility suited for expos, conferences, seminars, energy events and business exhibitions including Restart Energy India Expo.',
       bestFor: [
         'Restart Energy India Expo — renewable energy and solar',
@@ -69,7 +69,7 @@ export const goaData: CityPageData = {
     },
     {
       name: 'International Centre Goa, Dona Paula',
-      imageUrl: '/images/venues/icg-dona-paula-goa.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/icg-dona-paula-goa.jpg',
       description: 'International Centre Goa is a hub for specialized conferences, seminars and focused trade events. It is suitable for compact, polished and information-led booth formats for education, policy, business forums and boutique trade exhibitions.',
       bestFor: [
         'Specialized conferences and seminars',

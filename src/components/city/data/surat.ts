@@ -57,7 +57,7 @@ export const suratData: CityPageData = {
   featuredVenue: {
     name: 'Surat International Exhibition and Convention Centre (SIECC)',
     address: '146/B, Bhatar-Althan Road, Near Khajod Chowkdi, Sarsana, Surat, Gujarat 395017',
-    imageUrl: '/images/venues/siecc-surat.jpg',
+    imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/siecc-surat.jpg',
     ctaLabel: 'Plan My Stand at SIECC',
     specs: [
       { label: 'Total Land Area',   value: '1,30,000 sq. metres' },

@@ -45,7 +45,7 @@ export const bangaloreData: CityPageData = {
   venues: [
     {
       name: 'Bangalore International Exhibition Centre (BIEC)',
-      imageUrl: '/images/venues/biec-bangalore.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/biec-bangalore.jpg',
       description: 'BIEC on Tumkur Road is one of India\'s leading venues for large B2B trade fairs, engineering exhibitions, technology events, architecture expos and manufacturing shows. It is suitable for both compact booths and large custom-built exhibition stands.',
       bestFor: [
         'Machine tools and manufacturing exhibitions',
@@ -60,7 +60,7 @@ export const bangaloreData: CityPageData = {
     },
     {
       name: 'KTPO Trade Centre, Whitefield',
-      imageUrl: '/images/venues/ktpo-bangalore.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/ktpo-bangalore.jpg',
       description: 'KTPO Trade Centre in Whitefield is a useful venue for mid-scale B2B events, product exhibitions, industrial displays, apparel, electronics, agriculture, food technology and business trade shows. Its location in the eastern business corridor makes it relevant for technology and professional audiences.',
       bestFor: [
         'Electronics and technology exhibitions',
@@ -74,7 +74,7 @@ export const bangaloreData: CityPageData = {
     },
     {
       name: 'Bangalore Palace Grounds',
-      imageUrl: '/images/venues/palace-grounds-bangalore.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/palace-grounds-bangalore.jpg',
       description: 'Bangalore Palace Grounds is commonly used for large-footfall consumer exhibitions, public fairs, temporary pavilions, lifestyle events and open-ground trade setups. Stall design here needs to consider public visibility, temporary structures, outdoor movement and crowd engagement.',
       bestFor: [
         'Consumer exhibitions and lifestyle fairs',
@@ -87,7 +87,7 @@ export const bangaloreData: CityPageData = {
     },
     {
       name: 'Yelahanka & Aerospace Event Support',
-      imageUrl: '/images/venues/yelahanka-aerospace-bangalore.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/yelahanka-aerospace-bangalore.jpg',
       description: 'Bangalore is closely linked with aerospace and defence events, especially around Yelahanka. For aerospace, defence and advanced engineering exhibitors, stall design must communicate credibility, technical strength and precision.',
       bestFor: [
         'Aerospace and defence exhibitions',

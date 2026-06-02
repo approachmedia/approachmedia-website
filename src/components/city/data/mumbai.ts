@@ -45,7 +45,7 @@ export const mumbaiData: CityPageData = {
   venues: [
     {
       name: 'Bombay Exhibition Centre, Goregaon',
-      imageUrl: '/images/venues/bec-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/bec-mumbai.jpg',
       description: 'Bombay Exhibition Centre, also known as BEC or NESCO, is one of Mumbai\'s most active venues for large B2B exhibitions. It is commonly used for jewellery, chemicals, coatings, engineering, construction, design, media, pharma, packaging and industrial trade shows.',
       bestFor: [
         'Gems and jewellery exhibitions',
@@ -60,7 +60,7 @@ export const mumbaiData: CityPageData = {
     },
     {
       name: 'Jio World Convention Centre, BKC',
-      imageUrl: '/images/venues/jwcc-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/jwcc-mumbai.jpg',
       description: 'Jio World Convention Centre in Bandra Kurla Complex is a premium exhibition and convention venue for corporate events, jewellery shows, luxury showcases, conferences, real estate events and business exhibitions.',
       bestFor: [
         'Premium jewellery and luxury exhibitions',
@@ -73,7 +73,7 @@ export const mumbaiData: CityPageData = {
     },
     {
       name: 'MMRDA Grounds, BKC',
-      imageUrl: '/images/venues/mmrda-grounds-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/mmrda-grounds-mumbai.jpg',
       description: 'MMRDA Grounds in BKC is suitable for large-format exhibitions, outdoor activations, auto showcases, consumer events and temporary pavilion-based setups. Stall execution here needs planning for open-ground layout, temporary structures, public footfall and weather-aware logistics.',
       bestFor: [
         'Auto and mobility showcases',
@@ -86,7 +86,7 @@ export const mumbaiData: CityPageData = {
     },
     {
       name: 'World Trade Centre Mumbai',
-      imageUrl: '/images/venues/wtc-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/wtc-mumbai.jpg',
       description: 'World Trade Centre in Cuffe Parade is a business-focused venue for B2B trade shows, product launches, conferences and professional networking events. It is suitable for compact, premium and decision-maker-focused exhibition stalls.',
       bestFor: [
         'B2B product launches',
@@ -99,7 +99,7 @@ export const mumbaiData: CityPageData = {
     },
     {
       name: 'Nehru Centre, Worli',
-      imageUrl: '/images/venues/nehru-centre-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/nehru-centre-mumbai.jpg',
       description: 'Nehru Centre is used for art, design, lifestyle, specialty exhibitions, curated events and knowledge-led gatherings. Stall design here should feel polished, compact and well-organized.',
       bestFor: [
         'Design and lifestyle exhibitions',
@@ -112,7 +112,7 @@ export const mumbaiData: CityPageData = {
     },
     {
       name: 'CIDCO Exhibition Centre & Navi Mumbai',
-      imageUrl: '/images/venues/cidco-navi-mumbai.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/cidco-navi-mumbai.jpg',
       description: 'CIDCO Exhibition Centre and Navi Mumbai event venues are useful for regional trade shows, industrial events, consumer exhibitions, real estate expos and business gatherings serving Navi Mumbai, Thane and nearby industrial belts.',
       bestFor: [
         'Industrial and manufacturing exhibitions',

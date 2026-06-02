@@ -46,7 +46,7 @@ export const ahmedabadData: CityPageData = {
   venues: [
     {
       name: 'Gujarat University Convention & Exhibition Centre (GUCEC)',
-      imageUrl: '/images/venues/gucec-ahmedabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/gucec-ahmedabad.jpg',
       description: 'GUCEC in Memnagar is a key Ahmedabad venue for healthcare, EV, textile, home decor, interiors and B2B trade exhibitions. It is suitable for indoor exhibition stalls, product displays, conference-linked expos and brand-led business events.',
       bestFor: [
         'Medical and healthcare exhibitions',
@@ -59,7 +59,7 @@ export const ahmedabadData: CityPageData = {
     },
     {
       name: 'GMDC Ground, Vastrapur',
-      imageUrl: '/images/venues/gmdc-ground-ahmedabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/gmdc-ground-ahmedabad.jpg',
       description: 'GMDC Ground is widely used for large-format exhibitions and open-ground trade fairs. It is suitable for industrial machinery, engineering, real estate, infrastructure, construction and large product-display exhibitions.',
       bestFor: [
         'Engineering and manufacturing exhibitions',
@@ -72,7 +72,7 @@ export const ahmedabadData: CityPageData = {
     },
     {
       name: 'Eka Club / EKA Arena',
-      imageUrl: '/images/venues/eka-club-ahmedabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/eka-club-ahmedabad.jpg',
       description: 'Eka Club near Kankaria is useful for mid-scale B2B and consumer exhibitions, especially for electrical, energy, smart home, optics, lifestyle and technology events. Indoor arena-style execution requires careful planning for access, height, lighting and load requirements.',
       bestFor: [
         'Electric and energy expos',
@@ -84,7 +84,7 @@ export const ahmedabadData: CityPageData = {
     },
     {
       name: 'Vigyan Bhawan, Gujarat Science City',
-      imageUrl: '/images/venues/vigyan-bhawan-ahmedabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/vigyan-bhawan-ahmedabad.jpg',
       description: 'Vigyan Bhawan at Gujarat Science City is used for government, technology, medical, science, drone, geospatial and innovation-led events. Stalls here should feel professional, clean and information-led.',
       bestFor: [
         'Medical and healthcare technology',

@@ -44,7 +44,7 @@ export const chennaiData: CityPageData = {
   venues: [
     {
       name: 'Chennai Trade Centre, Nandambakkam',
-      imageUrl: '/images/venues/chennai-trade-centre.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/chennai-trade-centre.jpg',
       description: 'Chennai Trade Centre is one of the most important exhibition venues in South India. It hosts major B2B and consumer trade shows across manufacturing, machine tools, plastics, pharma, printing, packaging, renewable energy, food processing, architecture, interiors, jewellery and automotive sectors.',
       bestFor: [
         'Machine tools and manufacturing exhibitions',
@@ -61,7 +61,7 @@ export const chennaiData: CityPageData = {
     },
     {
       name: 'Halls, Conferences & Business Venues Across Chennai',
-      imageUrl: '/images/venues/chennai-business-venues.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/chennai-business-venues.jpg',
       description: 'Along with Chennai Trade Centre, the city also hosts corporate events, conferences, product launches and buyer meets at hotels, convention spaces and business venues across Chennai. These events often need compact, polished and brand-led booth solutions.',
       bestFor: [
         'Corporate product launches',

@@ -43,7 +43,7 @@ export const chandigarhData: CityPageData = {
   venues: [
     {
       name: 'Parade Ground, Sector 17',
-      imageUrl: '/images/venues/parade-ground-chandigarh.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/parade-ground-chandigarh.jpg',
       description: 'Parade Ground, Sector 17 is one of Chandigarh\'s most important exhibition venues for large B2B and public trade events. It is centrally located near ISBT, accessible for exhibitors from Chandigarh, Panchkula, Mohali and surrounding North Indian markets. Key events include PharmaTech & LabTech Expo, CII AgroTech India, MACHMA Expo and Ins/Outs Architecture & Interiors Show.',
       bestFor: [
         'PharmaTech & LabTech Expo — pharma and lab technology',
@@ -56,7 +56,7 @@ export const chandigarhData: CityPageData = {
     },
     {
       name: 'Exhibition Ground, Sector 34',
-      imageUrl: '/images/venues/sector34-chandigarh.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/sector34-chandigarh.jpg',
       description: 'Exhibition Ground, Sector 34 is suited for technology, mobility, agriculture innovation, surface engineering and public exhibition formats. It hosts India International Hydroponics Tech Expo, Electric Vehicle Expo and Surface Engineering and Coating Tech Expo.',
       bestFor: [
         'India International Hydroponics Tech Expo',
@@ -69,7 +69,7 @@ export const chandigarhData: CityPageData = {
     },
     {
       name: 'Kisan Bhawan',
-      imageUrl: '/images/venues/kisan-bhawan-chandigarh.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/kisan-bhawan-chandigarh.jpg',
       description: 'Kisan Bhawan is relevant for lifestyle, shopping and festive exhibitions in Chandigarh. These events are consumer-facing and often include designer clothing, festive collections, lifestyle products, home products, decor, gifting, accessories and retail brands.',
       bestFor: [
         'Lifestyle and festive shopping expos',
@@ -82,7 +82,7 @@ export const chandigarhData: CityPageData = {
     },
     {
       name: 'Conference Hotels & Business Venues, Chandigarh',
-      imageUrl: '/images/venues/chandigarh-conference-venues.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/chandigarh-conference-venues.jpg',
       description: 'Along with exhibition grounds, Chandigarh also hosts business conferences, dealer meets, healthcare events and product launches at hotels, auditoriums and convention venues. These events often require compact, polished and brand-led display booths.',
       bestFor: [
         'Pharma conferences and medical product launches',

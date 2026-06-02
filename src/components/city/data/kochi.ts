@@ -43,7 +43,7 @@ export const kochiData: CityPageData = {
   venues: [
     {
       name: 'Adlux International Convention & Exhibition Centre',
-      imageUrl: '/images/venues/adlux-kochi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/adlux-kochi.jpg',
       description: 'Adlux International Convention & Exhibition Centre, located in Karukutty near Angamaly, is one of Kerala\'s largest exhibition and convention venues. It is suitable for major industrial, commercial, consumer and large-format expo setups including India International Industrial Expo.',
       bestFor: [
         'India International Industrial Expo',
@@ -57,7 +57,7 @@ export const kochiData: CityPageData = {
     },
     {
       name: 'KINFRA International Exhibition Centre, Kalamassery',
-      imageUrl: '/images/venues/kinfra-kochi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/kinfra-kochi.jpg',
       description: 'KINFRA International Exhibition Centre in Kalamassery is a key venue for specialized B2B trade shows, healthcare expos, hospitality exhibitions, food technology events and industry-focused gatherings including Hospex and FoodTech & HotelTech Kerala.',
       bestFor: [
         'Hospex — healthcare and medical innovation exhibition',
@@ -70,7 +70,7 @@ export const kochiData: CityPageData = {
     },
     {
       name: 'Grand Hyatt Kochi Bolgatty & Bolgatty Palace',
-      imageUrl: '/images/venues/bolgatty-kochi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/bolgatty-kochi.jpg',
       description: 'Grand Hyatt Kochi Bolgatty and Bolgatty Palace Event Centre on Bolgatty Island are premium venues for high-profile conferences, luxury showcases, marine events, corporate symposiums, global meetings and premium brand activations including Gartner IT Symposium and India Boat & Marine Show.',
       bestFor: [
         'Gartner IT Symposium/Xpo — enterprise technology',
@@ -83,7 +83,7 @@ export const kochiData: CityPageData = {
     },
     {
       name: 'Chakolas Pavilion Event Centre, Kalamassery',
-      imageUrl: '/images/venues/chakolas-kochi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/chakolas-kochi.jpg',
       description: 'Chakolas Pavilion Event Centre is a mid-to-large Kochi venue suited for focused medical, technology, commercial and business exhibitions. It is suitable for compact and mid-scale stalls that need strong brand visibility and clear visitor flow.',
       bestFor: [
         'Medical and healthcare events',
@@ -96,7 +96,7 @@ export const kochiData: CityPageData = {
     },
     {
       name: 'Fort Kochi & Mattancherry Heritage Sites',
-      imageUrl: '/images/venues/fort-kochi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/fort-kochi.jpg',
       description: 'Fort Kochi and Mattancherry are used as site-responsive heritage venues for Kochi-Muziris Biennale — India\'s leading international contemporary art exhibition. Display planning here must be sensitive to heritage context, footfall, curation and installation requirements.',
       bestFor: [
         'Kochi-Muziris Biennale support and sponsor activations',

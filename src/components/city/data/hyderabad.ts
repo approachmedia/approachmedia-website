@@ -44,7 +44,7 @@ export const hyderabadData: CityPageData = {
   venues: [
     {
       name: 'HITEX Exhibition Centre, Madhapur',
-      imageUrl: '/images/venues/hitex-hyderabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/hitex-hyderabad.jpg',
       description: 'HITEX Exhibition Centre is one of Hyderabad\'s most active venues for national trade fairs, industry expos and large B2B exhibitions. Its location near Hi-Tech City and Madhapur makes it especially relevant for professional, technology and industrial audiences.',
       bestFor: [
         'Healthcare and medical equipment exhibitions',
@@ -60,7 +60,7 @@ export const hyderabadData: CityPageData = {
     },
     {
       name: 'Hyderabad International Convention Centre (HICC)',
-      imageUrl: '/images/venues/hicc-hyderabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/hicc-hyderabad.jpg',
       description: 'HICC in the Novotel complex is a strong venue for conventions, conference-linked exhibitions, corporate events and premium B2B gatherings. It is suitable for professional booths, product showcases, healthcare conferences, technology events and institutional buyer meetings.',
       bestFor: [
         'Corporate and conference-linked exhibitions',
@@ -73,7 +73,7 @@ export const hyderabadData: CityPageData = {
     },
     {
       name: 'Nampally Exhibition Grounds',
-      imageUrl: '/images/venues/nampally-hyderabad.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/nampally-hyderabad.jpg',
       description: 'Nampally Exhibition Grounds is well known for large consumer and industrial exhibitions, including public-facing events with high footfall. Stall design here should consider crowd movement, visibility, durability and practical product display.',
       bestFor: [
         'Consumer goods exhibitions',

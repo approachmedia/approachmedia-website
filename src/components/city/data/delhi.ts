@@ -45,7 +45,7 @@ export const delhiData: CityPageData = {
   venues: [
     {
       name: 'Bharat Mandapam, Pragati Maidan',
-      imageUrl: '/images/venues/bharat-mandapam-delhi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/bharat-mandapam-delhi.jpg',
       description: 'Bharat Mandapam at Pragati Maidan is one of Delhi\'s most important exhibition and convention venues. It hosts major food, publishing, trade, consumer, jewellery, textile, rubber, environment, hardware and multi-sector exhibitions.',
       bestFor: [
         'Food and hospitality exhibitions',
@@ -60,7 +60,7 @@ export const delhiData: CityPageData = {
     },
     {
       name: 'Yashobhoomi, Dwarka',
-      imageUrl: '/images/venues/yashobhoomi-delhi.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/yashobhoomi-delhi.jpg',
       description: 'Yashobhoomi, also known as India International Convention & Expo Centre, is a modern exhibition and convention venue in Dwarka. It is well suited for large-format B2B exhibitions, mobility shows, garment fairs, telecom, industrial events and international conventions.',
       bestFor: [
         'Mobility and automotive exhibitions',
@@ -74,7 +74,7 @@ export const delhiData: CityPageData = {
     },
     {
       name: 'India Expo Centre & Mart, Greater Noida',
-      imageUrl: '/images/venues/india-expo-centre-greater-noida.jpg',
+      imageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/venues/india-expo-centre-greater-noida.jpg',
       description: 'India Expo Centre & Mart is a major NCR venue for export-oriented and large-scale trade shows. It is especially relevant for handicrafts, home, lifestyle, furniture, garments, food, packaging, mobility, printing and industrial exhibitions.',
       bestFor: [
         'Home, lifestyle and handicrafts fairs',
