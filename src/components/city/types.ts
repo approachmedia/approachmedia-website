@@ -33,14 +33,24 @@ export interface CityPageData {
   services: { num: string; title: string; body: string }[]
 
   // ── Venue ──────────────────────────────────────────────
-  venueP1: string           // full-width intro paragraph
-  venueP2?: string          // optional second paragraph
-  venueCtaLabel: string     // CTA button text
-  venueCardTitle: string    // full venue name (image overlay + specs heading)
-  venueAddress: string      // shown at bottom of image overlay
-  venueImageUrl?: string    // /images/venues/siecc-surat.jpg or CDN URL
-  venueSpecs: { label: string; value: string }[]  // 2-col specs grid in card
-  venueNotableShows: string // "Notable shows: [text]" in card
+  venueIntro: string          // full-width intro paragraph under the heading
+  venueIntro2?: string        // optional second paragraph
+  // Mode A — one featured venue with photo + specs grid (Surat, Kolkata)
+  featuredVenue?: {
+    name: string              // full venue name
+    address: string           // shown on the photo overlay
+    imageUrl?: string         // /images/venues/siecc-surat.jpg or a CDN URL
+    specs: { label: string; value: string }[]  // 2-col specs grid
+    notableShows?: string     // "Notable shows: …"
+    ctaLabel: string          // CTA button text
+  }
+  // Mode B — multiple venues with "best suited for" lists (Ahmedabad)
+  venues?: {
+    name: string
+    description: string
+    bestFor: string[]
+    ctaLabel: string
+  }[]
 
   // ── Exhibitions ────────────────────────────────────────
   shows: ExhibitionShow[]

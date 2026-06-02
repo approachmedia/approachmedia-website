@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { ProjectCardData } from '@/components/portfolio/ProjectCard'
 import ExhibitionCarousel from './ExhibitionCarousel'
+import VenueImage from './VenueImage'
 import type { CityPageData } from './types'
 
 // ── Design tokens ────────────────────────────────────────────
@@ -144,69 +145,90 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl }: Props)
               <span className="highlight">in {data.citySlug.charAt(0).toUpperCase() + data.citySlug.slice(1)}</span>
             </h2>
           </div>
-          <p style={{ ...MUTED, maxWidth: '900px', margin: '0 auto 12px' }}>{data.venueP1}</p>
-          {data.venueP2 && <p style={{ ...MUTED, maxWidth: '900px', margin: '0 auto 44px' }}>{data.venueP2}</p>}
-          {!data.venueP2 && <div style={{ marginBottom: '44px' }} />}
+          <p style={{ ...MUTED, maxWidth: '900px', margin: '0 auto 12px' }}>{data.venueIntro}</p>
+          {data.venueIntro2 && <p style={{ ...MUTED, maxWidth: '900px', margin: '0 auto 12px' }}>{data.venueIntro2}</p>}
+          <div style={{ marginBottom: '40px' }} />
 
-          <div className="venue-card-grid" style={{ display: 'grid', gridTemplateColumns: '370px 1fr', border: '1px solid hsl(222 18% 22%)', borderRadius: '20px', overflow: 'hidden' }}>
+          {/* ── Mode A: single featured venue — photo + specs grid ── */}
+          {data.featuredVenue && (
+            <div className="venue-card-grid" style={{ display: 'grid', gridTemplateColumns: '370px 1fr', border: '1px solid hsl(222 18% 22%)', borderRadius: '20px', overflow: 'hidden' }}>
 
-            {/* ── Photo panel ── */}
-            <div style={{ position: 'relative', background: 'hsl(222 22% 12%)', minHeight: '420px' }}>
-              {data.venueImageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={data.venueImageUrl} alt={`${data.venueCardTitle} — exhibition venue`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', position: 'absolute', inset: 0 }} />
-              ) : (
-                <div style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="hsl(220 10% 28%)" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  <span style={{ color: 'hsl(220 10% 30%)', fontSize: '0.78rem', textAlign: 'center', maxWidth: '130px', lineHeight: 1.5 }}>Add venue photo</span>
-                </div>
-              )}
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, hsl(222 30% 5% / 0.92) 0%, transparent 55%)', pointerEvents: 'none' }} />
-              <span style={{ position: 'absolute', top: '16px', left: '16px', background: 'hsl(0 72% 47%)', color: '#fff', fontSize: '0.67rem', fontWeight: 700, letterSpacing: '0.09em', padding: '5px 13px', borderRadius: '100px', textTransform: 'uppercase' }}>Premier Venue</span>
-              <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
-                <p style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', lineHeight: 1.3, marginBottom: '6px' }}>{data.venueCardTitle}</p>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', color: 'hsl(220 10% 58%)', fontSize: '0.77rem', lineHeight: 1.4 }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, marginTop: '2px' }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  {data.venueAddress}
+              {/* Photo panel */}
+              <div style={{ position: 'relative', background: 'hsl(222 22% 12%)', minHeight: '420px' }}>
+                <VenueImage src={data.featuredVenue.imageUrl} alt={`${data.featuredVenue.name} — exhibition venue`} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, hsl(222 30% 5% / 0.92) 0%, transparent 55%)', pointerEvents: 'none' }} />
+                <span style={{ position: 'absolute', top: '16px', left: '16px', background: 'hsl(110 55% 42%)', color: '#fff', fontSize: '0.67rem', fontWeight: 700, letterSpacing: '0.09em', padding: '5px 13px', borderRadius: '100px', textTransform: 'uppercase' }}>Premier Venue</span>
+                <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
+                  <p style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', lineHeight: 1.3, marginBottom: '6px' }}>{data.featuredVenue.name}</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', color: 'hsl(220 10% 60%)', fontSize: '0.77rem', lineHeight: 1.4 }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, marginTop: '2px' }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                    {data.featuredVenue.address}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* ── Specs panel ── */}
-            <div style={{ background: 'hsl(222 20% 11%)', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'hsl(0 72% 58%)', lineHeight: 1.4, margin: 0 }}>{data.venueCardTitle}</h3>
+              {/* Specs panel */}
+              <div style={{ background: 'hsl(222 20% 11%)', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'hsl(110 55% 55%)', lineHeight: 1.4, margin: 0 }}>{data.featuredVenue.name}</h3>
 
-              {data.venueSpecs.length > 0 && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid hsl(222 18% 20%)', borderRadius: '10px', overflow: 'hidden' }}>
-                  {data.venueSpecs.map((spec, i) => (
-                    <div key={spec.label} style={{
-                      padding: '13px 16px',
-                      background: 'hsl(222 22% 10%)',
-                      borderRight: i % 2 === 0 ? '1px solid hsl(222 18% 20%)' : 'none',
-                      borderBottom: i + 2 < data.venueSpecs.length ? '1px solid hsl(222 18% 20%)' : 'none',
-                    }}>
-                      <p style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'hsl(220 10% 38%)', marginBottom: '4px' }}>{spec.label}</p>
-                      <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'hsl(0 0% 87%)', lineHeight: 1.35, margin: 0 }}>{spec.value}</p>
-                    </div>
-                  ))}
+                {data.featuredVenue.specs.length > 0 && (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid hsl(222 18% 20%)', borderRadius: '10px', overflow: 'hidden' }}>
+                    {data.featuredVenue.specs.map((spec, i) => (
+                      <div key={spec.label} style={{
+                        padding: '13px 16px',
+                        background: 'hsl(222 22% 10%)',
+                        borderRight: i % 2 === 0 ? '1px solid hsl(222 18% 20%)' : 'none',
+                        borderBottom: i + 2 < data.featuredVenue!.specs.length ? '1px solid hsl(222 18% 20%)' : 'none',
+                      }}>
+                        <p style={{ fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'hsl(220 10% 38%)', marginBottom: '4px' }}>{spec.label}</p>
+                        <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'hsl(0 0% 87%)', lineHeight: 1.35, margin: 0 }}>{spec.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {data.featuredVenue.notableShows && (
+                  <p style={{ fontSize: '0.84rem', color: 'hsl(220 10% 50%)', lineHeight: 1.7, margin: 0 }}>
+                    <strong style={{ color: 'hsl(220 10% 68%)' }}>Notable shows: </strong>
+                    {data.featuredVenue.notableShows}
+                  </p>
+                )}
+
+                <div style={{ marginTop: 'auto' }}>
+                  <Link href="/contact" className="btn btn-primary" style={{ display: 'block', textAlign: 'center', width: '100%' }}>
+                    {data.featuredVenue.ctaLabel} →
+                  </Link>
                 </div>
-              )}
-
-              {data.venueNotableShows && (
-                <p style={{ fontSize: '0.84rem', color: 'hsl(220 10% 50%)', lineHeight: 1.7, margin: 0 }}>
-                  <strong style={{ color: 'hsl(220 10% 68%)' }}>Notable shows: </strong>
-                  {data.venueNotableShows}
-                </p>
-              )}
-
-              <div style={{ marginTop: 'auto' }}>
-                <Link href="/contact" className="btn btn-primary" style={{ display: 'block', textAlign: 'center', width: '100%' }}>
-                  {data.venueCtaLabel} →
-                </Link>
               </div>
-            </div>
 
-          </div>
+            </div>
+          )}
+
+          {/* ── Mode B: multiple venues — "best suited for" cards ── */}
+          {data.venues && data.venues.length > 0 && (
+            <div style={CARD_GRID}>
+              {data.venues.map(v => (
+                <div key={v.name} style={{ ...CARD, display: 'flex', flexDirection: 'column' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'hsl(110 55% 55%)', lineHeight: 1.35, marginBottom: '12px' }}>{v.name}</h3>
+                  <p style={{ ...CARD_BODY, marginBottom: '18px' }}>{v.description}</p>
+                  <p style={{ fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'hsl(220 10% 42%)', marginBottom: '12px' }}>Best suited for</p>
+                  <ul style={{ display: 'grid', gap: '10px', listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
+                    {v.bestFor.map(item => (
+                      <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.86rem', color: 'hsl(220 10% 62%)', lineHeight: 1.5 }}>
+                        <span style={{ width: '18px', height: '18px', borderRadius: '50%', border: '1.5px solid hsl(110 55% 50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="hsl(110 55% 60%)" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                        </span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <div style={{ marginTop: 'auto' }}>
+                    <Link href="/contact" className="btn btn-outline btn-xs" style={{ display: 'inline-flex' }}>{v.ctaLabel} →</Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
