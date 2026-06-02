@@ -37,7 +37,7 @@ const CITIES = [
   { label: 'Pune',      href: '/exhibition-agency-in-pune' },
   { label: 'Ahmedabad', href: '/exhibition-stand-builders-in-ahmedabad' },
   { label: 'Surat',     href: '/exhibition-agency-in-surat' },
-  { label: 'Jaipur',    href: '/exhibition-agency-in-jaipur' },
+  { label: 'Jaipur',    href: '/exhibition-stand-in-jaipur' },
   { label: 'Kolkata',   href: '/exhibition-stand-builder-in-kolkata' },
   { label: 'Noida',     href: '/exhibition-stand-builders-in-noida' },
 ]
