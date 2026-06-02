@@ -204,26 +204,43 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl }: Props)
             </div>
           )}
 
-          {/* ── Mode B: multiple venues — "best suited for" cards ── */}
+          {/* ── Mode B: multiple venues — photo on top, 2 per row ── */}
           {data.venues && data.venues.length > 0 && (
-            <div style={CARD_GRID}>
+            <div
+              className="venue-photo-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: data.venues.length === 1 ? '1fr' : 'repeat(2, 1fr)',
+                gap: '24px',
+                maxWidth: data.venues.length === 1 ? '660px' : undefined,
+                margin: data.venues.length === 1 ? '0 auto' : undefined,
+              }}
+            >
               {data.venues.map(v => (
-                <div key={v.name} style={{ ...CARD, display: 'flex', flexDirection: 'column' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'hsl(110 55% 55%)', lineHeight: 1.35, marginBottom: '12px' }}>{v.name}</h3>
-                  <p style={{ ...CARD_BODY, marginBottom: '18px' }}>{v.description}</p>
-                  <p style={{ fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'hsl(220 10% 42%)', marginBottom: '12px' }}>Best suited for</p>
-                  <ul style={{ display: 'grid', gap: '10px', listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
-                    {v.bestFor.map(item => (
-                      <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.86rem', color: 'hsl(220 10% 62%)', lineHeight: 1.5 }}>
-                        <span style={{ width: '18px', height: '18px', borderRadius: '50%', border: '1.5px solid hsl(110 55% 50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="hsl(110 55% 60%)" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div style={{ marginTop: 'auto' }}>
-                    <Link href="/contact" className="btn btn-outline btn-xs" style={{ display: 'inline-flex' }}>{v.ctaLabel} →</Link>
+                <div key={v.name} style={{ border: '1px solid hsl(222 18% 20%)', borderRadius: '16px', overflow: 'hidden', background: 'hsl(222 22% 12%)', display: 'flex', flexDirection: 'column' }}>
+                  {/* Photo */}
+                  <div style={{ position: 'relative', aspectRatio: '16 / 9', background: 'hsl(222 22% 14%)' }}>
+                    <VenueImage src={v.imageUrl} alt={`${v.name} — exhibition venue`} />
+                    <span style={{ position: 'absolute', top: '14px', left: '14px', background: 'hsl(110 55% 42%)', color: '#fff', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.08em', padding: '4px 11px', borderRadius: '100px', textTransform: 'uppercase', zIndex: 1 }}>Venue</span>
+                  </div>
+                  {/* Body */}
+                  <div style={{ padding: '24px 26px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'hsl(110 55% 55%)', lineHeight: 1.35, marginBottom: '12px' }}>{v.name}</h3>
+                    <p style={{ ...CARD_BODY, marginBottom: '18px' }}>{v.description}</p>
+                    <p style={{ fontSize: '0.66rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'hsl(220 10% 42%)', marginBottom: '12px' }}>Best suited for</p>
+                    <ul style={{ display: 'grid', gap: '10px', listStyle: 'none', padding: 0, margin: '0 0 22px' }}>
+                      {v.bestFor.map(item => (
+                        <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.86rem', color: 'hsl(220 10% 62%)', lineHeight: 1.5 }}>
+                          <span style={{ width: '18px', height: '18px', borderRadius: '50%', border: '1.5px solid hsl(110 55% 50%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="hsl(110 55% 60%)" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                          </span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <div style={{ marginTop: 'auto' }}>
+                      <Link href="/contact" className="btn btn-outline btn-xs" style={{ display: 'inline-flex' }}>{v.ctaLabel} →</Link>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -29,9 +29,9 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
 ]
 
 const CITIES = [
-  { label: 'Mumbai',    href: '/exhibition-agency-in-mumbai' },
-  { label: 'Delhi',     href: '/exhibition-agency-in-delhi' },
-  { label: 'Bangalore', href: '/exhibition-agency-in-bangalore' },
+  { label: 'Mumbai',    href: '/exhibition-stall-designer-mumbai' },
+  { label: 'Delhi',     href: '/exhibition-stall-designer-delhi' },
+  { label: 'Bangalore', href: '/exhibition-stall-designer-bangalore' },
   { label: 'Hyderabad', href: '/exhibition-agency-in-hyderabad' },
   { label: 'Chennai',   href: '/exhibition-agency-in-chennai' },
   { label: 'Pune',      href: '/exhibition-agency-in-pune' },

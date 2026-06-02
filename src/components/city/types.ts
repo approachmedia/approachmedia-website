@@ -44,9 +44,10 @@ export interface CityPageData {
     notableShows?: string     // "Notable shows: …"
     ctaLabel: string          // CTA button text
   }
-  // Mode B — multiple venues with "best suited for" lists (Ahmedabad)
+  // Mode B — multiple venues with photo + "best suited for" lists (Ahmedabad)
   venues?: {
     name: string
+    imageUrl?: string         // /images/venues/biec-bangalore.jpg or a CDN URL
     description: string
     bestFor: string[]
     ctaLabel: string

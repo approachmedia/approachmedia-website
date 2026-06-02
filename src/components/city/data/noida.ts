@@ -50,6 +50,7 @@ export const noidaData: CityPageData = {
   venues: [
     {
       name: 'India Expo Centre & Mart, Greater Noida',
+      imageUrl: '/images/venues/india-expo-centre-greater-noida.jpg',
       description: 'India Expo Centre & Mart is one of India\'s major integrated exhibition and convention venues. Located in Greater Noida, it is known for large trade fairs, export shows, industry exhibitions, international conventions and large-format business events.',
       bestFor: [
         'Renewable energy and solar exhibitions',
@@ -65,6 +66,7 @@ export const noidaData: CityPageData = {
     },
     {
       name: 'Expocentre Noida, Sector 62',
+      imageUrl: '/images/venues/expocentre-noida.jpg',
       description: 'Expocentre Noida is a useful venue for B2B exhibitions, conferences, product launches, business meets and mid-scale trade events. Its Sector 62 location makes it accessible for exhibitors and visitors from Noida, Ghaziabad, Delhi and the wider NCR region.',
       bestFor: [
         'Battery and power technology events',

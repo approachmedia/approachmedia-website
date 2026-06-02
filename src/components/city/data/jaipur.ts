@@ -50,6 +50,7 @@ export const jaipurData: CityPageData = {
   venues: [
     {
       name: 'Jaipur Exhibition and Convention Centre (JECC), Sitapura',
+      imageUrl: '/images/venues/jecc-jaipur.jpg',
       description: 'JECC is a major venue for large-format trade shows and national/international exhibitions in Jaipur. Its exhibition halls and convention facilities make it suitable for both product-heavy stalls and premium brand showcases.',
       bestFor: [
         'Gems and jewellery exhibitions',
