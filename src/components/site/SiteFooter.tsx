@@ -39,7 +39,7 @@ const CITIES = [
   { label: 'Surat',     href: '/exhibition-agency-in-surat' },
   { label: 'Jaipur',    href: '/exhibition-agency-in-jaipur' },
   { label: 'Kolkata',   href: '/exhibition-stand-builder-in-kolkata' },
-  { label: 'Noida',     href: '/exhibition-agency-in-noida' },
+  { label: 'Noida',     href: '/exhibition-stand-builders-in-noida' },
 ]
 
 const SOCIAL = [
