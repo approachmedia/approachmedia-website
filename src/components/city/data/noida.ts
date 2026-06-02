@@ -1,13 +1,8 @@
-import type { CityPageData, ExhibitionShow } from '../types'
-import eventsData from '@/data/tradeshow-events.json'
-
-type CsvEvent = { title: string; link: string; dateRaw: string; startDate: string | null; city: string; categories: string[] }
+import type { CityPageData } from '../types'
+import { buildCityShows } from './shows'
 
 // Noida + Greater Noida shows are pulled live from the tradeshow dataset.
-const shows: ExhibitionShow[] = (eventsData as CsvEvent[])
-  .filter(e => /noida/i.test(e.city))
-  .slice(0, 9)
-  .map(e => ({ title: e.title, dateRaw: e.dateRaw, categories: e.categories, venue: e.city, link: e.link || null }))
+const shows = buildCityShows(/noida/i)
 
 export const noidaData: CityPageData = {
   citySlug: 'noida',

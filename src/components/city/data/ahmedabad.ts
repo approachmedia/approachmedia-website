@@ -1,14 +1,9 @@
-import type { CityPageData, ExhibitionShow } from '../types'
-import eventsData from '@/data/tradeshow-events.json'
-
-type CsvEvent = { title: string; link: string; dateRaw: string; startDate: string | null; city: string; categories: string[] }
+import type { CityPageData } from '../types'
+import { buildCityShows } from './shows'
 
 // Ahmedabad shows are pulled live from the tradeshow dataset (no hard-coded
 // key shows — the MD lists categories rather than dated editions).
-const shows: ExhibitionShow[] = (eventsData as CsvEvent[])
-  .filter(e => /ahmedabad/i.test(e.city))
-  .slice(0, 9)
-  .map(e => ({ title: e.title, dateRaw: e.dateRaw, categories: e.categories, venue: e.city, link: e.link || null }))
+const shows = buildCityShows(/ahmedabad/i)
 
 export const ahmedabadData: CityPageData = {
   citySlug: 'ahmedabad',

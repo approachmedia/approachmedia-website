@@ -1,24 +1,22 @@
-import type { CityPageData, ExhibitionShow } from '../types'
-import eventsData from '@/data/tradeshow-events.json'
+import type { CityPageData } from '../types'
+import { buildCityShows, type CuratedShow } from './shows'
 
-type CsvEvent = { title: string; link: string; dateRaw: string; startDate: string | null; city: string; categories: string[] }
-
-const KEY_SHOWS: ExhibitionShow[] = [
-  { title: 'SITEX — Surat International Textile Expo 2026', dateRaw: '21–23 Feb 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns', 'Apparel & Clothing'], venue: 'SIECC, Sarsana, Surat', link: null },
-  { title: 'Surat International Auto Expo 2026',            dateRaw: '13–16 Mar 2026', categories: ['Tradeshow', 'Auto & Automotive', 'Auto Shows'],              venue: 'SIECC, Sarsana, Surat', link: null },
-  { title: 'Sparkle International Gems & Jewellery Exhibition', dateRaw: '19–21 Mar 2026', categories: ['Tradeshow', 'Gems & Jewelry', 'Fashion & Beauty'],       venue: 'Surat (Venue TBA)',     link: null },
-  { title: 'Garfab — TX Surat',                             dateRaw: '27–29 Mar 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns'],                       venue: 'SIECC, Sarsana, Surat', link: null },
-  { title: 'SGCCI Wealth Expo 2026',                        dateRaw: '8–10 May 2026',  categories: ['Tradeshow', 'Banking & Finance', 'Business Services'],        venue: 'SIECC, Sarsana, Surat', link: null },
-  { title: 'SGCCI Textile Exhibition',                      dateRaw: '26–28 Jun 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns', 'Apparel & Clothing'], venue: 'SIECC, Sarsana, Surat', link: null },
-  { title: 'Hi Life Exhibition',                            dateRaw: '26–28 Mar 2026', categories: ['Tradeshow', 'Fashion & Beauty'],                               venue: 'Surat',                 link: null },
-  { title: 'Spring India Expo',                             dateRaw: '2–4 Apr 2026',   categories: ['Tradeshow', 'IT & Technology'],                               venue: 'Surat',                 link: null },
-  { title: '21by72 Startup Summit',                        dateRaw: '13 Jun 2026',    categories: ['Tradeshow', 'Business Services'],                             venue: 'Surat',                 link: null },
+const KEY_SHOWS: CuratedShow[] = [
+  { startDate: '2026-02-21', title: 'SITEX — Surat International Textile Expo 2026', dateRaw: '21–23 Feb 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns', 'Apparel & Clothing'], venue: 'SIECC, Sarsana, Surat', link: null },
+  { startDate: '2026-03-13', title: 'Surat International Auto Expo 2026',            dateRaw: '13–16 Mar 2026', categories: ['Tradeshow', 'Auto & Automotive', 'Auto Shows'],              venue: 'SIECC, Sarsana, Surat', link: null },
+  { startDate: '2026-03-19', title: 'Sparkle International Gems & Jewellery Exhibition', dateRaw: '19–21 Mar 2026', categories: ['Tradeshow', 'Gems & Jewelry', 'Fashion & Beauty'],       venue: 'Surat (Venue TBA)',     link: null },
+  { startDate: '2026-03-27', title: 'Garfab — TX Surat',                             dateRaw: '27–29 Mar 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns'],                       venue: 'SIECC, Sarsana, Surat', link: null },
+  { startDate: '2026-05-08', title: 'SGCCI Wealth Expo 2026',                        dateRaw: '8–10 May 2026',  categories: ['Tradeshow', 'Banking & Finance', 'Business Services'],        venue: 'SIECC, Sarsana, Surat', link: null },
+  { startDate: '2026-06-26', title: 'SGCCI Textile Exhibition',                      dateRaw: '26–28 Jun 2026', categories: ['Tradeshow', 'Textile, Fabrics & Yarns', 'Apparel & Clothing'], venue: 'SIECC, Sarsana, Surat', link: null },
+  { startDate: '2026-03-26', title: 'Hi Life Exhibition',                            dateRaw: '26–28 Mar 2026', categories: ['Tradeshow', 'Fashion & Beauty'],                               venue: 'Surat',                 link: null },
+  { startDate: '2026-04-02', title: 'Spring India Expo',                             dateRaw: '2–4 Apr 2026',   categories: ['Tradeshow', 'IT & Technology'],                               venue: 'Surat',                 link: null },
+  { startDate: '2026-06-13', title: '21by72 Startup Summit',                        dateRaw: '13 Jun 2026',    categories: ['Tradeshow', 'Business Services'],                             venue: 'Surat',                 link: null },
 ]
 
-const csvExtra = (eventsData as CsvEvent[])
-  .filter(e => e.city.toLowerCase().includes('surat') && !KEY_SHOWS.some(k => e.title.toLowerCase().startsWith(k.title.toLowerCase().slice(0, 18))))
-  .slice(0, 3)
-  .map(e => ({ title: e.title, dateRaw: e.dateRaw, categories: e.categories, venue: e.city, link: e.link || null }))
+const shows = buildCityShows(/surat/i, {
+  curated: KEY_SHOWS,
+  exclude: e => KEY_SHOWS.some(k => e.title.toLowerCase().startsWith(k.title.toLowerCase().slice(0, 18))),
+})
 
 export const suratData: CityPageData = {
   citySlug: 'surat',
@@ -74,7 +72,7 @@ export const suratData: CityPageData = {
     notableShows: 'SITEX (Surat International Textile Expo), Surat International Auto Expo, Sparkle International Gems & Jewellery Exhibition, UDYOG Industrial Exhibition, Food & Beverage Expo, Wealth Expo, SGCCI Global Village, Textile Utsav, ROOTZ Jewellery Exhibition, WeaveKniTT, Women Entrepreneur Exhibition (WEE)',
   },
 
-  shows: [...KEY_SHOWS, ...csvExtra],
+  shows,
 
   industries: [
     { title: 'Textiles, Apparel & Machinery',              body: 'Stalls that display fabric ranges, highlight processing and create focused buyer discussion areas.' },

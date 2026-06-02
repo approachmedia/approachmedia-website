@@ -1,24 +1,22 @@
-import type { CityPageData, ExhibitionShow } from '../types'
-import eventsData from '@/data/tradeshow-events.json'
+import type { CityPageData } from '../types'
+import { buildCityShows, type CuratedShow } from './shows'
 
-type CsvEvent = { title: string; link: string; dateRaw: string; startDate: string | null; city: string; categories: string[] }
-
-const KEY_SHOWS: ExhibitionShow[] = [
-  { title: 'Kolkata Footwear Fair',                    dateRaw: '18–20 Mar 2026',  categories: ['Tradeshow', 'Apparel & Clothing', 'Fashion & Beauty'],       venue: 'Kolkata',                            link: null },
-  { title: 'DITEX',                                    dateRaw: '31 Mar 2026',     categories: ['Tradeshow', 'Textile, Fabrics & Yarns'],                       venue: 'Kolkata',                            link: null },
-  { title: 'Sutraa — The Indian Fashion Exhibition',   dateRaw: '3–5 Apr 2026',   categories: ['Tradeshow', 'Fashion & Beauty', 'Apparel & Clothing'],         venue: 'Kolkata',                            link: null },
-  { title: 'Quest Asia — Gifts and Stationery Expo',  dateRaw: '10–12 Apr 2026',  categories: ['Tradeshow', 'Arts & Crafts', 'Business Services'],             venue: 'Kolkata',                            link: null },
-  { title: 'INDUS-Tech Expo',                          dateRaw: '24–26 Apr 2026',  categories: ['Tradeshow', 'Industrial Engineering', 'Automation'],           venue: 'Biswa Bangla Mela Prangan, Kolkata', link: null },
-  { title: 'Kolkata Machine Tools Show',               dateRaw: '8–10 May 2026',   categories: ['Tradeshow', 'Industrial Engineering', 'Automation & Robotics'],venue: 'Kolkata',                            link: null },
-  { title: 'PACK-O-PRINTEX Expo',                      dateRaw: '15–17 May 2026',  categories: ['Tradeshow', 'Packing & Packaging', 'Printing'],               venue: 'Biswa Bangla Mela Prangan, Kolkata', link: null },
-  { title: 'Travel & Tourism Fair Kolkata',            dateRaw: 'Jul 2026',        categories: ['Tradeshow', 'Tourism & Hospitality'],                          venue: 'Kolkata',                            link: null },
-  { title: 'CLI — Coal Logistics India',               dateRaw: 'Sep 2026',        categories: ['Tradeshow', 'Industrial Engineering', 'Power & Energy'],       venue: 'Kolkata',                            link: null },
+const KEY_SHOWS: CuratedShow[] = [
+  { startDate: '2026-03-18', title: 'Kolkata Footwear Fair',                    dateRaw: '18–20 Mar 2026',  categories: ['Tradeshow', 'Apparel & Clothing', 'Fashion & Beauty'],       venue: 'Kolkata',                            link: null },
+  { startDate: '2026-03-31', title: 'DITEX',                                    dateRaw: '31 Mar 2026',     categories: ['Tradeshow', 'Textile, Fabrics & Yarns'],                       venue: 'Kolkata',                            link: null },
+  { startDate: '2026-04-03', title: 'Sutraa — The Indian Fashion Exhibition',   dateRaw: '3–5 Apr 2026',   categories: ['Tradeshow', 'Fashion & Beauty', 'Apparel & Clothing'],         venue: 'Kolkata',                            link: null },
+  { startDate: '2026-04-10', title: 'Quest Asia — Gifts and Stationery Expo',  dateRaw: '10–12 Apr 2026',  categories: ['Tradeshow', 'Arts & Crafts', 'Business Services'],             venue: 'Kolkata',                            link: null },
+  { startDate: '2026-04-24', title: 'INDUS-Tech Expo',                          dateRaw: '24–26 Apr 2026',  categories: ['Tradeshow', 'Industrial Engineering', 'Automation'],           venue: 'Biswa Bangla Mela Prangan, Kolkata', link: null },
+  { startDate: '2026-05-08', title: 'Kolkata Machine Tools Show',               dateRaw: '8–10 May 2026',   categories: ['Tradeshow', 'Industrial Engineering', 'Automation & Robotics'],venue: 'Kolkata',                            link: null },
+  { startDate: '2026-05-15', title: 'PACK-O-PRINTEX Expo',                      dateRaw: '15–17 May 2026',  categories: ['Tradeshow', 'Packing & Packaging', 'Printing'],               venue: 'Biswa Bangla Mela Prangan, Kolkata', link: null },
+  { startDate: '2026-07-01', title: 'Travel & Tourism Fair Kolkata',            dateRaw: 'Jul 2026',        categories: ['Tradeshow', 'Tourism & Hospitality'],                          venue: 'Kolkata',                            link: null },
+  { startDate: '2026-09-01', title: 'CLI — Coal Logistics India',               dateRaw: 'Sep 2026',        categories: ['Tradeshow', 'Industrial Engineering', 'Power & Energy'],       venue: 'Kolkata',                            link: null },
 ]
 
-const csvExtra = (eventsData as CsvEvent[])
-  .filter(e => (e.city.toLowerCase().includes('kolkata') || e.city.toLowerCase().includes('calcutta')) && !KEY_SHOWS.some(k => e.title.toLowerCase().startsWith(k.title.toLowerCase().slice(0, 18))))
-  .slice(0, 3)
-  .map(e => ({ title: e.title, dateRaw: e.dateRaw, categories: e.categories, venue: e.city, link: e.link || null }))
+const shows = buildCityShows(/kolkata|calcutta/i, {
+  curated: KEY_SHOWS,
+  exclude: e => KEY_SHOWS.some(k => e.title.toLowerCase().startsWith(k.title.toLowerCase().slice(0, 18))),
+})
 
 export const kolkataData: CityPageData = {
   citySlug: 'kolkata',
@@ -74,7 +72,7 @@ export const kolkataData: CityPageData = {
     notableShows: 'INDPLAS — Eastern India\'s largest international plastics exhibition (tri-annual, Indian Plastics Federation) · Kolkata Machine Tools Show — machine tools, engineering & factory automation (annual) · Medicall Kolkata — B2B medical equipment exhibition (annual)',
   },
 
-  shows: [...KEY_SHOWS, ...csvExtra],
+  shows,
 
   industries: [
     { title: 'Plastics, Packaging & Polymers',        body: 'Stalls supporting machinery display, raw material communication, live demos and structured buyer discussions at Kolkata\'s major plastics and packaging expos.' },
