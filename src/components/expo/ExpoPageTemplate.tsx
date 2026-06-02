@@ -146,15 +146,6 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
               <span className="section-label">Event Overview</span>
               <h2 style={{ marginBottom: '18px' }}>About {data.title}</h2>
               <p style={{ color: 'var(--muted)', lineHeight: 1.85, fontSize: '1rem' }}>{data.eventOverview}</p>
-              {data.sourceUrl && (
-                <p style={{ marginTop: '14px', fontSize: '0.85rem', color: 'var(--muted)' }}>
-                  Source:{' '}
-                  <a href={data.sourceUrl} target="_blank" rel="nofollow noopener noreferrer"
-                    style={{ color: 'hsl(230 70% 65%)' }}>
-                    Event Detail Page
-                  </a>
-                </p>
-              )}
             </div>
             <div className="animate-in delay-1" style={{ display: 'grid', gap: '12px' }}>
               {[
