@@ -15,6 +15,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: 'Portfolio',
     links: [
       { label: 'All Projects',          href: '/portfolio' },
+      { label: 'Tradeshow Calendar',    href: '/tradeshow-calendar' },
       { label: 'Immersive Experience',  href: '/services/immersive-brand-experience' },
     ],
   },
