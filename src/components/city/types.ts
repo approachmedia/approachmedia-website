@@ -33,13 +33,14 @@ export interface CityPageData {
   services: { num: string; title: string; body: string }[]
 
   // ── Venue ──────────────────────────────────────────────
-  venueEyebrow: string
-  venueHeading: string
-  venueP1: string
-  venueP2: string
-  venueCtaLabel: string
-  venueCardTitle: string    // 'SIECC hosts' | 'Biswa Bangla hosts'
-  venueHosts: string[]
+  venueP1: string           // full-width intro paragraph
+  venueP2?: string          // optional second paragraph
+  venueCtaLabel: string     // CTA button text
+  venueCardTitle: string    // full venue name (image overlay + specs heading)
+  venueAddress: string      // shown at bottom of image overlay
+  venueImageUrl?: string    // /images/venues/siecc-surat.jpg or CDN URL
+  venueSpecs: { label: string; value: string }[]  // 2-col specs grid in card
+  venueNotableShows: string // "Notable shows: [text]" in card
 
   // ── Exhibitions ────────────────────────────────────────
   shows: ExhibitionShow[]
