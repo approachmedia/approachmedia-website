@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
+import ScrollHero from './ScrollHero'
+import MasonryGallery, { type GalleryItem } from './MasonryGallery'
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -51,8 +53,15 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
   const renders         = project.media.filter(m => m.mediaType === 'render_3d')
   const floorPlan       = project.media.find(m => m.mediaType === 'floor_plan')
   const primaryIndustry = project.industries.find(i => i.isPrimary)?.industry
-  const allIndustries   = project.industries.map(i => i.industry)
   const allTypes        = project.stallTypes.map(t => t.stallType)
+
+  // Combined photo set for the masonry grid (build photos + 3D renders)
+  const galleryItems: GalleryItem[] = [...galleryImages, ...renders].map(m => ({
+    id: m.id,
+    src: m.cdnUrl ?? m.url,
+    alt: m.altText,
+    caption: m.caption,
+  }))
   const materials       = (project.materialsUsed   as string[] | null) ?? []
   const features        = (project.specialFeatures as string[] | null) ?? []
   const awards          = (project.awards          as string[] | null) ?? []
@@ -188,33 +197,23 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          BLOCK 2 — HERO VISUAL
+          BLOCK 2 — HERO VISUAL (scroll-scaling, big → framed)
           ═══════════════════════════════════════════════════════ */}
-      <section style={{ position: 'relative', width: '100%', background: 'hsl(222 30% 6%)' }}>
-        {hero ? (
-          <div style={{ position: 'relative', width: '100%', maxHeight: '640px', overflow: 'hidden', aspectRatio: '21/9' }}>
-            <Image
-              src={hero.cdnUrl ?? hero.url}
-              alt={hero.altText}
-              fill
-              priority
-              sizes="100vw"
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 60%, hsl(222 30% 5%) 100%)' }} />
-            {hero.caption && (
-              <figcaption style={{ position: 'absolute', bottom: '20px', right: '24px', fontSize: '0.72rem', color: 'hsl(220 10% 55%)', background: 'hsl(222 30% 6% / 0.8)', padding: '4px 10px', borderRadius: '6px' }}>
-                {hero.caption}
-              </figcaption>
-            )}
-          </div>
-        ) : (
+      {hero ? (
+        <ScrollHero
+          src={hero.cdnUrl ?? hero.url}
+          alt={hero.altText}
+          caption={hero.caption}
+          title={project.title}
+        />
+      ) : (
+        <section style={{ position: 'relative', width: '100%', background: 'hsl(222 30% 6%)' }}>
           <div style={{ width: '100%', aspectRatio: '21/9', maxHeight: '480px', background: 'hsl(222 28% 8%)', border: '1px solid hsl(222 18% 16%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '12px' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'hsl(222 18% 14%)' }} />
             <span style={{ fontSize: '0.8rem', color: 'hsl(220 10% 35%)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>{project.title}</span>
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════
           BLOCK 3 — CONTEXT / BRIEF
@@ -327,86 +326,46 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          BLOCK 6 — GALLERY
+          BLOCK 6 — GALLERY (responsive masonry photo grid)
           ═══════════════════════════════════════════════════════ */}
-      {(galleryImages.length > 0 || renders.length > 0) ? (
+      {galleryItems.length > 0 ? (
         <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
-              <div style={{ paddingTop: '4px' }}>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(220 10% 45%)' }}>Gallery</span>
-              </div>
+          <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '80px 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px', marginBottom: '36px', flexWrap: 'wrap' }}>
               <div>
-                {galleryImages.length > 0 && (
-                  <>
-                    <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'hsl(0 0% 96%)', marginBottom: '28px', lineHeight: 1.2 }}>
-                      Project Images
-                    </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
-                      {galleryImages.map(img => (
-                        <figure key={img.id} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: '10px', overflow: 'hidden', background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 16%)', margin: 0 }}>
-                          <Image
-                            src={img.cdnUrl ?? img.url}
-                            alt={img.altText}
-                            fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            style={{ objectFit: 'cover', transition: 'transform 0.5s ease' }}
-                          />
-                          {img.caption && (
-                            <figcaption style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '8px 14px', background: 'linear-gradient(to top, hsl(222 30% 6% / 0.9), transparent)', fontSize: '0.72rem', color: 'hsl(220 10% 65%)' }}>
-                              {img.caption}
-                            </figcaption>
-                          )}
-                        </figure>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {renders.length > 0 && (
-                  <div style={{ marginTop: galleryImages.length > 0 ? '40px' : '0' }}>
-                    <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '20px' }}>
-                      3D Renders
-                    </p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-                      {renders.map(img => (
-                        <figure key={img.id} style={{ position: 'relative', aspectRatio: '16/9', borderRadius: '10px', overflow: 'hidden', background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 16%)', margin: 0 }}>
-                          <Image src={img.cdnUrl ?? img.url} alt={img.altText} fill sizes="(max-width: 640px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
-                        </figure>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {floorPlan && (
-                  <div style={{ marginTop: '40px' }}>
-                    <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '20px' }}>
-                      Floor Plan
-                    </p>
-                    <figure style={{ position: 'relative', maxWidth: '560px', aspectRatio: '4/3', borderRadius: '10px', overflow: 'hidden', background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 16%)', margin: 0 }}>
-                      <Image src={floorPlan.cdnUrl ?? floorPlan.url} alt={floorPlan.altText} fill style={{ objectFit: 'contain', padding: '16px' }} />
-                    </figure>
-                  </div>
-                )}
+                <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(220 10% 45%)' }}>Gallery</span>
+                <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'hsl(0 0% 96%)', marginTop: '10px', lineHeight: 1.15 }}>
+                  Inside the Build
+                </h2>
               </div>
+              <span style={{ fontSize: '0.8rem', color: 'hsl(220 10% 45%)' }}>
+                {galleryItems.length} {galleryItems.length === 1 ? 'image' : 'images'} · click to enlarge
+              </span>
             </div>
+
+            <MasonryGallery items={galleryItems} />
+
+            {floorPlan && (
+              <div style={{ marginTop: '48px' }}>
+                <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '20px' }}>
+                  Floor Plan
+                </p>
+                <figure style={{ position: 'relative', maxWidth: '640px', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden', background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 16%)', margin: 0 }}>
+                  <Image src={floorPlan.cdnUrl ?? floorPlan.url} alt={floorPlan.altText} fill sizes="640px" style={{ objectFit: 'contain', padding: '16px' }} />
+                </figure>
+              </div>
+            )}
           </div>
         </section>
       ) : (
         <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
-              <div style={{ paddingTop: '4px' }}>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(220 10% 45%)' }}>Gallery</span>
-              </div>
-              <div>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'hsl(0 0% 96%)', marginBottom: '28px', lineHeight: 1.2 }}>Project Visuals</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
-                  <ImagePlaceholder label="Concept Render" />
-                  <ImagePlaceholder label="Booth Interaction" />
-                  <ImagePlaceholder label="Material Mood" />
-                </div>
-              </div>
+          <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '80px 24px' }}>
+            <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(220 10% 45%)' }}>Gallery</span>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'hsl(0 0% 96%)', marginTop: '10px', marginBottom: '36px', lineHeight: 1.15 }}>Project Visuals</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+              <ImagePlaceholder label="Concept Render" />
+              <ImagePlaceholder label="Booth Interaction" />
+              <ImagePlaceholder label="Material Mood" />
             </div>
           </div>
         </section>
