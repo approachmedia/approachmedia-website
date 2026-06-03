@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Allow full-bleed (100vw) sections without a stray horizontal scrollbar.
+   `clip` — not `hidden` — so it never creates a scroll container that would
+   break the position:sticky hero and gallery bands. */
+body {
+  overflow-x: clip;
+}
+
 @layer components {
   .field-label {
     @apply block text-xs font-semibold text-slate-300 uppercase tracking-widest;

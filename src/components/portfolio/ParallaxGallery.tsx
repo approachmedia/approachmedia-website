@@ -12,8 +12,7 @@ export type GalleryItem = {
 
 // Row heights — photos keep their NATURAL aspect ratio (width = auto), so
 // nothing is ever cropped. Only the height is fixed per row.
-const ROW_H        = 320 // desktop band height (px)
-const ROW_H_MOBILE = 220
+const ROW_H = 360 // desktop band height (px)
 
 // How tall the scroll section is. The extra height beyond one viewport is the
 // distance over which the horizontal pan plays out.
@@ -98,7 +97,20 @@ export default function ParallaxGallery({ items }: { items: GalleryItem[] }) {
 
   return (
     <>
-      <div ref={sectionRef} style={{ position: 'relative', height: `${SECTION_VH}vh` }}>
+      <div
+        ref={sectionRef}
+        style={{
+          position: 'relative',
+          height:   `${SECTION_VH}vh`,
+          // Full-bleed: break out of any max-width parent to span the whole
+          // viewport width, edge to edge.
+          width:       '100vw',
+          left:        '50%',
+          right:       '50%',
+          marginLeft:  '-50vw',
+          marginRight: '-50vw',
+        }}
+      >
         <div
           style={{
             position:       'sticky',
@@ -107,7 +119,7 @@ export default function ParallaxGallery({ items }: { items: GalleryItem[] }) {
             display:        'flex',
             flexDirection:  'column',
             justifyContent: 'center',
-            gap:            '16px',
+            gap:            '18px',
             overflow:       'hidden',
           }}
         >
