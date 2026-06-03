@@ -8,7 +8,7 @@ import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 
 function FactRow({ label, value }: { label: string; value: string | number }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '16px', padding: '10px 0', borderBottom: '1px solid hsl(222 18% 16%)' }}>
+    <div className="pd-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '16px', padding: '10px 0', borderBottom: '1px solid hsl(222 18% 16%)' }}>
       <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(220 10% 48%)', flexShrink: 0 }}>{label}</span>
       <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'hsl(0 0% 92%)', textAlign: 'right' }}>{value}</span>
     </div>
@@ -105,6 +105,50 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
   return (
     <article>
 
+      {/* Roll-up reveal for the Project Details panel — unfurls from the top
+          like an exhibition roll-up banner, then the rows stagger in. */}
+      <style>{`
+        @keyframes pdRoll {
+          0%   { opacity: 0; transform: perspective(1400px) rotateX(-85deg); }
+          55%  { opacity: 1; }
+          100% { opacity: 1; transform: perspective(1400px) rotateX(0deg); }
+        }
+        @keyframes pdRowUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .pd-panel {
+          transform-origin: top center;
+          animation: pdRoll 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+          will-change: transform, opacity;
+        }
+        .pd-panel .pd-row {
+          opacity: 0;
+          animation: pdRowUp 0.55s ease both;
+        }
+        .pd-panel .pd-row:nth-child(1)  { animation-delay: 0.40s; }
+        .pd-panel .pd-row:nth-child(2)  { animation-delay: 0.47s; }
+        .pd-panel .pd-row:nth-child(3)  { animation-delay: 0.54s; }
+        .pd-panel .pd-row:nth-child(4)  { animation-delay: 0.61s; }
+        .pd-panel .pd-row:nth-child(5)  { animation-delay: 0.68s; }
+        .pd-panel .pd-row:nth-child(6)  { animation-delay: 0.75s; }
+        .pd-panel .pd-row:nth-child(7)  { animation-delay: 0.82s; }
+        .pd-panel .pd-row:nth-child(8)  { animation-delay: 0.89s; }
+        .pd-panel .pd-row:nth-child(9)  { animation-delay: 0.96s; }
+        .pd-panel .pd-row:nth-child(10) { animation-delay: 1.03s; }
+        .pd-panel .pd-row:nth-child(11) { animation-delay: 1.10s; }
+        .pd-panel .pd-row:nth-child(12) { animation-delay: 1.17s; }
+        .pd-panel .pd-row:nth-child(13) { animation-delay: 1.24s; }
+        .pd-panel .pd-row:nth-child(14) { animation-delay: 1.31s; }
+        @media (prefers-reduced-motion: reduce) {
+          .pd-panel, .pd-panel .pd-row {
+            animation: none;
+            opacity: 1;
+            transform: none;
+          }
+        }
+      `}</style>
+
       {/* ═══════════════════════════════════════════════════════
           BLOCK 1 — INTRO: breadcrumb + title left, facts right
           ═══════════════════════════════════════════════════════ */}
@@ -159,7 +203,19 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
                 ))}
               </div>
 
-              <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', fontWeight: 800, letterSpacing: '-0.025em', lineHeight: 1.06, color: 'hsl(0 0% 97%)', marginBottom: '20px' }}>
+              <h1 style={{
+                fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.06,
+                marginBottom: '20px',
+                // Brand gradient — bright white into blue into green
+                background: 'linear-gradient(105deg, hsl(0 0% 98%) 0%, hsl(225 85% 70%) 42%, hsl(145 60% 55%) 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                color: 'transparent',
+              }}>
                 {project.title}
               </h1>
 
@@ -174,9 +230,9 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
               </p>
             </div>
 
-            {/* Right — compact fact stack */}
-            <div style={{ background: 'hsl(222 28% 8%)', border: '1px solid hsl(222 18% 16%)', borderRadius: '14px', padding: '24px', marginTop: '4px' }}>
-              <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '4px' }}>
+            {/* Right — compact fact stack (rolls up like a banner on load) */}
+            <div className="pd-panel" style={{ background: 'hsl(222 28% 8%)', border: '1px solid hsl(222 18% 16%)', borderRadius: '14px', padding: '24px', marginTop: '4px' }}>
+              <p className="pd-row" style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '4px' }}>
                 Project Details
               </p>
               {project.client     && <FactRow label="Client"     value={project.client.name} />}
