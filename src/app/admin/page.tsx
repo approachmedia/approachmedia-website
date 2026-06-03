@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAdminProjectList } from '@/lib/db/portfolio'
+import ProjectRowActions from '@/components/admin/ProjectRowActions'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,8 +60,12 @@ export default async function AdminDashboard() {
                     :                          'bg-slate-600/40 text-slate-400'
                   }`}>{p.status}</span>
                 </td>
-                <td className="px-4 py-3">
-                  <Link href={`/admin/portfolio/${p.id}/edit`} className="text-blue-400 hover:text-blue-300 transition text-xs">Edit</Link>
+                <td className="px-4 py-3 text-right whitespace-nowrap">
+                  <ProjectRowActions
+                    id={p.id}
+                    isFeatured={p.isFeatured}
+                    title={p.title}
+                  />
                 </td>
               </tr>
             ))}
