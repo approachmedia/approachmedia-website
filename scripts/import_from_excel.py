@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-Import all 177 portfolio projects from the Approach Media case-study Excel file
-into PostgreSQL.  Also seeds the app_config table with the CDN base URL.
+Import portfolio projects from the Approach Media case-study Excel file into PostgreSQL.
+Also seeds the app_config table with the CDN base URL.
+
+Only rows where column A (title) has a value are imported — empty rows at the bottom
+of the spreadsheet are automatically skipped, so the row count reflects real data only.
 
 Usage:
     pip install openpyxl psycopg2-binary python-dotenv
-    python scripts/import_from_excel.py --excel scripts/new_casestudy_step2_seo_ready.xlsx
-    python scripts/import_from_excel.py --excel /path/to/file.xlsx --update   # overwrite existing slugs
-    python scripts/import_from_excel.py --excel /path/to/file.xlsx --dry-run  # preview only
+    python scripts/import_from_excel.py --excel new_casestudy_step2_seo_ready.xlsx
+    python scripts/import_from_excel.py --excel /path/to/file.xlsx --update    # overwrite existing slugs
+    python scripts/import_from_excel.py --excel /path/to/file.xlsx --dry-run   # preview only, no DB writes
 
 The script:
   1. Creates the app_config table row: key='media_cdn_base_url'
-  2. For each Excel row: upserts Client, Exhibition, Industry(ies), StallType(s)
+  2. For each data row: upserts Client, Exhibition, Industry(ies), StallType(s)
   3. Inserts Project + SeoMetadata + Media rows
   4. Stores image paths as RELATIVE paths (no domain) — the CDN base URL from
      app_config is prepended at render time, so switching CDN = one DB update.
