@@ -6,6 +6,8 @@ const config: NextConfig = {
       { protocol: 'https', hostname: 'cdn.approachmedia.in' },
       { protocol: 'https', hostname: 'approachmedia.in' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
+      // Cloudflare R2 public bucket — all project/venue media
+      { protocol: 'https', hostname: 'pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev' },
     ],
   },
   async redirects() {
