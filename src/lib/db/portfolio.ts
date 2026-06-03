@@ -1,6 +1,22 @@
 import { prisma } from './prisma'
+import { getCdnBaseUrl, buildMediaUrl } from './config'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import type { ProjectInput } from '@/lib/validations/portfolio'
+
+function resolveMediaUrls<T extends { media: { url: string; cdnUrl: string | null; thumbnailUrl: string | null }[] }>(
+  project: T,
+  cdnBase: string,
+): T {
+  return {
+    ...project,
+    media: project.media.map(m => ({
+      ...m,
+      url:          buildMediaUrl(m.url, cdnBase),
+      cdnUrl:       m.cdnUrl       ? buildMediaUrl(m.cdnUrl, cdnBase)       : m.cdnUrl,
+      thumbnailUrl: m.thumbnailUrl ? buildMediaUrl(m.thumbnailUrl, cdnBase) : m.thumbnailUrl,
+    })),
+  }
+}
 
 // ─── Lookups (used to populate form dropdowns) ───────────────
 
@@ -17,37 +33,48 @@ export async function getLookups() {
 // ─── Single project (public + admin) ─────────────────────────
 
 export async function getProjectBySlug(slug: string): Promise<ProjectWithRelations | null> {
-  return prisma.project.findUnique({
-    where: { slug },
-    include: {
-      client:      { include: { industry: true } },
-      exhibition:  true,
-      media:       { orderBy: { displayOrder: 'asc' } },
-      seoMetadata: true,
-      industries:  { include: { industry: true } },
-      stallTypes:  { include: { stallType: true } },
-    },
-  })
+  const [project, cdnBase] = await Promise.all([
+    prisma.project.findUnique({
+      where: { slug },
+      include: {
+        client:      { include: { industry: true } },
+        exhibition:  true,
+        media:       { orderBy: { displayOrder: 'asc' } },
+        seoMetadata: true,
+        industries:  { include: { industry: true } },
+        stallTypes:  { include: { stallType: true } },
+      },
+    }),
+    getCdnBaseUrl(),
+  ])
+  if (!project) return null
+  return resolveMediaUrls(project, cdnBase)
 }
 
 export async function getProjectById(id: number): Promise<ProjectWithRelations | null> {
-  return prisma.project.findUnique({
-    where: { id },
-    include: {
-      client:      { include: { industry: true } },
-      exhibition:  true,
-      media:       { orderBy: { displayOrder: 'asc' } },
-      seoMetadata: true,
-      industries:  { include: { industry: true } },
-      stallTypes:  { include: { stallType: true } },
-    },
-  })
+  const [project, cdnBase] = await Promise.all([
+    prisma.project.findUnique({
+      where: { id },
+      include: {
+        client:      { include: { industry: true } },
+        exhibition:  true,
+        media:       { orderBy: { displayOrder: 'asc' } },
+        seoMetadata: true,
+        industries:  { include: { industry: true } },
+        stallTypes:  { include: { stallType: true } },
+      },
+    }),
+    getCdnBaseUrl(),
+  ])
+  if (!project) return null
+  return resolveMediaUrls(project, cdnBase)
 }
 
 // ─── Portfolio index (public ISR page) ───────────────────────
 
 export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number }) {
-  return prisma.project.findMany({
+  const cdnBase = await getCdnBaseUrl()
+  const rows = await prisma.project.findMany({
     where: {
       status: 'published',
       ...(opts?.industrySlug && {
@@ -73,6 +100,7 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
     orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { buildYear: 'desc' }],
     take: opts?.limit,
   })
+  return rows.map(p => resolveMediaUrls(p, cdnBase))
 }
 
 export async function getAllPublishedSlugs() {

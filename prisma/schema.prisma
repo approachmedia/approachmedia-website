@@ -219,3 +219,19 @@ model ProjectStallType {
   @@id([projectId, stallTypeId])
   @@map("project_stall_types")
 }
+
+// ─────────────────────────────────────────────
+// GLOBAL SITE CONFIGURATION
+// ─────────────────────────────────────────────
+
+// Single-table key/value store for site-wide settings.
+// Critical key: 'media_cdn_base_url' — change this one row to migrate
+// all media assets to a new CDN without touching any project records.
+model AppConfig {
+  key         String   @id @db.VarChar(100)
+  value       String   @db.Text
+  description String?  @db.Text
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("app_config")
+}
