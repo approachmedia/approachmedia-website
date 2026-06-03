@@ -17,6 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <nav className="hidden md:flex items-center gap-4 text-sm">
               <Link href="/admin/portfolio"     className="text-slate-400 hover:text-white transition">Portfolio</Link>
               <Link href="/admin/portfolio/new" className="text-slate-400 hover:text-white transition">+ New Project</Link>
+              <Link href="/admin/seed"          className="text-slate-400 hover:text-white transition">Import</Link>
             </nav>
           </div>
           <LogoutButton />
