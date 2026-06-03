@@ -29,7 +29,7 @@ export default function SiteHeader() {
         {/* Logo */}
         <Link href="/" aria-label="Approach Media — Home" className="flex-shrink-0">
           <Image
-            src="https://www.approachmedia.in/assets/logo.png"
+            src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
             alt="Approach Media"
             width={160}
             height={40}

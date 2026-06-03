@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-6">
             <Link href="/admin" aria-label="Approach Media Admin">
               <Image
-                src="https://www.approachmedia.in/assets/logo.png"
+                src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
                 alt="Approach Media"
                 width={120}
                 height={30}
