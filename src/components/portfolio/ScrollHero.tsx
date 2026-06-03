@@ -10,76 +10,65 @@ type Props = {
   title: string
 }
 
-/**
- * Elixir-style scroll hero.
- * Starts as a full-bleed image (edge to edge, no radius) and, as the user
- * scrolls through the section, scales down into a contained, rounded frame.
- * Big at the top → smaller and framed as you move down the page.
- */
-export default function ScrollHero({ src, alt, caption, title }: Props) {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0) // 0 = full-bleed, 1 = fully contained
+// Final (small) hero dimensions when fully scrolled
+const FINAL_W = 426
+const FINAL_H = 212
+const FINAL_R = 14 // border-radius at small state
+
+export default function ScrollHero({ src, alt, caption }: Props) {
+  const sectionRef              = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
+  const [win, setWin]           = useState({ w: 1280, h: 800 })
 
   useEffect(() => {
     let raf = 0
-    const onScroll = () => {
+    const update = () => {
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
         const el = sectionRef.current
         if (!el) return
-        const rect = el.getBoundingClientRect()
-        // The section is taller than the viewport; progress runs as its top
-        // travels from 0 up to -(section height - viewport height).
-        const scrollable = el.offsetHeight - window.innerHeight
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        setWin({ w: vw, h: vh })
+        const scrollable = el.offsetHeight - vh
         if (scrollable <= 0) return setProgress(0)
-        const p = Math.min(1, Math.max(0, -rect.top / scrollable))
+        const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / scrollable))
         setProgress(p)
       })
     }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
     }
   }, [])
 
-  // Interpolate visual properties from progress.
-  const inset  = progress * 6          // vw of horizontal inset (0 → 6vw each side)
-  const radius = progress * 28         // px border radius (0 → 28)
-  const scaleY = 1 - progress * 0.12   // subtle vertical shrink
-  const topGap = progress * 32         // px top margin once framed
+  // Interpolate from full-bleed (progress=0) → 426×212 centered card (progress=1)
+  const figW    = win.w - progress * (win.w - FINAL_W)
+  const figH    = win.h - progress * (win.h - FINAL_H)
+  const offsetX = (win.w - figW) / 2
+  const offsetY = (win.h - figH) / 2
+  const radius  = progress * FINAL_R
+  const shadow  = progress > 0.3 ? `0 24px 80px -10px hsl(222 40% 2% / ${progress * 0.85})` : 'none'
 
   return (
-    <div ref={sectionRef} style={{ position: 'relative', height: '180vh', background: 'hsl(222 30% 5%)' }}>
-      {/* Sticky stage keeps the image pinned while the section scrolls past */}
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}
-      >
+    <div ref={sectionRef} style={{ position: 'relative', height: '200vh', background: 'hsl(222 30% 5%)' }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
         <figure
           style={{
-            position: 'relative',
-            margin: 0,
-            marginTop: `${topGap}px`,
-            width: `calc(100vw - ${inset * 2}vw)`,
-            height: `calc(100vh - ${topGap}px)`,
-            maxHeight: '100vh',
+            position:     'absolute',
+            margin:       0,
+            top:          `${offsetY}px`,
+            left:         `${offsetX}px`,
+            width:        `${figW}px`,
+            height:       `${figH}px`,
             borderRadius: `${radius}px`,
-            overflow: 'hidden',
-            transform: `scaleY(${scaleY})`,
-            transformOrigin: 'top center',
-            transition: 'box-shadow 0.3s ease',
-            boxShadow: progress > 0.4 ? '0 30px 80px -20px hsl(222 40% 2% / 0.8)' : 'none',
+            overflow:     'hidden',
+            boxShadow:    shadow,
+            transition:   'box-shadow 0.4s ease',
           }}
         >
           <Image
@@ -90,29 +79,26 @@ export default function ScrollHero({ src, alt, caption, title }: Props) {
             sizes="100vw"
             style={{ objectFit: 'cover', objectPosition: 'center' }}
           />
-          {/* Title overlay — visible while full-bleed, fades as it frames */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to top, hsl(222 40% 3% / 0.7) 0%, transparent 45%)',
-              opacity: 1 - progress * 0.6,
-            }}
-          />
+          {/* gradient overlay — fades as hero shrinks */}
+          <div style={{
+            position:   'absolute',
+            inset:      0,
+            background: 'linear-gradient(to top, hsl(222 40% 3% / 0.65) 0%, transparent 50%)',
+            opacity:    1 - progress * 0.9,
+            pointerEvents: 'none',
+          }} />
           {caption && (
-            <figcaption
-              style={{
-                position: 'absolute',
-                bottom: '20px',
-                right: '24px',
-                fontSize: '0.72rem',
-                color: 'hsl(220 10% 70%)',
-                background: 'hsl(222 30% 6% / 0.7)',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                opacity: 1 - progress,
-              }}
-            >
+            <figcaption style={{
+              position:     'absolute',
+              bottom:       '16px',
+              right:        '18px',
+              fontSize:     '0.7rem',
+              color:        'hsl(220 10% 72%)',
+              background:   'hsl(222 30% 6% / 0.75)',
+              padding:      '3px 9px',
+              borderRadius: '5px',
+              opacity:      1 - progress * 1.5 < 0 ? 0 : 1 - progress * 1.5,
+            }}>
               {caption}
             </figcaption>
           )}

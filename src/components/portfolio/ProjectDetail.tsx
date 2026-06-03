@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import ScrollHero from './ScrollHero'
-import MasonryGallery, { type GalleryItem } from './MasonryGallery'
+import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -343,7 +343,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
               </span>
             </div>
 
-            <MasonryGallery items={galleryItems} />
+            <ParallaxGallery items={galleryItems} />
 
             {floorPlan && (
               <div style={{ marginTop: '48px' }}>
