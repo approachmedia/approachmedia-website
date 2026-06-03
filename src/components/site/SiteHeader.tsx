@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -26,8 +27,15 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-[hsl(222,30%,6%)]/90 backdrop-blur">
       <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="text-lg font-display font-bold text-white flex-shrink-0">
-          Approach<span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Media</span>
+        <Link href="/" aria-label="Approach Media — Home" className="flex-shrink-0">
+          <Image
+            src="https://www.approachmedia.in/assets/logo.png"
+            alt="Approach Media"
+            width={160}
+            height={40}
+            priority
+            style={{ height: '36px', width: 'auto' }}
+          />
         </Link>
 
         {/* Desktop nav */}

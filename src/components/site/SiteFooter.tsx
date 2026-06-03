@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import FooterCityList from './FooterCityList'
 
@@ -64,8 +65,14 @@ export default function SiteFooter() {
 
           {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" className="text-xl font-display font-bold text-white">
-              Approach<span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Media</span>
+            <Link href="/" aria-label="Approach Media — Home">
+              <Image
+                src="https://www.approachmedia.in/assets/logo.png"
+                alt="Approach Media"
+                width={160}
+                height={40}
+                style={{ height: '40px', width: 'auto' }}
+              />
             </Link>
             <p className="text-sm text-slate-400 mt-4 max-w-sm leading-relaxed">
               India&apos;s trusted exhibition stall design and build company. Since 2002, creating spaces
