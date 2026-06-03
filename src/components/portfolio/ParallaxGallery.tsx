@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export type GalleryItem = {
   id: number
@@ -10,267 +10,306 @@ export type GalleryItem = {
   caption?: string | null
 }
 
-// Column scroll speeds — col 1 moves DOWN, col 2 moves UP, col 3 moves DOWN
-// (relative to how fast the section scrolls past)
-const COL_SPEEDS = [0.14, -0.18, 0.10]
+// Row heights — photos keep their NATURAL aspect ratio (width = auto), so
+// nothing is ever cropped. Only the height is fixed per row.
+const ROW_H        = 320 // desktop band height (px)
+const ROW_H_MOBILE = 220
 
-function distributeItems<T>(items: T[], cols: number): T[][] {
-  const out: T[][] = Array.from({ length: cols }, () => [])
-  items.forEach((item, i) => out[i % cols].push(item))
+// How tall the scroll section is. The extra height beyond one viewport is the
+// distance over which the horizontal pan plays out.
+const SECTION_VH = 260
+
+function chunkRows<T>(items: T[], rows: number): T[][] {
+  const out: T[][] = Array.from({ length: rows }, () => [])
+  items.forEach((it, i) => out[i % rows].push(it))
   return out
 }
 
 export default function ParallaxGallery({ items }: { items: GalleryItem[] }) {
-  const wrapRef                     = useRef<HTMLDivElement>(null)
-  const [offset, setOffset]         = useState(0)
-  const [active, setActive]         = useState<GalleryItem | null>(null)
-  const [isMobile, setIsMobile]     = useState(false)
+  const sectionRef          = useRef<HTMLDivElement>(null)
+  const rowRefs             = useRef<(HTMLDivElement | null)[]>([])
+  const [active, setActive] = useState<GalleryItem | null>(null)
+  const [isMobile, setMobile] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640)
+    const check = () => setMobile(window.innerWidth < 768)
     check()
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
 
+  // Imperatively pan each row horizontally based on how far the section has
+  // scrolled. Done in a rAF + direct DOM writes so it stays buttery smooth.
+  const apply = useCallback(() => {
+    const sec = sectionRef.current
+    if (!sec) return
+    const vh         = window.innerHeight
+    const scrollable = sec.offsetHeight - vh
+    const p = scrollable > 0
+      ? Math.min(1, Math.max(0, -sec.getBoundingClientRect().top / scrollable))
+      : 0
+
+    rowRefs.current.forEach((track, i) => {
+      if (!track) return
+      const parent = track.parentElement
+      if (!parent) return
+      const pan = Math.max(0, track.scrollWidth - parent.clientWidth)
+      // Even rows reveal toward the right as you scroll down; odd rows reveal
+      // toward the left — opposing horizontal drift for a dynamic feel.
+      const x = i % 2 === 0 ? -p * pan : -(1 - p) * pan
+      track.style.transform = `translate3d(${x.toFixed(1)}px, 0, 0)`
+    })
+  }, [])
+
   useEffect(() => {
+    if (isMobile) return
     let raf = 0
     const onScroll = () => {
       cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const el = wrapRef.current
-        if (!el) return
-        // offset = how many px the top of the section is above the viewport top
-        setOffset(-el.getBoundingClientRect().top)
-      })
+      raf = requestAnimationFrame(apply)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('scroll', onScroll) }
-  }, [])
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [isMobile, apply])
 
-  const colCount = isMobile ? 1 : 3
-  const columns  = distributeItems(items, colCount)
+  // ── Mobile: simple full-width stack, no parallax, no cropping ──────────
+  if (isMobile) {
+    return (
+      <>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {items.map(img => (
+            <Card key={img.id} item={img} mobile onClick={() => setActive(img)} />
+          ))}
+        </div>
+        <Lightbox active={active} onClose={() => setActive(null)} />
+        <CardStyles />
+      </>
+    )
+  }
+
+  // ── Desktop: sticky band of horizontally-panning rows ─────────────────
+  const rows = chunkRows(items, 2)
 
   return (
     <>
-      {/* ── Gallery grid ──────────────────────────────────────── */}
-      <div
-        ref={wrapRef}
-        style={{
-          display:             'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr',
-          gap:                 '12px',
-          alignItems:          'start',
-          // Extra vertical room so parallax movement doesn't clip edges
-          paddingTop:          isMobile ? 0 : '60px',
-          paddingBottom:       isMobile ? 0 : '60px',
-        }}
-      >
-        {columns.map((col, ci) => {
-          const translateY = isMobile ? 0 : offset * COL_SPEEDS[ci]
-          return (
-            <div
-              key={ci}
-              style={{
-                display:        'flex',
-                flexDirection:  'column',
-                gap:            '12px',
-                transform:      `translateY(${translateY}px)`,
-                willChange:     'transform',
-              }}
-            >
-              {col.map(img => (
-                <GalleryCard
-                  key={img.id}
-                  item={img}
-                  onClick={() => setActive(img)}
-                  // Middle column gets taller cards for visual rhythm
-                  tall={ci === 1}
-                />
-              ))}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* ── Lightbox ──────────────────────────────────────────── */}
-      {active && (
+      <div ref={sectionRef} style={{ position: 'relative', height: `${SECTION_VH}vh` }}>
         <div
-          onClick={() => setActive(null)}
           style={{
-            position:        'fixed',
-            inset:           0,
-            zIndex:          200,
-            background:      'hsl(222 40% 3% / 0.96)',
-            display:         'flex',
-            alignItems:      'center',
-            justifyContent:  'center',
-            padding:         '24px',
-            cursor:          'zoom-out',
+            position:       'sticky',
+            top:            0,
+            height:         '100vh',
+            display:        'flex',
+            flexDirection:  'column',
+            justifyContent: 'center',
+            gap:            '16px',
+            overflow:       'hidden',
           }}
         >
-          <button
-            type="button"
-            onClick={() => setActive(null)}
-            aria-label="Close"
-            style={{
-              position:     'absolute',
-              top:          '20px',
-              right:        '24px',
-              width:        '40px',
-              height:       '40px',
-              borderRadius: '50%',
-              background:   'hsl(222 24% 14%)',
-              border:       '1px solid hsl(222 18% 24%)',
-              color:        'hsl(0 0% 80%)',
-              fontSize:     '1.2rem',
-              cursor:       'pointer',
-              lineHeight:   1,
-            }}
-          >
-            ×
-          </button>
-          <figure
-            style={{ margin: 0, maxWidth: '90vw', maxHeight: '88vh', position: 'relative' }}
-            onClick={e => e.stopPropagation()}
-          >
-            <Image
-              src={active.src}
-              alt={active.alt}
-              width={1600}
-              height={1200}
-              sizes="90vw"
-              style={{
-                width:        'auto',
-                height:       'auto',
-                maxWidth:     '90vw',
-                maxHeight:    '82vh',
-                objectFit:    'contain',
-                borderRadius: '10px',
-              }}
-            />
-            {active.caption && (
-              <figcaption style={{
-                textAlign:  'center',
-                marginTop:  '12px',
-                fontSize:   '0.8rem',
-                color:      'hsl(220 10% 58%)',
-              }}>
-                {active.caption}
-              </figcaption>
-            )}
-          </figure>
+          {rows.map((row, ri) => (
+            <div key={ri} style={{ overflow: 'hidden', width: '100%' }}>
+              <div
+                ref={el => { rowRefs.current[ri] = el }}
+                style={{
+                  display:    'flex',
+                  gap:        '16px',
+                  width:      'max-content',
+                  willChange: 'transform',
+                  // Odd rows start shifted left and reveal rightward — set an
+                  // initial nudge via padding so both rows feel balanced.
+                  paddingLeft:  '24px',
+                  paddingRight: '24px',
+                }}
+              >
+                {row.map(img => (
+                  <Card
+                    key={img.id}
+                    item={img}
+                    height={ROW_H}
+                    onClick={() => setActive(img)}
+                    onReady={apply}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
-      <style>{`
-        .pgallery-card {
-          position: relative;
-          overflow: hidden;
-          border-radius: 10px;
-          cursor: zoom-in;
-          background: hsl(222 24% 8%);
-          display: block;
-          width: 100%;
-          border: none;
-          padding: 0;
-        }
-        .pgallery-card img {
-          display: block;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        .pgallery-card:hover img {
-          transform: scale(1.06);
-        }
-        .pgallery-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            to top,
-            hsl(222 40% 4% / 0.88) 0%,
-            hsl(222 40% 4% / 0.2)  40%,
-            transparent             70%
-          );
-          opacity: 0;
-          transition: opacity 0.4s ease;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 18px 16px 14px;
-        }
-        .pgallery-card:hover .pgallery-overlay {
-          opacity: 1;
-        }
-        .pgallery-caption {
-          font-size: 0.72rem;
-          color: hsl(220 10% 80%);
-          line-height: 1.4;
-          transform: translateY(6px);
-          transition: transform 0.4s ease;
-        }
-        .pgallery-card:hover .pgallery-caption {
-          transform: translateY(0);
-        }
-        .pgallery-icon {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background: hsl(0 0% 100% / 0.12);
-          backdrop-filter: blur(6px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 8px;
-          font-size: 0.9rem;
-          color: white;
-          transform: scale(0.7);
-          transition: transform 0.4s ease;
-        }
-        .pgallery-card:hover .pgallery-icon {
-          transform: scale(1);
-        }
-      `}</style>
+      <Lightbox active={active} onClose={() => setActive(null)} />
+      <CardStyles />
     </>
   )
 }
 
-function GalleryCard({
+// ── A single photo card — natural aspect ratio, never cropped ───────────
+function Card({
   item,
+  height,
+  mobile,
   onClick,
-  tall,
+  onReady,
 }: {
   item: GalleryItem
+  height?: number
+  mobile?: boolean
   onClick: () => void
-  tall: boolean
+  onReady?: () => void
 }) {
-  // Middle column cards are taller for visual rhythm
-  const imgH = tall ? 420 : 320
-
   return (
     <button
       type="button"
-      className="pgallery-card"
+      className="pg-card"
       onClick={onClick}
       aria-label={`View ${item.alt}`}
-      style={{ height: `${imgH}px` }}
+      style={
+        mobile
+          ? { width: '100%' }
+          : { height: `${height}px`, flex: '0 0 auto' }
+      }
     >
       <Image
         src={item.src}
         alt={item.alt}
-        fill
-        sizes="(max-width: 640px) 100vw, 33vw"
-        style={{ objectFit: 'cover' }}
+        width={1600}
+        height={1067}
+        sizes={mobile ? '100vw' : `${(height ?? ROW_H) * 1.6}px`}
+        onLoad={onReady}
+        style={
+          mobile
+            ? { width: '100%', height: 'auto', display: 'block' }
+            : { width: 'auto', height: '100%', display: 'block' }
+        }
       />
-      <div className="pgallery-overlay">
-        <div className="pgallery-icon">⤢</div>
-        {item.caption && (
-          <span className="pgallery-caption">{item.caption}</span>
-        )}
+      <div className="pg-overlay">
+        <div className="pg-icon">⤢</div>
+        {item.caption && <span className="pg-caption">{item.caption}</span>}
       </div>
     </button>
+  )
+}
+
+// ── Fullscreen lightbox ─────────────────────────────────────────────────
+function Lightbox({ active, onClose }: { active: GalleryItem | null; onClose: () => void }) {
+  useEffect(() => {
+    if (!active) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [active, onClose])
+
+  if (!active) return null
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position:       'fixed',
+        inset:          0,
+        zIndex:         200,
+        background:     'hsl(222 40% 3% / 0.96)',
+        display:        'flex',
+        alignItems:     'center',
+        justifyContent: 'center',
+        padding:        '24px',
+        cursor:         'zoom-out',
+      }}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        style={{
+          position: 'absolute', top: '20px', right: '24px', width: '40px', height: '40px',
+          borderRadius: '50%', background: 'hsl(222 24% 14%)', border: '1px solid hsl(222 18% 24%)',
+          color: 'hsl(0 0% 80%)', fontSize: '1.2rem', cursor: 'pointer', lineHeight: 1,
+        }}
+      >
+        ×
+      </button>
+      <figure
+        style={{ margin: 0, maxWidth: '92vw', maxHeight: '88vh', position: 'relative' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <Image
+          src={active.src}
+          alt={active.alt}
+          width={1920}
+          height={1280}
+          sizes="92vw"
+          style={{
+            width: 'auto', height: 'auto', maxWidth: '92vw', maxHeight: '82vh',
+            objectFit: 'contain', borderRadius: '10px', display: 'block',
+          }}
+        />
+        {active.caption && (
+          <figcaption style={{ textAlign: 'center', marginTop: '12px', fontSize: '0.8rem', color: 'hsl(220 10% 58%)' }}>
+            {active.caption}
+          </figcaption>
+        )}
+      </figure>
+    </div>
+  )
+}
+
+// ── Shared card styles (hover overlay + zoom) ───────────────────────────
+function CardStyles() {
+  return (
+    <style>{`
+      .pg-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        cursor: zoom-in;
+        background: hsl(222 24% 8%);
+        border: none;
+        padding: 0;
+        line-height: 0;
+      }
+      .pg-card img {
+        transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .pg-card:hover img { transform: scale(1.05); }
+      .pg-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          hsl(222 40% 4% / 0.85) 0%,
+          hsl(222 40% 4% / 0.15) 45%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 16px;
+      }
+      .pg-card:hover .pg-overlay { opacity: 1; }
+      .pg-caption {
+        font-size: 0.74rem;
+        color: hsl(220 10% 82%);
+        line-height: 1.4;
+        transform: translateY(6px);
+        transition: transform 0.4s ease;
+      }
+      .pg-card:hover .pg-caption { transform: translateY(0); }
+      .pg-icon {
+        width: 32px; height: 32px; border-radius: 50%;
+        background: hsl(0 0% 100% / 0.14);
+        backdrop-filter: blur(6px);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 8px; font-size: 0.9rem; color: white;
+        transform: scale(0.7);
+        transition: transform 0.4s ease;
+      }
+      .pg-card:hover .pg-icon { transform: scale(1); }
+    `}</style>
   )
 }
