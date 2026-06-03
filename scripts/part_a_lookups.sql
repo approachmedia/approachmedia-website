@@ -1,5 +1,4 @@
--- Run FIRST: CDN config + all lookup rows
-
+-- Run FIRST: CDN config + lookup rows
 INSERT INTO app_config (key,value,description,updated_at) VALUES ('media_cdn_base_url','https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev','Cloudflare R2 CDN. Change this one row to switch CDN for all images.',now()) ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value,updated_at=now();
 INSERT INTO industries (name,slug) VALUES ('Security Devises','security-devises') ON CONFLICT (slug) DO NOTHING;
 INSERT INTO industries (name,slug) VALUES ('IT','it') ON CONFLICT (slug) DO NOTHING;

@@ -1,22 +1,98 @@
 -- Run STEP 7: Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Desi
-
-INSERT INTO projects (title,slug,stall_area_sqm,stall_area_sqft,stall_height_m,floors,build_year,city,exhibition_id,client_id,description,design_brief,ai_summary,design_style,materials_used,special_features,awards,status,is_featured,display_order) VALUES ('Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025','voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',24,258.33,4,1,2025,'Gandhinagar',(SELECT id FROM exhibitions WHERE slug='fitag-tech-expo-it-show'),(SELECT id FROM clients WHERE slug='voltaic'),'Approach Media designed and fabricated a 24 SQM 3 side open stall exhibition stall for Voltaic Cable at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a premium black Voltaic Cable and Katvision stall with illuminated blue edge lighting, product wall displays, dark brand panels, and a high-contrast technology feel. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.','Create a 24 SQM 3 side open stall custom exhibition stall for Voltaic Cable that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.','Voltaic Cable exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 24 SQM 3 side open stall booth with premium dark technology booth with illuminated cable product showcase, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.','Premium dark technology booth with illuminated cable product showcase','["Black laminate panels", "acrylic logo signage", "LED strip lighting", "printed graphics", "product display shelving", "carpet flooring"]','["Three-side open layout", "illuminated blue edges", "cable product wall", "premium black fascia", "Katvision co-branding", "demo display zones"]',NULL,'published',true,60) ON CONFLICT (slug) DO NOTHING;
-INSERT INTO seo_metadata (project_id,meta_title,meta_description,og_title,og_description,og_image_url) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'Voltaic Cable 24 SQM Stall Design | FITAG Tech Expo - IT Show','Explore Voltaic Cable''s 24 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for','Voltaic Cable Custom Exhibition Stall at FITAG Tech Expo - IT Show','24 SQM 3 side open stall exhibition stall design and fabrication for Voltaic Cable by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp') ON CONFLICT (project_id) DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,caption,display_order,is_hero,is_thumbnail) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp','Voltaic Cable 24 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media','Voltaic Cable 24 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.',0,true,true) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 1',1) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 2',2) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 3',3) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 4',4) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 5',5) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 6',6) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-08.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 7',7) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-09.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 8',8) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-10.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 9',9) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-11.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 10',10) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-12.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 11',11) ON CONFLICT DO NOTHING;
-INSERT INTO media (project_id,media_type,url,alt_text,display_order) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-13.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 12',12) ON CONFLICT DO NOTHING;
-INSERT INTO project_industries (project_id,industry_id,is_primary) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),(SELECT id FROM industries WHERE slug='security-devises'),true) ON CONFLICT DO NOTHING;
-INSERT INTO project_industries (project_id,industry_id,is_primary) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),(SELECT id FROM industries WHERE slug='it'),false) ON CONFLICT DO NOTHING;
-INSERT INTO project_industries (project_id,industry_id,is_primary) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),(SELECT id FROM industries WHERE slug='hardware'),false) ON CONFLICT DO NOTHING;
-INSERT INTO project_industries (project_id,industry_id,is_primary) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),(SELECT id FROM industries WHERE slug='television'),false) ON CONFLICT DO NOTHING;
-INSERT INTO project_stall_types (project_id,stall_type_id,is_primary) VALUES ((SELECT id FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),(SELECT id FROM stall_types WHERE slug='3-side-open-stall'),true) ON CONFLICT DO NOTHING;
+INSERT INTO projects
+  (title,slug,stall_area_sqm,stall_area_sqft,stall_height_m,floors,build_year,city,
+   exhibition_id,client_id,description,design_brief,ai_summary,design_style,
+   materials_used,special_features,awards,status,is_featured,display_order)
+SELECT
+  'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025','voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  24,258.33,4,
+  1,2025,'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug='fitag-tech-expo-it-show'),
+  (SELECT id FROM clients WHERE slug='voltaic'),
+  'Approach Media designed and fabricated a 24 SQM 3 side open stall exhibition stall for Voltaic Cable at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a premium black Voltaic Cable and Katvision stall with illuminated blue edge lighting, product wall displays, dark brand panels, and a high-contrast technology feel. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.','Create a 24 SQM 3 side open stall custom exhibition stall for Voltaic Cable that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.','Voltaic Cable exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 24 SQM 3 side open stall booth with premium dark technology booth with illuminated cable product showcase, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.','Premium dark technology booth with illuminated cable product showcase',
+  '["Black laminate panels", "acrylic logo signage", "LED strip lighting", "printed graphics", "product display shelving", "carpet flooring"]','["Three-side open layout", "illuminated blue edges", "cable product wall", "premium black fascia", "Katvision co-branding", "demo display zones"]',NULL,
+  'published',true,60
+ON CONFLICT (slug) DO NOTHING;
+INSERT INTO seo_metadata
+  (project_id,meta_title,meta_description,og_title,og_description,og_image_url)
+SELECT id,'Voltaic Cable 24 SQM Stall Design | FITAG Tech Expo - IT Show','Explore Voltaic Cable''s 24 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for',
+  'Voltaic Cable Custom Exhibition Stall at FITAG Tech Expo - IT Show','24 SQM 3 side open stall exhibition stall design and fabrication for Voltaic Cable by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT (project_id) DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,caption,display_order,is_hero,is_thumbnail)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp','Voltaic Cable 24 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media','Voltaic Cable 24 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.',0,true,true
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 1',1
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 2',2
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 3',3
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 4',4
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 5',5
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 6',6
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-08.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 7',7
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-09.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 8',8
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-10.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 9',9
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-11.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 10',10
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-12.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 11',11
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO media (project_id,media_type,url,alt_text,display_order)
+SELECT id,'image','2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-13.webp','Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 photo 12',12
+FROM projects WHERE slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id,industry_id,is_primary)
+SELECT p.id,i.id,true
+FROM projects p, industries i
+WHERE p.slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025' AND i.slug='security-devises'
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id,industry_id,is_primary)
+SELECT p.id,i.id,false
+FROM projects p, industries i
+WHERE p.slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025' AND i.slug='it'
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id,industry_id,is_primary)
+SELECT p.id,i.id,false
+FROM projects p, industries i
+WHERE p.slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025' AND i.slug='hardware'
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id,industry_id,is_primary)
+SELECT p.id,i.id,false
+FROM projects p, industries i
+WHERE p.slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025' AND i.slug='television'
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id,stall_type_id,is_primary)
+SELECT p.id,s.id,true
+FROM projects p, stall_types s
+WHERE p.slug='voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025' AND s.slug='3-side-open-stall'
+ON CONFLICT DO NOTHING;
