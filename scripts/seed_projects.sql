@@ -1,0 +1,536 @@
+-- ═══════════════════════════════════════════════════════
+-- Step 0: create app_config table (safe — skipped if exists)
+-- ═══════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS app_config (
+  key         VARCHAR(100) PRIMARY KEY,
+  value       TEXT         NOT NULL,
+  description TEXT,
+  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+-- ═══════════════════════════════════════════════════════
+-- Step 1: CDN base URL config
+-- ═══════════════════════════════════════════════════════
+INSERT INTO app_config (key, value, description, updated_at)
+VALUES (
+  'media_cdn_base_url',
+  'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev',
+  'Cloudflare R2 CDN base URL. Update this one row to switch CDN for all project images.',
+  now()
+)
+ON CONFLICT (key) DO UPDATE
+  SET value = EXCLUDED.value, description = EXCLUDED.description, updated_at = now();
+
+-- ═══════════════════════════════════════════════════════
+-- Step 2: lookup tables (industries, stall_types, clients, exhibitions)
+-- ═══════════════════════════════════════════════════════
+INSERT INTO industries (name, slug) VALUES ('Security Devises', 'security-devises') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO industries (name, slug) VALUES ('IT', 'it') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO industries (name, slug) VALUES ('Hardware', 'hardware') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO industries (name, slug) VALUES ('Television', 'television') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO stall_types (name, slug) VALUES ('3 Side Open Stall', '3-side-open-stall') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO stall_types (name, slug) VALUES ('1 Side Open Stall', '1-side-open-stall') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO stall_types (name, slug) VALUES ('2 Side Open Stall', '2-side-open-stall') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Next View', 'next-view') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Acrrynics', 'acrrynics') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Digisol', 'digisol') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Lenovo - Metrobit Networks Pvt Ltd', 'lenovo-metrobit-networks-pvt-ltd') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Securus', 'securus') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Voltaic', 'voltaic') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO clients (name, slug) VALUES ('Wian', 'wian') ON CONFLICT (slug) DO NOTHING;
+INSERT INTO exhibitions (name, slug, venue_name, city, country) VALUES ('FITAG Tech Expo - IT Show', 'fitag-tech-expo-it-show', 'Helipad Ground', 'Gandhinagar', 'India') ON CONFLICT (slug) DO NOTHING;
+
+-- ═══════════════════════════════════════════════════════
+-- Step 3: projects + seo_metadata + media + junction tables
+-- ═══════════════════════════════════════════════════════
+
+-- ── Project: Next View 48 SQM 3 Side Open Stall Exhibition Stall Design a ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  48,
+  516.67,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'next-view' LIMIT 1),
+  'Approach Media designed and fabricated a 48 SQM 3 side open stall exhibition stall for Next View at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a spacious electronics and display technology stall with multiple live TV screens, bold Nextview fascia, demo walls, red carpet zone, and open product experience areas. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create a 48 SQM 3 side open stall custom exhibition stall for Next View that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Next View exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 48 SQM 3 side open stall booth with immersive display technology booth with live screen-led product storytelling, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Immersive display technology booth with live screen-led product storytelling',
+  '["Custom wooden build", "laminate finish", "printed graphics", "LED display integration", "acrylic signage", "carpet flooring"]', '["Three-side open visibility", "multi-screen display wall", "large brand fascia", "live demo zones", "product counters", "red carpet visitor flow"]', NULL,
+  'published', true, 10
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Next View 48 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Next View''s 48 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for',
+  'Next View Custom Exhibition Stall at FITAG Tech Expo - IT Show', '48 SQM 3 side open stall exhibition stall design and fabrication for Next View by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Next View 48 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Next View 48 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-08.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 7', 7
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 7);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-09.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 8', 8
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 8);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-10.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 9', 9
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 9);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/next-view/next-view-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-11.webp', 'Next View 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 10', 10
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 10);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'next-view-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '3-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design a ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  18,
+  193.75,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'acrrynics' LIMIT 1),
+  'Approach Media designed and fabricated an 18 SQM 3 side open stall exhibition stall for Acrrynics at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a compact Acronis and Nilmay branded IT security exhibit with illuminated counters, cyber cloud communication panels, blue flooring, and a clean meeting-led layout. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create an 18 SQM 3 side open stall custom exhibition stall for Acrrynics that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Acrrynics exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 18 SQM 3 side open stall booth with clean technology booth with blue-white cyber security branding, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Clean technology booth with blue-white cyber security branding',
+  '["Laminated wooden structure", "printed vinyl graphics", "acrylic logo panels", "LED backlit fascia", "carpet flooring", "display lighting"]', '["Backlit fascia", "Acronis/Nilmay brand panels", "product communication wall", "meeting seating", "illuminated counter", "open visitor access"]', NULL,
+  'published', true, 20
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Acrrynics 18 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Acrrynics''s 18 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for',
+  'Acrrynics Custom Exhibition Stall at FITAG Tech Expo - IT Show', '18 SQM 3 side open stall exhibition stall design and fabrication for Acrrynics by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Acrrynics 18 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Acrrynics 18 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/acrrynics/acrrynics-fitag-tech-expo-it-show-gandhinagar-18-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Acrrynics 18 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'acrrynics-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '3-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at  ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  18,
+  193.75,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'digisol' LIMIT 1),
+  'Approach Media designed and fabricated an 18 SQM 1 side open stall exhibition stall for Digisol at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a red and white networking products stall with strong Digisol fascia branding, wall-mounted product shelves, demo counters, and a focused product display zone. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create an 18 SQM 1 side open stall custom exhibition stall for Digisol that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Digisol exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 18 SQM 1 side open stall booth with bright product showcase stall with red-white technology branding, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Bright product showcase stall with red-white technology branding',
+  '["Modular wooden panels", "laminate finish", "printed vinyl", "acrylic branding", "LED lighting", "product shelves"]', '["High-visibility fascia", "product shelving", "router and networking product displays", "demo counter", "illuminated wall graphics"]', NULL,
+  'published', true, 30
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Digisol 18 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Digisol''s 18 SQM 1 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for impactful',
+  'Digisol Custom Exhibition Stall at FITAG Tech Expo - IT Show', '18 SQM 1 side open stall exhibition stall design and fabrication for Digisol by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Digisol 18 SQM 1 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Digisol 18 SQM 1 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-08.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 7', 7
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 7);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-09.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 8', 8
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 8);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/digisol/digisol-fitag-tech-expo-it-show-gandhinagar-18-sqm-1-side-open-stall-exhibition-stall-design-fabrication-approach-media-10.webp', 'Digisol 18 SQM 1 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 9', 9
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 9);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'digisol-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '1-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  48,
+  516.67,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'lenovo-metrobit-networks-pvt-ltd' LIMIT 1),
+  'Approach Media designed and fabricated a 48 SQM 3 side open stall exhibition stall for Lenovo Metrobit Networks at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a large Lenovo business technology stall with red-white brand architecture, multiple open visitor sides, demo counters, product panels, and a strong island-style presence. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create a 48 SQM 3 side open stall custom exhibition stall for Lenovo Metrobit Networks that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Lenovo Metrobit Networks exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 48 SQM 3 side open stall booth with corporate technology pavilion with bold red-white lenovo branding, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Corporate technology pavilion with bold red-white Lenovo branding',
+  '["Custom wooden structure", "laminate finish", "acrylic lettering", "vinyl graphics", "LED fascia lighting", "carpet flooring"]', '["Three-side open layout", "large Lenovo fascia", "demo zones", "product display counters", "visitor meeting area", "high brand visibility"]', NULL,
+  'published', true, 40
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Lenovo Metrobit Networks 48 SQM Stall Design | FITAG Tech Expo', 'Explore Lenovo Metrobit Networks''s 48 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach',
+  'Lenovo Metrobit Networks Custom Exhibition Stall at FITAG Tech Expo - IT Show', '48 SQM 3 side open stall exhibition stall design and fabrication for Lenovo Metrobit Networks by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Lenovo Metrobit Networks 48 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/lenovo-metrobit-networks/lenovo-metrobit-networks-fitag-tech-expo-it-show-gandhinagar-48-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Lenovo Metrobit Networks 48 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'lenovo-metrobit-networks-48-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '3-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at  ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  18,
+  193.75,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'securus' LIMIT 1),
+  'Approach Media designed and fabricated an 18 SQM 2 side open stall exhibition stall for Securus at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a security and surveillance stall with red-white fascia branding, camera and solution display panels, open visitor edges, and a compact product consultation layout. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create an 18 SQM 2 side open stall custom exhibition stall for Securus that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Securus exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 18 SQM 2 side open stall booth with professional security solutions booth with strong red-white visual identity, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Professional security solutions booth with strong red-white visual identity',
+  '["Wooden exhibition structure", "laminate finish", "printed vinyl panels", "acrylic logo", "LED lighting", "carpet flooring"]', '["Two-side open access", "security product display panels", "red-white fascia", "demo wall", "compact meeting and inquiry area"]', NULL,
+  'published', true, 50
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Securus 18 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Securus''s 18 SQM 2 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for impactful',
+  'Securus Custom Exhibition Stall at FITAG Tech Expo - IT Show', '18 SQM 2 side open stall exhibition stall design and fabrication for Securus by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Securus 18 SQM 2 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Securus 18 SQM 2 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/securus/securus-fitag-tech-expo-it-show-gandhinagar-18-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Securus 18 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'securus-18-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '2-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Desi ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  24,
+  258.33,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'voltaic' LIMIT 1),
+  'Approach Media designed and fabricated a 24 SQM 3 side open stall exhibition stall for Voltaic Cable at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a premium black Voltaic Cable and Katvision stall with illuminated blue edge lighting, product wall displays, dark brand panels, and a high-contrast technology feel. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create a 24 SQM 3 side open stall custom exhibition stall for Voltaic Cable that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Voltaic Cable exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 24 SQM 3 side open stall booth with premium dark technology booth with illuminated cable product showcase, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Premium dark technology booth with illuminated cable product showcase',
+  '["Black laminate panels", "acrylic logo signage", "LED strip lighting", "printed graphics", "product display shelving", "carpet flooring"]', '["Three-side open layout", "illuminated blue edges", "cable product wall", "premium black fascia", "Katvision co-branding", "demo display zones"]', NULL,
+  'published', true, 60
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Voltaic Cable 24 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Voltaic Cable''s 24 SQM 3 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for',
+  'Voltaic Cable Custom Exhibition Stall at FITAG Tech Expo - IT Show', '24 SQM 3 side open stall exhibition stall design and fabrication for Voltaic Cable by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Voltaic Cable 24 SQM 3 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Voltaic Cable 24 SQM 3 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-07.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 6', 6
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 6);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-08.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 7', 7
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 7);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-09.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 8', 8
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 8);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-10.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 9', 9
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 9);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-11.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 10', 10
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 10);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-12.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 11', 11
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 11);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/voltaic-cable/voltaic-cable-fitag-tech-expo-it-show-gandhinagar-24-sqm-3-side-open-stall-exhibition-stall-design-fabrication-approach-media-13.webp', 'Voltaic Cable 24 SQM 3 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 12', 12
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 12);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'voltaic-cable-24-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '3-side-open-stall'), true
+ON CONFLICT DO NOTHING;
+
+-- ── Project: Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FIT ──
+INSERT INTO projects (
+  title, slug, stall_area_sqm, stall_area_sqft, stall_height_m,
+  floors, build_year, city,
+  exhibition_id, client_id,
+  description, design_brief, ai_summary, design_style,
+  materials_used, special_features, awards,
+  status, is_featured, display_order
+)
+SELECT
+  'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025', 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025',
+  12,
+  129.17,
+  4,
+  1, 2025, 'Gandhinagar',
+  (SELECT id FROM exhibitions WHERE slug = 'fitag-tech-expo-it-show' LIMIT 1),
+  (SELECT id FROM clients WHERE slug = 'wian' LIMIT 1),
+  'Approach Media designed and fabricated a 12 SQM 2 side open stall exhibition stall for Wian at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar. The booth presents a compact Wian stall with a blue-white illuminated fascia, product display cabinet, consultation counter, and a tidy two-side open technology display format. The stall was planned for strong brand recall, clear product visibility, easy visitor movement, and search-friendly portfolio discovery for security devises, it, hardware, television exhibition projects in Gandhinagar, India.', 'Create a 12 SQM 2 side open stall custom exhibition stall for Wian that communicates technology, product credibility, and visitor engagement at FITAG Tech Expo - IT Show. The design needed visible branding, product-led storytelling, practical discussion areas, and a premium finish suitable for a busy expo environment.', 'Wian exhibition stall by Approach Media at FITAG Tech Expo - IT Show, Gandhinagar: 12 SQM 2 side open stall booth with compact blue-white technology display booth, designed for product display, lead generation, visitor interaction, and high search relevance around custom exhibition stall design and fabrication in Gujarat.', 'Compact blue-white technology display booth',
+  '["Wooden modular panels", "laminate finish", "printed vinyl graphics", "acrylic signage", "LED lighting", "display shelves"]', '["Two-side open compact stall", "illuminated blue fascia", "product display counter", "wall graphics", "visitor interaction desk"]', NULL,
+  'published', true, 70
+WHERE NOT EXISTS (SELECT 1 FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025');
+INSERT INTO seo_metadata (project_id, meta_title, meta_description, og_title, og_description, og_image_url)
+SELECT
+  (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'),
+  'Wian 12 SQM Stall Design | FITAG Tech Expo - IT Show', 'Explore Wian''s 12 SQM 2 side open stall exhibition stall at FITAG Tech Expo - IT Show, Gandhinagar, designed and fabricated by Approach Media for impactful',
+  'Wian Custom Exhibition Stall at FITAG Tech Expo - IT Show', '12 SQM 2 side open stall exhibition stall design and fabrication for Wian by Approach Media at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar.',
+  '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp'
+WHERE NOT EXISTS (SELECT 1 FROM seo_metadata WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'));
+INSERT INTO media (project_id, media_type, url, alt_text, caption, display_order, is_hero, is_thumbnail)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-01.webp', 'Wian 12 SQM 2 side open stall exhibition stall design at FITAG Tech Expo - IT Show Gandhinagar by Approach Media', 'Wian 12 SQM 2 Side Open Stall exhibition stall at FITAG Tech Expo - IT Show, Helipad Ground, Gandhinagar, designed and fabricated by Approach Media.', 0, true, true
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 0);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-02.webp', 'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 1', 1
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 1);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-03.webp', 'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 2', 2
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 2);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-04.webp', 'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 3', 3
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 3);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-05.webp', 'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 4', 4
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 4);
+INSERT INTO media (project_id, media_type, url, alt_text, display_order)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), 'image', '2025/fitag-tech-expo-it-show/wian/wian-fitag-tech-expo-it-show-gandhinagar-12-sqm-2-side-open-stall-exhibition-stall-design-fabrication-approach-media-06.webp', 'Wian 12 SQM 2 Side Open Stall Exhibition Stall Design at FITAG Tech Expo - IT Show, Gandhinagar 2025 exhibition stall photo 5', 5
+WHERE NOT EXISTS (SELECT 1 FROM media WHERE project_id = (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025') AND display_order = 5);
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'security-devises'), true
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'it'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'hardware'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_industries (project_id, industry_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM industries WHERE slug = 'television'), false
+ON CONFLICT DO NOTHING;
+INSERT INTO project_stall_types (project_id, stall_type_id, is_primary)
+SELECT (SELECT id FROM projects WHERE slug = 'wian-12-sqm-custom-exhibition-stall-fitag-tech-expo-it-show-gandhinagar-2025'), (SELECT id FROM stall_types WHERE slug = '2-side-open-stall'), true
+ON CONFLICT DO NOTHING;
