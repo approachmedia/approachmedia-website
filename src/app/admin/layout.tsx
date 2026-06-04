@@ -25,6 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link href="/admin/portfolio"     className="text-slate-400 hover:text-white transition">Portfolio</Link>
               <Link href="/admin/portfolio/new" className="text-slate-400 hover:text-white transition">+ New Project</Link>
               <Link href="/admin/seed"          className="text-slate-400 hover:text-white transition">Import</Link>
+              <Link href="/admin/setup-2fa"     className="text-slate-400 hover:text-white transition">2FA Setup</Link>
             </nav>
           </div>
           <LogoutButton />
