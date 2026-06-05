@@ -319,43 +319,56 @@ export default function PortfolioForm({ industries, stallTypes, exhibitions, cli
         </Section>
 
         {/* ── SECTION 2: CONTENT BLOCKS ──────────────────────── */}
-        <Section n={2} title="Content Blocks" subtitle="Long-form editorial content — human-written, E-E-A-T quality">
+        <Section n={2} title="Content Blocks" subtitle="These 3 fields map directly to the 3 sections visible on the public portfolio page">
 
-          {/* AI Summary with live word counter */}
+          {/* Page section mapping guide */}
+          <div className="rounded-lg border border-blue-700/40 bg-blue-900/10 px-4 py-3 text-xs text-blue-300 space-y-1">
+            <p className="font-semibold text-blue-200 mb-1">How fields appear on the portfolio page:</p>
+            <p><span className="font-mono bg-slate-800 px-1 rounded text-yellow-300">01 The Challenge</span> ← Design Brief field below</p>
+            <p><span className="font-mono bg-slate-800 px-1 rounded text-yellow-300">02 What We Designed</span> ← Full Description field below</p>
+            <p><span className="font-mono bg-slate-800 px-1 rounded text-yellow-300">03 Why It Worked</span> ← Why It Worked field below</p>
+          </div>
+
+          {/* Design Brief → "The Challenge" */}
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-widest">
-                AI Summary <span className="text-red-400">*</span>
-              </label>
-              <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
-                !aiSummaryText                ? 'bg-slate-700 text-slate-400'
-                : aiSummaryStatus.ok          ? 'bg-green-500/20 text-green-400'
-                :                               'bg-red-500/20 text-red-400'
-              }`}>
-                {aiSummaryStatus.count} words {aiSummaryStatus.ok ? '✓' : '(80–150 required)'}
-              </span>
+            <div className="flex items-center gap-2 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-widest">Design Brief</label>
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-yellow-300">→ 01 The Challenge on page</span>
+            </div>
+            <textarea {...register('designBrief')} rows={4} placeholder="Client brief: [brand objectives, footfall goals, product highlight requirements]..." className="field-input resize-y" />
+            <p className="mt-1 text-xs text-slate-500">The client&apos;s original brief — what problem they brought to you.</p>
+            {errors.designBrief && <p className="mt-1 text-xs text-red-400">{errors.designBrief.message}</p>}
+          </div>
+
+          {/* Full Description → "What We Designed" */}
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-widest">Full Description <span className="text-red-400">*</span></label>
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-yellow-300">→ 02 What We Designed on page</span>
+            </div>
+            <textarea {...register('description')} rows={10} placeholder="Approach Media designed and built this [sqm] [stall type] for [client] at [exhibition]..." className="field-input resize-y" />
+            <p className="mt-1 text-xs text-slate-500">Describe the stall design, structural system, zones, materials, and fabrication process.</p>
+            {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
+          </div>
+
+          {/* AI Summary → "Why It Worked" */}
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-widest">Why It Worked</label>
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-700 text-yellow-300">→ 03 Why It Worked on page</span>
+              {aiSummaryText && (
+                <span className="ml-auto text-xs font-mono text-slate-500">{aiSummaryStatus.count} words</span>
+              )}
             </div>
             <textarea
               {...register('aiSummary')}
               rows={5}
-              placeholder="72 sqm double-decker exhibition stall designed and fabricated by Approach Media for [Client] at [Trade Show], [Venue], [City], [Date]. Ground floor ([sqm]) comprises [zones]. Mezzanine ([sqm]) houses [function]. Materials: [list]. Design style: [style]."
+              placeholder="The stall balanced strong brand visibility with clear visitor flow. Every design decision — entrance positioning, product shelving height, consultation zone — was made with the visitor journey in mind."
               className="field-input resize-y"
             />
-            <div className="mt-1 flex items-start justify-between gap-4">
-              {errors.aiSummary
-                ? <p className="text-xs text-red-400">{errors.aiSummary.message}</p>
-                : <p className="text-xs text-slate-500">Entity-rich factual summary. Start with sqm + stall type + client + event. No marketing adjectives.</p>
-              }
-            </div>
+            <p className="mt-1 text-xs text-slate-500">The outcome — why the stall worked for the client. 1–3 sentences is fine.</p>
+            {errors.aiSummary && <p className="mt-1 text-xs text-red-400">{errors.aiSummary?.message as string}</p>}
           </div>
-
-          <Field label="Full Description" required hint="300–500 words. Describe the brief, design decisions, structural system, and fabrication process." error={errors.description?.message}>
-            <textarea {...register('description')} rows={10} placeholder="Approach Media designed and built this [sqm] [stall type] for [client] at [exhibition]..." className="field-input resize-y" />
-          </Field>
-
-          <Field label="Design Brief" hint="The client's original brief — shows problem-solving depth for E-E-A-T" error={errors.designBrief?.message}>
-            <textarea {...register('designBrief')} rows={4} placeholder="Client brief: [brand objectives, footfall goals, product highlight requirements]..." className="field-input resize-y" />
-          </Field>
 
         </Section>
 

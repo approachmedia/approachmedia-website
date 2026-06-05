@@ -13,10 +13,9 @@ const slug = z
 const urlOrEmpty = z.union([z.string().url(), z.literal('')]).optional()
 
 // ─────────────────────────────────────────────
-// AI SUMMARY — 80–150 word hard enforcement
-// LLMs index density, not word count, but
-// 80 min forces factual completeness and
-// 150 max prevents keyword stuffing.
+// AI SUMMARY — no word-count enforcement
+// Free-form outcome/result text that appears
+// in the "Why It Worked" section on the page.
 // ─────────────────────────────────────────────
 
 function wordCount(text: string) {
@@ -25,8 +24,7 @@ function wordCount(text: string) {
 
 const aiSummaryField = z
   .string()
-  .refine(v => wordCount(v) >= 80,  { message: 'ai_summary must be at least 80 words — add more factual entity detail' })
-  .refine(v => wordCount(v) <= 150, { message: 'ai_summary must not exceed 150 words — trim marketing language' })
+  .optional()
 
 // ─────────────────────────────────────────────
 // MEDIA SCHEMA — altText is MANDATORY
@@ -140,7 +138,7 @@ const ProjectSchemaBase = z.object({
   designBrief: z.string().max(2000).optional(),
 
   // AI/LLM fields
-  aiSummary:       aiSummaryField.optional(),
+  aiSummary:       aiSummaryField,
   designStyle:     z.string().max(150).optional(),
   materialsUsed:   z.array(z.string().min(2)).min(1, 'Add at least one material').max(30).optional(),
   specialFeatures: z.array(z.string().min(2)).max(30).optional(),
@@ -226,9 +224,7 @@ export function getAiSummaryWordCount(text: string): number {
   return wordCount(text)
 }
 
-export function validateAiSummary(text: string): { ok: boolean; count: number; message?: string } {
+export function validateAiSummary(text: string): { ok: boolean; count: number } {
   const count = wordCount(text)
-  if (count < 80)  return { ok: false, count, message: `${count}/80 words minimum — add entity-rich facts` }
-  if (count > 150) return { ok: false, count, message: `${count}/150 words maximum — trim marketing language` }
-  return { ok: true, count }
+  return { ok: count > 0, count }
 }
