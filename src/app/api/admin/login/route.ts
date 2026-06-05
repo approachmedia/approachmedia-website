@@ -23,15 +23,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
   }
 
-  // Password OK but no TOTP yet — tell the client to show step 2
-  if (!totp) {
-    return NextResponse.json({ step: 'totp' }, { status: 200 })
-  }
-
-  // Both password + TOTP must be correct to get the session cookie
-  if (!verifyTotp(totp)) {
-    return NextResponse.json({ error: 'Invalid authenticator code' }, { status: 401 })
-  }
+  // TOTP temporarily disabled — skip step 2
+  // TODO: re-enable once ADMIN_TOTP_SECRET is confirmed working in Railway
+  // if (!totp) {
+  //   return NextResponse.json({ step: 'totp' }, { status: 200 })
+  // }
+  // if (!verifyTotp(totp)) {
+  //   return NextResponse.json({ error: 'Invalid authenticator code' }, { status: 401 })
+  // }
 
   const response = NextResponse.json({ ok: true })
   response.cookies.set('admin_auth', 'authenticated', {
