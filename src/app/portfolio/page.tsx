@@ -1,12 +1,29 @@
 import type { Metadata } from 'next'
+import { unstable_cache } from 'next/cache'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import ProjectCard from '@/components/portfolio/ProjectCard'
 import FilterBar from '@/components/portfolio/FilterBar'
 
-// ISR: serve cached HTML for up to 5 minutes, rebuild in background on expiry
-export const revalidate = 300
+// force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
+// Data is cached for 5 minutes at the function level via unstable_cache below.
+export const dynamic = 'force-dynamic'
+
+// Cache the DB queries for 5 minutes. The page renders fresh each request but the
+// heavy DB work is only done once per 5-minute window (or when 'projects' tag is invalidated).
+const getPortfolioData = unstable_cache(
+  async () => {
+    const [projects, industries, stallTypes] = await Promise.all([
+      getPublishedProjects(),
+      prisma.industry.findMany({ orderBy: { name: 'asc' } }),
+      prisma.stallType.findMany({ orderBy: { name: 'asc' } }),
+    ])
+    return { projects, industries, stallTypes }
+  },
+  ['portfolio-page-data'],
+  { revalidate: 300, tags: ['projects'] },
+)
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
@@ -22,11 +39,7 @@ export const metadata: Metadata = {
 }
 
 export default async function PortfolioIndexPage() {
-  const [projects, industries, stallTypes] = await Promise.all([
-    getPublishedProjects(),
-    prisma.industry.findMany({ orderBy: { name: 'asc' } }),
-    prisma.stallType.findMany({ orderBy: { name: 'asc' } }),
-  ])
+  const { projects, industries, stallTypes } = await getPortfolioData()
 
   const jsonLd = generatePortfolioIndexSchema(projects.map(p => ({ title: p.title, slug: p.slug })))
 
