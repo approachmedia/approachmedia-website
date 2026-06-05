@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { prisma } from './prisma'
 import { getCdnBaseUrl, buildMediaUrl } from './config'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
@@ -32,7 +33,9 @@ export async function getLookups() {
 
 // ─── Single project (public + admin) ─────────────────────────
 
-export async function getProjectBySlug(slug: string): Promise<ProjectWithRelations | null> {
+// cache() deduplicates calls within the same request — generateMetadata and the page
+// component both call this, so without cache() it would hit the DB twice per page load.
+export const getProjectBySlug = cache(async function getProjectBySlug(slug: string): Promise<ProjectWithRelations | null> {
   const [project, cdnBase] = await Promise.all([
     prisma.project.findUnique({
       where: { slug },
@@ -49,7 +52,7 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithRelatio
   ])
   if (!project) return null
   return resolveMediaUrls(project, cdnBase)
-}
+})
 
 export async function getProjectById(id: number): Promise<ProjectWithRelations | null> {
   const [project, cdnBase] = await Promise.all([

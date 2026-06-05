@@ -5,8 +5,8 @@ import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import ProjectCard from '@/components/portfolio/ProjectCard'
 import FilterBar from '@/components/portfolio/FilterBar'
 
-// force-dynamic: DB must be available at runtime, not build time
-export const dynamic = 'force-dynamic'
+// ISR: serve cached HTML for up to 5 minutes, rebuild in background on expiry
+export const revalidate = 300
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
