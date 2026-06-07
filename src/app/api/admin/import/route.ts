@@ -83,6 +83,11 @@ export async function POST(request: NextRequest) {
     if (!slug) continue
 
     try {
+      // Images — prefer original upload paths; SEO-renamed paths as fallback only
+      const heroPath     = str(row.hero_image_url)  || str(row.hero_image_new_path_SEO)
+      const galleryRaw   = str(row.gallery_images)  || str(row.gallery_new_paths_SEO)
+      const galleryPaths = splitPipe(galleryRaw)
+
       // If slug already exists, replace its media with fresh paths from this row
       const exists = await prisma.project.findUnique({ where: { slug }, select: { id: true } })
       if (exists) {
@@ -112,11 +117,6 @@ export async function POST(request: NextRequest) {
       // Status: "final" → "published"
       const rawStatus = str(row.status).toLowerCase()
       const status    = (rawStatus === 'final' || rawStatus === 'published') ? 'published' : 'draft'
-
-      // Images — prefer original upload paths; SEO-renamed paths as fallback only
-      const heroPath    = str(row.hero_image_url)    || str(row.hero_image_new_path_SEO)
-      const galleryRaw  = str(row.gallery_images)    || str(row.gallery_new_paths_SEO)
-      const galleryPaths = splitPipe(galleryRaw)
 
       // SEO keywords
       const primaryKw    = str(row.primary_keyword)
