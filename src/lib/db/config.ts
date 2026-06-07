@@ -26,16 +26,19 @@ export const getCdnBaseUrl = unstable_cache(
 /**
  * Prepend CDN base URL to a relative media path.
  * Full URLs (http/https) pass through unchanged, so existing full-URL records
- * are safe.
+ * are safe. Each path segment is URL-encoded so folder names with spaces or
+ * special characters (e.g. "SSSA BUSINESS EXPO 2022", "MET & HITS") produce
+ * valid URLs.
  *
  * Examples:
- *   buildMediaUrl('2025/fitag/img.webp', 'https://cdn.r2.dev')
- *     → 'https://cdn.r2.dev/2025/fitag/img.webp'
+ *   buildMediaUrl('2022/SSSA BUSINESS EXPO 2022/img.webp', 'https://cdn.r2.dev')
+ *     → 'https://cdn.r2.dev/2022/SSSA%20BUSINESS%20EXPO%202022/img.webp'
  *   buildMediaUrl('https://other-cdn.com/img.webp', '...')
  *     → 'https://other-cdn.com/img.webp'  (unchanged)
  */
 export function buildMediaUrl(path: string | null | undefined, cdnBase: string): string {
   if (!path) return ''
   if (path.startsWith('http://') || path.startsWith('https://')) return path
-  return `${cdnBase}/${path.replace(/^\//, '')}`
+  const encoded = path.replace(/^\//, '').split('/').map(encodeURIComponent).join('/')
+  return `${cdnBase}/${encoded}`
 }
