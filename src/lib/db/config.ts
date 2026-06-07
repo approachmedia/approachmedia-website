@@ -13,10 +13,11 @@ export const getCdnBaseUrl = unstable_cache(
   async (): Promise<string> => {
     try {
       const row = await prisma.appConfig.findUnique({ where: { key: 'media_cdn_base_url' } })
-      const raw = row?.value ?? process.env.MEDIA_CDN_BASE_URL ?? FALLBACK_CDN
+      // Use || not ?? so empty strings also fall through to the next fallback
+      const raw = row?.value || process.env.MEDIA_CDN_BASE_URL || FALLBACK_CDN
       return raw.replace(/\/$/, '') // strip trailing slash
     } catch {
-      return (process.env.MEDIA_CDN_BASE_URL ?? FALLBACK_CDN).replace(/\/$/, '')
+      return (process.env.MEDIA_CDN_BASE_URL || FALLBACK_CDN).replace(/\/$/, '')
     }
   },
   ['media_cdn_base_url'],
@@ -39,6 +40,7 @@ export const getCdnBaseUrl = unstable_cache(
 export function buildMediaUrl(path: string | null | undefined, cdnBase: string): string {
   if (!path) return ''
   if (path.startsWith('http://') || path.startsWith('https://')) return path
+  const base = cdnBase || FALLBACK_CDN
   // Fully decode each segment (handles any number of encoding passes from repeated "Fix Now"
   // clicks — %2520 → %20 → space), then re-encode once to produce a valid single-encoded URL.
   const encoded = path.replace(/^\//, '').split('/').map(seg => {
@@ -46,5 +48,5 @@ export function buildMediaUrl(path: string | null | undefined, cdnBase: string):
     try { while (s !== decodeURIComponent(s)) s = decodeURIComponent(s) } catch { /* use last good value */ }
     try { return encodeURIComponent(s) } catch { return encodeURIComponent(seg) }
   }).join('/')
-  return `${cdnBase}/${encoded}`
+  return `${base}/${encoded}`
 }

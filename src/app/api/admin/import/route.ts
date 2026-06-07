@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
 
 async function isAuthenticated() {
@@ -185,6 +186,8 @@ export async function POST(request: NextRequest) {
       results.push({ slug, status: 'error', message: String(e).slice(0, 200) })
     }
   }
+
+  revalidateTag('projects')
 
   return NextResponse.json({
     results,
