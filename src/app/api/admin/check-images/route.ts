@@ -32,19 +32,35 @@ export async function GET() {
   const totalMedia = await prisma.media.count()
   const heroMedia  = await prisma.media.count({ where: { isHero: true } })
 
-  return NextResponse.json({
-    cdnBase,
-    totalMedia,
-    heroMedia,
-    projects: projects.map(p => ({
+  // Test each built URL with a HEAD request to check if file exists in R2
+  const projectsWithStatus = await Promise.all(projects.map(async p => {
+    const builtUrl = p.media[0] ? buildMediaUrl(p.media[0].url, cdnBase) : null
+    let httpStatus: number | null = null
+    if (builtUrl) {
+      try {
+        const res = await fetch(builtUrl, { method: 'HEAD', signal: AbortSignal.timeout(5000) })
+        httpStatus = res.status
+      } catch {
+        httpStatus = 0
+      }
+    }
+    return {
       id:    p.id,
       title: p.title.slice(0, 60),
       slug:  p.slug,
       hero:  p.media[0] ? {
         storedUrl:    p.media[0].url,
         storedCdnUrl: p.media[0].cdnUrl,
-        builtUrl:     buildMediaUrl(p.media[0].url, cdnBase),
+        builtUrl,
+        httpStatus,
       } : null,
-    })),
+    }
+  }))
+
+  return NextResponse.json({
+    cdnBase,
+    totalMedia,
+    heroMedia,
+    projects: projectsWithStatus,
   })
 }

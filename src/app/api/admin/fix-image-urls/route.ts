@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
 
 async function isAuthenticated() {
@@ -48,6 +49,9 @@ export async function POST() {
       errors.push(`id=${m.id}: ${String(e).slice(0, 100)}`)
     }
   }
+
+  // Bust the portfolio data cache so the next page load fetches fresh URLs
+  revalidateTag('projects')
 
   return NextResponse.json({ total: all.length, updated, errors })
 }
