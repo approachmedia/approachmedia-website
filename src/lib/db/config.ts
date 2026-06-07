@@ -20,7 +20,7 @@ export const getCdnBaseUrl = unstable_cache(
       return (process.env.MEDIA_CDN_BASE_URL || FALLBACK_CDN).replace(/\/$/, '')
     }
   },
-  ['media_cdn_base_url'],
+  ['media_cdn_base_url_v2'],
   { revalidate: 3600 },
 )
 

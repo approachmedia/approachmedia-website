@@ -21,7 +21,7 @@ const getPortfolioData = unstable_cache(
     ])
     return { projects, industries, stallTypes }
   },
-  ['portfolio-page-data'],
+  ['portfolio-page-data-v2'],
   { revalidate: 300, tags: ['projects'] },
 )
 
