@@ -169,10 +169,10 @@ export async function POST(request: NextRequest) {
           ...((str(row.meta_title) || primaryKw) ? {
             seoMetadata: {
               create: {
-                metaTitle:        str(row.meta_title).slice(0, 70)   || null,
+                metaTitle:        str(row.meta_title).slice(0, 70)        || null,
                 metaDescription:  str(row.meta_description).slice(0, 165) || null,
-                ogTitle:          str(row.og_title)       || null,
-                ogDescription:    str(row.og_description) || null,
+                ogTitle:          str(row.og_title).slice(0, 100)         || null,
+                ogDescription:    str(row.og_description).slice(0, 200)   || null,
                 primaryKeywords:  primaryKw ? [primaryKw] : [],
                 secondaryKeywords: secondaryKws,
               },
