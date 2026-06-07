@@ -15,6 +15,51 @@ const STATUS_COLOUR: Record<string, string> = {
 }
 const STATUS_ICON: Record<string, string> = { created: '✓', skipped: '—', error: '✗' }
 
+// ── Fix image URLs widget ──────────────────────────────────────────────────────
+function FixImageUrlsButton() {
+  const [state, setState] = useState<'idle' | 'running' | 'done' | 'error'>('idle')
+  const [result, setResult] = useState<{ total: number; updated: number } | null>(null)
+
+  async function run() {
+    setState('running')
+    try {
+      const res  = await fetch('/api/admin/fix-image-urls', { method: 'POST' })
+      const data = await res.json()
+      setResult({ total: data.total, updated: data.updated })
+      setState('done')
+    } catch {
+      setState('error')
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-orange-700/40 bg-orange-900/10 p-4 flex items-center justify-between gap-4">
+      <div>
+        <p className="text-sm font-semibold text-orange-300">Fix existing image URLs</p>
+        <p className="text-xs text-slate-400 mt-0.5">
+          Re-encodes spaces in folder names for all media already in the database
+          (e.g. <span className="font-mono text-slate-300">SSSA BUSINESS EXPO 2022</span> →{' '}
+          <span className="font-mono text-slate-300">SSSA%20BUSINESS%20EXPO%202022</span>).
+          Safe to run multiple times.
+        </p>
+        {state === 'done' && result && (
+          <p className="text-xs text-green-400 mt-1">
+            ✓ Done — {result.updated} of {result.total} records updated
+          </p>
+        )}
+        {state === 'error' && <p className="text-xs text-red-400 mt-1">Error — check console</p>}
+      </div>
+      <button
+        onClick={run}
+        disabled={state === 'running' || state === 'done'}
+        className="shrink-0 px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-sm font-semibold transition disabled:opacity-50"
+      >
+        {state === 'running' ? 'Fixing…' : state === 'done' ? 'Done ✓' : 'Fix Now'}
+      </button>
+    </div>
+  )
+}
+
 export default function ImportPage() {
   const fileRef           = useRef<HTMLInputElement>(null)
   const [rows, setRows]   = useState<Row[] | null>(null)
@@ -104,6 +149,9 @@ export default function ImportPage() {
         <p><span className="font-mono text-slate-400 w-52 inline-block">gallery_new_paths_SEO</span>→ Gallery images (falls back to gallery_images, pipe-separated)</p>
         <p><span className="font-mono text-slate-400 w-52 inline-block">status: "final"</span>→ stored as "published"</p>
       </div>
+
+      {/* Fix existing DB records */}
+      <FixImageUrlsButton />
 
       {/* File picker */}
       <div
