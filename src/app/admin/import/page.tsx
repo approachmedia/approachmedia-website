@@ -5,15 +5,15 @@ import * as XLSX from 'xlsx'
 import Link from 'next/link'
 
 type Row = Record<string, unknown>
-type Result = { slug: string; status: 'created' | 'skipped' | 'error'; message?: string }
-type Summary = { created: number; skipped: number; errors: number }
+type Result = { slug: string; status: 'created' | 'updated' | 'error'; message?: string }
+type Summary = { created: number; updated: number; errors: number }
 
 const STATUS_COLOUR: Record<string, string> = {
   created: 'text-green-400',
-  skipped: 'text-slate-400',
+  updated: 'text-blue-400',
   error:   'text-red-400',
 }
-const STATUS_ICON: Record<string, string> = { created: '✓', skipped: '—', error: '✗' }
+const STATUS_ICON: Record<string, string> = { created: '✓', updated: '↻', error: '✗' }
 
 // ── Fix image URLs widget ──────────────────────────────────────────────────────
 function FixImageUrlsButton() {
@@ -135,7 +135,7 @@ export default function ImportPage() {
         <h1 className="text-2xl font-bold text-white mb-1">Import Portfolio (Excel / CSV)</h1>
         <p className="text-slate-400 text-sm">
           Upload the prepared Excel file. The importer maps all 35 columns automatically.{' '}
-          <span className="text-yellow-300">Existing slugs are skipped — re-upload is safe.</span>
+          <span className="text-yellow-300">Re-uploading existing slugs updates their images — all other fields unchanged.</span>
         </p>
       </div>
 
@@ -145,8 +145,8 @@ export default function ImportPage() {
         <p><span className="font-mono text-yellow-300 w-52 inline-block">01 The Challenge</span>→ Design Brief (shown as "The Challenge" on page)</p>
         <p><span className="font-mono text-yellow-300 w-52 inline-block">02 What We Designed</span>→ Full Description (shown as "What We Designed" on page)</p>
         <p><span className="font-mono text-yellow-300 w-52 inline-block">03 Why It Worked</span>→ AI Summary (shown as "Why It Worked" on page)</p>
-        <p><span className="font-mono text-slate-400 w-52 inline-block">hero_image_new_path_SEO</span>→ Hero image (falls back to hero_image_url)</p>
-        <p><span className="font-mono text-slate-400 w-52 inline-block">gallery_new_paths_SEO</span>→ Gallery images (falls back to gallery_images, pipe-separated)</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">hero_image_url</span>→ Hero image (falls back to hero_image_new_path_SEO)</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">gallery_images</span>→ Gallery images (falls back to gallery_new_paths_SEO, pipe-separated)</p>
         <p><span className="font-mono text-slate-400 w-52 inline-block">status: "final"</span>→ stored as "published"</p>
       </div>
 
@@ -181,8 +181,8 @@ export default function ImportPage() {
               <div className="text-xs text-green-600 mt-1">Will import</div>
             </div>
             <div className="flex-1 rounded-xl bg-slate-800 border border-slate-700 p-4 text-center">
-              <div className="text-3xl font-bold text-slate-400">{existingCount}</div>
-              <div className="text-xs text-slate-500 mt-1">Already exist (skip)</div>
+              <div className="text-3xl font-bold text-blue-400">{existingCount}</div>
+              <div className="text-xs text-slate-500 mt-1">Existing (update images)</div>
             </div>
           </div>
 
@@ -208,8 +208,8 @@ export default function ImportPage() {
                       <td className="px-4 py-2.5 text-white font-medium">{String(r.client_name || '')}</td>
                       <td className="px-4 py-2.5 text-slate-300 max-w-xs truncate">{String(r.title || '').slice(0, 60)}</td>
                       <td className="px-4 py-2.5 text-slate-300 text-right">{String(r.stall_area_sqm || '')}</td>
-                      <td className={`px-4 py-2.5 font-medium ${isNew ? 'text-green-400' : 'text-slate-500'}`}>
-                        {isNew ? 'Import' : 'Skip (exists)'}
+                      <td className={`px-4 py-2.5 font-medium ${isNew ? 'text-green-400' : 'text-blue-400'}`}>
+                        {isNew ? 'New' : 'Update images'}
                       </td>
                     </tr>
                   )
@@ -226,7 +226,7 @@ export default function ImportPage() {
           <div className="flex gap-3">
             <button
               onClick={runImport}
-              disabled={loading || newCount === 0}
+              disabled={loading || rows.length === 0}
               className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition disabled:opacity-50"
             >
               {loading ? 'Importing…' : `Import ${newCount} project${newCount !== 1 ? 's' : ''}`}
@@ -257,8 +257,8 @@ export default function ImportPage() {
               <div className="text-xs text-green-600 mt-1">Created</div>
             </div>
             <div className="flex-1 rounded-xl bg-slate-800 border border-slate-700 p-4 text-center">
-              <div className="text-3xl font-bold text-slate-400">{summary.skipped}</div>
-              <div className="text-xs text-slate-500 mt-1">Skipped</div>
+              <div className="text-3xl font-bold text-blue-400">{summary.updated}</div>
+              <div className="text-xs text-slate-500 mt-1">Updated</div>
             </div>
             {summary.errors > 0 && (
               <div className="flex-1 rounded-xl bg-red-900/20 border border-red-800 p-4 text-center">

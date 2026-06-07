@@ -76,16 +76,27 @@ export async function POST(request: NextRequest) {
   if (!await isAuthenticated()) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
   const { rows } = await request.json() as { rows: Record<string, unknown>[] }
-  const results: { slug: string; status: 'created' | 'skipped' | 'error'; message?: string }[] = []
+  const results: { slug: string; status: 'created' | 'updated' | 'error'; message?: string }[] = []
 
   for (const row of rows) {
     const slug = str(row.slug)
     if (!slug) continue
 
     try {
-      // Skip if slug already exists
+      // If slug already exists, replace its media with fresh paths from this row
       const exists = await prisma.project.findUnique({ where: { slug }, select: { id: true } })
-      if (exists) { results.push({ slug, status: 'skipped' }); continue }
+      if (exists) {
+        const mediaRows = [
+          ...(heroPath ? [{ mediaType: 'image' as const, url: heroPath, altText: str(row.hero_image_alt) || str(row.title), caption: str(row.hero_image_caption) || null, isHero: true,  displayOrder: 0 }] : []),
+          ...galleryPaths.map((path, i) => ({ mediaType: 'image' as const, url: path, altText: `${str(row.title)} — photo ${i + 2}`, isHero: false, displayOrder: i + 1 })),
+        ]
+        if (mediaRows.length > 0) {
+          await prisma.media.deleteMany({ where: { projectId: exists.id } })
+          await prisma.media.createMany({ data: mediaRows.map(m => ({ ...m, projectId: exists.id })) })
+        }
+        results.push({ slug, status: 'updated' })
+        continue
+      }
 
       // Related entities
       const clientId     = str(row.client_name)     ? await findOrCreateClient(str(row.client_name))                                                                             : null
@@ -102,9 +113,9 @@ export async function POST(request: NextRequest) {
       const rawStatus = str(row.status).toLowerCase()
       const status    = (rawStatus === 'final' || rawStatus === 'published') ? 'published' : 'draft'
 
-      // Images — prefer SEO-renamed paths; relative paths are stored as-is (CDN base prepended at render)
-      const heroPath    = str(row.hero_image_new_path_SEO) || str(row.hero_image_url)
-      const galleryRaw  = str(row.gallery_new_paths_SEO)   || str(row.gallery_images)
+      // Images — prefer original upload paths; SEO-renamed paths as fallback only
+      const heroPath    = str(row.hero_image_url)    || str(row.hero_image_new_path_SEO)
+      const galleryRaw  = str(row.gallery_images)    || str(row.gallery_new_paths_SEO)
       const galleryPaths = splitPipe(galleryRaw)
 
       // SEO keywords
@@ -179,7 +190,7 @@ export async function POST(request: NextRequest) {
     results,
     summary: {
       created: results.filter(r => r.status === 'created').length,
-      skipped: results.filter(r => r.status === 'skipped').length,
+      updated: results.filter(r => r.status === 'updated').length,
       errors:  results.filter(r => r.status === 'error').length,
     },
   })
