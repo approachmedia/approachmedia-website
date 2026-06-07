@@ -7,11 +7,16 @@ async function isAuthenticated() {
   return jar.get('admin_auth')?.value === 'authenticated'
 }
 
-// Encode every path segment — same logic as buildMediaUrl fix
+// Fully decode each segment then re-encode once — handles %2520 (double-encoded) paths
+// that result from running Fix Now multiple times on already-encoded paths.
 function encodePath(url: string): string {
   if (!url) return url
   if (url.startsWith('http://') || url.startsWith('https://')) return url
-  return url.replace(/^\//, '').split('/').map(encodeURIComponent).join('/')
+  return url.replace(/^\//, '').split('/').map(seg => {
+    let s = seg
+    try { while (s !== decodeURIComponent(s)) s = decodeURIComponent(s) } catch { /* use last good value */ }
+    try { return encodeURIComponent(s) } catch { return encodeURIComponent(seg) }
+  }).join('/')
 }
 
 export async function POST() {

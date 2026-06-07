@@ -39,10 +39,12 @@ export const getCdnBaseUrl = unstable_cache(
 export function buildMediaUrl(path: string | null | undefined, cdnBase: string): string {
   if (!path) return ''
   if (path.startsWith('http://') || path.startsWith('https://')) return path
-  // Normalize: decode each segment first (handles already-encoded paths from "Fix Now"),
-  // then re-encode — this is idempotent whether the path has raw spaces or %20.
+  // Fully decode each segment (handles any number of encoding passes from repeated "Fix Now"
+  // clicks — %2520 → %20 → space), then re-encode once to produce a valid single-encoded URL.
   const encoded = path.replace(/^\//, '').split('/').map(seg => {
-    try { return encodeURIComponent(decodeURIComponent(seg)) } catch { return encodeURIComponent(seg) }
+    let s = seg
+    try { while (s !== decodeURIComponent(s)) s = decodeURIComponent(s) } catch { /* use last good value */ }
+    try { return encodeURIComponent(s) } catch { return encodeURIComponent(seg) }
   }).join('/')
   return `${cdnBase}/${encoded}`
 }
