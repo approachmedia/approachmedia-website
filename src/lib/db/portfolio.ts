@@ -159,6 +159,32 @@ export async function updateProject(id: number, data: Partial<ProjectInput>) {
         data: stallTypeIds.map((sid, i) => ({ projectId: id, stallTypeId: sid, isPrimary: i === 0 })),
       })
     }
+    // Replace media wholesale when the form sends a media array. Undefined means
+    // "not editing media" (leave as-is); an empty array means "remove all media".
+    if (media) {
+      await tx.media.deleteMany({ where: { projectId: id } })
+      if (media.length > 0) {
+        await tx.media.createMany({
+          data: media.map(m => ({
+            projectId:    id,
+            mediaType:    m.mediaType,
+            url:          m.url,
+            cdnUrl:       m.cdnUrl       || null,
+            thumbnailUrl: m.thumbnailUrl || null,
+            altText:      m.altText,
+            caption:      m.caption      || null,
+            titleAttr:    m.titleAttr    || null,
+            displayOrder: m.displayOrder ?? 0,
+            isHero:       m.isHero       ?? false,
+            isThumbnail:  m.isThumbnail  ?? false,
+            widthPx:      m.widthPx      ?? null,
+            heightPx:     m.heightPx     ?? null,
+            fileSizeKb:   m.fileSizeKb   ?? null,
+            mimeType:     m.mimeType     || null,
+          })),
+        })
+      }
+    }
     if (seoMetadata) {
       await tx.seoMetadata.upsert({
         where:  { projectId: id },

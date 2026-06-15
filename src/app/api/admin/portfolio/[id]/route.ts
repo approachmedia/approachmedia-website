@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { ProjectUpdateSchema } from '@/lib/validations/portfolio'
 import { updateProject } from '@/lib/db/portfolio'
 import { prisma } from '@/lib/db/prisma'
@@ -26,6 +27,7 @@ export async function PATCH(
 
   try {
     const project = await updateProject(id, parsed.data)
+    revalidateTag('projects')
     return NextResponse.json(project)
   } catch (err) {
     console.error('[portfolio PATCH]', err)
@@ -52,6 +54,7 @@ export async function DELETE(
       prisma.seoMetadata.deleteMany({ where: { projectId: id } }),
       prisma.project.delete({ where: { id } }),
     ])
+    revalidateTag('projects')
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[portfolio DELETE]', err)

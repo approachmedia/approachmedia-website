@@ -46,6 +46,23 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
     displayOrder:    project.displayOrder,
     industryIds:     project.industries.map(i => i.industry.id),
     stallTypeIds:    project.stallTypes.map(s => s.stallType.id),
+    media: project.media.map(m => ({
+      id:           m.id,
+      mediaType:    m.mediaType as 'image' | 'render_3d' | 'video' | 'floor_plan' | 'elevation',
+      url:          m.url,
+      cdnUrl:       m.cdnUrl ?? undefined,
+      thumbnailUrl: m.thumbnailUrl ?? undefined,
+      altText:      m.altText,
+      caption:      m.caption ?? undefined,
+      titleAttr:    m.titleAttr ?? undefined,
+      displayOrder: m.displayOrder,
+      isHero:       m.isHero,
+      isThumbnail:  m.isThumbnail,
+      widthPx:      m.widthPx ?? undefined,
+      heightPx:     m.heightPx ?? undefined,
+      fileSizeKb:   m.fileSizeKb ?? undefined,
+      mimeType:     m.mimeType ?? undefined,
+    })),
     ...(project.seoMetadata && {
       seoMetadata: {
         metaTitle:         project.seoMetadata.metaTitle ?? undefined,
