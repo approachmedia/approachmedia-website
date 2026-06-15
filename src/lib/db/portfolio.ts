@@ -224,6 +224,7 @@ export async function getAdminProjectList() {
       id: true, title: true, slug: true, status: true,
       isFeatured: true, buildYear: true, updatedAt: true,
       client:     { select: { name: true } },
+      exhibition: { select: { name: true } },
       industries: { where: { isPrimary: true }, include: { industry: { select: { name: true } } } },
     },
     orderBy: { updatedAt: 'desc' },
