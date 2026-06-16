@@ -59,7 +59,7 @@ const SOCIAL = [
 
 export default function SiteFooter() {
   return (
-    <footer className="relative mt-20 border-t border-border/30 bg-surface">
+    <footer className="relative mt-20 border-t border-border/10 bg-surface">
       <div className="container-wide py-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
 

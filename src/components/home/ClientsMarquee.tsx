@@ -7,7 +7,7 @@ const clientNames = [
 export function ClientsMarquee() {
   const row = [...clientNames, ...clientNames]
   return (
-    <section className="border-y border-border/30 bg-surface/40 py-16 md:py-20">
+    <section className="border-y border-border/10 bg-surface/40 py-16 md:py-20">
       <div className="container-wide">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Trusted by leaders</p>
@@ -24,7 +24,7 @@ export function ClientsMarquee() {
             {row.map((c, i) => (
               <div
                 key={i}
-                className="flex h-16 min-w-[180px] items-center justify-center rounded-lg border border-border/30 bg-surface px-6 text-sm font-medium text-muted-foreground transition-colors hover:border-brand-blue-glow/50 hover:text-foreground"
+                className="flex h-16 min-w-[180px] items-center justify-center rounded-lg border border-border/10 bg-surface px-6 text-sm font-medium text-muted-foreground transition-colors hover:border-brand-blue-glow/50 hover:text-foreground"
               >
                 {c}
               </div>

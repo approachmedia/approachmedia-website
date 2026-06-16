@@ -37,7 +37,7 @@ export default function SiteHeader() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-border/30 bg-background/85 backdrop-blur-xl'
+          ? 'border-b border-border/10 bg-background/85 backdrop-blur-xl'
           : 'border-b border-transparent bg-background/60 backdrop-blur'
       }`}
     >
@@ -85,7 +85,7 @@ export default function SiteHeader() {
         <button
           type="button"
           onClick={() => setOpen(o => !o)}
-          className="rounded-md border border-border/30 p-2 text-foreground xl:hidden"
+          className="rounded-md border border-border/10 p-2 text-foreground xl:hidden"
           aria-label="Toggle navigation menu"
           aria-expanded={open}
         >
@@ -95,7 +95,7 @@ export default function SiteHeader() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-border/30 bg-background/95 backdrop-blur-xl xl:hidden">
+        <div className="border-t border-border/10 bg-background/95 backdrop-blur-xl xl:hidden">
           <nav className="container-wide flex flex-col py-4" aria-label="Mobile">
             {NAV.map(item => (
               <Link
