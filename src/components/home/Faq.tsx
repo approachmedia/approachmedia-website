@@ -30,7 +30,7 @@ export function Faq() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="surface-card rounded-xl border border-border/10 px-5"
+                className="surface-card rounded-xl border border-border/60 px-5"
               >
                 <AccordionTrigger className="py-5 text-left font-display text-base font-medium text-foreground hover:no-underline">
                   {f.q}
