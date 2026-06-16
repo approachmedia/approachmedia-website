@@ -29,7 +29,7 @@ export function ServicesGrid() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/30 bg-border/30 md:grid-cols-2 lg:grid-cols-3">
           {services.map(s => (
             <Link
               key={s.slug}
