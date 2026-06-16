@@ -29,12 +29,12 @@ export function ServicesGrid() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/10 bg-border/10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {services.map(s => (
             <Link
               key={s.slug}
               href={`/services/${s.slug}`}
-              className="surface-card group relative flex flex-col gap-5 p-7 md:p-8"
+              className="surface-card group relative flex flex-col gap-5 rounded-2xl p-7 md:p-8"
             >
               <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand-blue/30 to-brand-green/20 ring-1 ring-brand-blue-glow/30">
                 <s.icon className="h-5 w-5 text-brand-green-glow" />

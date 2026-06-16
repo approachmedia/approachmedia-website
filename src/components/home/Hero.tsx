@@ -76,7 +76,7 @@ export function Hero() {
         </div>
 
         {/* Metrics */}
-        <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/10 bg-border/10 sm:grid-cols-4">
+        <div className="mt-16 grid grid-cols-2 overflow-hidden rounded-2xl border border-border/10 sm:grid-cols-4">
           {metrics.map(m => (
             <div key={m.l} className="bg-surface/80 px-5 py-6 backdrop-blur md:px-7 md:py-8">
               <div className="font-display text-3xl font-semibold text-foreground md:text-4xl">{m.v}</div>
