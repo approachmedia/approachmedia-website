@@ -53,13 +53,16 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
 .section-subtitle { color: var(--muted); font-size: 1.05rem; max-width: 640px; margin-top: 16px; margin-bottom: 56px; line-height: 1.8; }
 
 /* ── Buttons ────────────────────────────────────────────────── */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 30px; border-radius: 6px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.03em; cursor: pointer; border: none; transition: var(--transition); text-decoration: none; white-space: nowrap; }
-.btn-primary { background: var(--gold); color: #ffffff; }
-.btn-primary:hover { background: var(--gold-2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(27,111,255,0.39); }
-.btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.4); }
-.btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-.btn-ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
-.btn-ghost:hover { background: var(--gold); color: var(--dark); transform: translateY(-2px); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 30px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.03em; cursor: pointer; border: none; transition: var(--transition); text-decoration: none; white-space: nowrap; }
+/* Signature gradient + glow CTA (matches the shadcn "hero" button variant) */
+.btn-primary { background: linear-gradient(135deg, hsl(230 60% 38%) 0%, hsl(230 80% 58%) 100%); color: #ffffff; box-shadow: 0 0 80px -20px hsl(230 80% 58% / 0.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 100px -10px hsl(230 80% 58% / 0.6); }
+/* Glass button (matches the shadcn "glass" variant) */
+.btn-outline { background: rgba(255,255,255,0.05); color: var(--white); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+/* Brand outline (matches the shadcn "outlineBrand" variant) */
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid hsl(230 80% 58% / 0.4); }
+.btn-ghost:hover { border-color: hsl(230 80% 58%); background: hsl(230 80% 58% / 0.1); color: var(--white); }
 .btn-xs { padding: 10px 18px; font-size: 0.82rem; }
 
 /* ============================================================

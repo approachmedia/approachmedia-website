@@ -59,32 +59,32 @@ const SOCIAL = [
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-slate-800 bg-[hsl(222,30%,5%)] mt-20">
-      <div className="max-w-7xl mx-auto px-4 py-14">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
+    <footer className="relative mt-20 border-t border-border/60 bg-surface">
+      <div className="container-wide py-16">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
 
           {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" aria-label="Approach Media — Home">
+            <Link href="/" aria-label="Approach Media — Home" className="inline-flex rounded-md bg-white px-2 py-1.5">
               <Image
                 src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
                 alt="Approach Media"
                 width={160}
                 height={40}
-                style={{ height: '40px', width: 'auto' }}
+                style={{ height: '32px', width: 'auto' }}
               />
             </Link>
-            <p className="text-sm text-slate-400 mt-4 max-w-sm leading-relaxed">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
               India&apos;s trusted exhibition stall design and build company. Since 2002, creating spaces
               that attract, engage, and deliver lasting impact across India and 14+ countries.
             </p>
-            <div className="flex gap-2 mt-5">
+            <div className="mt-5 flex gap-2">
               {SOCIAL.map(s => (
                 <a
                   key={s.label}
                   href="#"
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-semibold text-slate-300 hover:border-blue-500 hover:text-white transition"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-elevated text-xs font-semibold text-muted-foreground transition hover:border-brand-blue-glow/50 hover:text-foreground"
                 >
                   {s.short}
                 </a>
@@ -95,11 +95,11 @@ export default function SiteFooter() {
           {/* Link columns */}
           {COLUMNS.map(col => (
             <div key={col.heading}>
-              <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-4">{col.heading}</h5>
+              <h5 className="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-foreground">{col.heading}</h5>
               <ul className="space-y-2.5">
                 {col.links.map(link => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-slate-400 hover:text-white transition">
+                    <Link href={link.href} className="text-sm text-muted-foreground transition hover:text-foreground">
                       {link.label}
                     </Link>
                   </li>
@@ -110,19 +110,21 @@ export default function SiteFooter() {
 
           {/* Cities We Work */}
           <div>
-            <h5 className="text-xs font-bold text-white uppercase tracking-widest mb-4">Cities We Work</h5>
+            <h5 className="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-foreground">Cities We Work</h5>
             <FooterCityList cities={CITIES} />
           </div>
         </div>
+      </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-500">© {new Date().getFullYear()} Approach Media Pvt. Ltd. All rights reserved.</p>
-          <div className="flex items-center gap-5 text-xs text-slate-500">
-            <Link href="/portfolio" className="hover:text-slate-300 transition">Portfolio</Link>
-            <Link href="/contact"   className="hover:text-slate-300 transition">Contact</Link>
-            <a href="/sitemap.xml" className="hover:text-slate-300 transition">Sitemap</a>
-          </div>
+      <div className="hairline-divider" />
+
+      {/* Bottom bar */}
+      <div className="container-wide flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
+        <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Approach Media Pvt. Ltd. All rights reserved.</p>
+        <div className="flex items-center gap-5 text-xs text-muted-foreground">
+          <Link href="/portfolio" className="transition hover:text-foreground">Portfolio</Link>
+          <Link href="/contact"   className="transition hover:text-foreground">Contact</Link>
+          <a href="/sitemap.xml" className="transition hover:text-foreground">Sitemap</a>
         </div>
       </div>
     </footer>

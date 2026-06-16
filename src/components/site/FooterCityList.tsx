@@ -16,7 +16,7 @@ export default function FooterCityList({ cities }: { cities: City[] }) {
       <ul className="space-y-2.5">
         {shown.map(city => (
           <li key={city.href}>
-            <Link href={city.href} className="text-sm text-slate-400 hover:text-white transition">
+            <Link href={city.href} className="text-sm text-muted-foreground hover:text-foreground transition">
               {city.label}
             </Link>
           </li>
@@ -26,7 +26,7 @@ export default function FooterCityList({ cities }: { cities: City[] }) {
       {cities.length > VISIBLE && (
         <button
           onClick={() => setExpanded(e => !e)}
-          className="mt-3 flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition"
+          className="mt-3 flex items-center gap-1 text-xs text-muted-foreground/70 hover:text-foreground transition"
         >
           {expanded ? 'Show less' : `See More`}
           <svg

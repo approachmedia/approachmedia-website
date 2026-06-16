@@ -2,7 +2,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const NAV = [
   { label: 'Home',         href: '/' },
@@ -17,6 +19,14 @@ const NAV = [
 export default function SiteHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12)
+    onScroll()
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/'
@@ -24,87 +34,90 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-[hsl(222,30%,6%)]/90 backdrop-blur">
-      <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'border-b border-border/60 bg-background/85 backdrop-blur-xl'
+          : 'border-b border-transparent bg-background/60 backdrop-blur'
+      }`}
+    >
+      <div className="container-wide flex h-16 items-center justify-between gap-4 md:h-20">
         {/* Logo */}
-        <Link href="/" aria-label="Approach Media — Home" className="flex-shrink-0">
-          <Image
-            src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
-            alt="Approach Media"
-            width={160}
-            height={40}
-            priority
-            style={{ height: '36px', width: 'auto' }}
-          />
+        <Link href="/" aria-label="Approach Media — Home" className="flex shrink-0 items-center">
+          <span className="rounded-md bg-white px-2 py-1.5">
+            <Image
+              src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
+              alt="Approach Media"
+              width={160}
+              height={40}
+              priority
+              style={{ height: '28px', width: 'auto' }}
+            />
+          </span>
         </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden lg:flex items-center gap-6 text-sm">
+        <nav className="hidden items-center gap-7 xl:flex" aria-label="Primary">
           {NAV.map(item => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={`transition ${
-                  isActive(item.href) ? 'text-white font-semibold' : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {item.label}
-              </Link>
-            </li>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`text-sm transition-colors ${
+                isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {item.label}
+            </Link>
           ))}
-        </ul>
+        </nav>
 
-        {/* CTA */}
-        <Link
-          href="/contact"
-          className="hidden lg:inline-block px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition flex-shrink-0"
-        >
-          Book A Consultation
-        </Link>
+        {/* CTAs */}
+        <div className="hidden items-center gap-3 md:flex">
+          <Button asChild variant="glass" size="sm">
+            <Link href="/portfolio">View Portfolio</Link>
+          </Button>
+          <Button asChild variant="hero" size="sm">
+            <Link href="/contact">Book A Consultation</Link>
+          </Button>
+        </div>
 
         {/* Mobile hamburger */}
         <button
           type="button"
           onClick={() => setOpen(o => !o)}
-          className="lg:hidden p-2 text-slate-300 hover:text-white"
+          className="rounded-md border border-border/60 p-2 text-foreground xl:hidden"
           aria-label="Toggle navigation menu"
           aria-expanded={open}
         >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {open
-              ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />}
-          </svg>
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-      </nav>
+      </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden border-t border-slate-800 bg-[hsl(222,30%,6%)]">
-          <ul className="px-4 py-3 space-y-1">
+        <div className="border-t border-border/60 bg-background/95 backdrop-blur-xl xl:hidden">
+          <nav className="container-wide flex flex-col py-4" aria-label="Mobile">
             {NAV.map(item => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg text-sm transition ${
-                    isActive(item.href) ? 'bg-slate-800 text-white font-semibold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-            <li className="pt-2">
               <Link
-                href="/contact"
+                key={item.href}
+                href={item.href}
                 onClick={() => setOpen(false)}
-                className="block text-center px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition"
+                className={`py-2.5 text-sm transition-colors ${
+                  isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
-                Book A Consultation
+                {item.label}
               </Link>
-            </li>
-          </ul>
+            ))}
+            <div className="mt-3 flex flex-col gap-2">
+              <Button asChild variant="glass" size="sm">
+                <Link href="/portfolio" onClick={() => setOpen(false)}>View Portfolio</Link>
+              </Button>
+              <Button asChild variant="hero" size="sm">
+                <Link href="/contact" onClick={() => setOpen(false)}>Book A Consultation</Link>
+              </Button>
+            </div>
+          </nav>
         </div>
       )}
     </header>
