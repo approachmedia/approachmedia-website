@@ -12,6 +12,10 @@ import { UpcomingExhibitions } from '@/components/home/UpcomingExhibitions'
 import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
 
+// force-dynamic: FeaturedProjects reads from the DB, and DATABASE_URL is not
+// available during the Docker build — only at runtime.
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Approach Media — Exhibition Stall Design & Build Company India',
   description: "India's trusted exhibition stall design and build company. 23+ years, 6000+ stalls, 14+ countries.",
