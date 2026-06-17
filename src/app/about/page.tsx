@@ -70,7 +70,7 @@ export default function AboutPage() {
       {/* ══════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════ */}
-      <section className="relative isolate overflow-hidden border-b border-white/10 pb-24 pt-24 md:pb-32 md:pt-32">
+      <section className="relative isolate overflow-hidden border-b border-white/15 pb-24 pt-24 md:pb-32 md:pt-32">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_60%_20%,hsl(var(--brand-blue-glow)/0.18),transparent_55%)]" />
         <div className="container-wide">
           <p className="text-xs uppercase tracking-[0.28em] text-brand-green animate-fade-in">About Us</p>
@@ -105,7 +105,7 @@ export default function AboutPage() {
             {offerings.map(({ Icon, title, body }) => (
               <div
                 key={title}
-                className="group rounded-xl border border-border/60 bg-surface/40 p-6 transition-colors hover:border-brand-blue-glow/40"
+                className="group rounded-xl border border-white/15 bg-surface/40 p-6 transition-colors hover:border-brand-blue-glow/40"
               >
                 <div className="flex items-center gap-3">
                   <div className="rounded-lg bg-brand-blue/15 p-2 text-brand-blue-glow">
@@ -119,7 +119,7 @@ export default function AboutPage() {
           </div>
 
           {/* Stall image — upload about-stall.jpg to R2 /images/ folder */}
-          <div className="relative overflow-hidden rounded-2xl border border-border/60">
+          <div className="relative overflow-hidden rounded-2xl border border-white/15">
             <div className="aspect-[4/5] w-full bg-gradient-to-br from-brand-blue/10 via-background to-brand-green/5">
               <Image
                 src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/about-stall.jpg"
@@ -139,7 +139,7 @@ export default function AboutPage() {
       {/* ══════════════════════════════════════════════════
           STATS STRIP
       ══════════════════════════════════════════════════ */}
-      <section className="border-y border-white/10 bg-surface/40 py-14 md:py-16">
+      <section className="border-y border-white/15 bg-surface/40 py-14 md:py-16">
         <div className="container-wide">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {stats.map(s => (
@@ -171,7 +171,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {principles.map(p => (
-              <div key={p.title} className="rounded-2xl border border-border/60 bg-surface/40 p-7">
+              <div key={p.title} className="rounded-2xl border border-white/15 bg-surface/40 p-7">
                 <h3 className="font-display text-lg font-semibold text-foreground">{p.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.body}</p>
               </div>
@@ -183,7 +183,7 @@ export default function AboutPage() {
       {/* ══════════════════════════════════════════════════
           OUR PROCESS
       ══════════════════════════════════════════════════ */}
-      <section className="border-t border-white/10 bg-surface/30 py-20 md:py-24">
+      <section className="border-t border-white/15 bg-surface/30 py-20 md:py-24">
         <div className="container-wide">
           <p className="text-xs uppercase tracking-wider text-brand-green">Our Process</p>
           <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-foreground md:text-5xl">
@@ -195,7 +195,7 @@ export default function AboutPage() {
           </p>
           <div className="mt-12 grid gap-5 md:grid-cols-2">
             {process.map(p => (
-              <div key={p.n} className="rounded-xl border border-border/60 bg-background/60 p-6">
+              <div key={p.n} className="rounded-xl border border-white/15 bg-background/60 p-6">
                 <div className="flex items-start gap-4">
                   <div className="font-display text-2xl font-semibold text-brand-blue-glow">{p.n}</div>
                   <div>
@@ -214,14 +214,14 @@ export default function AboutPage() {
       ══════════════════════════════════════════════════ */}
       <section className="py-20 md:py-24">
         <div className="container-wide grid gap-10 md:grid-cols-2">
-          <div className="rounded-2xl border border-border/60 bg-surface/40 p-8">
+          <div className="rounded-2xl border border-white/15 bg-surface/40 p-8">
             <p className="text-xs uppercase tracking-wider text-brand-green">Our Vision</p>
             <p className="mt-4 font-display text-xl leading-snug text-foreground md:text-2xl">
               To be a trusted partner for brands across industries and geographies, known for creating exhibition spaces
               that go beyond visibility to shape how brands are experienced and remembered.
             </p>
           </div>
-          <div className="rounded-2xl border border-border/60 bg-surface/40 p-8">
+          <div className="rounded-2xl border border-white/15 bg-surface/40 p-8">
             <p className="text-xs uppercase tracking-wider text-brand-green">Our Mission</p>
             <p className="mt-4 font-display text-xl leading-snug text-foreground md:text-2xl">
               To deliver innovative and impactful exhibition designs and branding solutions that resonate with our
