@@ -43,7 +43,7 @@ export function FeaturedProjects() {
             <Link
               key={p.id}
               href="/portfolio"
-              className="group relative overflow-hidden rounded-2xl border border-border/20 bg-surface"
+              className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
                 <Image
