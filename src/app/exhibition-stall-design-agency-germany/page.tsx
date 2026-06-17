@@ -15,6 +15,7 @@ const data: CountryPageData = {
   country: 'Germany',
   wordmark: 'GERMANY',
   slug: 'exhibition-stall-design-agency-germany',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/germany-hero.jpg',
   areaServed: ['Germany', 'Frankfurt', 'Hannover', 'Munich', 'Düsseldorf', 'Cologne', 'Berlin'],
 
   meta: {

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, CheckCircle2, Globe2, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -96,6 +97,7 @@ export interface CountryPageData {
   exhibitions: CountryExhibition[]
   industries: CountryIndustry[]
   faqs: CountryFaq[]
+  heroImageUrl?: string
 
   cta: {
     heading1: string
@@ -127,8 +129,16 @@ export function CountryPageTemplate({ data }: { data: CountryPageData }) {
           HERO
       ══════════════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden border-b border-white/10">
-        {/* Background gradients — replace with a real <Image> once you have a venue photo at /images/{slug}-hero.jpg */}
         <div className="absolute inset-0 -z-20">
+          {data.heroImageUrl && (
+            <Image
+              src={data.heroImageUrl}
+              alt={`Exhibition stall design in ${data.country}`}
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/85 to-background" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--brand-blue-glow)/0.25),transparent_60%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_75%,hsl(var(--brand-green)/0.08),transparent_50%)]" />

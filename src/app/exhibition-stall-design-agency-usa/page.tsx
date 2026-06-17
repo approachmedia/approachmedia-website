@@ -15,6 +15,7 @@ const data: CountryPageData = {
   country: 'USA',
   wordmark: 'USA',
   slug: 'exhibition-stall-design-agency-usa',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/usa-hero.jpg',
   areaServed: ['USA', 'Las Vegas', 'Chicago', 'Orlando', 'New York', 'Houston', 'Atlanta'],
 
   meta: {

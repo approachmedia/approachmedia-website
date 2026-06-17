@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Malaysia',
   wordmark: 'MALAYSIA',
   slug: 'exhibition-stall-design-agency-malaysia',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/malaysia-hero.jpg',
   areaServed: ['Malaysia', 'Kuala Lumpur', 'Penang', 'Johor Bahru'],
 
   meta: {

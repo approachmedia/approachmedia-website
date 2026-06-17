@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Bangladesh',
   wordmark: 'BANGLADESH',
   slug: 'exhibition-stall-design-agency-bangladesh',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/bangladesh-hero.jpg',
   areaServed: ['Bangladesh', 'Dhaka', 'Chittagong', 'Sylhet'],
 
   meta: {

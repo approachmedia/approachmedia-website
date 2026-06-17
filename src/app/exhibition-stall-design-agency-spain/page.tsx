@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Spain',
   wordmark: 'SPAIN',
   slug: 'exhibition-stall-design-agency-spain',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/spain-hero.jpg',
   areaServed: ['Spain', 'Barcelona', 'Madrid', 'Valencia', 'Bilbao'],
   meta: {
     title: 'Exhibition Stall Design Agency in Spain | Booth Design & Fabrication',

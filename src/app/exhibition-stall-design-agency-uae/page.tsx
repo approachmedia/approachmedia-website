@@ -15,6 +15,7 @@ const data: CountryPageData = {
   country: 'UAE',
   wordmark: 'UAE',
   slug: 'exhibition-stall-design-agency-uae',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/uae-hero.jpg',
   areaServed: ['UAE', 'Dubai', 'Abu Dhabi', 'Sharjah'],
 
   meta: {

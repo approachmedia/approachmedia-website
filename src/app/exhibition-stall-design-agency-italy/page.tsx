@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Italy',
   wordmark: 'ITALY',
   slug: 'exhibition-stall-design-agency-italy',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/italy-hero.jpg',
   areaServed: ['Italy', 'Milan', 'Bologna', 'Rimini', 'Verona', 'Florence'],
   meta: {
     title: 'Exhibition Stall Design Agency in Italy | Booth Design & Fabrication',

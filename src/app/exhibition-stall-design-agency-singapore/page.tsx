@@ -15,6 +15,7 @@ const data: CountryPageData = {
   country: 'Singapore',
   wordmark: 'SINGAPORE',
   slug: 'exhibition-stall-design-agency-singapore',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/singapore-hero.jpg',
   areaServed: ['Singapore', 'Marina Bay', 'Changi', 'Suntec City'],
 
   meta: {

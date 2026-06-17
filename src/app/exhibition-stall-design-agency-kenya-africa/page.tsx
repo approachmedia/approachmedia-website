@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Kenya & Africa',
   wordmark: 'AFRICA',
   slug: 'exhibition-stall-design-agency-kenya-africa',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/kenya-africa-hero.jpg',
   areaServed: ['Kenya', 'Nairobi', 'Johannesburg', 'Lagos', 'Cape Town', 'Accra', 'Africa'],
 
   meta: {

@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Netherlands',
   wordmark: 'NETHERLANDS',
   slug: 'exhibition-stall-design-agency-netherlands',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/netherlands-hero.jpg',
   areaServed: ['Netherlands', 'Amsterdam', 'Utrecht', 'Rotterdam', 'Eindhoven'],
   meta: {
     title: 'Exhibition Stall Design Agency in Netherlands | Booth Design Amsterdam',

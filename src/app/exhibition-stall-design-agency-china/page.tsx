@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'China',
   wordmark: 'CHINA',
   slug: 'exhibition-stall-design-agency-china',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/china-hero.jpg',
   areaServed: ['China', 'Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen', 'Chengdu'],
   meta: {
     title: 'Exhibition Stall Design Agency in China | Booth Design & Fabrication',

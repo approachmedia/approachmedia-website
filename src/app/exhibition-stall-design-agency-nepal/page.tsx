@@ -16,6 +16,7 @@ const data: CountryPageData = {
   country: 'Nepal',
   wordmark: 'NEPAL',
   slug: 'exhibition-stall-design-agency-nepal',
+  heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/nepal-hero.jpg',
   areaServed: ['Nepal', 'Kathmandu', 'Pokhara', 'Biratnagar'],
 
   meta: {
