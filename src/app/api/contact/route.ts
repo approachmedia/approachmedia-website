@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const TO   = 'info@approachmedia.in'
 const FROM = 'Approach Media Website <noreply@approachmedia.in>'
 
@@ -16,6 +14,7 @@ function row(label: string, value: string | undefined) {
 }
 
 export async function POST(req: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
     const d = await req.json() as Record<string, string>
 
