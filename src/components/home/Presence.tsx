@@ -2,12 +2,7 @@ import Link from 'next/link'
 import { MapPin, Globe2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { INDIAN_CITIES } from '@/data/cities'
-
-const countries = [
-  'USA', 'Germany', 'France', 'Netherlands', 'Italy',
-  'UAE / Dubai', 'Spain', 'Nepal', 'Bangladesh',
-  'Singapore', 'China', 'Malaysia', 'Kenya / Africa',
-]
+import { INTERNATIONAL_COUNTRIES } from '@/data/countries'
 
 export function Presence() {
   return (
@@ -58,9 +53,17 @@ export function Presence() {
               Trade-show projects delivered across 14+ countries, to international build and safety standards.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {countries.map(c => (
-                <span key={c} className="rounded-full border border-border/70 bg-surface px-3 py-1.5 text-xs text-muted-foreground">
-                  {c}
+              {INTERNATIONAL_COUNTRIES.map(c => c.href ? (
+                <Link
+                  key={c.label}
+                  href={c.href}
+                  className="rounded-full border border-border/70 bg-surface px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-brand-green-glow/50 hover:text-foreground"
+                >
+                  {c.label}
+                </Link>
+              ) : (
+                <span key={c.label} className="rounded-full border border-border/70 bg-surface px-3 py-1.5 text-xs text-muted-foreground">
+                  {c.label}
                 </span>
               ))}
             </div>
