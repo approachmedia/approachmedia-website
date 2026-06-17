@@ -1,14 +1,33 @@
 import Link from 'next/link'
 import { Calendar, MapPin, ArrowUpRight } from 'lucide-react'
+import expoData from '@/data/expo-pages.json'
+import type { ExpoPageData } from '@/components/expo/types'
 
-const events = [
-  { slug: 'auto-expo-2026',      name: 'Auto Expo 2026', city: 'Greater Noida', country: 'India',   venue: 'India Expo Mart',  start: 'Jan 17, 2026', end: 'Jan 22, 2026', industry: 'Automotive' },
-  { slug: 'cphi-frankfurt-2026', name: 'CPHI Frankfurt', city: 'Frankfurt',     country: 'Germany', venue: 'Messe Frankfurt',  start: 'Oct 13, 2026', end: 'Oct 15, 2026', industry: 'Pharma' },
-  { slug: 'gulfood-2026',        name: 'Gulfood',        city: 'Dubai',         country: 'UAE',     venue: 'DWTC',             start: 'Feb 16, 2026', end: 'Feb 20, 2026', industry: 'FMCG' },
-  { slug: 'bauma-2026',          name: 'Bauma',          city: 'Munich',        country: 'Germany', venue: 'Messe München',    start: 'Apr 6, 2026',  end: 'Apr 12, 2026', industry: 'Construction' },
-]
+const MONTH_ABBR: Record<number, string> = {
+  1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN',
+  7: 'JUL', 8: 'AUG', 9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC',
+}
+
+function getUpcomingExpos(limit = 15) {
+  const now = new Date()
+  const curMonth = MONTH_ABBR[now.getMonth() + 1]
+  const curYear  = String(now.getFullYear())
+
+  const nextDate = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const nxtMonth = MONTH_ABBR[nextDate.getMonth() + 1]
+  const nxtYear  = String(nextDate.getFullYear())
+
+  const expos = expoData as ExpoPageData[]
+
+  const current = expos.filter(e => e.month === curMonth && e.year === curYear)
+  const next    = expos.filter(e => e.month === nxtMonth && e.year === nxtYear)
+
+  return [...current, ...next].slice(0, limit)
+}
 
 export function UpcomingExhibitions() {
+  const events = getUpcomingExpos(15)
+
   return (
     <section className="py-20 md:py-28">
       <div className="container-wide">
@@ -33,15 +52,17 @@ export function UpcomingExhibitions() {
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-4 md:gap-6">
                   <div className="rounded-xl border border-brand-blue-glow/30 bg-brand-blue/15 px-3.5 py-2.5 text-center">
-                    <div className="font-display text-xs uppercase tracking-wider text-brand-green-glow">{e.start.split(' ')[0]}</div>
-                    <div className="font-display text-2xl font-semibold leading-none text-foreground">{e.start.split(' ')[1].replace(',', '')}</div>
+                    <div className="font-display text-xs uppercase tracking-wider text-brand-green-glow">{e.monthName.slice(0, 3)}</div>
+                    <div className="font-display text-2xl font-semibold leading-none text-foreground">{e.year}</div>
                   </div>
                   <div>
-                    <h3 className="font-display text-lg font-semibold text-foreground md:text-xl">{e.name}</h3>
+                    <h3 className="font-display text-lg font-semibold text-foreground md:text-xl">{e.title}</h3>
                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground md:text-sm">
-                      <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {e.venue}, {e.city}, {e.country}</span>
-                      <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {e.start} – {e.end}</span>
-                      <span className="rounded-full border border-border/70 px-2 py-0.5 text-[11px] uppercase tracking-wider">{e.industry}</span>
+                      <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {e.venue}</span>
+                      <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {e.monthName} {e.year}</span>
+                      <span className="rounded-full border border-border/70 px-2 py-0.5 text-[11px] uppercase tracking-wider">
+                        {e.industryLabel.split(',')[0]}
+                      </span>
                     </div>
                   </div>
                 </div>

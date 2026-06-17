@@ -1,9 +1,13 @@
 import Link from 'next/link'
 import { MapPin, Globe2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { INDIAN_CITIES } from '@/data/cities'
 
-const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Ahmedabad', 'Rajkot', 'Surat', 'Baroda', 'Punjab', 'Haryana']
-const countries = ['USA', 'Germany', 'France', 'Netherlands', 'Italy', 'UAE / Dubai', 'Spain', 'Nepal', 'Bangladesh', 'Singapore', 'China', 'Malaysia', 'Kenya / Africa']
+const countries = [
+  'USA', 'Germany', 'France', 'Netherlands', 'Italy',
+  'UAE / Dubai', 'Spain', 'Nepal', 'Bangladesh',
+  'Singapore', 'China', 'Malaysia', 'Kenya / Africa',
+]
 
 export function Presence() {
   return (
@@ -28,10 +32,14 @@ export function Presence() {
               On-ground teams across India&apos;s largest exhibition cities and industrial hubs.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {cities.map(c => (
-                <span key={c} className="rounded-full border border-border/70 bg-surface px-3 py-1.5 text-xs text-muted-foreground">
-                  {c}
-                </span>
+              {INDIAN_CITIES.map(c => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className="rounded-full border border-border/70 bg-surface px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-brand-blue-glow/50 hover:text-foreground"
+                >
+                  {c.label}
+                </Link>
               ))}
             </div>
             <Button asChild variant="outlineBrand" size="sm" className="mt-7">

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import FooterCityList from './FooterCityList'
+import { INDIAN_CITIES } from '@/data/cities'
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -32,23 +33,6 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   },
 ]
 
-const CITIES = [
-  { label: 'Mumbai',      href: '/exhibition-stall-designer-mumbai' },
-  { label: 'Delhi',       href: '/exhibition-stall-designer-delhi' },
-  { label: 'Bangalore',   href: '/exhibition-stall-designer-bangalore' },
-  { label: 'Hyderabad',   href: '/exhibition-stall-design-hyderabad' },
-  { label: 'Chennai',     href: '/exhibition-stall-designer-chennai' },
-  { label: 'Pune',        href: '/exhibition-stall-design-pune' },
-  { label: 'Ahmedabad',   href: '/exhibition-stand-builders-in-ahmedabad' },
-  { label: 'Surat',       href: '/exhibition-agency-in-surat' },
-  { label: 'Jaipur',      href: '/exhibition-stand-in-jaipur' },
-  { label: 'Kolkata',     href: '/exhibition-stand-builder-in-kolkata' },
-  { label: 'Noida',       href: '/exhibition-stand-builders-in-noida' },
-  { label: 'Ludhiana',    href: '/exhibition-stall-design-ludhiana' },
-  { label: 'Chandigarh',  href: '/exhibition-stall-design-chandigarh' },
-  { label: 'Kochi',       href: '/exhibition-stall-design-kochi' },
-  { label: 'Goa',         href: '/exhibition-stall-design-goa' },
-]
 
 const SOCIAL = [
   { label: 'LinkedIn',  short: 'in' },
@@ -111,7 +95,7 @@ export default function SiteFooter() {
           {/* Cities We Work */}
           <div>
             <h5 className="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-foreground">Cities We Work</h5>
-            <FooterCityList cities={CITIES} />
+            <FooterCityList cities={INDIAN_CITIES} />
           </div>
         </div>
       </div>

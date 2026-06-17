@@ -2,27 +2,24 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowUpRight, MapPin, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { getPublishedProjects } from '@/lib/db/portfolio'
 
-type Project = {
-  id: string
-  title: string
-  slug: string
-  client: string | null
-  cover_image_url: string
-  exhibition_name: string | null
-  city: string | null
-  country: string | null
-  year: number | null
-  industry: { name: string } | null
-}
+export async function FeaturedProjects() {
+  const rows = await getPublishedProjects({ limit: 3 })
 
-const projects: Project[] = [
-  { id: 'f1', title: 'Luxury Retail Launch Pavilion', slug: 'luxury-retail-launch-2025', client: 'Confidential FMCG Brand', industry: { name: 'FMCG / Retail' }, exhibition_name: 'Ambiente',  city: 'Frankfurt',      country: 'Germany', year: 2025, cover_image_url: '/home/project-1.jpg' },
-  { id: 'f2', title: 'Pharma Innovation Stand',        slug: 'pharma-innovation-stand',     client: 'Leading Pharma Co.',     industry: { name: 'Pharma' },       exhibition_name: 'CPHI',      city: 'Barcelona',      country: 'Spain',   year: 2024, cover_image_url: '/home/project-2.jpg' },
-  { id: 'f3', title: 'Automotive Double-Decker',       slug: 'automotive-double-decker',    client: 'Global Auto OEM',        industry: { name: 'Automotive' },   exhibition_name: 'Auto Expo', city: 'Greater Noida',  country: 'India',   year: 2024, cover_image_url: '/home/project-3.jpg' },
-]
+  const projects = rows.map(p => ({
+    id:             String(p.id),
+    title:          p.title,
+    slug:           p.slug,
+    client:         p.client?.name ?? null,
+    cover_image_url: p.media[0]?.url ?? null,
+    exhibition_name: p.exhibition?.name ?? null,
+    city:           p.city ?? p.exhibition?.city ?? null,
+    country:        p.exhibition?.country ?? null,
+    year:           p.buildYear ?? null,
+    industry:       p.industries[0]?.industry ?? null,
+  }))
 
-export function FeaturedProjects() {
   return (
     <section className="py-20 md:py-28" id="portfolio">
       <div className="container-wide">
@@ -42,17 +39,21 @@ export function FeaturedProjects() {
           {projects.map(p => (
             <Link
               key={p.id}
-              href="/portfolio"
+              href={`/portfolio/${p.slug}`}
               className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
-                <Image
-                  src={p.cover_image_url}
-                  alt={`${p.title} — exhibition stall by Approach Media`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                {p.cover_image_url ? (
+                  <Image
+                    src={p.cover_image_url}
+                    alt={`${p.title} — exhibition stall by Approach Media`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-surface-elevated to-surface" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-90" />
                 {p.industry && (
                   <span className="absolute left-4 top-4 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[11px] uppercase tracking-wider text-white/90 backdrop-blur">
