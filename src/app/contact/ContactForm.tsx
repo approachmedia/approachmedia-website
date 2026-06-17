@@ -1,0 +1,202 @@
+'use client'
+
+import { useState } from 'react'
+import { Send, CheckCircle2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select'
+
+// ── Options ───────────────────────────────────────────────
+
+const SERVICES = [
+  'Exhibition Stall Design',
+  'Custom Booth Fabrication',
+  'Turnkey Project Management',
+  'Audio-Visual & Technology Integration',
+  'Double Decker / Mezzanine Stands',
+  'Immersive Brand Experience Design',
+  'Not sure yet',
+]
+
+const STALL_SIZES = [
+  '9 sqm', '18 sqm', '27 sqm', '36 sqm', '50 sqm',
+  '60–100 sqm', '100–200 sqm', '200–500 sqm', '500+ sqm', 'Other',
+]
+
+const BUDGETS = [
+  'Under ₹10L', '₹10L – ₹25L', '₹25L – ₹50L', '₹50L – ₹1Cr', '₹1Cr+',
+]
+
+// ── Sub-components ───────────────────────────────────────
+
+function Field({
+  label, name, type = 'text', required, placeholder,
+}: {
+  label: string; name: string; type?: string; required?: boolean; placeholder?: string
+}) {
+  return (
+    <div>
+      <Label htmlFor={name} className="text-sm">
+        {label}{required && <span className="text-brand-green"> *</span>}
+      </Label>
+      <Input id={name} name={name} type={type} required={required} placeholder={placeholder} className="mt-2" />
+    </div>
+  )
+}
+
+function SelectField({
+  label, name, options, onValueChange,
+}: {
+  label: string; name: string; options: string[]; onValueChange?: (v: string) => void
+}) {
+  return (
+    <div>
+      <Label htmlFor={name} className="text-sm">{label}</Label>
+      <Select name={name} onValueChange={onValueChange}>
+        <SelectTrigger className="mt-2"><SelectValue placeholder="Select…" /></SelectTrigger>
+        <SelectContent>
+          {options.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+        </SelectContent>
+      </Select>
+    </div>
+  )
+}
+
+// ── Main form ─────────────────────────────────────────────
+
+export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
+  const [loading, setLoading]         = useState(false)
+  const [success, setSuccess]         = useState(false)
+  const [error,   setError]           = useState('')
+  const [stallSize, setStallSize]     = useState('')
+  const [customSize, setCustomSize]   = useState('')
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const formData = new FormData(e.currentTarget)
+    const data: Record<string, string> = {}
+    formData.forEach((v, k) => { data[k] = v.toString() })
+
+    if (stallSize === 'Other') data.stall_size_custom = customSize
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setSuccess(true)
+      ;(e.target as HTMLFormElement).reset()
+      setStallSize('')
+      setCustomSize('')
+    } catch {
+      setError('Something went wrong — please email us directly at info@approachmedia.in')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (success) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 rounded-2xl border border-white/15 bg-surface/40 p-12 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-brand-green/30 bg-brand-green/10">
+          <CheckCircle2 className="h-8 w-8 text-brand-green" />
+        </div>
+        <div>
+          <h3 className="font-display text-2xl font-semibold text-foreground">Thank you — we&apos;ve received your request.</h3>
+          <p className="mt-3 text-muted-foreground">
+            Our team will review your brief and get back to you within <strong className="text-foreground">1 business day</strong> with next steps.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            For urgent enquiries, WhatsApp or call us directly.
+          </p>
+        </div>
+        <Button variant="outlineBrand" onClick={() => setSuccess(false)}>Submit another enquiry</Button>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-white/15 bg-surface/40 p-6 md:p-10">
+      {/* ── Contact info ── */}
+      <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Contact information</p>
+      <div className="mt-4 grid gap-5 md:grid-cols-2">
+        <Field label="Full name"                 name="name"     required placeholder="Your name" />
+        <Field label="Company"                   name="company"  required placeholder="Company name" />
+        <Field label="Work email"                name="email"    type="email" required placeholder="you@company.com" />
+        <Field label="Phone (with country code)" name="phone"    placeholder="+91 98000 00000" />
+      </div>
+
+      {/* ── Exhibition details ── */}
+      <p className="mt-8 text-xs uppercase tracking-[0.22em] text-brand-green">Exhibition details</p>
+      <div className="mt-4 grid gap-5 md:grid-cols-2">
+        <Field label="Exhibition / event name" name="exhibition" placeholder="e.g. ACETECH 2026" />
+        <Field label="Venue"                   name="venue"      placeholder="e.g. Bombay Exhibition Centre" />
+        <Field label="Event city / country"    name="location"   placeholder="e.g. Mumbai, India" />
+        <div>
+          <Label htmlFor="event_date" className="text-sm">Event date <span className="text-muted-foreground">(optional)</span></Label>
+          <Input id="event_date" name="event_date" type="date" className="mt-2" />
+        </div>
+      </div>
+
+      {/* ── Project details ── */}
+      <p className="mt-8 text-xs uppercase tracking-[0.22em] text-brand-green">Project details</p>
+      <div className="mt-4 grid gap-5 md:grid-cols-2">
+        <SelectField label="Service of interest" name="service" options={SERVICES} />
+
+        {/* Stall size with "Other" expansion */}
+        <div className="space-y-2">
+          <SelectField
+            label="Stall size"
+            name="stall_size"
+            options={STALL_SIZES}
+            onValueChange={setStallSize}
+          />
+          {stallSize === 'Other' && (
+            <Input
+              name="stall_size_custom"
+              placeholder="Enter your stall size (e.g. 45 sqm)"
+              value={customSize}
+              onChange={e => setCustomSize(e.target.value)}
+              className="mt-2"
+            />
+          )}
+        </div>
+
+        <SelectField label="Indicative budget" name="budget" options={BUDGETS} />
+      </div>
+
+      {/* ── Message ── */}
+      <div className="mt-5">
+        <Label htmlFor="message" className="text-sm">How can we help?</Label>
+        <Textarea
+          id="message"
+          name="message"
+          rows={5}
+          placeholder="Tell us about the brand, audience, objectives and anything specific you want the stall to achieve…"
+          className="mt-2"
+        />
+      </div>
+
+      {error && (
+        <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">{error}</p>
+      )}
+
+      <Button type="submit" variant="hero" size="lg" className="mt-7 w-full md:w-auto" disabled={loading}>
+        {loading ? 'Sending…' : isProposal ? 'Send Proposal Request' : 'Send Enquiry'}
+        <Send className="h-4 w-4" />
+      </Button>
+      <p className="mt-4 text-xs text-muted-foreground">
+        We respond to all enquiries within 1 business day. Your information stays private and is never shared.
+      </p>
+    </form>
+  )
+}
