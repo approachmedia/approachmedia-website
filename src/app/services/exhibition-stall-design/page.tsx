@@ -1,231 +1,437 @@
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  ArrowRight, CheckCircle2, Compass, PenTool, Hammer, Truck,
+  ShieldCheck, Sparkles, Trophy, Users, Clock, Ruler, Layers,
+  Lightbulb, Award,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from '@/components/ui/accordion'
+
 export const metadata = {
-  title: 'Exhibition Stall Design — Approach Media',
-  description: 'In exhibitions, you have seconds to make a lasting impression. Our exhibition stall designs do exactly that.',
+  title: 'Exhibition Stall Design & Fabrication — Approach Media',
+  description: 'Custom exhibition stall design, fabrication and on-site execution. 6000+ stalls across 14+ countries, built in our own 30,000 sq ft workshop with full mock-up testing.',
   alternates: { canonical: 'https://approachmedia.in/services/exhibition-stall-design' },
   openGraph: {
-    title: 'Exhibition Stall Design — Approach Media',
-    description: 'In exhibitions, you have seconds to make a lasting impression. Our exhibition stall designs do exactly that.',
+    title: 'Exhibition Stall Design & Fabrication — Approach Media',
+    description: 'Custom exhibition stall design, fabrication and on-site execution. 6000+ stalls across 14+ countries, built in our own 30,000 sq ft workshop with full mock-up testing.',
     url: 'https://approachmedia.in/services/exhibition-stall-design',
   },
 }
+
+const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'
+
+const trustBadges = [
+  { icon: Trophy,      label: '6000+ stalls executed' },
+  { icon: Users,       label: '14+ countries' },
+  { icon: Clock,       label: '23+ years experience' },
+  { icon: ShieldCheck, label: 'ISO-grade build quality' },
+]
+
+const whyChoose = [
+  { icon: PenTool,    title: 'Concept-first design',        copy: 'Every stall starts with a brand truth and a visitor journey — not a template. 3D walkthroughs before a single panel is cut.' },
+  { icon: Hammer,     title: 'Owned 30,000 sq ft workshop', copy: 'Carpentry, metal, print, electricals and finishing all under one roof — no third-party guesswork, no last-minute compromises.' },
+  { icon: ShieldCheck, title: 'Full-scale mock-up testing',  copy: 'Your stall is fully built and inspected in our warehouse before it ships. What you approve is what shows up on the floor.' },
+  { icon: Truck,      title: 'End-to-end execution',        copy: 'Design, fabrication, logistics, on-site installation and dismantling — one team, one point of accountability, zero finger-pointing.' },
+  { icon: Compass,    title: 'Industry-aware design',       copy: 'Pharma, real estate, FMCG, textiles, manufacturing, automotive — we shape stalls around how your buyers actually behave.' },
+  { icon: Award,      title: 'International build standards', copy: 'Stalls built to perform in Frankfurt, Dubai, Paris and Mumbai — premium materials, safe loadings, clean finishes.' },
+]
+
+const stallTypes = [
+  { title: 'Custom Built Stalls',   copy: 'Fully bespoke, brand-led architecture — your most powerful on-floor asset.',                      img: 'stall-gallery-1.jpg', alt: 'Modern white custom exhibition stall with lounge' },
+  { title: 'Double-Decker Stalls',  copy: 'Maximize footprint with a private upper lounge for high-value meetings.',                        img: 'stall-gallery-4.jpg', alt: 'Double-decker exhibition stand with full LED walls' },
+  { title: 'Modular Stalls',        copy: 'Reusable, reconfigurable systems for brands exhibiting across multiple shows.',                   img: 'stall-gallery-2.jpg', alt: 'Bold geometric exhibition booth with LED fins' },
+  { title: 'Country Pavilions',     copy: 'Large-format pavilions that host multiple brands under one cohesive story.',                     img: 'stall-gallery-3.jpg', alt: 'Luxury reception with wood paneling and ring light' },
+]
+
+const process = [
+  { step: '01', icon: Compass,    title: 'Brief & Discovery',     copy: 'We map your goals, audience, footprint and KPIs in a focused 30-minute session.' },
+  { step: '02', icon: PenTool,    title: 'Concept & 3D Design',   copy: 'Mood, layout and 3D walkthrough renders — refined until you can already feel the stall.' },
+  { step: '03', icon: Ruler,      title: 'Engineering & Costing', copy: 'Working drawings, material specs and a transparent line-item budget. No surprises.' },
+  { step: '04', icon: Hammer,     title: 'Fabrication',           copy: 'Built in our 30,000 sq ft warehouse by in-house carpenters, metal and finishing teams.' },
+  { step: '05', icon: ShieldCheck, title: 'Mock-Up & QC',          copy: 'Stall is fully erected and inspected end-to-end before it leaves the workshop.' },
+  { step: '06', icon: Truck,      title: 'On-Site Execution',     copy: 'Logistics, install, AV calibration and standby team for the full show duration.' },
+]
+
+const promises = [
+  'Free 3D concept sketch within 48 hours',
+  'Fixed-price quote with zero hidden costs',
+  'Dedicated project manager from day one',
+  'Reply to every brief within 4 working hours',
+  'On-time delivery — guaranteed in writing',
+  'Standby crew on-site for all show days',
+]
+
+const faqs = [
+  { q: 'How early should we start the stall design process?',  a: 'Ideally 6–8 weeks before the event for custom builds, and 10–12 weeks for double-decker or international shipments. For tight timelines, we can fast-track with a focused design sprint.' },
+  { q: 'Do you handle stalls outside India?',                  a: 'Yes. We have executed stalls across 14+ countries including USA, Germany, France, UAE, Singapore, Italy, Netherlands and Kenya — with local installation partners and full project oversight from our team.' },
+  { q: 'What does a custom stall typically cost?',             a: 'Custom stalls are priced by size, material, complexity and city. We share a transparent, line-item quote after a short discovery call — no inflated numbers, no hidden charges.' },
+  { q: 'Can we re-use the stall for other shows?',             a: 'Absolutely. We design with modularity in mind so the same stall can be reconfigured for different footprints and shows — reducing your cost per exhibition over time.' },
+  { q: 'Who manages the stall on-site during the exhibition?', a: 'Our on-floor crew handles installation, AV, electricals, daily maintenance and dismantling. A project manager stays through the show so your team only focuses on conversations.' },
+]
 
 export default function ExhibitionStallDesignPage() {
   return (
     <main>
 
-      {/* ═══ SECTION 1: HERO ═══════════════════════════════════════════ */}
-      <section className="page-hero" aria-labelledby="esd-hero-heading">
-        <div className="container">
-          <div className="page-hero-inner animate-in">
-            <span className="eyebrow-pill">Stalls That Are Designed to Be Remembered</span>
-            <h1 id="esd-hero-heading" style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: '700', letterSpacing: '-0.02em', lineHeight: '1.08', maxWidth: '760px', marginBottom: '22px' }}>Exhibition Stall Design</h1>
-            <p style={{ fontSize: '1.05rem', color: 'var(--muted)', maxWidth: '560px', lineHeight: '1.8', marginBottom: '36px' }}>In exhibitions, you have seconds to make a lasting impression. Our exhibition stall designs do exactly that.</p>
-            <div className="hero-ctas">
-              <a href="/contact" className="btn btn-primary">Request a Proposal &rarr;</a>
-              <a href="/contact" className="btn btn-outline">Book a Consultation</a>
-            </div>
-          </div>
+      {/* ══════════════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════════════ */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src={`${CDN}/stall-hero.jpg`}
+            alt="Premium custom exhibition stall with double-decker design, wood and brass finishes"
+            fill className="object-cover" priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
-      </section>
 
-      {/* ═══ SECTION 2: INTRO + DUMMY IMAGE ════════════════════════════ */}
-      <section className="section" aria-labelledby="esd-intro-heading">
-        <div className="container">
-          <div className="intro-media-grid animate-in">
-            <div className="intro-media-text">
-              <h2 id="esd-intro-heading" className="sr-only" style={{ position: 'absolute', left: '-9999px' }}>About our exhibition stall design</h2>
-              <p>In an environment where every stall is competing for attention, we design customised exhibition spaces that align with your brand, audience, and exhibition objectives.</p>
-              <p>Choosing the right design directly impacts how your brand is experienced.</p>
-              <p>At Approach Media, we bring over two decades of expertise in exhibition stall designs across geographies and industries. We partner with brands to create spaces that perform in high-pressure exhibition environments.</p>
+        <div className="container-wide grid gap-10 py-24 md:grid-cols-12 md:py-36">
+          <div className="md:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-green/40 bg-brand-green/10 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-brand-green">
+              <Sparkles className="h-3.5 w-3.5" /> Exhibition Stall Design
             </div>
-            {/* DUMMY PHOTO — replace src below with your own image */}
-            <figure className="media-frame">
-              {/* To use a real photo: <img src="../assets/portfolio/stall-design-1.jpg" alt="Premium exhibition stall design build" /> */}
-              <span className="media-icon" aria-hidden="true">&#128247;</span>
-              <span className="media-hint">Replace with project photo</span>
-              <figcaption className="media-tag">Sample Project</figcaption>
-              <span className="media-caption">Premium exhibition stall design build</span>
-            </figure>
+            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
+              The stall your <span className="text-brand-blue-glow">buyers</span>
+              <br />
+              actually remember.
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Custom-designed, in-house built exhibition stalls — engineered for first
+              impressions, full-week durability, and the kind of conversations that
+              close after the show.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild variant="hero" size="xl">
+                <Link href="/contact">Get a Free 3D Concept <ArrowRight className="h-4 w-4" /></Link>
+              </Button>
+              <Button asChild variant="glass" size="xl">
+                <Link href="/contact">Talk to a Stall Designer</Link>
+              </Button>
+            </div>
+            <div className="mt-10 grid max-w-xl grid-cols-2 gap-3 md:grid-cols-4">
+              {trustBadges.map(b => (
+                <div key={b.label} className="flex items-center gap-2 rounded-xl border border-white/15 bg-background/60 px-3 py-2 text-xs text-muted-foreground backdrop-blur">
+                  <b.icon className="h-3.5 w-3.5 text-brand-green" />
+                  <span className="leading-tight">{b.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ SECTION 3: STATS STRIP ════════════════════════════════════ */}
-      <div className="stats-strip" role="region" aria-label="Company statistics">
-        <div className="container">
-          <div className="stats-strip-inner animate-in">
-            <div className="stat-item"><span className="stat-number">23+</span><div className="stat-label">Years of Experience</div></div>
-            <div className="stat-item"><span className="stat-number">6000+</span><div className="stat-label">Stalls Executed</div></div>
-            <div className="stat-item"><span className="stat-number">9+</span><div className="stat-label">Industries Served</div></div>
-            <div className="stat-item"><span className="stat-number">14+</span><div className="stat-label">Countries Delivered</div></div>
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ SECTION 4: END-TO-END SOLUTIONS ═══════════════════════════ */}
-      <section className="section" aria-labelledby="esd-solutions-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ maxWidth: '620px' }}>
-            <h2 id="esd-solutions-heading">End-to-End Exhibition Stall Design Solutions</h2>
-            <p style={{ color: 'var(--muted)', lineHeight: '1.85', fontSize: '1rem', marginTop: '18px' }}>At Approach Media, we design and build customised exhibition stalls for trade fairs, expos, and corporate events across India. Every stall is thoughtfully created to reflect your brand identity, maximise the available space, and create meaningful engagement with visitors.</p>
-          </div>
-          <div className="feature-check-grid">
-            <div className="feature-check-card animate-in delay-1">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Concept Design &amp; 3D Visualization</h3>
-                <p>Transforming your ideas into innovative, functional, and visually impactful exhibition stall designs.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-2">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>In-House Engineering &amp; Fabrication</h3>
-                <p>Precision-built structures crafted by our in-house team to ensure quality, durability, and attention to detail.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-3">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Stall Installation &amp; Dismantling</h3>
-                <p>Efficient setup and timely removal for a smooth and hassle-free event experience.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-4">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Compliance with Venue Norms</h3>
-                <p>Ensuring every exhibition stall design meets venue guidelines, local regulations, and safety standards.</p>
+          <div className="md:col-span-5">
+            <div className="grid grid-cols-2 gap-3">
+              <Image src={`${CDN}/stall-gallery-1.jpg`} alt="Modern white custom exhibition stall with lounge"
+                width={640} height={800} loading="lazy"
+                className="aspect-[4/5] w-full rounded-2xl border border-white/15 object-cover" />
+              <div className="space-y-3">
+                <Image src={`${CDN}/stall-gallery-2.jpg`} alt="Bold geometric exhibition booth with LED fins"
+                  width={640} height={640} loading="lazy"
+                  className="aspect-square w-full rounded-2xl border border-white/15 object-cover" />
+                <Image src={`${CDN}/stall-gallery-3.jpg`} alt="Luxury reception with wood paneling and ring light"
+                  width={640} height={640} loading="lazy"
+                  className="aspect-square w-full rounded-2xl border border-white/15 object-cover" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 5: WHY CHOOSE APPROACH MEDIA ══════════════════════ */}
-      <section className="section" style={{ background: 'hsl(222 24% 9% / 0.3)', borderTop: '1px solid var(--border)' }} aria-labelledby="esd-why-heading">
-        <div className="container">
-          <div className="section-head animate-in">
-            <span className="section-label">Why Choose Approach Media</span>
-            <h2 id="esd-why-heading">Thoughtfully designed experience-oriented exhibition stalls, delivered with certainty.</h2>
+      {/* ══════════════════════════════════════════════════
+          CONFIDENCE STRIP
+      ══════════════════════════════════════════════════ */}
+      <section className="border-y border-white/15 bg-surface/40 py-16 md:py-20">
+        <div className="container-wide grid gap-10 md:grid-cols-2 md:items-center">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why brands trust us</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              23 years. 6000+ stalls. Zero missed deadlines.
+            </h2>
           </div>
-          <div className="why4-grid">
-            <div className="why4-card animate-in delay-1">
-              <h3>Designed with Industry Context</h3>
-              <p>Every industry communicates differently. Every element we design is intentional — the goal is to convey your message instantly and create a lasting impression.</p>
+          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+            From Fortune 500 brands at Hannover Messe to home-grown leaders at Pragati
+            Maidan — we&apos;ve quietly built a reputation for stalls that show up on time,
+            stand strong through the week, and bring real ROI back to the marketing team.
+          </p>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          WHY CHOOSE US
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-wide">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why choose Approach Media</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+                Six reasons marketing heads sleep better with us on the project.
+              </h2>
             </div>
-            <div className="why4-card animate-in delay-2">
-              <h3>Smooth End-to-End Execution</h3>
-              <p>From concept to dismantling, a single team manages the entire process — ensuring consistency and complete control over quality and timelines.</p>
+            <Button asChild variant="glass" size="lg">
+              <Link href="/portfolio">See recent stalls <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {whyChoose.map(s => (
+              <div key={s.title} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50">
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
+                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          GALLERY SHOWCASE
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-y border-white/15 bg-surface/30 py-20 md:py-24">
+        <div className="container-wide">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">A walk through our work</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+                Real stalls, real shows, real ROI.
+              </h2>
             </div>
-            <div className="why4-card animate-in delay-3">
-              <h3>Aligned with Global Standards</h3>
-              <p>We adhere to global build, safety, and execution standards, delivering consistent quality wherever you exhibit.</p>
+            <Link href="/portfolio" className="hidden items-center gap-1.5 text-sm font-medium text-brand-blue-glow md:inline-flex">
+              View full portfolio <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-12 md:grid-rows-2">
+            <div className="md:col-span-7 md:row-span-2 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '520px' }}>
+              <Image src={`${CDN}/stall-gallery-4.jpg`} alt="Double-decker exhibition stand with full LED walls"
+                fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">Tech Expo · 96 sqm · Double-Decker</p>
+                <p className="mt-1 font-display text-xl text-foreground">Two-storey statement build</p>
+              </div>
             </div>
-            <div className="why4-card animate-in delay-1">
-              <h3>Structured, Reliable Timelines</h3>
-              <p>A well-defined process enables us to complete most projects within a two-month timeframe.</p>
+            <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
+              <Image src={`${CDN}/stall-gallery-2.jpg`} alt="Bold geometric exhibition stall"
+                fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">Auto Show · 64 sqm</p>
+                <p className="mt-1 font-display text-xl text-foreground">Architectural fin façade</p>
+              </div>
+            </div>
+            <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
+              <Image src={`${CDN}/stall-gallery-3.jpg`} alt="Luxury wooden reception with brand wall"
+                fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">Luxury Expo · 36 sqm</p>
+                <p className="mt-1 font-display text-xl text-foreground">Warm hospitality lounge</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 6: OUR APPROACH ═══════════════════════════════════ */}
-      <section className="section" aria-labelledby="esd-approach-heading">
-        <div className="container">
-          <div className="section-head animate-in">
-            <span className="section-label">Our Approach</span>
-            <h2 id="esd-approach-heading">How we deliver this, reliably</h2>
+      {/* ══════════════════════════════════════════════════
+          STALL TYPES
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-wide">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Stall types we build</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              Whatever your footprint, we have a format that performs.
+            </h2>
           </div>
-          <div className="flow-grid">
-            <div className="flow-card animate-in delay-1">
-              <span className="flow-num">01</span>
-              <h3>Understand &amp; Plan</h3>
-              <p>We align on your brand, audience, objectives, and exhibition context to set a clear direction.</p>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {stallTypes.map(t => (
+              <div key={t.title} className="group overflow-hidden rounded-2xl border border-white/15 bg-surface/40">
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image src={`${CDN}/${t.img}`} alt={t.alt} fill loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-display text-lg font-semibold text-foreground">{t.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.copy}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          MATERIAL / CRAFT BAND
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-y border-white/15 bg-surface/40 py-20 md:py-24">
+        <div className="container-wide grid gap-10 md:grid-cols-12 md:items-center">
+          <div className="md:col-span-5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/15">
+              <Image src={`${CDN}/stall-gallery-5.jpg`} alt="Detail of fluted wood, brushed brass and backlit glass on a premium stall"
+                fill loading="lazy" className="object-cover" />
             </div>
-            <div className="flow-card animate-in delay-2">
-              <span className="flow-num">02</span>
-              <h3>Design &amp; Detail</h3>
-              <p>Your requirements are translated into spatial layouts, 3D concepts, and technical specifications ready for execution.</p>
-            </div>
-            <div className="flow-card animate-in delay-3">
-              <span className="flow-num">03</span>
-              <h3>Build &amp; Test</h3>
-              <p>The stall is fabricated and assembled, with a full-scale mock-up tested to ensure everything works as intended.</p>
-            </div>
-            <div className="flow-card animate-in delay-4">
-              <span className="flow-num">04</span>
-              <h3>Execute &amp; Close</h3>
-              <p>We handle on-site installation, handover, and post-event dismantling, ensuring a smooth experience from start to finish.</p>
+          </div>
+          <div className="md:col-span-7">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Built like architecture, not a backdrop</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              The difference is in the millimetres.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+              Fluted oak panels meeting brushed brass trims. Seamless edge-lit acrylic.
+              Floor-to-ceiling laminations without a single visible joint. We obsess
+              over the details that visitors don&apos;t consciously notice — but absolutely feel.
+            </p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {[
+                { icon: Layers,      label: 'Premium veneers & laminates' },
+                { icon: Lightbulb,   label: 'Integrated cove & spot lighting' },
+                { icon: Ruler,       label: 'Tolerances under 2 mm' },
+                { icon: ShieldCheck, label: 'Fire-rated, safety-tested builds' },
+              ].map(m => (
+                <div key={m.label} className="flex items-center gap-3 rounded-xl border border-white/15 bg-background/60 px-4 py-3 text-sm text-foreground">
+                  <m.icon className="h-4 w-4 text-brand-green" />
+                  {m.label}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 7: CTA ════════════════════════════════════════════ */}
-      <section className="cta-section" aria-labelledby="esd-cta-heading">
-        <div className="container">
-          <h2 id="esd-cta-heading">Consult with our exhibition stall design experts today.</h2>
-          <p className="cta-sub">Because your space defines how your brand is experienced and how your clients remember you.</p>
-          <div className="cta-buttons">
-            <a href="/contact" className="btn btn-primary">Request a Proposal &rarr;</a>
-            <a href="/contact" className="btn btn-outline">Book a Consultation</a>
+      {/* ══════════════════════════════════════════════════
+          PROCESS — 6 STEPS
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-wide">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to dismantling</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              A 6-step process built around your peace of mind.
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {process.map(p => (
+              <div key={p.step} className="relative rounded-2xl border border-white/15 bg-surface/40 p-7 transition-colors hover:border-brand-blue-glow/50">
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</span>
+                  <p.icon className="h-5 w-5 text-brand-green" />
+                </div>
+                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 8: FAQ ════════════════════════════════════════════ */}
-      <section className="section faq-section" aria-labelledby="esd-faq-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ marginBottom: '36px' }}>
-            <h2 id="esd-faq-heading">Frequently Asked Questions</h2>
+      {/* ══════════════════════════════════════════════════
+          OUR PROMISE
+      ══════════════════════════════════════════════════ */}
+      <section className="border-y border-white/15 bg-surface/30 py-20 md:py-24">
+        <div className="container-wide grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Our promise to you</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              Six commitments. Every single project.
+            </h2>
+            <p className="mt-5 text-muted-foreground">
+              No fine print, no caveats. This is what every client we work with gets —
+              from a 9 sqm shell scheme to a 200 sqm flagship pavilion.
+            </p>
+            <Button asChild variant="hero" size="lg" className="mt-7">
+              <Link href="/contact">Start your project <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
           </div>
-          <div className="faq-list">
-            <div className="faq-item animate-in delay-1">
-              <button className="faq-question" aria-expanded="false">How much does exhibition stall design cost?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Cost depends on stand size, design complexity, materials, and location. After a short brief we share a transparent, itemised proposal so you know exactly what you're paying for — with no hidden charges.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-2">
-              <button className="faq-question" aria-expanded="false">How early should we start?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Ideally 6–8 weeks before the show. That gives us room for concept design, approvals, fabrication, and a full-scale mock-up. We can work to tighter timelines too — tell us your date and we'll plan around it.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-3">
-              <button className="faq-question" aria-expanded="false">What if we already have ideas or constraints?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Perfect — we love a starting point. Share your references, brand guidelines, or organiser constraints and we'll build the design around them rather than imposing a template.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-4">
-              <button className="faq-question" aria-expanded="false">What if something doesn't work on-site?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Our full-scale mock-up testing eliminates most surprises before dispatch. On-site, our installation team is present throughout setup to handle any adjustment immediately, so your stand is show-ready on time.</p></div>
-            </div>
+          <div className="md:col-span-7">
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {promises.map(p => (
+                <li key={p} className="flex items-start gap-3 rounded-2xl border border-white/15 bg-background/60 p-5">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-green" />
+                  <span className="text-sm leading-relaxed text-foreground">{p}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 9: EXPLORE MORE SERVICES ══════════════════════════ */}
-      <section className="section explore-more-section" aria-labelledby="esd-more-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ marginBottom: '36px' }}>
-            <span className="section-label" id="esd-more-heading">Explore More Services</span>
+      {/* ══════════════════════════════════════════════════
+          INLINE CONVERSION BAND
+      ══════════════════════════════════════════════════ */}
+      <section className="border-b border-white/15 bg-surface/40 py-14">
+        <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="flex items-start gap-4">
+            <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-green/15 text-brand-green">
+              <PenTool className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-display text-xl font-semibold text-foreground md:text-2xl">
+                See your stall before you commit.
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground md:text-base">
+                Share your event, footprint and brand — we&apos;ll send a free 3D concept within 48 hours.
+              </p>
+            </div>
           </div>
-          <div className="srv-cards-grid">
-            <a href="/services/custom-booth-fabrication" className="srv-card animate-in delay-1">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Custom Booth Fabrication</h3>
-              <p>Bespoke designs translated into durable, high-quality structures.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
-            <a href="/services/turnkey-project-management" className="srv-card animate-in delay-2">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Turnkey Project Management</h3>
-              <p>We manage the entire project cycle so you can focus entirely on your visitors.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
-            <a href="/services/av-technology-integration" className="srv-card animate-in delay-3">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Audio-Visual &amp; Technology Integration</h3>
-              <p>Enhancing how your audience experiences and interacts with your brand.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
+          <Button asChild variant="hero" size="lg" className="shrink-0">
+            <Link href="/contact">Get my free 3D concept <ArrowRight className="h-4 w-4" /></Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-narrow">
+          <p className="text-xs uppercase tracking-[0.28em] text-brand-green">FAQ</p>
+          <h2 className="mt-4 font-display text-3xl font-semibold text-foreground md:text-5xl">Frequently Asked Questions</h2>
+          <div className="mt-12">
+            <Accordion type="single" collapsible className="space-y-2">
+              {faqs.map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="rounded-xl border border-white/15 bg-surface/40 px-5">
+                  <AccordionTrigger className="py-5 text-left font-display text-base font-medium text-foreground hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          FINAL CTA
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-t border-white/15 py-24 md:py-32">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(var(--brand-blue-glow)/0.15),transparent_60%)]" />
+        <div className="container-narrow text-center">
+          <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get started</p>
+          <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
+            Let&apos;s build the stall your competitors will study.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-muted-foreground md:text-lg">
+            A short call, a sharp brief, and a 3D concept you can show your team. Be on the
+            floor with a stall that earns the meetings — and the memories.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button asChild variant="hero" size="xl">
+              <Link href="/contact">Request a Proposal <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button asChild variant="glass" size="xl">
+              <Link href="/contact">Book a Consultation</Link>
+            </Button>
           </div>
         </div>
       </section>
