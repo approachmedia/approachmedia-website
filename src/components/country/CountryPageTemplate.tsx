@@ -114,11 +114,32 @@ export function CountryPageTemplate({ data }: { data: CountryPageData }) {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: `Approach Media — Exhibition Stall Design Agency in ${data.country}`,
-    areaServed: data.areaServed,
-    description: data.meta.description,
-    url: pageUrl,
+    '@graph': [
+      {
+        '@type': 'LocalBusiness',
+        name: `Approach Media — Exhibition Stall Design Agency in ${data.country}`,
+        areaServed: data.areaServed,
+        description: data.meta.description,
+        url: pageUrl,
+        '@id': `${SITE_URL}#organization`,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'International', item: `${SITE_URL}/#international` },
+          { '@type': 'ListItem', position: 3, name: `Exhibition Stall Design in ${data.country}`, item: pageUrl },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: data.faqs.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
   }
 
   return (

@@ -8,20 +8,20 @@ export default function robots(): MetadataRoute.Robots {
       // Standard crawlers — full access to portfolio
       { userAgent: '*', allow: '/', disallow: ['/admin', '/api/'] },
 
-      // OpenAI GPTBot — allow portfolio for AI citations
-      { userAgent: 'GPTBot', allow: ['/portfolio/', '/services/'] },
+      // OpenAI GPTBot — allow portfolio, services, country pages for AI citations
+      { userAgent: 'GPTBot', allow: ['/portfolio/', '/services/', '/exhibition-stall-design-agency-'] },
 
-      // Perplexity — allow portfolio
-      { userAgent: 'PerplexityBot', allow: '/portfolio/' },
+      // Perplexity — allow portfolio and country pages
+      { userAgent: 'PerplexityBot', allow: ['/portfolio/', '/exhibition-stall-design-agency-'] },
 
       // Google AI overview (Gemini indexing)
-      { userAgent: 'Google-Extended', allow: '/portfolio/' },
+      { userAgent: 'Google-Extended', allow: ['/portfolio/', '/exhibition-stall-design-agency-'] },
 
       // Anthropic crawler
-      { userAgent: 'anthropic-ai', allow: '/portfolio/' },
+      { userAgent: 'anthropic-ai', allow: ['/portfolio/', '/exhibition-stall-design-agency-'] },
 
       // CCBot (Common Crawl — used for LLM training datasets)
-      { userAgent: 'CCBot', allow: '/portfolio/' },
+      { userAgent: 'CCBot', allow: ['/portfolio/', '/exhibition-stall-design-agency-'] },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   }

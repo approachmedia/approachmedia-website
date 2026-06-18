@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Double Decker Mezzanine Stands — Approach Media',
   description: 'Engineered multi-level structures that maximise floor presence — adding private meeting areas, VIP lounges, and elevated viewing platforms to create a landmark on any show floor.',
+  alternates: { canonical: 'https://approachmedia.in/services/double-decker-mezzanine-stands' },
+  openGraph: {
+    title: 'Double Decker Mezzanine Stands — Approach Media',
+    description: 'Engineered multi-level structures that maximise floor presence — adding private meeting areas, VIP lounges, and elevated viewing platforms to create a landmark on any show floor.',
+    url: 'https://approachmedia.in/services/double-decker-mezzanine-stands',
+  },
 }
 
 export default function DoubleDeckerMezzanineStandsPage() {

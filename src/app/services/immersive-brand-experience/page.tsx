@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Immersive Brand Experience — Approach Media',
   description: 'Sensory-led environments designed to be remembered — every touchpoint of spatial narrative, lighting, sound, material, and interaction crafted to emotionally connect visitors to your brand.',
+  alternates: { canonical: 'https://approachmedia.in/services/immersive-brand-experience' },
+  openGraph: {
+    title: 'Immersive Brand Experience — Approach Media',
+    description: 'Sensory-led environments designed to be remembered — every touchpoint of spatial narrative, lighting, sound, material, and interaction crafted to emotionally connect visitors to your brand.',
+    url: 'https://approachmedia.in/services/immersive-brand-experience',
+  },
 }
 
 export default function ImmersiveBrandExperiencePage() {

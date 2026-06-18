@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Turnkey Project Management — Approach Media',
   description: 'We manage the entire project cycle so you can focus entirely on your visitors — from the first brief to post-event dismantle, with zero coordination gaps.',
+  alternates: { canonical: 'https://approachmedia.in/services/turnkey-project-management' },
+  openGraph: {
+    title: 'Turnkey Project Management — Approach Media',
+    description: 'We manage the entire project cycle so you can focus entirely on your visitors — from the first brief to post-event dismantle, with zero coordination gaps.',
+    url: 'https://approachmedia.in/services/turnkey-project-management',
+  },
 }
 
 export default function TurnkeyProjectManagementPage() {

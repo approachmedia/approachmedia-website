@@ -6,6 +6,12 @@ import { ContactForm } from './ContactForm'
 export const metadata: Metadata = {
   title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
   description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
+  alternates: { canonical: 'https://approachmedia.in/contact' },
+  openGraph: {
+    title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
+    description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
+    url: 'https://approachmedia.in/contact',
+  },
 }
 
 export default function ContactPage() {

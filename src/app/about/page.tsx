@@ -8,6 +8,12 @@ import { CtaBand } from '@/components/home/CtaBand'
 export const metadata: Metadata = {
   title: 'About Approach Media | Exhibition Stall Design & Build Company',
   description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
+  alternates: { canonical: 'https://approachmedia.in/about' },
+  openGraph: {
+    title: 'About Approach Media | Exhibition Stall Design & Build Company',
+    description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
+    url: 'https://approachmedia.in/about',
+  },
 }
 
 // ── Data ─────────────────────────────────────────────────────

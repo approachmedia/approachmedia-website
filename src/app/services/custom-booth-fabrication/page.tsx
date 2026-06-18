@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Custom Booth Fabrication — Approach Media',
   description: 'At exhibitions, execution matters as much as design. Our custom booth fabrication services deliver stalls built with precision, quality, and reliability for a strong brand presence.',
+  alternates: { canonical: 'https://approachmedia.in/services/custom-booth-fabrication' },
+  openGraph: {
+    title: 'Custom Booth Fabrication — Approach Media',
+    description: 'At exhibitions, execution matters as much as design. Our custom booth fabrication services deliver stalls built with precision, quality, and reliability for a strong brand presence.',
+    url: 'https://approachmedia.in/services/custom-booth-fabrication',
+  },
 }
 
 export default function CustomBoothFabricationPage() {

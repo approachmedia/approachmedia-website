@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Exhibition Stall Design — Approach Media',
   description: 'In exhibitions, you have seconds to make a lasting impression. Our exhibition stall designs do exactly that.',
+  alternates: { canonical: 'https://approachmedia.in/services/exhibition-stall-design' },
+  openGraph: {
+    title: 'Exhibition Stall Design — Approach Media',
+    description: 'In exhibitions, you have seconds to make a lasting impression. Our exhibition stall designs do exactly that.',
+    url: 'https://approachmedia.in/services/exhibition-stall-design',
+  },
 }
 
 export default function ExhibitionStallDesignPage() {

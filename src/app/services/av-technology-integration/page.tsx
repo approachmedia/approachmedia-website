@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'AV & Technology Integration — Approach Media',
   description: 'LED walls, interactive screens, immersive sound and lighting — planned and integrated within your stall from day one to enhance how your audience experiences your brand.',
+  alternates: { canonical: 'https://approachmedia.in/services/av-technology-integration' },
+  openGraph: {
+    title: 'AV & Technology Integration — Approach Media',
+    description: 'LED walls, interactive screens, immersive sound and lighting — planned and integrated within your stall from day one to enhance how your audience experiences your brand.',
+    url: 'https://approachmedia.in/services/av-technology-integration',
+  },
 }
 
 export default function AvTechnologyIntegrationPage() {

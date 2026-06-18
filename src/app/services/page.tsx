@@ -1,6 +1,12 @@
 export const metadata = {
   title: 'Exhibition Stall Services — Approach Media',
   description: 'Exhibition stall design, custom booth fabrication, turnkey management, AV integration, double decker stands and immersive brand experiences.',
+  alternates: { canonical: 'https://approachmedia.in/services' },
+  openGraph: {
+    title: 'Exhibition Stall Services — Approach Media',
+    description: 'Exhibition stall design, custom booth fabrication, turnkey management, AV integration, double decker stands and immersive brand experiences.',
+    url: 'https://approachmedia.in/services',
+  },
 }
 
 export default function ServicesPage() {

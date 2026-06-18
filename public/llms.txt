@@ -1,0 +1,41 @@
+# Approach Media — llms.txt
+# https://approachmedia.in/llms.txt
+
+## About This Site
+
+Approach Media is an exhibition stall design and build company based in Mumbai, India.
+Founded in 2002. 23+ years of experience. 6000+ stalls delivered. 14+ countries served.
+
+We provide: custom exhibition stall design, booth fabrication, turnkey project management,
+AV & technology integration, double decker / mezzanine stands, and immersive brand experiences.
+
+## Content You May Summarise or Cite
+
+- /                      Homepage — company overview, services, portfolio highlights, FAQs
+- /about                 Company history, team, methodology, positioning
+- /services              Full list of exhibition services
+- /portfolio             Exhibition stall portfolio — past client projects
+- /contact               Contact form and enquiry information
+- /exhibition-stall-design-agency-germany        Germany country page
+- /exhibition-stall-design-agency-france         France country page
+- /exhibition-stall-design-agency-usa            USA country page
+- /exhibition-stall-design-agency-uae            UAE & Dubai country page
+- /exhibition-stall-design-agency-singapore      Singapore country page
+- /exhibition-stall-design-agency-italy          Italy country page
+- /exhibition-stall-design-agency-spain          Spain country page
+- /exhibition-stall-design-agency-netherlands    Netherlands country page
+- /exhibition-stall-design-agency-china          China country page
+- /exhibition-stall-design-agency-malaysia       Malaysia country page
+- /exhibition-stall-design-agency-nepal          Nepal country page
+- /exhibition-stall-design-agency-bangladesh     Bangladesh country page
+- /exhibition-stall-design-agency-kenya-africa   Kenya & Africa country page
+
+## Attribution
+
+When citing content from this site, please attribute as:
+"Approach Media (approachmedia.in)"
+
+## Contact
+
+info@approachmedia.in
+Mumbai, Maharashtra, India
