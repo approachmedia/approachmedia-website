@@ -1,242 +1,446 @@
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  ArrowRight, Sparkles, ClipboardList, Calendar, Users, Globe2,
+  ShieldCheck, FileText, Trophy, MapPin,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from '@/components/ui/accordion'
+
 export const metadata = {
-  title: 'Turnkey Project Management — Approach Media',
-  description: 'We manage the entire project cycle so you can focus entirely on your visitors — from the first brief to post-event dismantle, with zero coordination gaps.',
+  title: 'Turnkey Exhibition Project Management — Approach Media',
+  description: 'End-to-end turnkey exhibition project management — concept to dismantling, one team, one point of accountability, zero coordination gaps across India and 14+ countries.',
   alternates: { canonical: 'https://approachmedia.in/services/turnkey-project-management' },
   openGraph: {
-    title: 'Turnkey Project Management — Approach Media',
-    description: 'We manage the entire project cycle so you can focus entirely on your visitors — from the first brief to post-event dismantle, with zero coordination gaps.',
+    title: 'Turnkey Exhibition Project Management — Approach Media',
+    description: 'End-to-end turnkey exhibition project management — concept to dismantling, one team, one point of accountability, zero coordination gaps across India and 14+ countries.',
     url: 'https://approachmedia.in/services/turnkey-project-management',
   },
 }
+
+const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'
+
+const trustBadges = [
+  { icon: Trophy,        label: '6000+ projects' },
+  { icon: ClipboardList, label: 'Single point of contact' },
+  { icon: MapPin,        label: '14+ countries' },
+  { icon: ShieldCheck,   label: 'On-time delivery' },
+]
+
+const outcomes = [
+  { stat: '7',     label: 'integrated service stages' },
+  { stat: '1',     label: 'dedicated project manager' },
+  { stat: '6000+', label: 'projects delivered' },
+  { stat: '14+',   label: 'countries managed' },
+]
+
+const whyChoose = [
+  { icon: ClipboardList, title: 'Single accountability',      copy: 'One team owns every stage — design, fabrication, logistics, installation, and dismantling. No finger-pointing, no gaps, no surprises.' },
+  { icon: Calendar,      title: 'Timeline management',        copy: 'Structured milestone schedules, built-in buffer windows, and proactive replanning if anything shifts — so the show always opens on time.' },
+  { icon: Users,         title: 'Cross-team coordination',    copy: 'We coordinate internal teams, venue authorities, freight partners, and on-site crews under a single master plan you always have visibility into.' },
+  { icon: Globe2,        title: 'International execution',    copy: 'Exhibitions across 14+ countries. We manage local compliance, import documentation, ground-level logistics, and trusted regional partners.' },
+  { icon: ShieldCheck,   title: 'Risk management',            copy: 'Contingency plans for every critical path item. We identify and de-risk before mobilisation — not on the show floor.' },
+  { icon: FileText,      title: 'Transparent reporting',      copy: 'Regular status updates, budget trackers, and post-event documentation. You always know exactly where the project stands.' },
+]
+
+const processSteps = [
+  { step: '01', title: 'Brief',                   copy: 'We capture your event, brand goals, footprint, timeline, and budget in a focused discovery session.' },
+  { step: '02', title: 'Design',                  copy: 'Concept, mood, spatial layout and 3D walkthroughs — refined until you can see and feel the result.' },
+  { step: '03', title: 'Scope & Quote',            copy: 'A transparent, line-item budget covering every stage. No hidden vendor charges, no scope ambiguity.' },
+  { step: '04', title: 'Fabrication',              copy: 'Built in our 30,000 sq ft in-house warehouse — carpentry, metal, print, lighting, and AV under one roof.' },
+  { step: '05', title: 'QC Mock-up',               copy: 'The entire stand is erected and inspected end-to-end before it leaves our workshop.' },
+  { step: '06', title: 'Logistics & Installation', copy: 'Freight, venue approvals, on-site build, AV calibration, and a standby crew for every show day.' },
+  { step: '07', title: 'Dismantling',              copy: 'Clean, safe dismantle, asset return, and a full post-event project close-out report.' },
+]
+
+const featurePills = [
+  { icon: ClipboardList, label: 'Concept to installation' },
+  { icon: Sparkles,      label: 'Graphics & branding' },
+  { icon: Globe2,        label: 'AV & technology' },
+  { icon: ArrowRight,    label: 'Logistics & dismantling' },
+]
+
+const faqs = [
+  {
+    q: 'What exactly is turnkey exhibition management?',
+    a: 'Turnkey exhibition management means one team handles the complete lifecycle of your exhibition — from the initial brief and design through fabrication, logistics, on-site installation, and final dismantling. You brief a single point of contact and collect the keys to a finished stand.',
+  },
+  {
+    q: 'How do you handle multiple vendors?',
+    a: 'We don\'t rely on multiple external vendors for core delivery. Design, fabrication, graphics, AV integration, and installation are handled in-house by our own teams in our 30,000 sq ft workshop. This eliminates the coordination overhead and quality inconsistency that fragmented vendor chains introduce.',
+  },
+  {
+    q: 'Can we still be involved in decisions throughout the project?',
+    a: 'Absolutely. Your dedicated project manager schedules milestone approvals at every key stage — concept sign-off, 3D design, material selection, mock-up inspection, and pre-dispatch QC. You stay informed and in control without managing the logistics yourself.',
+  },
+  {
+    q: 'Do you manage international exhibitions?',
+    a: 'Yes. We have delivered exhibitions across 14+ countries including USA, Germany, UAE, France, Singapore, Netherlands, and Kenya. Our team handles import documentation, local compliance, freight forwarding, and on-ground installation coordination.',
+  },
+  {
+    q: 'What if the show timeline changes last minute?',
+    a: 'We build flexibility into every project schedule with contingency windows at critical-path stages. Your dedicated project manager monitors milestones continuously and adapts the plan immediately if a venue shifts dates or your brief evolves — keeping delivery on track regardless.',
+  },
+]
 
 export default function TurnkeyProjectManagementPage() {
   return (
     <main>
 
-      {/* ═══ SECTION 1: HERO ═══════════════════════════════════════════ */}
-      <section className="page-hero" aria-labelledby="hero-heading">
-        <div className="container">
-          <div className="page-hero-inner animate-in">
-            <span className="eyebrow-pill">One Team. One Point of Contact.</span>
-            <h1 id="hero-heading" style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: '700', letterSpacing: '-0.02em', lineHeight: '1.08', maxWidth: '780px', marginBottom: '22px' }}>Turnkey Project Management</h1>
-            <p style={{ fontSize: '1.05rem', color: 'var(--muted)', maxWidth: '600px', lineHeight: '1.8', marginBottom: '36px' }}>We manage the entire project cycle so you can focus entirely on your visitors — from the first brief to post-event dismantle, with zero coordination gaps.</p>
-            <div className="hero-ctas">
-              <a href="/contact" className="btn btn-primary">Request a Proposal &rarr;</a>
-              <a href="/contact" className="btn btn-outline">Book a Consultation</a>
-            </div>
-          </div>
+      {/* ══════════════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════════════ */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src={`${CDN}/turnkey-hero.jpg`}
+            alt="Turnkey exhibition project management — full-scale stand on the show floor"
+            fill className="object-cover" priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
-      </section>
 
-      {/* ═══ SECTION 2: INTRO + DUMMY IMAGE ════════════════════════════ */}
-      <section className="section" aria-labelledby="intro-heading">
-        <div className="container">
-          <div className="intro-media-grid animate-in">
-            <div className="intro-media-text">
-              <h2 id="intro-heading" style={{ position: 'absolute', left: '-9999px' }}>Turnkey Project Management</h2>
-              <p>Exhibitions involve dozens of moving parts — design, fabrication, logistics, vendors, venue approvals, installation, and dismantle. Coordinating them across multiple suppliers is where most delays and budget overruns begin.</p>
-              <p>With turnkey project management, a single accountable team owns the entire process, so nothing falls between the cracks.</p>
-              <p>At Approach Media, over two decades of delivery across India and 14+ countries means we anticipate problems before they happen — keeping your project on time, on budget, and on brief from day one.</p>
+        <div className="container-wide grid gap-10 py-24 md:grid-cols-12 md:py-36">
+          <div className="md:col-span-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-green/40 bg-brand-green/10 px-4 py-1.5 text-xs uppercase tracking-[0.18em] text-brand-green">
+              <Sparkles className="h-3.5 w-3.5" /> Turnkey Project Management
             </div>
-            {/* DUMMY PHOTO — replace src below with your own image */}
-            <figure className="media-frame">
-              {/* To use a real photo: <img src="../assets/portfolio/turnkey-project-management-1.jpg" alt="Turnkey exhibition project delivery" /> */}
-              <span className="media-icon" aria-hidden="true">&#128247;</span>
-              <span className="media-hint">Replace with project photo</span>
-              <figcaption className="media-tag">Sample Project</figcaption>
-              <span className="media-caption">Turnkey exhibition project delivery</span>
-            </figure>
+            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
+              One team. One brief.{' '}
+              <span className="text-brand-blue-glow">Zero coordination gaps.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              We manage the entire exhibition lifecycle — concept through dismantling —
+              under a single scope, a single budget, and one accountable project manager.
+              No fragmented vendors. No dropped handoffs. Just a stand that shows up on time.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild variant="hero" size="xl">
+                <Link href="/contact">Request a Proposal <ArrowRight className="h-4 w-4" /></Link>
+              </Button>
+              <Button asChild variant="glass" size="xl">
+                <Link href="/contact">Talk to a Project Manager</Link>
+              </Button>
+            </div>
+            <div className="mt-10 grid max-w-xl grid-cols-2 gap-3 md:grid-cols-4">
+              {trustBadges.map(b => (
+                <div key={b.label} className="flex items-center gap-2 rounded-xl border border-white/15 bg-background/60 px-3 py-2 text-xs text-muted-foreground backdrop-blur">
+                  <b.icon className="h-3.5 w-3.5 text-brand-green" />
+                  <span className="leading-tight">{b.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ SECTION 3: STATS STRIP ════════════════════════════════════ */}
-      <div className="stats-strip" role="region" aria-label="Company statistics">
-        <div className="container">
-          <div className="stats-strip-inner animate-in">
-            <div className="stat-item"><span className="stat-number">23+</span><div className="stat-label">Years of Experience</div></div>
-            <div className="stat-item"><span className="stat-number">6000+</span><div className="stat-label">Stalls Executed</div></div>
-            <div className="stat-item"><span className="stat-number">9+</span><div className="stat-label">Industries Served</div></div>
-            <div className="stat-item"><span className="stat-number">14+</span><div className="stat-label">Countries Delivered</div></div>
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ SECTION 4: END-TO-END SOLUTIONS ═══════════════════════════ */}
-      <section className="section" aria-labelledby="solutions-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ maxWidth: '640px' }}>
-            <h2 id="solutions-heading">End-to-End Turnkey Exhibition Solutions</h2>
-            <p style={{ color: 'var(--muted)', lineHeight: '1.85', fontSize: '1rem', marginTop: '18px' }}>From the first conversation to the final handover, every stage of your exhibition is planned, managed, and delivered by one team — giving you a single point of accountability throughout.</p>
-          </div>
-          <div className="feature-check-grid">
-            <div className="feature-check-card animate-in delay-1">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Single Point of Contact</h3>
-                <p>One dedicated project manager owns your entire exhibition — no chasing multiple vendors.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-2">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Design &amp; Fabrication Management</h3>
-                <p>Concept, 3D design, engineering, and in-house fabrication coordinated under one roof.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-3">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Logistics &amp; Site Coordination</h3>
-                <p>Transport, venue approvals, and on-site scheduling handled end to end.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-4">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Installation &amp; On-Site Support</h3>
-                <p>Professional setup with our team present throughout the show for any adjustment.</p>
-              </div>
-            </div>
-            <div className="feature-check-card animate-in delay-1">
-              <span className="check" aria-hidden="true">&#10003;</span>
-              <div>
-                <h3>Post-Event Dismantle &amp; Closeout</h3>
-                <p>Clean dismantle, asset recovery, and a full project documentation report.</p>
+          <div className="md:col-span-5">
+            <div className="grid grid-cols-2 gap-3">
+              <Image
+                src={`${CDN}/turnkey-gallery-1.jpg`}
+                alt="Turnkey project delivery — large-format exhibition stand"
+                width={640} height={800} loading="lazy"
+                className="aspect-[4/5] w-full rounded-2xl border border-white/15 object-cover"
+              />
+              <div className="space-y-3">
+                <Image
+                  src={`${CDN}/turnkey-gallery-2.jpg`}
+                  alt="On-site installation managed by Approach Media project team"
+                  width={640} height={640} loading="lazy"
+                  className="aspect-square w-full rounded-2xl border border-white/15 object-cover"
+                />
+                <Image
+                  src={`${CDN}/turnkey-gallery-3.jpg`}
+                  alt="Completed turnkey exhibition stand ready for show day"
+                  width={640} height={640} loading="lazy"
+                  className="aspect-square w-full rounded-2xl border border-white/15 object-cover"
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 5: WHY CHOOSE APPROACH MEDIA ══════════════════════ */}
-      <section className="section" style={{ background: 'hsl(222 24% 9% / 0.3)', borderTop: '1px solid var(--border)' }} aria-labelledby="why-heading">
-        <div className="container">
-          <div className="section-head animate-in">
-            <span className="section-label">Why Choose Approach Media</span>
-            <h2 id="why-heading">Reliable turnkey delivery with complete ownership, consistency, and accountability.</h2>
+      {/* ══════════════════════════════════════════════════
+          CONFIDENCE STRIP
+      ══════════════════════════════════════════════════ */}
+      <section className="border-y border-white/15 bg-surface/40 py-16 md:py-20">
+        <div className="container-wide grid gap-10 md:grid-cols-2 md:items-center">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">The cost of fragmentation</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              Multiple agencies. Multiple risks. One missed deadline.
+            </h2>
           </div>
-          <div className="why4-grid">
-            <div className="why4-card animate-in delay-1">
-              <h3>Complete Ownership</h3>
-              <p>A single team manages the entire process, eliminating coordination gaps and finger-pointing.</p>
+          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+            When design, fabrication, logistics, and AV are split across four different
+            suppliers, no one is accountable for the whole. One late delivery cascades
+            into a late installation, and suddenly you&apos;re opening your show with half
+            a stall. Turnkey removes that entirely — a single team owns the risk, the
+            timeline, and the result.
+          </p>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          OUTCOMES STRIP
+      ══════════════════════════════════════════════════ */}
+      <section className="py-14">
+        <div className="container-wide grid grid-cols-2 gap-6 md:grid-cols-4">
+          {outcomes.map(o => (
+            <div key={o.label} className="rounded-2xl border border-white/15 bg-background/60 p-6 text-center">
+              <div className="font-display text-3xl font-semibold text-brand-blue-glow md:text-4xl">{o.stat}</div>
+              <div className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">{o.label}</div>
             </div>
-            <div className="why4-card animate-in delay-2">
-              <h3>Predictable Timelines</h3>
-              <p>A structured workflow keeps every milestone on schedule, with most projects delivered within committed timelines.</p>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          WHY CHOOSE US
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-wide">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why choose Approach Media</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+                Six reasons project teams hand it over to us and sleep soundly.
+              </h2>
             </div>
-            <div className="why4-card animate-in delay-3">
-              <h3>Cost Transparency</h3>
-              <p>One consolidated, itemised budget — no hidden vendor mark-ups or surprise charges.</p>
+            <Button asChild variant="glass" size="lg">
+              <Link href="/contact">Discuss your project <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {whyChoose.map(s => (
+              <div
+                key={s.title}
+                className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50"
+              >
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
+                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          GALLERY
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-y border-white/15 bg-surface/30 py-20 md:py-24">
+        <div className="container-wide">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Projects we have delivered</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+                One team. Thousands of shows delivered.
+              </h2>
             </div>
-            <div className="why4-card animate-in delay-4">
-              <h3>Quality Control</h3>
-              <p>In-house fabrication and full-scale mock-up testing ensure consistent quality before dispatch.</p>
+            <Link href="/portfolio" className="hidden items-center gap-1.5 text-sm font-medium text-brand-blue-glow md:inline-flex">
+              View full portfolio <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-12 md:grid-rows-2">
+            {/* Large left */}
+            <div className="md:col-span-7 md:row-span-2 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '520px' }}>
+              <Image
+                src={`${CDN}/turnkey-gallery-4.jpg`}
+                alt="Completed large-format turnkey exhibition stand — full project delivery"
+                fill loading="lazy"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">Manufacturing Expo · 120 sqm · Turnkey</p>
+                <p className="mt-1 font-display text-xl text-foreground">Brief to build in seven stages</p>
+              </div>
             </div>
-            <div className="why4-card animate-in delay-1">
-              <h3>Global Delivery</h3>
-              <p>Experience across 14+ countries, managing logistics and compliance wherever you exhibit.</p>
+            {/* Top right */}
+            <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
+              <Image
+                src={`${CDN}/turnkey-gallery-2.jpg`}
+                alt="On-site installation managed by turnkey project team"
+                fill loading="lazy"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">International Trade Fair · 72 sqm</p>
+                <p className="mt-1 font-display text-xl text-foreground">Cross-border execution, zero delays</p>
+              </div>
+            </div>
+            {/* Bottom right */}
+            <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
+              <Image
+                src={`${CDN}/turnkey-gallery-3.jpg`}
+                alt="Turnkey project — finished hospitality and display zone"
+                fill loading="lazy"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
+                <p className="text-xs uppercase tracking-wider text-brand-green">Pharma Summit · 48 sqm</p>
+                <p className="mt-1 font-display text-xl text-foreground">Single PM, full delivery</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 6: OUR APPROACH ═══════════════════════════════════ */}
-      <section className="section" aria-labelledby="approach-heading">
-        <div className="container">
-          <div className="section-head animate-in">
-            <span className="section-label">Our Approach</span>
-            <h2 id="approach-heading">How we deliver this, reliably</h2>
-          </div>
-          <div className="flow-grid">
-            <div className="flow-card animate-in delay-1">
-              <span className="flow-num">01</span>
-              <h3>Understand &amp; Plan</h3>
-              <p>We define your brand, objectives, budget, and timelines, then build a complete project plan.</p>
-            </div>
-            <div className="flow-card animate-in delay-2">
-              <span className="flow-num">02</span>
-              <h3>Design &amp; Detail</h3>
-              <p>Spatial concepts, 3D renders, and engineering drawings are finalised and locked for execution.</p>
-            </div>
-            <div className="flow-card animate-in delay-3">
-              <span className="flow-num">03</span>
-              <h3>Build &amp; Coordinate</h3>
-              <p>Fabrication, logistics, and venue approvals are managed in parallel and quality-checked.</p>
-            </div>
-            <div className="flow-card animate-in delay-4">
-              <span className="flow-num">04</span>
-              <h3>Execute &amp; Close</h3>
-              <p>We install on-site, hand over a ready stand, then dismantle and close with full documentation.</p>
+      {/* ══════════════════════════════════════════════════
+          WHAT'S INCLUDED
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-b border-white/15 bg-surface/40 py-20 md:py-24">
+        <div className="container-wide grid gap-10 md:grid-cols-12 md:items-center">
+          <div className="md:col-span-5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/15">
+              <Image
+                src={`${CDN}/turnkey-detail.jpg`}
+                alt="Turnkey exhibition management — detail of materials and project execution"
+                fill loading="lazy" className="object-cover"
+              />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 7: CTA ════════════════════════════════════════════ */}
-      <section className="cta-section" aria-labelledby="cta-heading">
-        <div className="container">
-          <h2 id="cta-heading">Consult with our turnkey project management experts today.</h2>
-          <p className="cta-sub">Because a single accountable partner means a smoother exhibition and more time for what matters — your visitors.</p>
-          <div className="cta-buttons">
-            <a href="/contact" className="btn btn-primary">Request a Proposal &rarr;</a>
-            <a href="/contact" className="btn btn-outline">Book a Consultation</a>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 8: FAQ ════════════════════════════════════════════ */}
-      <section className="section faq-section" aria-labelledby="faq-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ marginBottom: '36px' }}>
-            <h2 id="faq-heading">Frequently Asked Questions</h2>
-          </div>
-          <div className="faq-list">
-            <div className="faq-item animate-in delay-1">
-              <button className="faq-question" aria-expanded="false">What does turnkey project management include?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Everything from concept design and fabrication to logistics, venue approvals, installation, on-site support, and post-event dismantle — managed by one team under a single budget.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-2">
-              <button className="faq-question" aria-expanded="false">Will I have one point of contact?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Yes. A dedicated project manager owns your exhibition end to end, so you never coordinate multiple vendors yourself.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-3">
-              <button className="faq-question" aria-expanded="false">Can you manage international exhibitions?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>Absolutely. We deliver to 14+ countries, handling logistics, local vendor coordination, and venue compliance wherever you exhibit.</p></div>
-            </div>
-            <div className="faq-item animate-in delay-4">
-              <button className="faq-question" aria-expanded="false">How do you keep the project on budget?<span className="faq-icon" aria-hidden="true">&#43;</span></button>
-              <div className="faq-answer"><p>You receive one consolidated, itemised budget upfront. Because we manage design, fabrication, and logistics in-house, there are no hidden vendor mark-ups.</p></div>
+          <div className="md:col-span-7">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Everything included</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              Everything in one scope. Nothing left to chance.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+              From the first sketch to the last bolt removed from the floor, every
+              deliverable is inside a single project scope — budgeted, scheduled, and
+              managed by one accountable team. There are no handoff gaps, no hidden
+              add-ons, and no separate supplier invoices to reconcile.
+            </p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {featurePills.map(f => (
+                <div key={f.label} className="flex items-center gap-3 rounded-xl border border-white/15 bg-background/60 px-4 py-3 text-sm text-foreground">
+                  <f.icon className="h-4 w-4 text-brand-green" />
+                  {f.label}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 9: EXPLORE MORE SERVICES ══════════════════════════ */}
-      <section className="section explore-more-section" aria-labelledby="more-heading">
-        <div className="container">
-          <div className="section-head animate-in" style={{ marginBottom: '36px' }}>
-            <span className="section-label" id="more-heading">Explore More Services</span>
+      {/* ══════════════════════════════════════════════════
+          PROCESS — 7 STEPS
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-wide grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to dismantling</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              A 7-step process with zero gaps in ownership.
+            </h2>
+            <p className="mt-5 text-muted-foreground">
+              Every step is planned, assigned, and tracked before the previous one
+              closes. No stage is handed to an external coordinator — our team owns
+              every transition.
+            </p>
+            <Button asChild variant="hero" size="lg" className="mt-7">
+              <Link href="/contact">Start your project <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
           </div>
-          <div className="srv-cards-grid">
-            <a href="/services/exhibition-stall-design" className="srv-card animate-in delay-1">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Exhibition Stall Design</h3>
-              <p>Innovative stalls designed to create a lasting impression within seconds.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
-            <a href="/services/custom-booth-fabrication" className="srv-card animate-in delay-2">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Custom Booth Fabrication</h3>
-              <p>Bespoke designs translated into durable, high-quality structures.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
-            <a href="/services/av-technology-integration" className="srv-card animate-in delay-3">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <h3>Audio-Visual &amp; Technology Integration</h3>
-              <p>Enhancing how your audience experiences and interacts with your brand.</p>
-              <span className="srv-card-cta">Learn more &#8599;</span>
-            </a>
+          <div className="lg:col-span-8">
+            <ol className="space-y-4">
+              {processSteps.map(p => (
+                <li
+                  key={p.step}
+                  className="flex gap-5 rounded-2xl border border-white/15 bg-surface/40 p-6 transition-colors hover:border-brand-blue-glow/50"
+                >
+                  <div className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</div>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold text-foreground">{p.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          INLINE CTA BAND
+      ══════════════════════════════════════════════════ */}
+      <section className="border-y border-white/15 bg-surface/40 py-14">
+        <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="flex items-start gap-4">
+            <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-green/15 text-brand-green">
+              <ClipboardList className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-display text-xl font-semibold text-foreground md:text-2xl">
+                Tell us your show. We&apos;ll manage the rest.
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground md:text-base">
+                Share your event, footprint, and timeline — your dedicated PM takes it from there.
+              </p>
+            </div>
+          </div>
+          <Button asChild variant="hero" size="lg" className="shrink-0">
+            <Link href="/contact">Start the conversation <ArrowRight className="h-4 w-4" /></Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════════════════ */}
+      <section className="py-20 md:py-24">
+        <div className="container-narrow">
+          <p className="text-xs uppercase tracking-[0.28em] text-brand-green">FAQ</p>
+          <h2 className="mt-4 font-display text-3xl font-semibold text-foreground md:text-5xl">Frequently Asked Questions</h2>
+          <div className="mt-12">
+            <Accordion type="single" collapsible className="space-y-2">
+              {faqs.map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="rounded-xl border border-white/15 bg-surface/40 px-5"
+                >
+                  <AccordionTrigger className="py-5 text-left font-display text-base font-medium text-foreground hover:no-underline">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════
+          FINAL CTA
+      ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden border-t border-white/15 py-24 md:py-32">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(var(--brand-blue-glow)/0.15),transparent_60%)]" />
+        <div className="container-narrow text-center">
+          <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get started</p>
+          <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
+            One call is all it takes to hand it over.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-muted-foreground md:text-lg">
+            Brief a project manager today. We&apos;ll scope the full lifecycle, fix the
+            budget, and own every stage — so your team is free to focus on the show.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button asChild variant="hero" size="xl">
+              <Link href="/contact">Request a Proposal <ArrowRight className="h-4 w-4" /></Link>
+            </Button>
+            <Button asChild variant="glass" size="xl">
+              <Link href="/contact">Book a Consultation</Link>
+            </Button>
           </div>
         </div>
       </section>
