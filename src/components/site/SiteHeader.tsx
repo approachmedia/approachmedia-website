@@ -44,16 +44,15 @@ export default function SiteHeader() {
       <div className="container-wide flex h-16 items-center justify-between gap-4 md:h-20">
         {/* Logo */}
         <Link href="/" aria-label="Approach Media — Home" className="flex shrink-0 items-center">
-          <span className="rounded-md bg-white px-2 py-1.5">
-            <Image
-              src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
-              alt="Approach Media"
-              width={160}
-              height={40}
-              priority
-              style={{ height: '28px', width: 'auto' }}
-            />
-          </span>
+          <Image
+            src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
+            alt="Approach Media"
+            width={200}
+            height={56}
+            priority
+            className="brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.35)]"
+            style={{ height: '44px', width: 'auto' }}
+          />
         </Link>
 
         {/* Desktop nav */}
