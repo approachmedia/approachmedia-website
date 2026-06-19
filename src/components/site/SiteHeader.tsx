@@ -45,13 +45,13 @@ export default function SiteHeader() {
         {/* Logo */}
         <Link href="/" aria-label="Approach Media — Home" className="flex shrink-0 items-center">
           <Image
-            src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
+            src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/logo_favicon/Appraoch%20Media%20Logo.svg"
             alt="Approach Media"
-            width={200}
+            width={220}
             height={56}
             priority
-            className="brightness-0 invert drop-shadow-[0_0_8px_rgba(255,255,255,0.35)]"
-            style={{ height: '44px', width: 'auto' }}
+            unoptimized
+            style={{ height: '48px', width: 'auto' }}
           />
         </Link>
 

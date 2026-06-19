@@ -49,13 +49,14 @@ export default function SiteFooter() {
 
           {/* Brand */}
           <div className="col-span-2">
-            <Link href="/" aria-label="Approach Media — Home" className="inline-flex rounded-md bg-white px-2 py-1.5">
+            <Link href="/" aria-label="Approach Media — Home" className="inline-flex">
               <Image
-                src="https://approachmedia.in/wp-content/uploads/2020/10/approach-media-logo-small.png"
+                src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/logo_favicon/Appraoch%20Media%20Logo.svg"
                 alt="Approach Media"
-                width={160}
-                height={40}
-                style={{ height: '32px', width: 'auto' }}
+                width={200}
+                height={56}
+                unoptimized
+                style={{ height: '52px', width: 'auto' }}
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
