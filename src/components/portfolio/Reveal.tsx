@@ -50,17 +50,17 @@ export function EditorialImage({
             initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
             whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 1.1, ease: EASE }}
+            transition={{ duration: 0.9, ease: EASE }}
             className="absolute inset-0"
           >
             <motion.img
               src={src}
               alt={alt}
               loading="lazy"
-              initial={{ scale: 1.18 }}
+              initial={{ scale: 1.06 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 1.4, ease: EASE }}
+              transition={{ duration: 1.2, ease: EASE }}
               className="absolute inset-0 h-full w-full object-cover will-change-transform"
             />
           </motion.div>
