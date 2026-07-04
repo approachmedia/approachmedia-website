@@ -1,17 +1,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
-import CaseStudyHero, { CASE_LIGHT_BG } from './CaseStudyHero'
+import CaseStudyHero from './CaseStudyHero'
 import BrandMark from './BrandMark'
 import { Reveal, EditorialImage } from './Reveal'
 import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 
-// ─── Light-zone palette (post-hero sections, per the reference video) ───
-const INK      = 'hsl(222 30% 12%)'   // primary text
-const INK_SOFT = 'hsl(222 12% 38%)'   // muted text
-const INK_FADE = 'hsl(222 10% 52%)'   // labels
-const LINE     = 'hsl(220 15% 86%)'   // borders
-const CARD     = 'hsl(0 0% 100%)'     // cards
+// ─── Palette — the site's original black scheme, per client direction ───
+const INK      = 'hsl(0 0% 96%)'      // primary text
+const INK_SOFT = 'hsl(220 10% 62%)'   // muted text
+const INK_FADE = 'hsl(220 10% 45%)'   // labels
+const LINE     = 'hsl(222 18% 14%)'   // borders
+const CARD     = 'hsl(222 28% 8%)'    // cards
 
 // ── Helpers ────────────────────────────────────────────────────
 
@@ -27,7 +27,7 @@ function FactRow({ label, value }: { label: string; value: string | number }) {
 function ServiceCard({ label }: { label: string }) {
   return (
     <div style={{ padding: '16px 20px', background: CARD, border: `1px solid ${LINE}`, borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'hsl(110 55% 42%)', flexShrink: 0 }} />
+      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'hsl(110 55% 50%)', flexShrink: 0 }} />
       <span style={{ fontSize: '0.88rem', fontWeight: 500, color: INK }}>{label}</span>
     </div>
   )
@@ -37,7 +37,7 @@ function NarrativeBlock({ num, heading, body }: { num: string; heading: string; 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '14px' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
-        <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(230 60% 45%)', flexShrink: 0 }}>{num}</span>
+        <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(230 70% 65%)', flexShrink: 0 }}>{num}</span>
         <h3 style={{ fontSize: 'clamp(1.15rem, 2.5vw, 1.5rem)', fontWeight: 700, color: INK, lineHeight: 1.2 }}>{heading}</h3>
       </div>
       <p style={{ fontSize: '0.95rem', color: INK_SOFT, lineHeight: 1.85, paddingLeft: '32px' }}>{body}</p>
@@ -136,9 +136,9 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       )}
 
       {/* ═══════════════════════════════════════════════════════
-          LIGHT ZONE — the page turns light after the hero
+          CONTENT — original black scheme throughout
           ═══════════════════════════════════════════════════════ */}
-      <div style={{ background: CASE_LIGHT_BG }}>
+      <div>
 
         {/* ── INTRO: breadcrumb + title left, facts right ── */}
         <section style={{ borderBottom: `1px solid ${LINE}` }}>
@@ -173,18 +173,18 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
                   {primaryIndustry && (
                     <Link href={`/portfolio/industry/${primaryIndustry.slug}`}
-                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(110 55% 42% / 0.08)', border: '1px solid hsl(110 55% 42% / 0.35)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(110 55% 30%)', textDecoration: 'none' }}>
+                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(110 55% 50% / 0.1)', border: '1px solid hsl(110 55% 50% / 0.3)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(110 55% 50%)', textDecoration: 'none' }}>
                       {primaryIndustry.name}
                     </Link>
                   )}
                   {allTypes.slice(0, 1).map(t => (
                     <Link key={t.id} href={`/portfolio/type/${t.slug}`}
-                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(230 64% 52% / 0.07)', border: '1px solid hsl(230 64% 52% / 0.3)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(230 64% 42%)', textDecoration: 'none' }}>
+                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(230 70% 65% / 0.1)', border: '1px solid hsl(230 70% 65% / 0.3)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(230 70% 65%)', textDecoration: 'none' }}>
                       {t.name}
                     </Link>
                   ))}
                   {awards.slice(0, 1).map((a, i) => (
-                    <span key={i} style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(42 80% 55% / 0.12)', border: '1px solid hsl(42 80% 45% / 0.4)', fontSize: '0.7rem', fontWeight: 700, color: 'hsl(42 80% 30%)' }}>
+                    <span key={i} style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(42 80% 55% / 0.1)', border: '1px solid hsl(42 80% 55% / 0.3)', fontSize: '0.7rem', fontWeight: 700, color: 'hsl(42 80% 60%)' }}>
                       {a}
                     </span>
                   ))}
@@ -196,7 +196,11 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
                   letterSpacing: '-0.025em',
                   lineHeight: 1.08,
                   marginBottom: '20px',
-                  color: INK,
+                  background: 'linear-gradient(105deg, hsl(0 0% 98%) 0%, hsl(225 85% 70%) 42%, hsl(145 60% 55%) 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent',
                 }}>
                   {project.title}
                 </h1>
@@ -214,7 +218,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
 
               {/* Right — compact fact stack */}
               <Reveal delay={0.15}>
-                <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: '14px', padding: '24px', marginTop: '4px', boxShadow: '0 1px 3px rgba(16,24,40,0.06)' }}>
+                <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: '14px', padding: '24px', marginTop: '4px' }}>
                   <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: INK_FADE, marginBottom: '4px' }}>
                     Project Details
                   </p>
@@ -260,7 +264,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
         {/* ── CONTEXT / BRIEF — with a quiet brand mark in the margin ── */}
         <section style={{ borderBottom: `1px solid ${LINE}`, position: 'relative', overflow: 'hidden' }}>
           <div aria-hidden style={{ position: 'absolute', right: '-90px', top: '50%', transform: 'translateY(-50%)', width: '340px', height: '306px', opacity: 0.55 }}>
-            <BrandMark className="h-full w-full" stroke="hsl(220 15% 82%)" strokeWidth={0.8} />
+            <BrandMark className="h-full w-full" stroke="hsl(222 18% 22%)" strokeWidth={0.8} />
           </div>
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px', position: 'relative' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
@@ -423,7 +427,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </section>
         )}
 
-      </div>{/* end light zone */}
+      </div>{/* end content zone */}
 
       {/* ═══════════════════════════════════════════════════════
           IMPACT — back to dark (bookend)
