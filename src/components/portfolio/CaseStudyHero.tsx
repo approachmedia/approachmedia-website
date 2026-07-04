@@ -11,7 +11,7 @@
  */
 
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import BlueprintLines from './BlueprintLines'
+import GoldenRatio from './GoldenRatio'
 
 export type CaseStudyHeroProps = {
   title:     string
@@ -51,7 +51,7 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.55)_100%)]" />
 
-      {/* Blueprint construction lines — the selected shape, full-bleed */}
+      {/* Golden ratio construction — the final selected shape, full-bleed */}
       <div className="absolute inset-0 z-10">
         <motion.div
           initial={prefersReduced ? false : { opacity: 0 }}
@@ -60,7 +60,7 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
           style={prefersReduced ? undefined : { y: linesY }}
           className="h-full w-full will-change-transform"
         >
-          <BlueprintLines className="h-full w-full" />
+          <GoldenRatio className="h-full w-full" />
         </motion.div>
       </div>
 

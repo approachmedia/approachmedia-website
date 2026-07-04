@@ -9,7 +9,7 @@
  */
 
 import { motion, useReducedMotion } from 'framer-motion'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -39,12 +39,17 @@ export function EditorialImage({
   className?: string
 }) {
   const prefersReduced = useReducedMotion()
+  const [failed, setFailed] = useState(false)
+
+  // A missing or broken image collapses the block entirely — never leave a
+  // giant empty placeholder box reserving space on the page.
+  if (!src || failed) return null
 
   return (
     <figure className={`relative m-0 ${className}`}>
       <div className={`relative overflow-hidden ${aspect} bg-slate-900`}>
         {prefersReduced ? (
-          <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+          <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <motion.div
             initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
@@ -57,6 +62,7 @@ export function EditorialImage({
               src={src}
               alt={alt}
               loading="lazy"
+              onError={() => setFailed(true)}
               initial={{ scale: 1.06 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true, margin: '-80px' }}
