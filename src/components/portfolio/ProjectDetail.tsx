@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
-import ProjectCinema, { type CinemaScene } from './ProjectCinema'
+import CaseStudyHero from './CaseStudyHero'
+import CaseStudyShapes from './CaseStudyShapes'
+import { Reveal, EditorialImage } from './Reveal'
 import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -55,13 +57,6 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
   const primaryIndustry = project.industries.find(i => i.isPrimary)?.industry
   const allTypes        = project.stallTypes.map(t => t.stallType)
 
-  // Combined photo set for the masonry grid (build photos + 3D renders)
-  const galleryItems: GalleryItem[] = [...galleryImages, ...renders].map(m => ({
-    id: m.id,
-    src: m.cdnUrl ?? m.url,
-    alt: m.altText,
-    caption: m.caption,
-  }))
   const materials       = (project.materialsUsed   as string[] | null) ?? []
   const features        = (project.specialFeatures as string[] | null) ?? []
   const awards          = (project.awards          as string[] | null) ?? []
@@ -102,37 +97,49 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
     )
   }
 
-  // ── Cinema scenes: hero first, then gallery + renders (max 6) ──
-  const cinemaScenes: CinemaScene[] = [
-    ...(hero ? [hero] : []),
-    ...galleryImages,
-    ...renders,
-  ].slice(0, 6).map(m => ({
-    src:     m.cdnUrl ?? m.url,
-    alt:     m.altText,
+  // ── Agentura-style hero + editorial image breaks ──────────────
+  // First 4 gallery images become editorial breaks woven between content
+  // sections; the rest (plus 3D renders) go to the masonry gallery.
+  const editorialImgs   = galleryImages.slice(0, 4)
+  const remainingItems: GalleryItem[] = [...galleryImages.slice(4), ...renders].map(m => ({
+    id: m.id,
+    src: m.cdnUrl ?? m.url,
+    alt: m.altText,
     caption: m.caption,
   }))
 
-  const cinemaMeta = [
-    ex?.name,
-    ex?.city ?? project.city,
-    project.buildYear ? String(project.buildYear) : null,
-    project.stallAreaSqm ? `${Number(project.stallAreaSqm)} sqm` : null,
-  ].filter(Boolean).join('  ·  ')
+  const heroServices = [
+    ...allTypes.map(t => t.name),
+    'Design',
+    'Fabrication',
+  ].filter(Boolean).slice(0, 3).join(' · ')
+
+  const heroClientLine = project.client
+    ? [project.client.name, ex?.city ?? project.city].filter(Boolean).join(', ')
+    : null
 
   return (
     <article>
 
+      {/* Wrapper spanning hero → brief: hosts the travelling shape layer.
+          Shapes start spread across the hero, converge into a centered totem
+          and drift behind the opening sections before fading out. */}
+      <div className="relative overflow-hidden">
+      <CaseStudyShapes />
+
       {/* ═══════════════════════════════════════════════════════
-          BLOCK 0 — CINEMA: full-screen scroll experience built
-          from this project's own photo set
+          BLOCK 0 — HERO: full-viewport image, centered name,
+          corner metadata (geometry lives in CaseStudyShapes)
           ═══════════════════════════════════════════════════════ */}
-      {cinemaScenes.length > 0 && (
-        <ProjectCinema
+      {hero && (
+        <CaseStudyHero
           title={project.client?.name ?? project.title}
-          meta={cinemaMeta}
+          image={hero.cdnUrl ?? hero.url}
+          imageAlt={hero.altText}
+          year={project.buildYear ? String(project.buildYear) : null}
           category={primaryIndustry?.name ?? null}
-          scenes={cinemaScenes}
+          client={heroClientLine}
+          services={heroServices}
         />
       )}
 
@@ -284,9 +291,33 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          BLOCK 3 — CONTEXT / BRIEF
+          BLOCK 2 — EDITORIAL IMAGE 1: offset right (Agentura-style)
           ═══════════════════════════════════════════════════════ */}
-      <section style={{ background: 'hsl(222 28% 7%)', borderBottom: '1px solid hsl(222 18% 13%)' }}>
+      {editorialImgs[0] && (
+        <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
+          <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '64px 24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.6fr)', gap: '24px', alignItems: 'end' }}>
+              <Reveal>
+                <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(220 10% 45%)' }}>
+                  {String(project.buildYear ?? '')} {ex?.name ? `· ${ex.name}` : ''}
+                </p>
+              </Reveal>
+              <EditorialImage
+                src={editorialImgs[0].cdnUrl ?? editorialImgs[0].url}
+                alt={editorialImgs[0].altText}
+                caption={editorialImgs[0].caption}
+                aspect="aspect-[4/3]"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════
+          BLOCK 3 — CONTEXT / BRIEF (transparent bg so the shape
+          totem stays visible behind it)
+          ═══════════════════════════════════════════════════════ */}
+      <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
             <div style={{ paddingTop: '4px' }}>
@@ -330,6 +361,25 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
         </div>
       </section>
 
+      {/* End of shape-layer wrapper — geometry fades out above here */}
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════
+          BLOCK 3.5 — EDITORIAL IMAGE 2: full-bleed wide
+          ═══════════════════════════════════════════════════════ */}
+      {editorialImgs[1] && (
+        <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
+          <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '64px 24px' }}>
+            <EditorialImage
+              src={editorialImgs[1].cdnUrl ?? editorialImgs[1].url}
+              alt={editorialImgs[1].altText}
+              caption={editorialImgs[1].caption}
+              aspect="aspect-[21/9]"
+            />
+          </div>
+        </section>
+      )}
+
       {/* ═══════════════════════════════════════════════════════
           BLOCK 4 — SERVICES USED
           ═══════════════════════════════════════════════════════ */}
@@ -366,6 +416,32 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       </section>
 
       {/* ═══════════════════════════════════════════════════════
+          BLOCK 4.5 — EDITORIAL IMAGES 3+4: two-up pair
+          ═══════════════════════════════════════════════════════ */}
+      {editorialImgs[2] && (
+        <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
+          <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '64px 24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: editorialImgs[3] ? 'repeat(auto-fit, minmax(300px, 1fr))' : '1fr', gap: '20px' }}>
+              <EditorialImage
+                src={editorialImgs[2].cdnUrl ?? editorialImgs[2].url}
+                alt={editorialImgs[2].altText}
+                caption={editorialImgs[2].caption}
+                aspect="aspect-[4/3]"
+              />
+              {editorialImgs[3] && (
+                <EditorialImage
+                  src={editorialImgs[3].cdnUrl ?? editorialImgs[3].url}
+                  alt={editorialImgs[3].altText}
+                  caption={editorialImgs[3].caption}
+                  aspect="aspect-[4/3]"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════
           BLOCK 5 — NARRATIVE: Challenge / Design / Outcome
           ═══════════════════════════════════════════════════════ */}
       <section style={{ background: 'hsl(222 28% 7%)', borderBottom: '1px solid hsl(222 18% 13%)' }}>
@@ -396,7 +472,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
       {/* ═══════════════════════════════════════════════════════
           BLOCK 6 — GALLERY (responsive masonry photo grid)
           ═══════════════════════════════════════════════════════ */}
-      {galleryItems.length > 0 ? (
+      {remainingItems.length > 0 ? (
         <section style={{ borderBottom: '1px solid hsl(222 18% 13%)' }}>
           <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '80px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px', marginBottom: '36px', flexWrap: 'wrap' }}>
@@ -407,11 +483,11 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
                 </h2>
               </div>
               <span style={{ fontSize: '0.8rem', color: 'hsl(220 10% 45%)' }}>
-                {galleryItems.length} {galleryItems.length === 1 ? 'image' : 'images'} · click to enlarge
+                {remainingItems.length} {remainingItems.length === 1 ? 'image' : 'images'} · click to enlarge
               </span>
             </div>
 
-            <ParallaxGallery items={galleryItems} />
+            <ParallaxGallery items={remainingItems} />
 
             {floorPlan && (
               <div style={{ marginTop: '48px' }}>
