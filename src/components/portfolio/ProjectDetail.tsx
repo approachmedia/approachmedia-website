@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
-import ScrollHero from './ScrollHero'
+import ProjectCinema, { type CinemaScene } from './ProjectCinema'
 import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -102,8 +102,39 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
     )
   }
 
+  // ── Cinema scenes: hero first, then gallery + renders (max 6) ──
+  const cinemaScenes: CinemaScene[] = [
+    ...(hero ? [hero] : []),
+    ...galleryImages,
+    ...renders,
+  ].slice(0, 6).map(m => ({
+    src:     m.cdnUrl ?? m.url,
+    alt:     m.altText,
+    caption: m.caption,
+  }))
+
+  const cinemaMeta = [
+    ex?.name,
+    ex?.city ?? project.city,
+    project.buildYear ? String(project.buildYear) : null,
+    project.stallAreaSqm ? `${Number(project.stallAreaSqm)} sqm` : null,
+  ].filter(Boolean).join('  ·  ')
+
   return (
     <article>
+
+      {/* ═══════════════════════════════════════════════════════
+          BLOCK 0 — CINEMA: full-screen scroll experience built
+          from this project's own photo set
+          ═══════════════════════════════════════════════════════ */}
+      {cinemaScenes.length > 0 && (
+        <ProjectCinema
+          title={project.client?.name ?? project.title}
+          meta={cinemaMeta}
+          category={primaryIndustry?.name ?? null}
+          scenes={cinemaScenes}
+        />
+      )}
 
       {/* Roll-up reveal for the Project Details panel — unfurls from the top
           like an exhibition roll-up banner, then the rows stagger in. */}
@@ -251,25 +282,6 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </div>
         </div>
       </section>
-
-      {/* ═══════════════════════════════════════════════════════
-          BLOCK 2 — HERO VISUAL (scroll-scaling, big → framed)
-          ═══════════════════════════════════════════════════════ */}
-      {hero ? (
-        <ScrollHero
-          src={hero.cdnUrl ?? hero.url}
-          alt={hero.altText}
-          caption={hero.caption}
-          title={project.title}
-        />
-      ) : (
-        <section style={{ position: 'relative', width: '100%', background: 'hsl(222 30% 6%)' }}>
-          <div style={{ width: '100%', aspectRatio: '21/9', maxHeight: '480px', background: 'hsl(222 28% 8%)', border: '1px solid hsl(222 18% 16%)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'hsl(222 18% 14%)' }} />
-            <span style={{ fontSize: '0.8rem', color: 'hsl(220 10% 35%)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>{project.title}</span>
-          </div>
-        </section>
-      )}
 
       {/* ═══════════════════════════════════════════════════════
           BLOCK 3 — CONTEXT / BRIEF

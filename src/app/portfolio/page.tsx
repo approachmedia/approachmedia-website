@@ -6,7 +6,6 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import ProjectCard from '@/components/portfolio/ProjectCard'
 import FilterBar from '@/components/portfolio/FilterBar'
-import PortfolioShowcase, { type ShowcaseItem } from '@/components/portfolio/PortfolioShowcase'
 
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
 // Data is cached for 5 minutes at the function level via unstable_cache below.
@@ -45,40 +44,12 @@ export default async function PortfolioIndexPage() {
 
   const jsonLd = generatePortfolioIndexSchema(projects.map(p => ({ title: p.title, slug: p.slug })))
 
-  // ── Showcase scenes: featured projects first, topped up with the most
-  // recent image-backed projects (one per client, max 6 scenes) ─────────
-  const withImage = projects.filter(p => p.media[0])
-  const seenClients = new Set<string>()
-  const scenes: typeof withImage = []
-  for (const p of [...withImage.filter(p => p.isFeatured), ...withImage]) {
-    const key = p.client?.name ?? p.slug
-    if (seenClients.has(key)) continue
-    seenClients.add(key)
-    scenes.push(p)
-    if (scenes.length === 6) break
-  }
-
-  const showcaseItems: ShowcaseItem[] = scenes.map(p => ({
-    slug:       p.slug,
-    clientName: p.client?.name ?? p.title,
-    eventName:  p.exhibition?.name ?? null,
-    location:   p.city ?? p.exhibition?.city ?? null,
-    year:       p.buildYear,
-    boothSize:  p.stallAreaSqm ? `${Number(p.stallAreaSqm)} sqm` : null,
-    heroImage:  p.media[0].cdnUrl ?? p.media[0].url,
-    heroAlt:    p.media[0].altText,
-    category:   p.industries[0]?.industry.name ?? null,
-  }))
-
   const featured = projects.filter(p => p.isFeatured)
   const rest     = projects.filter(p => !p.isFeatured)
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      {/* ── Cinematic scroll showcase — full bleed, no container ── */}
-      <PortfolioShowcase items={showcaseItems} />
 
       {/* ── Project index ── */}
       <main className="max-w-7xl mx-auto px-4 py-20 space-y-16">
