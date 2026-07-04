@@ -1,18 +1,91 @@
 'use client'
 
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+type Option = { id: number; name: string }
+
 type Project = {
-  id:         number
-  title:      string
-  status:     string
-  isFeatured: boolean
-  buildYear:  number | null
-  client:     { name: string } | null
-  exhibition: { name: string } | null
-  industries: { industry: { name: string } }[]
+  id:           number
+  title:        string
+  status:       string
+  isFeatured:   boolean
+  buildYear:    number | null
+  client:       { name: string } | null
+  exhibition:   { name: string } | null
+  industryId:   number | null
+  stallTypeId:  number | null
+  thumbnail:    string | null
+  thumbnailAlt: string
+}
+
+// ── Inline auto-saving dropdown ───────────────────────────────────────────────
+// Saves immediately on change via PATCH /api/admin/portfolio/[id].
+// `field` picks which relation to update (industryIds | stallTypeIds).
+
+function InlineSelect({
+  projectId, field, value, options, placeholder,
+}: {
+  projectId:   number
+  field:       'industryIds' | 'stallTypeIds'
+  value:       number | null
+  options:     Option[]
+  placeholder: string
+}) {
+  const [current, setCurrent] = useState<number | null>(value)
+  const [state, setState]     = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+
+  // Keep in sync if the server data changes (e.g. after router.refresh)
+  useEffect(() => { setCurrent(value) }, [value])
+
+  async function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const raw   = e.target.value
+    const newId = raw ? parseInt(raw, 10) : null
+    const prev  = current
+    setCurrent(newId)
+
+    if (newId === null) { setCurrent(prev); return } // don't allow clearing to empty
+
+    setState('saving')
+    try {
+      const res = await fetch(`/api/admin/portfolio/${projectId}`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ [field]: [newId] }),
+      })
+      if (!res.ok) throw new Error(String(res.status))
+      setState('saved')
+      setTimeout(() => setState('idle'), 1500)
+    } catch {
+      setCurrent(prev)
+      setState('error')
+      setTimeout(() => setState('idle'), 2500)
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <select
+        value={current ?? ''}
+        onChange={onChange}
+        disabled={state === 'saving'}
+        className={`min-w-[150px] max-w-[210px] rounded-md border bg-slate-800 px-2 py-1.5 text-xs text-slate-200 outline-none transition focus:border-blue-500 disabled:opacity-60 ${
+          state === 'error' ? 'border-red-500' : state === 'saved' ? 'border-green-500' : 'border-slate-700 hover:border-slate-500'
+        }`}
+      >
+        <option value="" disabled>{placeholder}</option>
+        {options.map(o => (
+          <option key={o.id} value={o.id}>{o.name}</option>
+        ))}
+      </select>
+      <span className="w-3 flex-shrink-0 text-xs">
+        {state === 'saving' && <span className="text-slate-400">…</span>}
+        {state === 'saved'  && <span className="text-green-400">✓</span>}
+        {state === 'error'  && <span className="text-red-400" title="Save failed">✕</span>}
+      </span>
+    </div>
+  )
 }
 
 // ── Searchable filter dropdown ────────────────────────────────────────────────
@@ -132,7 +205,13 @@ function FilterCombo({
 
 // ── Main table ────────────────────────────────────────────────────────────────
 
-export default function AdminProjectTable({ projects }: { projects: Project[] }) {
+export default function AdminProjectTable({
+  projects, industryOptions, stallTypeOptions,
+}: {
+  projects:         Project[]
+  industryOptions:  Option[]
+  stallTypeOptions: Option[]
+}) {
   const router                    = useRouter()
   const [selected, setSelected]   = useState<Set<number>>(new Set())
   const [deleting, startDelete]   = useTransition()
@@ -142,6 +221,12 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
   const [filterClient,     setFilterClient]     = useState('')
   const [filterExhibition, setFilterExhibition] = useState('')
   const [filterYear,       setFilterYear]       = useState('')
+  const [filterIndustry,   setFilterIndustry]   = useState('')
+
+  const industryName = useMemo(() => {
+    const m = new Map(industryOptions.map(o => [o.id, o.name]))
+    return (id: number | null) => (id ? m.get(id) ?? '' : '')
+  }, [industryOptions])
 
   // Unique option lists derived from the full project list
   const clientOptions = [...new Set(
@@ -156,13 +241,16 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
     projects.map(p => p.buildYear).filter((y): y is number => y !== null)
   )].sort((a, b) => b - a).map(String)
 
-  const anyFilter = Boolean(filterClient || filterExhibition || filterYear)
+  const industryFilterOptions = industryOptions.map(o => o.name).sort()
+
+  const anyFilter = Boolean(filterClient || filterExhibition || filterYear || filterIndustry)
 
   // Apply filters
   const visible = projects.filter(p => {
-    if (filterClient     && p.client?.name     !== filterClient)     return false
-    if (filterExhibition && p.exhibition?.name !== filterExhibition) return false
-    if (filterYear       && String(p.buildYear) !== filterYear)      return false
+    if (filterClient     && p.client?.name     !== filterClient)      return false
+    if (filterExhibition && p.exhibition?.name !== filterExhibition)  return false
+    if (filterYear       && String(p.buildYear) !== filterYear)       return false
+    if (filterIndustry   && industryName(p.industryId) !== filterIndustry) return false
     return true
   })
 
@@ -203,28 +291,14 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
     <div className="space-y-3">
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-2">
-        <FilterCombo
-          label="Client"
-          options={clientOptions}
-          value={filterClient}
-          onChange={setFilterClient}
-        />
-        <FilterCombo
-          label="Exhibition"
-          options={exhibitionOptions}
-          value={filterExhibition}
-          onChange={setFilterExhibition}
-        />
-        <FilterCombo
-          label="Year"
-          options={yearOptions}
-          value={filterYear}
-          onChange={setFilterYear}
-        />
+        <FilterCombo label="Industry"   options={industryFilterOptions} value={filterIndustry}   onChange={setFilterIndustry} />
+        <FilterCombo label="Client"     options={clientOptions}         value={filterClient}     onChange={setFilterClient} />
+        <FilterCombo label="Exhibition" options={exhibitionOptions}     value={filterExhibition} onChange={setFilterExhibition} />
+        <FilterCombo label="Year"       options={yearOptions}           value={filterYear}       onChange={setFilterYear} />
         {anyFilter && (
           <button
             type="button"
-            onClick={() => { setFilterClient(''); setFilterExhibition(''); setFilterYear('') }}
+            onClick={() => { setFilterClient(''); setFilterExhibition(''); setFilterYear(''); setFilterIndustry('') }}
             className="px-3 py-2 rounded-lg text-xs text-slate-500 hover:text-red-400 transition"
           >
             Clear all
@@ -278,7 +352,7 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
       )}
 
       {/* Table */}
-      <div className="rounded-2xl border border-slate-700 overflow-hidden">
+      <div className="rounded-2xl border border-slate-700 overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-800/60 border-b border-slate-700">
             <tr>
@@ -290,8 +364,8 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
                   className="rounded border-slate-600 bg-slate-700 accent-blue-500 cursor-pointer"
                 />
               </th>
-              {['Title', 'Client', 'Industry', 'Year', 'Status', ''].map(h => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-widest">{h}</th>
+              {['Photo', 'Title', 'Client', 'Industry', 'Stall Type', 'Year', 'Status', ''].map((h, i) => (
+                <th key={i} className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-widest">{h}</th>
               ))}
             </tr>
           </thead>
@@ -306,12 +380,44 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
                     className="rounded border-slate-600 bg-slate-700 accent-blue-500 cursor-pointer"
                   />
                 </td>
-                <td className="px-4 py-3 text-slate-200 font-medium max-w-xs truncate">
+                <td className="px-4 py-2">
+                  {p.thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={p.thumbnail}
+                      alt={p.thumbnailAlt}
+                      loading="lazy"
+                      className="h-12 w-16 rounded-md object-cover border border-slate-700 bg-slate-800"
+                    />
+                  ) : (
+                    <div className="h-12 w-16 rounded-md border border-slate-700 bg-slate-800 flex items-center justify-center text-slate-600 text-[10px]">
+                      No image
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-slate-200 font-medium max-w-[220px] truncate">
                   {p.isFeatured && <span className="mr-1.5 text-yellow-400">★</span>}
                   {p.title}
                 </td>
                 <td className="px-4 py-3 text-slate-400">{p.client?.name ?? '—'}</td>
-                <td className="px-4 py-3 text-slate-400">{p.industries[0]?.industry.name ?? '—'}</td>
+                <td className="px-4 py-3">
+                  <InlineSelect
+                    projectId={p.id}
+                    field="industryIds"
+                    value={p.industryId}
+                    options={industryOptions}
+                    placeholder="Select industry"
+                  />
+                </td>
+                <td className="px-4 py-3">
+                  <InlineSelect
+                    projectId={p.id}
+                    field="stallTypeIds"
+                    value={p.stallTypeId}
+                    options={stallTypeOptions}
+                    placeholder="Select stall type"
+                  />
+                </td>
                 <td className="px-4 py-3 text-slate-400">{p.buildYear ?? '—'}</td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
@@ -329,7 +435,7 @@ export default function AdminProjectTable({ projects }: { projects: Project[] })
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={9} className="px-4 py-12 text-center text-slate-500">
                   {anyFilter ? 'No projects match these filters' : 'No projects yet'}
                 </td>
               </tr>

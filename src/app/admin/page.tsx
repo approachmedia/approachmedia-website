@@ -1,11 +1,17 @@
 import Link from 'next/link'
-import { getAdminProjectList } from '@/lib/db/portfolio'
+import { getAdminProjectList, getLookups } from '@/lib/db/portfolio'
 import AdminProjectTable from '@/components/admin/AdminProjectTable'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const projects = await getAdminProjectList()
+  const [projects, lookups] = await Promise.all([
+    getAdminProjectList(),
+    getLookups(),
+  ])
+
+  const industryOptions  = lookups.industries.map(i => ({ id: i.id, name: i.name }))
+  const stallTypeOptions = lookups.stallTypes.map(s => ({ id: s.id, name: s.name }))
 
   const counts = {
     total:     projects.length,
@@ -33,7 +39,11 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      <AdminProjectTable projects={projects} />
+      <AdminProjectTable
+        projects={projects}
+        industryOptions={industryOptions}
+        stallTypeOptions={stallTypeOptions}
+      />
     </div>
   )
 }

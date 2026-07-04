@@ -245,14 +245,44 @@ export async function createExhibition(data: { name: string; city?: string; venu
 // ─── Admin list ───────────────────────────────────────────────
 
 export async function getAdminProjectList() {
-  return prisma.project.findMany({
-    select: {
-      id: true, title: true, slug: true, status: true,
-      isFeatured: true, buildYear: true, updatedAt: true,
-      client:     { select: { name: true } },
-      exhibition: { select: { name: true } },
-      industries: { where: { isPrimary: true }, include: { industry: { select: { name: true } } } },
-    },
-    orderBy: { updatedAt: 'desc' },
+  const [rows, cdnBase] = await Promise.all([
+    prisma.project.findMany({
+      select: {
+        id: true, title: true, slug: true, status: true,
+        isFeatured: true, buildYear: true, updatedAt: true,
+        client:     { select: { name: true } },
+        exhibition: { select: { name: true } },
+        industries: { where: { isPrimary: true }, select: { industryId: true } },
+        stallTypes: { where: { isPrimary: true }, select: { stallTypeId: true } },
+        media: {
+          take: 1,
+          orderBy: [{ isHero: 'desc' }, { displayOrder: 'asc' }],
+          select: { url: true, cdnUrl: true, thumbnailUrl: true, altText: true },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    }),
+    getCdnBaseUrl(),
+  ])
+
+  return rows.map(p => {
+    const m = p.media[0]
+    const thumbnail = m
+      ? buildMediaUrl(m.thumbnailUrl || m.cdnUrl || m.url, cdnBase)
+      : null
+    return {
+      id: p.id,
+      title: p.title,
+      slug: p.slug,
+      status: p.status,
+      isFeatured: p.isFeatured,
+      buildYear: p.buildYear,
+      client: p.client,
+      exhibition: p.exhibition,
+      industryId:  p.industries[0]?.industryId  ?? null,
+      stallTypeId: p.stallTypes[0]?.stallTypeId ?? null,
+      thumbnail,
+      thumbnailAlt: m?.altText ?? p.title,
+    }
   })
 }
