@@ -1,7 +1,6 @@
 'use client'
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -23,13 +22,18 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
+        // The +/- indicator: the vertical bar rotates away and fades when open,
+        // turning the plus into a minus with the same power4 ease as the panel.
+        "group flex flex-1 items-center justify-between py-4 font-medium transition-all",
         className,
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+      <span className="relative ml-4 h-3.5 w-3.5 shrink-0" aria-hidden="true">
+        <span className="absolute left-0 top-1/2 h-[1.5px] w-full -translate-y-1/2 rounded-full bg-current" />
+        <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-current transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
+      </span>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

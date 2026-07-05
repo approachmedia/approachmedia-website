@@ -16,8 +16,8 @@ export default function FooterCityList({ cities }: { cities: City[] }) {
       <ul className="space-y-2.5">
         {shown.map(city => (
           <li key={city.href}>
-            <Link href={city.href} className="text-sm text-muted-foreground hover:text-foreground transition">
-              {city.label}
+            <Link href={city.href} className="link-reveal text-sm text-muted-foreground hover:text-foreground transition">
+              <span className="link-text">{city.label}</span>
             </Link>
           </li>
         ))}

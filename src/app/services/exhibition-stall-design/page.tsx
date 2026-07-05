@@ -351,7 +351,7 @@ export default function ExhibitionStallDesignPage() {
             </Button>
           </div>
           <div className="md:col-span-7">
-            <ul className="grid gap-3 sm:grid-cols-2">
+            <ul className="styled-scroll grid max-h-64 gap-3 overflow-y-auto pr-2 sm:grid-cols-2">
               {promises.map(p => (
                 <li key={p} className="flex items-start gap-3 rounded-2xl border border-white/15 bg-background/60 p-5">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-green" />

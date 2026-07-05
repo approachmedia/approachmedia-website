@@ -22,7 +22,7 @@ export function Process() {
               Seven defined stages, one accountable team — from first brief to post-event wrap-up.
             </p>
           </div>
-          <ol className="space-y-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 md:col-span-8">
+          <ol className="styled-scroll max-h-[540px] space-y-px overflow-y-auto rounded-2xl border border-white/15 bg-white/15 md:col-span-8 md:max-h-[560px]">
             {steps.map(s => (
               <li key={s.n} className="flex gap-6 bg-surface p-6 transition-colors hover:bg-surface-elevated md:p-7">
                 <div className="font-display text-2xl font-semibold text-brand-green-glow md:text-3xl">{s.n}</div>
