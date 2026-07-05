@@ -3,6 +3,15 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  // Safety guard: this seed is ONLY for bootstrapping an EMPTY database.
+  // Never run against a live DB — it would re-create deleted demo data
+  // (the Sun Pharma sample project) and stale industry/stall-type lookups.
+  const existingProjects = await prisma.project.count()
+  if (existingProjects > 0) {
+    console.log(`⏭  Database already has ${existingProjects} projects — skipping seed (demo data is only for empty databases).`)
+    return
+  }
+
   console.log('🌱  Seeding lookup tables...')
 
   // ─────────────────────────────────────────────

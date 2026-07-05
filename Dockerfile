@@ -16,5 +16,8 @@ RUN npm run build
 
 EXPOSE 3000
 
-# DB migration + seed, then start regardless (so healthcheck passes even if DB is temporarily unreachable)
-CMD ["sh", "-c", "npx prisma db push && npx tsx prisma/seed.ts; exec npm start"]
+# Sync schema, then start regardless (so healthcheck passes even if DB is
+# temporarily unreachable). NO seeding here — the seed script re-created
+# deleted demo data (Sun Pharma project, old industries) on every deploy.
+# Seed a fresh database manually with: npm run db:seed
+CMD ["sh", "-c", "npx prisma db push; exec npm start"]
