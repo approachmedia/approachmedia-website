@@ -44,23 +44,34 @@ export async function GoogleReviews() {
   const placeId = process.env.GOOGLE_PLACE_ID
   if (!key || !placeId) return null
 
-  let place: PlaceDetails | null = null
-  try {
-    const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
-      headers: {
-        'X-Goog-Api-Key':    key,
-        'X-Goog-FieldMask':  'rating,userRatingCount,googleMapsUri,reviews',
-      },
-      next: { revalidate: 21600 }, // 6 h
-    })
-    if (!res.ok) return null
-    place = await res.json() as PlaceDetails
-  } catch {
-    return null
+  async function fetchPlace(fields: string): Promise<PlaceDetails | null> {
+    try {
+      const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+        headers: {
+          'X-Goog-Api-Key':   key!,
+          'X-Goog-FieldMask': fields,
+        },
+        next: { revalidate: 21600 }, // 6 h
+      })
+      if (!res.ok) {
+        console.error(`[GoogleReviews] ${res.status} for fields "${fields}":`, await res.text())
+        return null
+      }
+      return await res.json() as PlaceDetails
+    } catch (err) {
+      console.error('[GoogleReviews] fetch failed:', err)
+      return null
+    }
   }
 
-  const reviews = (place?.reviews ?? []).filter(r => r.text?.text)
-  if (!place?.rating || reviews.length === 0) return null
+  // Full request first; if the reviews field is rejected (SKU/permission),
+  // fall back to the rating summary alone so the block still shows.
+  const place =
+    (await fetchPlace('rating,userRatingCount,googleMapsUri,reviews')) ??
+    (await fetchPlace('rating,userRatingCount'))
+
+  if (!place?.rating) return null
+  const reviews = (place.reviews ?? []).filter(r => r.text?.text)
 
   const writeReviewUrl = `https://search.google.com/local/writereview?placeid=${placeId}`
   const allReviewsUrl  = `https://search.google.com/local/reviews?placeid=${placeId}`
@@ -98,6 +109,7 @@ export async function GoogleReviews() {
       </div>
 
       {/* Review cards */}
+      {reviews.length > 0 && (
       <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {reviews.slice(0, 6).map((r, i) => (
           <figure key={i} className="surface-card rounded-2xl p-6">
@@ -129,6 +141,7 @@ export async function GoogleReviews() {
           </figure>
         ))}
       </div>
+      )}
     </div>
   )
 }
