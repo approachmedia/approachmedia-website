@@ -20,9 +20,11 @@ type Project = {
   thumbnailAlt: string
 }
 
-// ── Inline auto-saving dropdown ───────────────────────────────────────────────
-// Saves immediately on change via PATCH /api/admin/portfolio/[id].
-// `field` picks which relation to update (industryIds | stallTypeIds).
+// ── Inline auto-saving searchable dropdown ────────────────────────────────────
+// Type-to-filter combobox; saves immediately on pick via
+// PATCH /api/admin/portfolio/[id]. `field` picks which relation to update
+// (industryIds | stallTypeIds). The panel is position:fixed so the table's
+// overflow container can't clip it.
 
 function InlineSelect({
   projectId, field, value, options, placeholder,
@@ -35,18 +37,50 @@ function InlineSelect({
 }) {
   const [current, setCurrent] = useState<number | null>(value)
   const [state, setState]     = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [open, setOpen]       = useState(false)
+  const [q, setQ]             = useState('')
+  const btnRef                = useRef<HTMLButtonElement>(null)
+  const panelRef              = useRef<HTMLDivElement>(null)
+  const [pos, setPos]         = useState({ top: 0, left: 0, up: false })
 
   // Keep in sync if the server data changes (e.g. after router.refresh)
   useEffect(() => { setCurrent(value) }, [value])
 
-  async function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const raw   = e.target.value
-    const newId = raw ? parseInt(raw, 10) : null
-    const prev  = current
+  // Close on outside click / scroll (fixed panel would drift on scroll)
+  useEffect(() => {
+    if (!open) return
+    function onDoc(e: MouseEvent) {
+      if (panelRef.current?.contains(e.target as Node)) return
+      if (btnRef.current?.contains(e.target as Node)) return
+      setOpen(false); setQ('')
+    }
+    function onScroll(e: Event) {
+      if (panelRef.current?.contains(e.target as Node)) return
+      setOpen(false); setQ('')
+    }
+    document.addEventListener('mousedown', onDoc)
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true })
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      window.removeEventListener('scroll', onScroll, { capture: true })
+    }
+  }, [open])
+
+  function toggle() {
+    if (!open && btnRef.current) {
+      const r  = btnRef.current.getBoundingClientRect()
+      const up = window.innerHeight - r.bottom < 320
+      setPos({ top: up ? r.top : r.bottom, left: r.left, up })
+    }
+    setOpen(o => !o)
+    setQ('')
+  }
+
+  async function save(newId: number) {
+    const prev = current
     setCurrent(newId)
-
-    if (newId === null) { setCurrent(prev); return } // don't allow clearing to empty
-
+    setOpen(false)
+    setQ('')
     setState('saving')
     try {
       const res = await fetch(`/api/admin/portfolio/${projectId}`, {
@@ -64,21 +98,70 @@ function InlineSelect({
     }
   }
 
+  const currentName = options.find(o => o.id === current)?.name
+  const filtered = q.trim()
+    ? options.filter(o => o.name.toLowerCase().includes(q.toLowerCase()))
+    : options
+
   return (
     <div className="flex items-center gap-1.5">
-      <select
-        value={current ?? ''}
-        onChange={onChange}
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={toggle}
         disabled={state === 'saving'}
-        className={`min-w-[150px] max-w-[210px] rounded-md border bg-slate-800 px-2 py-1.5 text-xs text-slate-200 outline-none transition focus:border-blue-500 disabled:opacity-60 ${
+        className={`flex min-w-[150px] max-w-[210px] items-center justify-between gap-2 rounded-md border bg-slate-800 px-2 py-1.5 text-left text-xs outline-none transition disabled:opacity-60 ${
           state === 'error' ? 'border-red-500' : state === 'saved' ? 'border-green-500' : 'border-slate-700 hover:border-slate-500'
-        }`}
+        } ${currentName ? 'text-slate-200' : 'text-slate-500'}`}
       >
-        <option value="" disabled>{placeholder}</option>
-        {options.map(o => (
-          <option key={o.id} value={o.id}>{o.name}</option>
-        ))}
-      </select>
+        <span className="truncate">{currentName ?? placeholder}</span>
+        <svg className="h-3 w-3 flex-shrink-0 opacity-50" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <div
+          ref={panelRef}
+          style={pos.up
+            ? { position: 'fixed', bottom: window.innerHeight - pos.top + 4, left: pos.left }
+            : { position: 'fixed', top: pos.top + 4, left: pos.left }}
+          className="z-50 w-64 overflow-hidden rounded-xl border border-slate-600 bg-slate-900 shadow-2xl"
+        >
+          <div className="border-b border-slate-800 p-2">
+            <input
+              autoFocus
+              value={q}
+              onChange={e => setQ(e.target.value)}
+              placeholder={`Search…`}
+              className="w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white outline-none transition focus:border-blue-500"
+              onKeyDown={e => {
+                if (e.key === 'Escape') { setOpen(false); setQ('') }
+                if (e.key === 'Enter' && filtered.length >= 1) save(filtered[0].id)
+              }}
+            />
+          </div>
+          <ul className="max-h-64 overflow-y-auto py-1">
+            {filtered.map(o => (
+              <li key={o.id}>
+                <button
+                  type="button"
+                  onClick={() => save(o.id)}
+                  className={`w-full truncate px-3 py-2 text-left text-sm transition ${
+                    o.id === current ? 'bg-blue-600/20 text-blue-300' : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  {o.name}
+                </button>
+              </li>
+            ))}
+            {filtered.length === 0 && (
+              <li className="px-3 py-4 text-center text-sm text-slate-500">No matches</li>
+            )}
+          </ul>
+        </div>
+      )}
+
       <span className="w-3 flex-shrink-0 text-xs">
         {state === 'saving' && <span className="text-slate-400">…</span>}
         {state === 'saved'  && <span className="text-green-400">✓</span>}
@@ -287,6 +370,18 @@ export default function AdminProjectTable({
     })
   }
 
+  async function bulkFeature(featured: boolean) {
+    startDelete(async () => {
+      await fetch('/api/admin/portfolio/bulk-feature', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: [...selected], featured }),
+      })
+      setSelected(new Set())
+      router.refresh()
+    })
+  }
+
   return (
     <div className="space-y-3">
       {/* Filter bar */}
@@ -334,6 +429,20 @@ export default function AdminProjectTable({
             </>
           ) : (
             <>
+              <button
+                onClick={() => bulkFeature(true)}
+                disabled={deleting}
+                className="px-3 py-1 rounded text-xs font-semibold bg-yellow-500/15 hover:bg-yellow-500/30 text-yellow-400 hover:text-yellow-300 border border-yellow-600/40 transition disabled:opacity-50"
+              >
+                ★ Featured Projects
+              </button>
+              <button
+                onClick={() => bulkFeature(false)}
+                disabled={deleting}
+                className="px-3 py-1 rounded text-xs font-semibold text-slate-400 hover:text-slate-200 border border-slate-600 transition disabled:opacity-50"
+              >
+                Remove Featured
+              </button>
               <button
                 onClick={() => setConfirm(true)}
                 className="px-3 py-1 rounded text-xs font-semibold bg-red-600/20 hover:bg-red-600/40 text-red-400 hover:text-red-300 border border-red-700/40 transition"
