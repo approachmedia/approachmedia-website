@@ -53,6 +53,34 @@ const industries = [
 const N = industries.length
 const PER_CARD_VH = 90        // scroll length per card (reference uses 100vh)
 
+// ── Rotating brand shape (the svgApp / rotate_g overlay) ──────────
+// A thin-outline interlocked circle + triangle that rotates and scales in
+// sync with scroll, drawn on top of the cross-fading cards — the "scroll
+// rotate" effect from the reference.
+function RotatingShape({ rotate, scale }: { rotate: MotionValue<number>; scale: MotionValue<number> }) {
+  const s = 'rgba(255,255,255,0.85)'
+  return (
+    <motion.div
+      style={{ rotate, scale }}
+      className="pointer-events-none absolute left-1/2 top-1/2 z-20 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 mix-blend-screen opacity-70 will-change-transform"
+    >
+      <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible" aria-hidden="true">
+        <g fill="none" stroke={s} strokeWidth="0.9">
+          <circle cx="100" cy="100" r="94" />
+          <circle cx="100" cy="100" r="60" />
+          <polygon points="100,14 174,158 26,158" />
+          <polygon points="100,186 26,42 174,42" strokeOpacity="0.6" />
+          {/* corner registration ticks */}
+          <g strokeWidth="1.2">
+            <line x1="100" y1="0" x2="100" y2="12" /><line x1="100" y1="188" x2="100" y2="200" />
+            <line x1="0" y1="100" x2="12" y2="100" /><line x1="188" y1="100" x2="200" y2="100" />
+          </g>
+        </g>
+      </svg>
+    </motion.div>
+  )
+}
+
 // ── One full-screen card ──────────────────────────────────────────
 function CardLayer({ progress, index, item }: {
   progress: MotionValue<number>
@@ -129,6 +157,11 @@ export function Industries() {
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] })
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 30 })
 
+  // The rotate_g effect: the brand shape rotates ~1 full turn across the whole
+  // section and scales gently — in sync with scroll, over the cards.
+  const shapeRotate = useTransform(progress, [0, 1], [0, 330])
+  const shapeScale  = useTransform(progress, [0, 0.5, 1], [0.85, 1.08, 0.9])
+
   useMotionValueEvent(progress, 'change', v => {
     const idx = Math.round(v * (N - 1))
     if (idx !== active) setActive(idx)
@@ -144,6 +177,9 @@ export function Industries() {
         {industries.map((item, i) => (
           <CardLayer key={i} progress={progress} index={i} item={item} />
         ))}
+
+        {/* Rotating brand shape overlay — the scroll-rotate effect */}
+        <RotatingShape rotate={shapeRotate} scale={shapeScale} />
 
         {/* Persistent section kicker (top) */}
         <div className="pointer-events-none absolute inset-x-0 top-[8vh] z-30 text-center">
