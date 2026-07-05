@@ -22,7 +22,8 @@ const AccordionTrigger = React.forwardRef<
 >(({ className, children, onClick, ...props }, ref) => {
   // Question scramble on toggle (reference-video effect): when clicked, the
   // question decodes through random glyphs in brand green, resolving
-  // RIGHT to LEFT back into the real text (~0.6s).
+  // LEFT to RIGHT back into the real text (~0.6s); the open question then
+  // stays brand green until another question is selected.
   const [display, setDisplay]       = React.useState<React.ReactNode>(children);
   const [scrambling, setScrambling] = React.useState(false);
   const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
@@ -50,8 +51,8 @@ const AccordionTrigger = React.forwardRef<
           .split('')
           .map((c, i) => {
             if (c === ' ') return ' ';
-            // resolve from the RIGHT: the tail settles first, glyphs fall away leftward
-            return i >= original.length - resolved ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+            // resolve LEFT to RIGHT — same pattern as the footer links
+            return i < resolved ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
           })
           .join('')
       );
@@ -77,7 +78,7 @@ const AccordionTrigger = React.forwardRef<
         )}
         {...props}
       >
-        <span className={scrambling ? 'text-brand-green transition-colors' : 'transition-colors'}>{display}</span>
+        <span className={`transition-colors duration-300 group-data-[state=open]:text-brand-green ${scrambling ? 'text-brand-green' : ''}`}>{display}</span>
         <span className="relative ml-4 h-3.5 w-3.5 shrink-0" aria-hidden="true">
           <span className="absolute left-0 top-1/2 h-[1.5px] w-full -translate-y-1/2 rounded-full bg-current" />
           <span className="absolute left-1/2 top-0 h-full w-[1.5px] -translate-x-1/2 rounded-full bg-current transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
