@@ -14,7 +14,7 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = "AccordionItem";
 
-const GLYPHS = '!<>-_\\/[]{}—=+*^?#@$%';
+const GLYPHS = '01';  // binary decode — data generating text
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,

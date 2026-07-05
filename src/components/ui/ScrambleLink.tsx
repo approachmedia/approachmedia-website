@@ -11,7 +11,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
-const GLYPHS = '!<>-_\\/[]{}—=+*^?#@$%'
+const GLYPHS = '01'  // binary decode — data generating text
 
 export default function ScrambleLink({
   href,
