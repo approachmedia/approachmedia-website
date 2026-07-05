@@ -55,6 +55,14 @@ function smoothstep(edge0: number, edge1: number, x: number) {
   return t * t * (3 - 2 * t)
 }
 
+// Entry point — all cards start stacked at the bottom-LEFT, tilted, then get
+// dealt into the arch one by one, left → right, like a clock hand sweeping.
+const ENTRY_X = -50   // vw
+const ENTRY_Y = 30    // vh (below centre-left)
+const ENTRY_ROT = -95 // deg
+
+function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
+
 // ── One card riding the arch ──────────────────────────────────────
 function Card({ progress, index }: { progress: MotionValue<number>; index: number }) {
   const t = N > 1 ? index / (N - 1) : 0.5
@@ -66,15 +74,20 @@ function Card({ progress, index }: { progress: MotionValue<number>; index: numbe
   const yTarget   = -Math.cos(a) * 34 + 4 // vh  (centre highest, ends near mid)
   const rotTarget = a * (180 / Math.PI)   // deg — tangent tilt
 
-  const x = useTransform(progress, v => `${xTarget * smoothstep(0.05, 0.6, v)}vw`)
-  const y = useTransform(progress, v => `${8 + (yTarget - 8) * smoothstep(0.05, 0.6, v)}vh`)
-  const rotate  = useTransform(progress, v => rotTarget * smoothstep(0.05, 0.6, v))
-  const scale   = useTransform(progress, v => 0.4 + 0.6 * smoothstep(0.05, 0.6, v))
-  const opacity = useTransform(progress, v => Math.min(1, smoothstep(0.02, 0.45, v) * 1.4))
+  // Per-card stagger: leftmost lands first, rightmost last → left→right sweep.
+  const start = t * 0.62
+  const win   = 0.3
+  const local = (v: number) => smoothstep(start, start + win, v)
+
+  const x = useTransform(progress, v => `${lerp(ENTRY_X, xTarget, local(v))}vw`)
+  const y = useTransform(progress, v => `${lerp(ENTRY_Y, yTarget, local(v))}vh`)
+  const rotate  = useTransform(progress, v => lerp(ENTRY_ROT, rotTarget, local(v)))
+  const scale   = useTransform(progress, v => lerp(0.45, 1, local(v)))
+  const opacity = useTransform(progress, v => smoothstep(start, start + 0.08, v))
 
   const item = industries[index]
-  // outer cards sit behind, centre cards in front — clean overlap
-  const depth = Math.round((1 - Math.abs(t - 0.5) * 2) * 10)
+  // later cards (further right) sit in front as they're dealt on top
+  const depth = index
 
   return (
     <motion.figure
