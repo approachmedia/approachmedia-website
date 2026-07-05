@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import ScrambleLink from '@/components/ui/ScrambleLink'
 import FooterCityList from './FooterCityList'
 import { INDIAN_CITIES } from '@/data/cities'
 
@@ -84,9 +85,9 @@ export default function SiteFooter() {
               <ul className="space-y-2.5">
                 {col.links.map(link => (
                   <li key={link.href}>
-                    <Link href={link.href} className="link-reveal text-sm text-muted-foreground transition hover:text-foreground">
-                      <span className="link-text">{link.label}</span>
-                    </Link>
+                    <ScrambleLink href={link.href} className="text-sm text-muted-foreground transition hover:text-foreground">
+                      {link.label}
+                    </ScrambleLink>
                   </li>
                 ))}
               </ul>
@@ -107,9 +108,9 @@ export default function SiteFooter() {
       <div className="container-wide flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
         <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Approach Media Pvt. Ltd. All rights reserved.</p>
         <div className="flex items-center gap-5 text-xs text-muted-foreground">
-          <Link href="/portfolio" className="link-reveal transition hover:text-foreground"><span className="link-text">Portfolio</span></Link>
-          <Link href="/contact"   className="link-reveal transition hover:text-foreground"><span className="link-text">Contact</span></Link>
-          <a href="/sitemap.xml" className="link-reveal transition hover:text-foreground"><span className="link-text">Sitemap</span></a>
+          <ScrambleLink href="/portfolio" className="transition hover:text-foreground">Portfolio</ScrambleLink>
+          <ScrambleLink href="/contact" className="transition hover:text-foreground">Contact</ScrambleLink>
+          <ScrambleLink href="/sitemap.xml" external className="transition hover:text-foreground">Sitemap</ScrambleLink>
         </div>
       </div>
     </footer>
