@@ -19,8 +19,9 @@ import { getPublishedProjects } from '@/lib/db/portfolio'
  * hero image + primary industry tag + short "Client — Exhibition" title.
  */
 
-// interlocking ratios, in card order: L1, R1 (tall), L2, R2
-const RATIOS = ['aspect-[4/3]', 'aspect-[3/4]', 'aspect-[4/5]', 'aspect-[4/3]']
+// interlocking ratio cycles per column (left / right)
+const LEFT_RATIOS  = ['aspect-[4/3]', 'aspect-[4/5]']
+const RIGHT_RATIOS = ['aspect-[3/4]', 'aspect-[4/3]']
 
 type Work = {
   title: string
@@ -32,8 +33,9 @@ type Work = {
 export async function FeaturedWorks() {
   let works: Work[] = []
   try {
-    const rows = (await getPublishedProjects({ limit: 12 })).filter(p => p.media[0]?.url)
-    works = rows.slice(0, 5).map(p => ({
+    // Every project marked ★ Featured in the admin (with a hero image)
+    const rows = (await getPublishedProjects({ featured: true })).filter(p => p.media[0]?.url)
+    works = rows.map(p => ({
       // Short editorial title ("Sun Pharma — CPHI India 2024"), not the long SEO one
       title: p.client?.name
         ? [p.client.name, p.exhibition?.name ?? p.buildYear].filter(Boolean).join(' — ')
@@ -46,9 +48,10 @@ export async function FeaturedWorks() {
     // DB unreachable — skip the section rather than crash the homepage.
   }
 
-  if (works.length < 4) return null
-  const cards  = works.slice(0, 4)
-  const teaser = works[4] ?? works[0]
+  if (works.length === 0) return null
+  const leftCards  = works.filter((_, i) => i % 2 === 0)
+  const rightCards = works.filter((_, i) => i % 2 === 1)
+  const teaser     = works[0]
 
   return (
     <section id="portfolio" className="px-[6vw] py-20 md:py-28">
@@ -84,13 +87,13 @@ export async function FeaturedWorks() {
       {/* ── Staggered grid: right column starts lower ── */}
       <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
         <div className="flex flex-col gap-y-14">
-          {[cards[0], cards[2]].map((p, col) => (
-            <WorkCard key={p.slug ?? p.title} project={p} ratio={RATIOS[col * 2]} />
+          {leftCards.map((p, i) => (
+            <WorkCard key={p.slug ?? p.title} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
           ))}
         </div>
         <div className="flex flex-col gap-y-14 md:pt-28">
-          {[cards[1], cards[3]].map((p, col) => (
-            <WorkCard key={p.slug ?? p.title} project={p} ratio={RATIOS[col * 2 + 1]} />
+          {rightCards.map((p, i) => (
+            <WorkCard key={p.slug ?? p.title} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
           ))}
         </div>
       </div>

@@ -75,11 +75,12 @@ export async function getProjectById(id: number): Promise<ProjectWithRelations |
 
 // ─── Portfolio index (public ISR page) ───────────────────────
 
-export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number }) {
+export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number; featured?: boolean }) {
   const cdnBase = await getCdnBaseUrl()
   const rows = await prisma.project.findMany({
     where: {
       status: 'published',
+      ...(opts?.featured && { isFeatured: true }),
       ...(opts?.industrySlug && {
         industries: { some: { industry: { slug: opts.industrySlug } } },
       }),
