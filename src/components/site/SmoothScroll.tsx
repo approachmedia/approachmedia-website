@@ -18,7 +18,7 @@ export default function SmoothScroll() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const lenis = new Lenis({
-      lerp: 0.1,          // smoothing strength — lower = floatier
+      lerp: 0.07,         // smoothing strength — lower = floatier
       wheelMultiplier: 1,
       smoothWheel: true,
       syncTouch: false,    // keep native momentum scrolling on touch devices

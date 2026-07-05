@@ -63,18 +63,36 @@ export default function ScrambleLink({
     }, 30)
   }
 
-  const cls = `${className} transition-colors ${scrambling ? 'text-brand-green' : ''}`.trim()
+  const cls = `group relative inline-flex items-center ${className}`.trim()
+
+  // Green square dot scales in at the left on hover while the label shifts
+  // right and scrambles in Approach green (reference-video behaviour).
+  const inner = (
+    <>
+      <span
+        aria-hidden
+        className="absolute left-0 h-1.5 w-1.5 scale-0 bg-brand-green transition-transform duration-300 ease-out group-hover:scale-100 group-focus-visible:scale-100"
+      />
+      <span
+        className={`inline-block transition-[transform,color] duration-300 group-hover:translate-x-3.5 group-focus-visible:translate-x-3.5 ${
+          scrambling ? 'text-brand-green' : ''
+        }`}
+      >
+        {display}
+      </span>
+    </>
+  )
 
   if (external) {
     return (
       <a href={href} className={cls} onMouseEnter={scramble} onFocus={scramble}>
-        {display}
+        {inner}
       </a>
     )
   }
   return (
     <Link href={href} className={cls} onMouseEnter={scramble} onFocus={scramble}>
-      {display}
+      {inner}
     </Link>
   )
 }

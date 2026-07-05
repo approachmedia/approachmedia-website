@@ -56,7 +56,7 @@ export default function RevealList({ items }: { items: string[] }) {
   const railRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll({ target: railRef, offset: ['start 0.75', 'end 0.55'] })
-  const progress      = useSpring(scrollYProgress, { stiffness: 90, damping: 22 })
+  const progress      = useSpring(scrollYProgress, { stiffness: 55, damping: 20 })
   const markerTop     = useTransform(progress, v => `${Math.min(1, Math.max(0, v)) * 100}%`)
   const markerRot     = useTransform(progress, [0, 1], [0, 315])
   const markerOpacity = useTransform(scrollYProgress, [0, 0.02, 0.93, 1], [0, 1, 1, 0])

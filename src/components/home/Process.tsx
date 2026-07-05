@@ -60,7 +60,7 @@ function StepRow({
       transition={{ duration: 0.7, delay: index * 0.08, ease: EASE }}
       className="flex gap-6 py-6 pl-6 will-change-transform md:gap-8 md:py-7"
     >
-      <div className="w-10 shrink-0 font-display text-2xl font-semibold text-brand-green-glow md:text-3xl">{n}</div>
+      <div className="w-10 shrink-0 font-display text-2xl font-semibold text-brand-blue-glow md:text-3xl">{n}</div>
       <div>
         <h3 className="font-display text-lg font-semibold text-foreground">{t}</h3>
         <p className="mt-1.5 text-sm text-muted-foreground md:text-base">{d}</p>
@@ -76,7 +76,7 @@ export function Process() {
   // Marker rides scroll progress through the list: falls from the label,
   // rotates on the way down, vanishes at the bottom.
   const { scrollYProgress } = useScroll({ target: railRef, offset: ['start 0.7', 'end 0.55'] })
-  const progress      = useSpring(scrollYProgress, { stiffness: 90, damping: 22 })
+  const progress      = useSpring(scrollYProgress, { stiffness: 55, damping: 20 })
   const markerTop     = useTransform(progress, v => `${Math.min(1, Math.max(0, v)) * 100}%`)
   const markerRot     = useTransform(progress, [0, 1], [0, 315])
   const markerOpacity = useTransform(scrollYProgress, [0, 0.02, 0.93, 1], [0, 1, 1, 0])
@@ -94,12 +94,12 @@ export function Process() {
             </p>
           </div>
 
-          <div className="md:col-span-8">
+          <div ref={railRef} className="relative md:col-span-8">
             {/* Label on top of the content — the marker begins its fall here */}
             <p className="pb-4 pl-6 text-xs font-bold uppercase tracking-[0.22em] text-brand-green">Our Approach</p>
 
-            <div ref={railRef} className="relative">
-              {/* The traveling square */}
+            {/* The traveling square — starts level with the label */}
+            <div className="absolute inset-0 pointer-events-none">
               {!prefersReduced && (
                 <motion.span
                   style={{ top: markerTop, rotate: markerRot, opacity: markerOpacity }}
@@ -107,6 +107,7 @@ export function Process() {
                   aria-hidden
                 />
               )}
+            </div>
 
               <ol className="divide-y divide-white/10 border-y border-white/10">
                 {steps.map((s, i) => (
@@ -122,7 +123,6 @@ export function Process() {
                   />
                 ))}
               </ol>
-            </div>
           </div>
         </div>
       </div>
