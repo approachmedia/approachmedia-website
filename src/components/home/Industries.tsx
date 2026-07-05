@@ -1,20 +1,30 @@
 'use client'
 
 /**
- * Industries we serve — circular image wheel (client's final reference code).
+ * Industries we serve — centred orbit wheel, refined per client spec:
  *
- * A large disc sits inside an overflow-hidden container that shows only its
- * top slice. Round industry photos + labels sit evenly on the rim, each
- * counter-rotated so it stays upright. Scroll progress rotates the whole
- * disc (lerp-smoothed rAF loop) while the section travels through the
- * viewport — the exact mechanic from the reference HTML.
+ *  1. SQUARE cards (rounded-lg, aspect-square, object-cover),
+ *     ~240px desktop / ~150px mobile.
+ *  2. ONE title, never rotated, rendered in a fixed centred slot directly
+ *     below the active (centre) image: industries[activeIndex].label.
+ *  3. Active image: scale 1.08, opacity 1, higher z, stronger ring.
+ *     Others: opacity 0.45–0.65, smaller scale.
+ *  4. activeIndex = Math.round(progress * (N - 1)) — the image closest to
+ *     the viewport centre owns the title.
+ *  5. The arc is centred: the active card sits at left 50% / top 58% of the
+ *     pinned viewport.
+ *  6. Cards tilt slightly (tangent to the arc); upright when at centre.
+ *  7. Sticky: outer wrapper is tall (30vh per industry, min 300vh); the
+ *     inner h-screen viewport stays pinned until the LAST industry has
+ *     reached the centre, then the page continues.
  *
+ * Rotation is scroll-driven with the reference's lerp smoothing (EASE 0.08).
  * Images:  /industries/exhibition-stall-design-<slug>.jpg
- * Reduced-motion → wheel renders static (no rotation).
  */
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
@@ -38,51 +48,80 @@ const ITEMS = [
   { label: 'Events',               img: 'exhibition-stall-design-events.jpg' },
 ]
 
-// ── Tuning (from the reference) ───────────────────────────────────
-const SPIN_DEGREES = 90   // total rotation across the scroll range
-const EASE         = 0.08 // smoothing (lower = smoother/laggier)
-const RADIUS_RATIO = 0.444 // rim radius as a fraction of disc width (= 40vw on a 90vw disc)
+const N    = ITEMS.length
+const STEP = 360 / N          // angular gap between cards on the disc
+const EASE = 0.08             // lerp smoothing from the reference
 
 export function Industries() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const wheelRef     = useRef<HTMLDivElement>(null)
+  const wrapRef  = useRef<HTMLDivElement>(null)   // tall scroll wrapper
+  const wheelRef = useRef<HTMLDivElement>(null)   // rotating disc
+  const [active, setActive] = useState(0)
 
   useEffect(() => {
-    const container = containerRef.current
-    const wheel     = wheelRef.current
-    if (!container || !wheel) return
+    const wrap  = wrapRef.current
+    const wheel = wheelRef.current
+    if (!wrap || !wheel) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const nodes = Array.from(wheel.children) as HTMLElement[]
+    const cards = nodes.map(n => n.firstElementChild as HTMLElement)
 
-    // Place each item evenly around the rim: rotate to its slot, push out by
-    // the radius, counter-rotate so it stays upright.
+    let radius = 600
+
     function placeItems() {
-      const step = 360 / nodes.length
-      const r = wheel!.offsetWidth * RADIUS_RATIO
-      nodes.forEach((node, i) => {
-        const angle = step * i
-        node.style.transform = `rotate(${angle}deg) translate(${r}px) rotate(${-angle}deg)`
-      })
+      const vw = window.innerWidth
+      radius = Math.min(Math.max(vw * 0.46, 420), 940)
     }
 
-    // Scroll-driven rotation with lerp smoothing.
-    let targetAngle = 0
-    let currentAngle = 0
+    // Scroll progress through the tall wrapper: 0 → first card centred,
+    // 1 → last card centred (section unpins only after the last one).
+    let target = 0
+    let current = -0.001
+    let lastIdx = -1
     let rafId = 0
 
     function updateTarget() {
-      const rect = container!.getBoundingClientRect()
+      const rect = wrap!.getBoundingClientRect()
       const vh = window.innerHeight
-      const total = rect.height + vh
-      let progress = (vh - rect.top) / total
-      progress = Math.max(0, Math.min(1, progress))
-      targetAngle = -SPIN_DEGREES * progress
+      const total = rect.height - vh
+      target = total > 0 ? Math.max(0, Math.min(1, -rect.top / total)) : 0
+    }
+
+    function render(p: number) {
+      const theta = -STEP * (N - 1) * p          // disc rotation (deg)
+
+      // Direct trig: each card orbits a centre at (50%, 58% + R).
+      // phi = card's current angle from the TOP slot (0 = centred).
+      nodes.forEach((node, i) => {
+        const phi = (STEP * i + theta) * (Math.PI / 180)
+        const x = radius * Math.sin(phi)
+        const y = radius * (1 - Math.cos(phi))
+        const tiltDeg = STEP * i + theta          // tangent tilt; 0 when centred
+
+        const dSteps = Math.abs(STEP * i + theta) / STEP
+        const isActive = dSteps < 0.5
+        const scale   = isActive ? 1.08 : Math.max(0.84, 1 - dSteps * 0.09)
+        const opacity = isActive ? 1 : Math.max(0.45, 0.65 - (dSteps - 0.5) * 0.08)
+
+        node.style.transform =
+          `translate(-50%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) ` +
+          `rotate(${tiltDeg.toFixed(2)}deg) scale(${scale.toFixed(3)})`
+        node.style.opacity = opacity.toFixed(3)
+        node.style.zIndex = String(isActive ? 30 : Math.max(1, 20 - Math.round(dSteps * 4)))
+
+        const card = cards[i]
+        card.style.boxShadow = isActive
+          ? '0 0 0 2px rgba(255,255,255,0.45), 0 24px 60px rgba(0,0,0,0.6)'
+          : '0 0 0 1px rgba(255,255,255,0.12), 0 12px 32px rgba(0,0,0,0.45)'
+      })
+
+      const idx = Math.max(0, Math.min(N - 1, Math.round(p * (N - 1))))
+      if (idx !== lastIdx) { lastIdx = idx; setActive(idx) }
     }
 
     function loop() {
-      currentAngle += (targetAngle - currentAngle) * EASE
-      wheel!.style.transform = `translate(-50%, 0) rotate(${currentAngle.toFixed(3)}deg)`
+      current += (target - current) * EASE
+      render(current)
       rafId = requestAnimationFrame(loop)
     }
 
@@ -92,7 +131,7 @@ export function Industries() {
     updateTarget()
 
     if (reduced) {
-      wheel.style.transform = 'translate(-50%, 0) rotate(0deg)'
+      render(0)
     } else {
       window.addEventListener('scroll', updateTarget, { passive: true })
       rafId = requestAnimationFrame(loop)
@@ -107,61 +146,71 @@ export function Industries() {
   }, [])
 
   return (
-    <section className="bg-surface/40 py-16 md:py-20">
-      {/* Heading */}
-      <div className="container-narrow text-center">
-        <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Industries we serve</p>
-        <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
-          Designed for the way <span className="text-gradient-brand">your industry</span> communicates.
-        </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-          Every industry tells its story differently. We translate technical, sensory and emotional cues into spaces that perform.
-        </p>
-      </div>
+    // 7. Sticky scroll: 30vh of scroll per industry (min 300vh total)
+    <div ref={wrapRef} style={{ height: `${Math.max(300, N * 30)}vh` }} className="relative bg-surface/40">
+      <div className="sticky top-0 h-screen overflow-hidden">
 
-      {/* ── The clipped viewport: crops the big wheel to its top slice ── */}
-      <div
-        ref={containerRef}
-        className="relative mx-auto mt-4 w-full overflow-hidden"
-        style={{ height: 'min(40vw, 560px)', paddingTop: 'min(12.5vw, 175px)' }}
-      >
-        {/* ── The rotating disc ── */}
-        <div
-          ref={wheelRef}
-          className="relative left-1/2 will-change-transform"
-          style={{ width: '90vw', height: '90vw', transform: 'translate(-50%, 0) rotate(0deg)' }}
-        >
+        {/* Heading */}
+        <div className="container-narrow pt-[9vh] text-center">
+          <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Industries we serve</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
+            Designed for the way <span className="text-gradient-brand">your industry</span> communicates.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+            Every industry tells its story differently. We translate technical, sensory and emotional cues into spaces that perform.
+          </p>
+        </div>
+
+        {/* ── The orbiting cards — active slot at 50% / 58% ── */}
+        <div ref={wheelRef} className="pointer-events-none absolute inset-0">
           {ITEMS.map(item => (
             <div
               key={item.label}
-              className="absolute left-1/2 top-1/2 w-[25vw] md:w-[12vw]"
-              style={{ transformOrigin: '0 0' }}
+              className="absolute left-1/2 top-[58%] will-change-transform"
+              style={{ transform: 'translate(-50%, -50%)' }}
             >
-              <div className="text-center">
-                <div className="mx-auto aspect-square w-full overflow-hidden rounded-full border border-white/15 bg-surface">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`${CDN}/${item.img}`}
-                    alt={`${item.label} exhibition stall design`}
-                    loading="lazy"
-                    className="block h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mt-[1.2vw] whitespace-nowrap">
-                  <div className="text-[2.6vw] font-bold text-foreground md:text-[1vw]">{item.label}</div>
-                </div>
+              {/* square card */}
+              <div className="h-[150px] w-[150px] overflow-hidden rounded-lg bg-surface md:h-[240px] md:w-[240px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${CDN}/${item.img}`}
+                  alt={`${item.label} exhibition stall design`}
+                  loading="lazy"
+                  className="block h-full w-full object-cover"
+                />
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* CTA */}
-      <div className="mt-10 text-center">
-        <Button asChild variant="hero" size="lg">
-          <Link href="/portfolio">Explore by Industry</Link>
-        </Button>
+        {/* ── ONE centred title, directly below the active image ── */}
+        <div className="pointer-events-none absolute left-1/2 top-[58%] z-40 -translate-x-1/2 pt-[90px] text-center md:pt-[140px]">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={active}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.28 }}
+              className="whitespace-nowrap font-display text-xl font-bold text-white md:text-3xl"
+            >
+              {ITEMS[active].label}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+
+        {/* Progress + CTA */}
+        <div className="absolute inset-x-0 bottom-[5vh] z-40 flex flex-col items-center gap-5">
+          <div className="flex items-center gap-1.5">
+            {ITEMS.map((_, i) => (
+              <span key={i} className={`h-1 rounded-full transition-all duration-300 ${i === active ? 'w-6 bg-brand-green' : 'w-1.5 bg-white/25'}`} />
+            ))}
+          </div>
+          <Button asChild variant="hero" size="lg" className="pointer-events-auto">
+            <Link href="/portfolio">Explore by Industry</Link>
+          </Button>
+        </div>
       </div>
-    </section>
+    </div>
   )
 }
