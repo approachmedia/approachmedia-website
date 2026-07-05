@@ -9,6 +9,8 @@
  *   contendre-solar.png, univia.png, rayzon-solar.png
  */
 
+import { GoogleReviews } from './GoogleReviews'
+
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/clientlogo'
 
 const testimonials = [
@@ -93,9 +95,9 @@ export function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-10 rounded-2xl border border-dashed border-border/70 bg-surface/40 p-6 text-center text-sm text-muted-foreground">
-          Google Reviews widget will embed here once the Business Profile is connected.
-        </div>
+        {/* Live Google reviews — renders once GOOGLE_PLACES_API_KEY +
+            GOOGLE_PLACE_ID are configured on Railway */}
+        <GoogleReviews />
       </div>
     </section>
   )
