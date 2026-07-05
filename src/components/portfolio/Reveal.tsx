@@ -8,8 +8,8 @@
  *                     slight zoom, exactly once, as it scrolls into view.
  */
 
-import { motion, useReducedMotion } from 'framer-motion'
-import { useState, type ReactNode } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef, useState, type ReactNode } from 'react'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -41,20 +41,26 @@ export function EditorialImage({
   const prefersReduced = useReducedMotion()
   const [failed, setFailed] = useState(false)
 
+  // Observe the UNCLIPPED figure wrapper, not the clipped layer itself —
+  // newer Chrome treats a fully clip-pathed element as never intersecting,
+  // so a whileInView on the clipped div would deadlock (clipped because not
+  // in view, not in view because clipped).
+  const figRef = useRef<HTMLElement>(null)
+  const inView = useInView(figRef, { once: true, margin: '-60px' })
+
   // A missing or broken image collapses the block entirely — never leave a
   // giant empty placeholder box reserving space on the page.
   if (!src || failed) return null
 
   return (
-    <figure className={`relative m-0 ${className}`}>
+    <figure ref={figRef} className={`relative m-0 ${className}`}>
       <div className={`relative overflow-hidden ${aspect} bg-slate-900`}>
         {prefersReduced ? (
           <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <motion.div
             initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
-            whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-            viewport={{ once: true, margin: '-80px' }}
+            animate={inView ? { clipPath: 'inset(0% 0% 0% 0%)' } : undefined}
             transition={{ duration: 0.9, ease: EASE }}
             className="absolute inset-0"
           >
@@ -64,8 +70,7 @@ export function EditorialImage({
               loading="lazy"
               onError={() => setFailed(true)}
               initial={{ scale: 1.06 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true, margin: '-80px' }}
+              animate={inView ? { scale: 1 } : undefined}
               transition={{ duration: 1.2, ease: EASE }}
               className="absolute inset-0 h-full w-full object-cover will-change-transform"
             />
