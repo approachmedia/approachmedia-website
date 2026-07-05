@@ -3,10 +3,12 @@
 /**
  * Industries we serve — reference-video scroll effect.
  *
- * A pinned section: as the user scrolls, the headline wipes from muted into
- * the brand gradient (left→right), and one tilted photo card per industry
- * fans out from a tight cluster into a rotated arc, each labelled, then
- * drifts upward. Reduced-motion users get a static labelled grid.
+ * A pinned section. As the user scrolls, the headline wipes from muted into
+ * the brand gradient (left→right), and the industry photo cards fan out from
+ * a tight centre cluster into a wide ARCH that curves up and around the
+ * centred heading + paragraph — the middle stays clear so the copy is always
+ * readable, exactly like the reference. Each card tilts tangent to the arch
+ * and carries a label. Reduced-motion users get a static labelled grid.
  *
  * Images live on R2:  /images/industries/exhibition-stall-design-<slug>.jpg
  */
@@ -35,7 +37,7 @@ const industries = [
   { label: 'Healthcare',           img: 'exhibition-stall-design-healthcare.jpg' },
   { label: 'Plastic',              img: 'exhibition-stall-design-plastic.jpg' },
   { label: 'Printing & Packaging', img: 'exhibition-stall-design-printing-packaging.jpg' },
-  { label: 'Valves, Pumps & Gears',img: 'exhibition-stall-design-valves-pumps-gears.jpg' },
+  { label: 'Valves & Pumps',       img: 'exhibition-stall-design-valves-pumps-gears.jpg' },
   { label: 'Renewable Energy',     img: 'exhibition-stall-design-renewable-energy.jpg' },
   { label: 'Water',                img: 'exhibition-stall-design-water-industry.jpg' },
   { label: 'Cosmetics',            img: 'exhibition-stall-design-cosmetics.jpg' },
@@ -46,52 +48,49 @@ const industries = [
 ]
 
 const N = industries.length
+const ARC = 2.95 // total sweep of the arch in radians (~169°)
 
 function smoothstep(edge0: number, edge1: number, x: number) {
   const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)))
   return t * t * (3 - 2 * t)
 }
 
-// ── One fanning card ──────────────────────────────────────────────
+// ── One card riding the arch ──────────────────────────────────────
 function Card({ progress, index }: { progress: MotionValue<number>; index: number }) {
-  const t = N > 1 ? index / (N - 1) : 0.5            // 0..1 across the arc
-  const xTarget   = -45 + t * 90                     // vw spread
-  const arcY      = -Math.sin(t * Math.PI) * 80 + 20 // px — centre highest
-  const rotTarget = -18 + t * 36                     // deg tilt
-  const isCentre  = Math.abs(t - 0.5) < 0.5 / N
+  const t = N > 1 ? index / (N - 1) : 0.5
+  const a = (t - 0.5) * ARC              // angle along the arch (rad)
 
-  const x = useTransform(progress, v => `${xTarget * smoothstep(0.05, 0.55, v)}vw`)
-  const y = useTransform(progress, v => {
-    const spread = smoothstep(0.05, 0.55, v)
-    const drift  = smoothstep(0.55, 1, v)
-    return 90 + (arcY - 90) * spread - drift * 170
-  })
-  const rotate  = useTransform(progress, v => rotTarget * smoothstep(0.05, 0.55, v))
-  const scale   = useTransform(progress, v => 0.5 + 0.5 * smoothstep(0.05, 0.55, v))
-  const opacity = useTransform(progress, v => {
-    const spread = smoothstep(0.02, 0.5, v)
-    const drift  = smoothstep(0.72, 1, v)
-    return Math.min(1, spread * 1.35) * (1 - drift * 0.5)
-  })
+  // Final arch position: sin drives horizontal spread, -cos lifts the centre
+  // cards up and lets the outer cards swing down the sides.
+  const xTarget   = Math.sin(a) * 46      // vw
+  const yTarget   = -Math.cos(a) * 34 + 4 // vh  (centre highest, ends near mid)
+  const rotTarget = a * (180 / Math.PI)   // deg — tangent tilt
+
+  const x = useTransform(progress, v => `${xTarget * smoothstep(0.05, 0.6, v)}vw`)
+  const y = useTransform(progress, v => `${8 + (yTarget - 8) * smoothstep(0.05, 0.6, v)}vh`)
+  const rotate  = useTransform(progress, v => rotTarget * smoothstep(0.05, 0.6, v))
+  const scale   = useTransform(progress, v => 0.4 + 0.6 * smoothstep(0.05, 0.6, v))
+  const opacity = useTransform(progress, v => Math.min(1, smoothstep(0.02, 0.45, v) * 1.4))
 
   const item = industries[index]
+  // outer cards sit behind, centre cards in front — clean overlap
+  const depth = Math.round((1 - Math.abs(t - 0.5) * 2) * 10)
 
   return (
     <motion.figure
-      style={{ x, y, rotate, scale, opacity, zIndex: isCentre ? 20 : 10 - Math.round(Math.abs(t - 0.5) * 12) }}
-      className="absolute left-1/2 top-1/2 m-0 -ml-[5.5rem] -mt-[7rem] h-56 w-44 will-change-transform md:-ml-[6rem] md:-mt-[7.5rem] md:h-60 md:w-48"
+      style={{ x, y, rotate, scale, opacity, zIndex: depth }}
+      className="absolute left-1/2 top-1/2 m-0 -ml-[4.75rem] -mt-[6rem] h-48 w-[9.5rem] will-change-transform"
     >
-      <div className="relative overflow-hidden rounded-xl border border-white/15 bg-white/5 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-sm">
+      <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/5 p-1 shadow-2xl shadow-black/60">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${CDN}/${item.img}`}
           alt={`${item.label} exhibition stall design`}
           loading="lazy"
-          className="h-52 w-full rounded-lg object-cover md:h-56"
+          className="h-44 w-full rounded-lg object-cover"
         />
-        {/* label overlaid on the card so 16 captions never collide */}
-        <div className="absolute inset-x-1.5 bottom-1.5 rounded-b-lg bg-gradient-to-t from-black/85 via-black/40 to-transparent px-3 pb-2.5 pt-8">
-          <p className="text-center text-[11px] font-bold uppercase tracking-[0.12em] text-white">{item.label}</p>
+        <div className="absolute inset-x-1 bottom-1 rounded-b-lg bg-gradient-to-t from-black/90 via-black/40 to-transparent px-2 pb-2 pt-7">
+          <p className="text-center text-[10px] font-bold uppercase tracking-[0.1em] text-white">{item.label}</p>
         </div>
       </div>
     </motion.figure>
@@ -134,17 +133,23 @@ export function Industries() {
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] })
   const progress = useSpring(scrollYProgress, { stiffness: 80, damping: 26 })
 
-  // Headline wipe: muted → brand gradient, left to right
   const fillClip = useTransform(progress, v => `inset(0 ${100 - smoothstep(0, 0.5, v) * 100}% 0 0)`)
 
   if (prefersReduced) return <StaticIndustries />
 
   return (
     <div ref={wrapRef} style={{ height: '260vh' }} className="relative bg-surface/40">
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-start overflow-hidden pt-[11vh]">
+      <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* Headline with scroll colour-fill */}
-        <div className="container-narrow relative z-30 text-center">
+        {/* Cards arch layer — behind the copy */}
+        <div className="pointer-events-none absolute inset-0 z-10">
+          {industries.map((_, i) => (
+            <Card key={i} progress={progress} index={i} />
+          ))}
+        </div>
+
+        {/* Centred copy — always readable in the clear middle of the arch */}
+        <div className="relative z-30 flex h-full flex-col items-center justify-center px-6 text-center">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Industries we serve</p>
 
           <div className="relative mx-auto mt-3 max-w-3xl">
@@ -159,20 +164,11 @@ export function Industries() {
             </motion.h2>
           </div>
 
-          <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
             Every industry tells its story differently. We translate technical, sensory and emotional cues into spaces that perform.
           </p>
-        </div>
 
-        {/* Fanning cards layer */}
-        <div className="pointer-events-none relative mt-2 h-[52vh] w-full">
-          {industries.map((_, i) => (
-            <Card key={i} progress={progress} index={i} />
-          ))}
-        </div>
-
-        <div className="relative z-30">
-          <Button asChild variant="hero" size="lg">
+          <Button asChild variant="hero" size="lg" className="mt-8">
             <Link href="/portfolio">Explore by Industry</Link>
           </Button>
         </div>
