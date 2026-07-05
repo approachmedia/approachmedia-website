@@ -4,12 +4,12 @@
  * brand accents). Client logos are colourful light-background artwork, so
  * each sits in a small white chip that works on the dark theme.
  *
- * Logo files (upload to R2 bucket folder `testimonials/`):
+ * Logo files live in the R2 bucket folder `images/clientlogo/`:
  *   apson-inc.png, rabatex-group.png, aahaan-polycare.png,
  *   contendre-solar.png, univia.png, rayzon-solar.png
  */
 
-const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/testimonials'
+const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/clientlogo'
 
 const testimonials = [
   {
