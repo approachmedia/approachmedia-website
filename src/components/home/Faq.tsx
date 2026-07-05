@@ -25,14 +25,14 @@ export function Faq() {
           </p>
         </div>
         <div className="md:col-span-8">
-          <Accordion type="single" collapsible className="space-y-2">
+          <Accordion type="single" collapsible className="border-t border-white/10">
             {faqs.map((f, i) => (
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="surface-card rounded-xl border border-white/15 px-5"
+                className="border-white/10"
               >
-                <AccordionTrigger className="py-5 text-left font-display text-base font-medium text-foreground hover:no-underline">
+                <AccordionTrigger className="py-5 text-left text-[13px] font-semibold uppercase tracking-[0.14em] text-foreground hover:no-underline md:text-sm">
                   {f.q}
                 </AccordionTrigger>
                 <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground">
