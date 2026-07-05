@@ -1,21 +1,32 @@
 'use client'
 
 /**
- * Industries we serve — rotating-dial scroll effect (client's rotate_g mechanic).
+ * Industries we serve — pinned full-screen cross-fade stack.
  *
- * All cards are fixed on the rim of ONE wheel whose pivot sits far below the
- * section. Scroll rotates the whole wheel (like the reference's rotate_g), so
- * the cards ride a circular arc — sweeping in from the left and settling into a
- * centred rainbow arch, like a clock hand. The heading + paragraph stay still
- * in the clear middle; the headline wipes into the brand gradient.
- * Reduced-motion → static grid.
+ * Faithful to the reference `component--contentscrollcenter`:
+ *  • the section is `count * PER_CARD` tall; inside sits a `sticky; h-screen`
+ *    wrapper, and every card is `absolute; inset-0` — full-screen layers
+ *    stacked on top of each other.
+ *  • scroll cross-fades between cards. The leaving card fades out while its
+ *    image lifts (y 0→-20%) and its info lifts+fades (y 0→-30%); the entering
+ *    card fades in while its image settles (y 10%→0) and info rises (y 20%→0).
+ *  • an anchor nav lists the industries; the active one is highlighted.
  *
  * Images:  /industries/exhibition-stall-design-<slug>.jpg
+ * Reduced-motion → simple stacked grid.
  */
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
@@ -40,16 +51,46 @@ const industries = [
 ]
 
 const N = industries.length
-const R = 98          // wheel radius (vh)
-const SPAN = 88       // total angular spread of the rim cards (deg)
-const START = -56     // wheel rotation at scroll 0 (cards parked to the left)
-const END = 0         // wheel rotation when the arch is centred
+const PER_CARD_VH = 90        // scroll length per card (reference uses 100vh)
 
-function smoothstep(edge0: number, edge1: number, x: number) {
-  const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)))
-  return t * t * (3 - 2 * t)
+// ── One full-screen card ──────────────────────────────────────────
+function CardLayer({ progress, index, item }: {
+  progress: MotionValue<number>
+  index:    number
+  item:     { label: string; img: string }
+}) {
+  const t   = N > 1 ? index / (N - 1) : 0
+  const seg = N > 1 ? 1 / (N - 1) : 1
+
+  // d = -1 at the previous card's centre, 0 here, +1 at the next card's centre.
+  const d = (p: number) => (p - t) / seg
+
+  const opacity = useTransform(progress, p => Math.max(0, 1 - Math.abs(d(p)) * 1.7))
+  const imgY    = useTransform(progress, p => { const x = d(p); return `${x <= 0 ? -x * 10 : -x * 20}%` })
+  const imgSc   = useTransform(progress, p => 1.05 + Math.abs(d(p)) * 0.05)
+  const infoY   = useTransform(progress, p => { const x = d(p); return `${x <= 0 ? -x * 16 : -x * 30}%` })
+  const zIndex  = useTransform(progress, p => Math.round(Math.max(0, 1 - Math.abs(d(p))) * 10))
+
+  return (
+    <motion.div style={{ opacity, zIndex }} className="absolute inset-0 will-change-[opacity]">
+      {/* full-bleed image with the "space" parallax lift */}
+      <motion.div style={{ y: imgY, scale: imgSc }} className="absolute inset-0 will-change-transform">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`${CDN}/${item.img}`} alt={`${item.label} exhibition stall design`} loading={index < 2 ? 'eager' : 'lazy'} className="h-full w-full object-cover" />
+      </motion.div>
+      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.7)_100%)]" />
+
+      {/* info: kicker + giant title, lifts + fades with scroll */}
+      <motion.div style={{ y: infoY }} className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center will-change-transform">
+        <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-brand-green md:text-xs">Exhibition Stall Design</p>
+        <h3 className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight text-white md:text-8xl">
+          {item.label}
+        </h3>
+      </motion.div>
+    </motion.div>
+  )
 }
-function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
 
 // ── Static fallback ───────────────────────────────────────────────
 function StaticIndustries() {
@@ -83,73 +124,55 @@ function StaticIndustries() {
 export function Industries() {
   const prefersReduced = useReducedMotion()
   const wrapRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
 
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start start', 'end end'] })
-  const progress = useSpring(scrollYProgress, { stiffness: 80, damping: 26 })
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 30 })
 
-  // One transform drives the whole wheel — the rotate_g rotation.
-  const wheelRotate = useTransform(progress, v => lerp(START, END, smoothstep(0, 0.82, v)))
-  const fillClip    = useTransform(progress, v => `inset(0 ${100 - smoothstep(0, 0.5, v) * 100}% 0 0)`)
+  useMotionValueEvent(progress, 'change', v => {
+    const idx = Math.round(v * (N - 1))
+    if (idx !== active) setActive(idx)
+  })
 
   if (prefersReduced) return <StaticIndustries />
 
   return (
-    <div ref={wrapRef} style={{ height: '260vh' }} className="relative bg-surface/40">
+    <div ref={wrapRef} style={{ height: `${N * PER_CARD_VH}vh` }} className="relative bg-black">
       <div className="sticky top-0 h-screen overflow-hidden">
 
-        {/* The rotating dial — cards fixed on the rim, pivot far below */}
-        <motion.div
-          style={{ rotate: wheelRotate }}
-          className="pointer-events-none absolute left-1/2 top-full z-10 h-0 w-0"
-        >
-          {industries.map((item, i) => {
-            const angle = -SPAN / 2 + (i / (N - 1)) * SPAN
-            return (
-              <div
-                key={i}
-                className="absolute left-0 top-0"
-                style={{ transform: `rotate(${angle}deg) translateY(-${R}vh)` }}
+        {/* Cross-fading full-screen cards */}
+        {industries.map((item, i) => (
+          <CardLayer key={i} progress={progress} index={i} item={item} />
+        ))}
+
+        {/* Persistent section kicker (top) */}
+        <div className="pointer-events-none absolute inset-x-0 top-[8vh] z-30 text-center">
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60">Industries we serve</p>
+        </div>
+
+        {/* Anchor nav — lists industries, active highlighted (desktop) */}
+        <ul className="absolute left-[4vw] top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-1.5 lg:flex">
+          {industries.map((item, i) => (
+            <li key={i}>
+              <span
+                className={`text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors duration-300 ${
+                  i === active ? 'text-brand-green' : 'text-white/35'
+                }`}
               >
-                <figure className="absolute m-0 -ml-[4.5rem] -mt-[6rem] h-48 w-36">
-                  <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/5 p-1 shadow-2xl shadow-black/60">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`${CDN}/${item.img}`}
-                      alt={`${item.label} exhibition stall design`}
-                      loading="lazy"
-                      className="h-44 w-full rounded-lg object-cover"
-                    />
-                    <div className="absolute inset-x-1 bottom-1 rounded-b-lg bg-gradient-to-t from-black/90 via-black/40 to-transparent px-2 pb-2 pt-7">
-                      <p className="text-center text-[10px] font-bold uppercase tracking-[0.1em] text-white">{item.label}</p>
-                    </div>
-                  </div>
-                </figure>
-              </div>
-            )
-          })}
-        </motion.div>
+                {item.label}
+              </span>
+            </li>
+          ))}
+        </ul>
 
-        {/* Centred copy — always readable in the clear middle of the arch */}
-        <div className="relative z-30 flex h-full flex-col items-center justify-center px-6 text-center">
-          <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Industries we serve</p>
-
-          <div className="relative mx-auto mt-3 max-w-3xl">
-            <h2 className="font-display text-3xl font-semibold leading-tight text-muted-foreground/40 md:text-5xl">
-              Designed for the way your industry communicates.
-            </h2>
-            <motion.h2
-              style={{ clipPath: fillClip }}
-              className="absolute inset-0 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl"
-            >
-              Designed for the way <span className="text-gradient-brand">your industry</span> communicates.
-            </motion.h2>
+        {/* Progress rail (bottom) + CTA */}
+        <div className="absolute inset-x-0 bottom-[7vh] z-30 flex flex-col items-center gap-6">
+          <div className="flex items-center gap-1.5">
+            {industries.map((_, i) => (
+              <span key={i} className={`h-1 rounded-full transition-all duration-300 ${i === active ? 'w-6 bg-brand-green' : 'w-1.5 bg-white/25'}`} />
+            ))}
           </div>
-
-          <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
-            Every industry tells its story differently. We translate technical, sensory and emotional cues into spaces that perform.
-          </p>
-
-          <Button asChild variant="hero" size="lg" className="mt-8">
+          <Button asChild variant="hero" size="lg" className="pointer-events-auto">
             <Link href="/portfolio">Explore by Industry</Link>
           </Button>
         </div>
