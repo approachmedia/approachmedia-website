@@ -57,9 +57,13 @@ const TOP_CATEGORIES = [
   'Industrial Engineering',
 ]
 
-export default function TradeshowClient({ events }: { events: TradeshowEvent[] }) {
+export default function TradeshowClient({ events, initialMonth = '' }: { events: TradeshowEvent[]; initialMonth?: string }) {
   const [query, setQuery] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState('')
+  // Pre-select the current month on first load — but only if it actually has
+  // events; otherwise fall back to "All Months".
+  const [selectedMonth, setSelectedMonth] = useState(() =>
+    initialMonth && events.some(e => getMonthYear(e.startDate) === initialMonth) ? initialMonth : ''
+  )
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [showExhibitionsOnly, setShowExhibitionsOnly] = useState(false)

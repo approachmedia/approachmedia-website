@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
-import TradeshowClient from './TradeshowClient'
+import TradeshowClient, { type TradeshowEvent } from './TradeshowClient'
 import eventsData from '@/data/tradeshow-events.json'
+
+// Rendered per-request so "today" is always current — past events drop off
+// automatically as their dates pass, without needing a redeploy.
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'India Tradeshow Calendar 2026 — Exhibition Events',
@@ -8,6 +12,18 @@ export const metadata: Metadata = {
 }
 
 export default function TradeshowCalendarPage() {
+  // "Today" in Indian time (YYYY-MM-DD) — the calendar serves an Indian audience.
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })
+  const currentMonth = today.slice(0, 7)
+
+  // Upcoming only: keep events whose last day is today or later. Multi-day
+  // events still running count as upcoming. Events without a parseable date
+  // are kept (we can't prove they are past).
+  const upcoming = (eventsData as TradeshowEvent[]).filter(e => {
+    const lastDay = e.endDate || e.startDate
+    return !lastDay || lastDay >= today
+  })
+
   return (
     <main>
       {/* ── HERO ─────────────────────────────────────────── */}
@@ -18,8 +34,8 @@ export default function TradeshowCalendarPage() {
             Find Your Next <span className="highlight">Exhibition</span>
           </h1>
           <p className="section-subtitle">
-            Browse {eventsData.length}+ trade shows, exhibitions, and industry conferences
-            across India in 2026. Filter by city, month, or industry to plan your exhibition calendar.
+            Browse {upcoming.length}+ upcoming trade shows, exhibitions, and industry conferences
+            across India. Filter by city, month, or industry to plan your exhibition calendar.
           </p>
         </div>
       </section>
@@ -59,7 +75,7 @@ export default function TradeshowCalendarPage() {
       {/* ── CALENDAR ─────────────────────────────────────── */}
       <section className="section" style={{ paddingTop: '0' }}>
         <div className="container">
-          <TradeshowClient events={eventsData as Parameters<typeof TradeshowClient>[0]['events']} />
+          <TradeshowClient events={upcoming} initialMonth={currentMonth} />
         </div>
       </section>
     </main>
