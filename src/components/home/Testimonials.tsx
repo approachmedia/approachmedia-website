@@ -1,9 +1,59 @@
-import { Star, Quote } from 'lucide-react'
+/**
+ * Testimonials — real client voices from the old Approach Media site,
+ * restyled to the new design system (dark surface cards, display font,
+ * brand accents). Client logos are colourful light-background artwork, so
+ * each sits in a small white chip that works on the dark theme.
+ *
+ * Logo files (upload to R2 bucket folder `testimonials/`):
+ *   apson-inc.png, rabatex-group.png, aahaan-polycare.png,
+ *   contendre-solar.png, univia.png, rayzon-solar.png
+ */
+
+const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/testimonials'
 
 const testimonials = [
-  { quote: 'From design to dismantle, Approach Media managed every detail. Our stand became the anchor of the show floor.', name: 'Marketing Director', company: 'Global Pharma Brand',      rating: 5 },
-  { quote: 'Their full-scale mock-up testing meant zero surprises on-site. The build quality was genuinely international.', name: 'Brand Lead',          company: 'Indian Automotive OEM',   rating: 5 },
-  { quote: "We've returned to them for four consecutive shows. Consistency, timelines, and creative depth — every time.",  name: 'VP Marketing',        company: 'Building Materials Major', rating: 5 },
+  {
+    logo:    'rabatex-group.png',
+    company: 'Rabatex Group',
+    quote:   "These guys are highly creative, respectful of deadlines (oftentimes delivering early) and always professional. It's a pleasure working with them!",
+    name:    'Haresh Panchal',
+    role:    'Director',
+  },
+  {
+    logo:    'contendre-solar.png',
+    company: 'Contendre Solar',
+    quote:   'Team Approach Media’s meticulous approach to planning, designing, and executing our displays has resulted in remarkable outcomes that have exceeded our expectations. Throughout our partnership, Approach Media Pvt. Ltd. has exhibited a deep understanding of our brand and objectives, ensuring that every exhibition accurately represents our vision.',
+    name:    'Dharmin Sheth',
+    role:    'Director',
+  },
+  {
+    logo:    'rayzon-solar.png',
+    company: 'Rayzon Solar',
+    quote:   'Team AMPL’s unwavering commitment to delivering high-quality output has truly impressed us. Approach Media Pvt. Ltd. has consistently demonstrated their expertise and professionalism in handling all aspects of our exhibition projects.',
+    name:    'Chirag Nakarani',
+    role:    'Director',
+  },
+  {
+    logo:    'univia.png',
+    company: 'Univia',
+    quote:   'Approach Media Pvt. Ltd. has proven to be a reliable and trustworthy partner. Their timely delivery and efficient project management have allowed us to seamlessly execute our global exhibitions.',
+    name:    'Ravi Varmora',
+    role:    'Director',
+  },
+  {
+    logo:    'apson-inc.png',
+    company: 'Apson Inc',
+    quote:   'The AMPL team stands out as a remarkable talent in the field of branding and stall design, showcasing exceptional skills and expertise. Their outstanding attitude and strong work ethic further elevate their reputation.',
+    name:    'Hiren Panchal',
+    role:    'Director',
+  },
+  {
+    logo:    'aahaan-polycare.png',
+    company: 'Aahaan Polycare Pvt. Ltd.',
+    quote:   'Everyone at AMPL worked incredibly hard and did what we needed them to do to produce in time.',
+    name:    'Abhinav Halani',
+    role:    'Director',
+  },
 ]
 
 export function Testimonials() {
@@ -17,21 +67,27 @@ export function Testimonials() {
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <figure key={i} className="surface-card relative rounded-2xl p-7">
-              <Quote className="h-7 w-7 text-brand-green-glow/70" />
-              <blockquote className="mt-4 text-base leading-relaxed text-foreground/90">
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map(t => (
+            <figure key={t.name} className="surface-card flex flex-col rounded-2xl p-7">
+              {/* white chip so colourful light-bg logos read on the dark theme */}
+              <div className="inline-flex h-16 w-fit max-w-full items-center rounded-lg bg-white px-4 py-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${CDN}/${t.logo}`}
+                  alt={`${t.company} logo`}
+                  loading="lazy"
+                  className="h-full w-auto max-w-[150px] object-contain"
+                />
+              </div>
+
+              <blockquote className="mt-5 flex-1 text-[15px] leading-relaxed text-foreground/90">
                 {`“${t.quote}”`}
               </blockquote>
+
               <figcaption className="mt-6">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className="h-3.5 w-3.5 fill-brand-green-glow text-brand-green-glow" />
-                  ))}
-                </div>
-                <p className="mt-2 text-sm font-medium text-foreground">{t.name}</p>
-                <p className="text-xs text-muted-foreground">{t.company}</p>
+                <p className="font-display text-base font-semibold text-foreground">{t.name}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">{t.role} · {t.company}</p>
               </figcaption>
             </figure>
           ))}
