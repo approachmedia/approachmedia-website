@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/button'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 
 export async function FeaturedProjects() {
-  const rows = await getPublishedProjects({ limit: 3 })
+  // Same ordered query as FeaturedWorks (top of the page), which shows the
+  // first 4 projects that have a hero image — skip those and take the next 3.
+  const rows = (await getPublishedProjects({ limit: 12 }))
+    .filter(p => p.media[0]?.url)
+    .slice(4, 7)
 
   const projects = rows.map(p => ({
     id:             String(p.id),
