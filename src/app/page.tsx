@@ -7,13 +7,12 @@ import { Presence } from '@/components/home/Presence'
 import { Industries } from '@/components/home/Industries'
 import { WhyChoose } from '@/components/home/WhyChoose'
 import { Process } from '@/components/home/Process'
-import { FeaturedProjects } from '@/components/home/FeaturedProjects'
 import { Testimonials } from '@/components/home/Testimonials'
 import { UpcomingExhibitions } from '@/components/home/UpcomingExhibitions'
 import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
 
-// force-dynamic: FeaturedProjects reads from the DB, and DATABASE_URL is not
+// force-dynamic: FeaturedWorks reads from the DB, and DATABASE_URL is not
 // available during the Docker build — only at runtime.
 export const dynamic = 'force-dynamic'
 
@@ -73,13 +72,12 @@ export default function HomePage() {
         <Hero />
         <ClientsMarquee />
         <About />
-        <FeaturedWorks />
         <ServicesGrid />
         <Presence />
         <Industries />
         <WhyChoose />
         <Process />
-        <FeaturedProjects />
+        <FeaturedWorks />
         <Testimonials />
         <UpcomingExhibitions />
         <CtaBand />
