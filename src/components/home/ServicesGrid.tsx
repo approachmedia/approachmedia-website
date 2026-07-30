@@ -1,14 +1,6 @@
 import Link from 'next/link'
-import { ArrowUpRight, PenTool, Hammer, Layers, MonitorPlay, Building2, Sparkles } from 'lucide-react'
-
-const services = [
-  { icon: PenTool,    title: 'Exhibition Stall Design',           slug: 'exhibition-stall-design',           desc: 'Concept-led spatial design that translates your brand into experience.' },
-  { icon: Hammer,     title: 'Custom Booth Fabrication',          slug: 'custom-booth-fabrication',          desc: 'In-house fabrication with international build & finish standards.' },
-  { icon: Layers,     title: 'Turnkey Project Management',        slug: 'turnkey-project-management',        desc: 'One team, end-to-end — from brief to dismantle.' },
-  { icon: MonitorPlay, title: 'Audio-Visual & Tech Integration',  slug: 'av-technology-integration',         desc: 'LED walls, interactive screens, immersive sound and lighting.' },
-  { icon: Building2,  title: 'Double Decker / Mezzanine Stands',  slug: 'double-decker-mezzanine-stands',     desc: 'Engineered multi-level stands that maximise floor presence.' },
-  { icon: Sparkles,   title: 'Immersive Brand Experiences',       slug: 'immersive-brand-experience',        desc: 'Sensory-led environments designed to be remembered.' },
-]
+import { ArrowUpRight } from 'lucide-react'
+import { ServicesImageAccordion } from '@/components/ui/interactive-image-accordion'
 
 export function ServicesGrid() {
   return (
@@ -29,23 +21,10 @@ export function ServicesGrid() {
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 md:grid-cols-2 lg:grid-cols-3">
-          {services.map(s => (
-            <Link
-              key={s.slug}
-              href={`/services/${s.slug}`}
-              className="surface-card group relative flex flex-col gap-5 p-7 md:p-8"
-            >
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand-blue/30 to-brand-green/20 ring-1 ring-brand-blue-glow/30">
-                <s.icon className="h-5 w-5 text-brand-green-glow" />
-              </div>
-              <div>
-                <h3 className="font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
-              </div>
-              <ArrowUpRight className="absolute right-6 top-6 h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-green-glow" />
-            </Link>
-          ))}
+        {/* Interactive image accordion — hover a strip to expand; each links
+            to its service page */}
+        <div className="mt-12">
+          <ServicesImageAccordion />
         </div>
       </div>
     </section>
