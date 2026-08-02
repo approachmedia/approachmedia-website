@@ -13,11 +13,26 @@ Optional flags:
     --root "/Users/admin/Documents/Approach Processed/Sorted Photographs"
     --out-dir "/Users/admin/Desktop"
     --out-name "portfolio-import-from-sorted-photographs"
+    --export-dir "/Users/admin/Desktop/Sorted Photographs - SEO Ready"
+    --no-rename         (reference photos at their ORIGINAL filenames instead)
 
 Requires only the Python 3 standard library for the CSV output (always
 works). For the .xlsx file it uses openpyxl if installed; if not, it prints
 a one-line install command and still writes the CSV (the /admin/import page
 accepts CSV directly, so the .xlsx is a convenience, not a requirement).
+
+By default this ALSO copies every used photo into a fresh "<root> - SEO
+Ready" folder next to your library, renamed for SEO using the exact
+convention already live in production (see the "Next View" project in
+src/app/api/admin/seed/route.ts):
+
+    <company>-<exhibition>-<city>-<size>-sqm-<sides>-side-open-stall-
+    exhibition-stall-design-fabrication-approach-media-<NN>.<ext>
+
+Your ORIGINAL Sorted Photographs folder is never modified — only new,
+renamed COPIES are made. Upload the SEO Ready folder's contents to R2
+(same relative structure), then upload the generated CSV/XLSX to
+/admin/import.
 
 ────────────────────────────────────────────────────────────────────────────
 RULES IMPLEMENTED (per the Approach Media brief)
@@ -58,9 +73,10 @@ import argparse
 import csv
 import os
 import re
+import shutil
 import sys
-import unicodedata
 from pathlib import Path
+from typing import Optional
 
 # ─── Canonical lookups (from the live site's own dropdown lists) ────────────
 
@@ -170,7 +186,52 @@ def rel_path(root: Path, file: Path) -> str:
     return "/".join(file.relative_to(root).parts)
 
 
-def build_row(year, exhibition_raw, company, hero_file, gallery_files, root, seen_slugs, warnings):
+def seo_export_images(export_root, year, exhibition_name, city, company, size, sides,
+                       hero_file, gallery_files):
+    """
+    Copies (never moves — originals are untouched) the hero + gallery images
+    into  <export_root>/<year>/<exhibition-slug>/<company-slug>/  using the
+    exact SEO filename convention already live in production:
+
+      <company>-<exhibition>-<city>-<size>-sqm-<sides>-side-open-stall-
+      exhibition-stall-design-fabrication-approach-media-<NN>.<ext>
+
+    (see the "Next View" project in src/app/api/admin/seed/route.ts for the
+    proven real-world example this mirrors). Returns (hero_rel, gallery_rel)
+    as relative paths under export_root, ready to drop straight into the
+    hero_image_url / gallery_images columns.
+    """
+    exhibition_slug = slugify(exhibition_name)
+    company_slug    = slugify(company)
+    dest_dir = export_root / year / exhibition_slug / company_slug
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    name_parts = [company_slug, exhibition_slug]
+    if city:
+        name_parts.append(slugify(city))
+    if size:
+        name_parts.append(f"{size}-sqm")
+    if sides:
+        name_parts.append(f"{sides}-side-open-stall")
+    name_parts.append("exhibition-stall-design-fabrication-approach-media")
+    base = "-".join(name_parts)
+    base = re.sub(r"-+", "-", base)[:170].strip("-")  # keep filenames a sane length
+
+    ordered = [hero_file] + [f for f in gallery_files if f != hero_file]
+    new_files = []
+    for i, src in enumerate(ordered, start=1):
+        ext = src.suffix.lower()
+        dest = dest_dir / f"{base}-{i:02d}{ext}"
+        shutil.copy2(src, dest)
+        new_files.append(dest)
+
+    hero_rel    = rel_path(export_root, new_files[0])
+    gallery_rel = "|".join(rel_path(export_root, f) for f in new_files[1:])
+    return hero_rel, gallery_rel
+
+
+def build_row(year, exhibition_raw, company, hero_file, gallery_files, root, seen_slugs,
+              warnings, export_root=None):
     m = EXHIBITION_CITY_RE.match(exhibition_raw)
     exhibition_name, city = (m.group(1).strip(), m.group(2).strip()) if m else (exhibition_raw, "")
 
@@ -224,8 +285,12 @@ def build_row(year, exhibition_raw, company, hero_file, gallery_files, root, see
                   f"Approach Media.").strip()
     meta_desc  = re.sub(r"\s+", " ", meta_desc)[:165]
 
-    hero_rel    = rel_path(root, hero_file)
-    gallery_rel = "|".join(rel_path(root, f) for f in gallery_files if f != hero_file)
+    if export_root is not None:
+        hero_rel, gallery_rel = seo_export_images(
+            export_root, year, exhibition_name, city, company, size, sides, hero_file, gallery_files)
+    else:
+        hero_rel    = rel_path(root, hero_file)
+        gallery_rel = "|".join(rel_path(root, f) for f in gallery_files if f != hero_file)
 
     return {
         "title": title,
@@ -274,7 +339,7 @@ COLUMNS = [
 ]
 
 
-def walk_library(root: Path):
+def walk_library(root: Path, export_root: Optional[Path] = None):
     rows = []
     report = {
         "dont_use_this_skipped": [],
@@ -325,7 +390,8 @@ def walk_library(root: Path):
                                      f"{len(hero_candidates)} files start with \"Hero\" — used "
                                      f"\"{hero_file.name}\" as the hero, the rest went to the gallery")
 
-                row = build_row(year, exh_dir.name, company_dir.name, hero_file, images, root, seen_slugs, warnings)
+                row = build_row(year, exh_dir.name, company_dir.name, hero_file, images, root,
+                                 seen_slugs, warnings, export_root=export_root)
                 rows.append(row)
                 report["created"].append(row["slug"])
 
@@ -394,14 +460,28 @@ def main():
                     help="Where to write the output files (default: the folder above --root)")
     ap.add_argument("--out-name", default="portfolio-import-from-sorted-photographs",
                     help="Output filename without extension")
+    ap.add_argument("--export-dir", default=None,
+                    help="Where to copy SEO-renamed photos (default: '<root's parent>/"
+                         "Sorted Photographs - SEO Ready'). Originals are never modified — "
+                         "this is a fresh copy with clean filenames, ready to upload to R2.")
+    ap.add_argument("--no-rename", action="store_true",
+                    help="Skip photo renaming — reference photos at their original filenames "
+                         "and folder paths instead (old behaviour).")
     args = ap.parse_args()
 
     root = Path(args.root).expanduser()
     out_dir = Path(args.out_dir).expanduser() if args.out_dir else root.parent
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    export_root = None
+    if not args.no_rename:
+        export_root = Path(args.export_dir).expanduser() if args.export_dir else \
+            root.parent / f"{root.name} - SEO Ready"
+        export_root.mkdir(parents=True, exist_ok=True)
+        print(f"SEO-renamed photos will be copied to: {export_root}")
+
     print(f"Scanning: {root}")
-    rows, report, warnings = walk_library(root)
+    rows, report, warnings = walk_library(root, export_root=export_root)
 
     csv_path  = out_dir / f"{args.out_name}.csv"
     xlsx_path = out_dir / f"{args.out_name}.xlsx"
@@ -413,10 +493,18 @@ def main():
 
     print_report(report, warnings, rows)
 
-    print(f"\nNext step: upload {csv_path.name} (or the .xlsx) at "
-          f"/admin/import — but first make sure the same folder structure is "
-          f"uploaded to your R2 bucket, since the image paths are relative "
-          f"(e.g. \"2023/Aahar 2023 (Delhi)/TALOD/Hero-18-2.webp\").")
+    if export_root is not None:
+        print(f"\nNext steps:\n"
+              f"  1. Upload the contents of \"{export_root}\" to your R2 bucket, "
+              f"preserving the folder structure exactly as-is.\n"
+              f"  2. Upload {csv_path.name} (or the .xlsx) at /admin/import.\n"
+              f"Your ORIGINAL Sorted Photographs folder was not touched — only new, "
+              f"renamed copies were created.")
+    else:
+        print(f"\nNext step: upload {csv_path.name} (or the .xlsx) at "
+              f"/admin/import — but first make sure the same folder structure is "
+              f"uploaded to your R2 bucket, since the image paths are relative "
+              f"(e.g. \"2023/Aahar 2023 (Delhi)/TALOD/Hero-18-2.webp\").")
 
 
 if __name__ == "__main__":
