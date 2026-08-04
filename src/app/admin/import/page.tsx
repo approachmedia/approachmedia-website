@@ -147,7 +147,17 @@ export default function ImportPage() {
         <p><span className="font-mono text-yellow-300 w-52 inline-block">03 Why It Worked</span>→ AI Summary (shown as "Why It Worked" on page)</p>
         <p><span className="font-mono text-slate-400 w-52 inline-block">hero_image_url</span>→ Hero image (falls back to hero_image_new_path_SEO)</p>
         <p><span className="font-mono text-slate-400 w-52 inline-block">gallery_images</span>→ Gallery images (falls back to gallery_new_paths_SEO, pipe-separated)</p>
-        <p><span className="font-mono text-slate-400 w-52 inline-block">status: "final"</span>→ stored as "published"</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">ai_context_summary</span>→ SEO AI context summary</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">focus_entities</span>→ SEO focus entities (pipe-separated)</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">primary_keywords</span>→ SEO primary keywords (pipe-separated)</p>
+        <p><span className="font-mono text-slate-400 w-52 inline-block">status: "final"</span>→ stored as "published" (&quot;published&quot; also accepted)</p>
+        <p className="text-amber-300/90 pt-1">
+          Multi-value columns — <span className="font-mono">industries</span>, <span className="font-mono">stall_types</span>,{' '}
+          <span className="font-mono">materials_used</span>, <span className="font-mono">special_features</span>,{' '}
+          <span className="font-mono">awards</span>, <span className="font-mono">focus_entities</span>,{' '}
+          <span className="font-mono">primary_keywords</span>, <span className="font-mono">secondary_keywords</span> — must be
+          separated with <span className="font-mono">|</span>, not commas. Comma-separated values are stored as one single item.
+        </p>
       </div>
 
       {/* Fix existing DB records */}

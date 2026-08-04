@@ -119,9 +119,14 @@ export async function POST(request: NextRequest) {
       const rawStatus = str(row.status).toLowerCase()
       const status    = (rawStatus === 'final' || rawStatus === 'published') ? 'published' : 'draft'
 
-      // SEO keywords
-      const primaryKw    = str(row.primary_keyword)
+      // SEO keywords — "primary_keywords" (pipe-separated) is the current column;
+      // "primary_keyword" (single value) is kept for older import files.
+      const primaryKws   = splitPipe(row.primary_keywords)
+      const legacyKw     = str(row.primary_keyword)
+      const primaryKwList = primaryKws.length > 0 ? primaryKws : (legacyKw ? [legacyKw] : [])
       const secondaryKws = splitPipe(row.secondary_keywords)
+      const focusEnts    = splitPipe(row.focus_entities)
+      const aiContext    = str(row.ai_context_summary) || null
 
       await prisma.project.create({
         data: {
@@ -166,14 +171,16 @@ export async function POST(request: NextRequest) {
               })),
             ],
           },
-          ...((str(row.meta_title) || primaryKw) ? {
+          ...((str(row.meta_title) || primaryKwList.length > 0) ? {
             seoMetadata: {
               create: {
                 metaTitle:        str(row.meta_title).slice(0, 70)        || null,
                 metaDescription:  str(row.meta_description).slice(0, 165) || null,
                 ogTitle:          str(row.og_title).slice(0, 100)         || null,
                 ogDescription:    str(row.og_description).slice(0, 200)   || null,
-                primaryKeywords:  primaryKw ? [primaryKw] : [],
+                aiContextSummary: aiContext,
+                focusEntities:    focusEnts,
+                primaryKeywords:  primaryKwList,
                 secondaryKeywords: secondaryKws,
               },
             },
