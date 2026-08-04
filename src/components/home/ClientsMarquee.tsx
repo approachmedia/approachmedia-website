@@ -1,10 +1,19 @@
-const clientNames = [
-  'Tata', 'Reliance', 'Mahindra', 'Aditya Birla', 'Pfizer', 'Sun Pharma',
-  'Cipla', 'Asian Paints', "Dr. Reddy's", 'L&T', 'Godrej', 'Bajaj',
-  'Hindustan Unilever', 'ITC', 'JSW', 'Bosch', 'Siemens', 'Schneider',
-]
+import { getMajorClients } from '@/lib/db/portfolio'
 
-export function ClientsMarquee() {
+/**
+ * Clientele marquee — real clients we have built a stall larger than
+ * MIN_SQM sqm for, read from the portfolio so the row stays current as
+ * projects are added. Hidden entirely if the portfolio is too thin to
+ * fill the row.
+ */
+const MIN_SQM = 70
+const MIN_TO_SHOW = 6
+
+export async function ClientsMarquee() {
+  const clientNames = await getMajorClients(MIN_SQM)
+  if (clientNames.length < MIN_TO_SHOW) return null
+
+  // Duplicated so the marquee can loop seamlessly.
   const row = [...clientNames, ...clientNames]
   return (
     <section className="border-y border-white/15 bg-surface/40 py-16 md:py-20">

@@ -107,6 +107,51 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
   return rows.map(p => resolveMediaUrls(p, cdnBase))
 }
 
+/**
+ * Clients we have built a large stall for, biggest first.
+ *
+ * Used by the homepage clientele marquee. Names are tidied for display —
+ * legal suffixes ("Pvt. Ltd."), parenthetical sub-brands and everything
+ * after a dash are dropped, so "Tatsav (Patidar Exports Pvt. Ltd.)" shows
+ * as "Tatsav". Variants that collapse onto the same (or a longer form of
+ * the same) name are shown once.
+ */
+export async function getMajorClients(minSqm = 70) {
+  const rows = await prisma.project.findMany({
+    where: { status: 'published', stallAreaSqm: { gt: minSqm }, client: { isNot: null } },
+    select: { stallAreaSqm: true, client: { select: { name: true } } },
+    orderBy: { stallAreaSqm: 'desc' },
+  })
+
+  const byName = new Map<string, { name: string; sqm: number }>()
+  for (const r of rows) {
+    const name = displayClientName(r.client!.name)
+    if (!name) continue
+    const sqm = Number(r.stallAreaSqm ?? 0)
+    const seen = byName.get(name.toLowerCase())
+    if (!seen || sqm > seen.sqm) byName.set(name.toLowerCase(), { name, sqm })
+  }
+
+  // Collapse "Zedtech Water Solution" into "Zedtech" when both are present.
+  // Word-boundary prefixes only, so "Venus" never swallows "Venusgear".
+  const kept = [...byName.values()]
+  const names = kept
+    .filter(a => !kept.some(b => b !== a && a.name.toLowerCase().startsWith(b.name.toLowerCase() + ' ')))
+    .sort((a, b) => b.sqm - a.sqm)
+
+  return names.map(n => n.name)
+}
+
+function displayClientName(raw: string) {
+  return raw
+    .replace(/\s*\([^)]*\)/g, '')                                   // "(Serenity Circles)"
+    .replace(/\s+[-–—]\s+.*$/, '')                                  // "HXG - Tangshan Hexiang…"
+    .replace(/[,\s]*\b(pvt|private)\.?\s*(ltd|limited)\.?$/i, '')   // "Pvt. Ltd."
+    .replace(/[,\s]*\b(ltd|limited|llp|inc)\.?$/i, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 export async function getAllPublishedSlugs() {
   const rows = await prisma.project.findMany({ where: { status: 'published' }, select: { slug: true } })
   return rows.map(r => r.slug)
