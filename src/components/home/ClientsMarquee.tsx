@@ -9,12 +9,18 @@ import { getMajorClients } from '@/lib/db/portfolio'
 const MIN_SQM = 70
 const MIN_TO_SHOW = 6
 
+// Seconds each logo takes to travel its own width. The animation moves the
+// row by exactly one copy of the list, so scaling the duration by the number
+// of logos keeps the scroll at a steady ~55px/s no matter how many there are.
+const SECONDS_PER_LOGO = 3.5
+
 export async function ClientsMarquee() {
   const clientNames = await getMajorClients(MIN_SQM)
   if (clientNames.length < MIN_TO_SHOW) return null
 
   // Duplicated so the marquee can loop seamlessly.
   const row = [...clientNames, ...clientNames]
+  const duration = { '--marquee-duration': `${clientNames.length * SECONDS_PER_LOGO}s` } as React.CSSProperties
   return (
     <section className="border-y border-white/15 bg-surface/40 py-16 md:py-20">
       <div className="container-wide">
@@ -29,7 +35,7 @@ export async function ClientsMarquee() {
         </div>
 
         <div className="relative mt-12 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex w-max animate-marquee gap-3">
+          <div className="flex w-max animate-marquee gap-3" style={duration}>
             {row.map((c, i) => (
               <div
                 key={i}
