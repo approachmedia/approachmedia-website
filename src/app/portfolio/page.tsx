@@ -4,7 +4,7 @@ import { unstable_cache } from 'next/cache'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
-import ProjectCard from '@/components/portfolio/ProjectCard'
+import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
 
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
@@ -73,9 +73,7 @@ export default async function PortfolioIndexPage() {
         {featured.length > 0 && (
           <section>
             <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-6">Featured Projects</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featured.map(p => <ProjectCard key={p.id} project={p} />)}
-            </div>
+            <PortfolioGrid projects={featured} />
           </section>
         )}
 
@@ -85,9 +83,7 @@ export default async function PortfolioIndexPage() {
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">All Projects</h2>
           )}
           {rest.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {rest.map(p => <ProjectCard key={p.id} project={p} />)}
-            </div>
+            <PortfolioGrid projects={rest} />
           ) : (
             <p className="text-slate-500 text-center py-20">No projects published yet.</p>
           )}
