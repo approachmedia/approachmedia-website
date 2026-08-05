@@ -130,7 +130,7 @@ export default function ExhibitionStallDesignPage() {
                 width={640} height={800} loading="lazy"
                 className="aspect-[4/5] w-full rounded-2xl border border-white/15 object-cover" />
               <div className="space-y-3">
-                <Image src={`${CDN}/stall-gallery-2.jpg`} alt="Bold geometric exhibition booth with LED fins"
+                <Image src={`${CDN}/stall-gallery-5.jpg`} alt="Property expo exhibition stall, 72 sqm"
                   width={640} height={640} loading="lazy"
                   className="aspect-square w-full rounded-2xl border border-white/15 object-cover" />
                 <Image src={`${CDN}/stall-gallery-3.jpg`} alt="Luxury reception with wood paneling and ring light"
