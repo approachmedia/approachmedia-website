@@ -3,55 +3,54 @@ import Image from 'next/image'
 import type { ProjectCardData } from './ProjectCard'
 
 /**
- * Portfolio index grid — the editorial, staggered treatment used by the
- * homepage "Featured Works" section, widened to three columns.
+ * Portfolio index grid — the same editorial, staggered treatment as the
+ * homepage "Featured Works" section: two columns, the right one starting
+ * lower, with the ratio alternating down each column so the cards
+ * interlock rather than lining up.
  *
- * Reading order is preserved (DOM order == visual order, left to right) so
- * the newest-year-first ordering from getPublishedProjects still reads
- * correctly across each row. The zig-zag comes from two things:
- *
- *  - a per-column top offset, so neighbouring columns never line up, and
- *  - a four-step aspect-ratio cycle across three columns, so the ratio
- *    rotates row to row instead of giving each column one fixed shape.
- *
- * Both are desktop-only; below lg the grid collapses to a plain 1/2-column
- * stack where staggering would just look broken.
+ * Projects alternate left/right in order, so the newest work sits at the
+ * top of both columns. Below md it collapses to a single stack, where
+ * staggering would just read as broken spacing.
  */
 
-// 4 ratios over 3 columns — coprime, so the pattern rotates rather than
-// locking one shape per column.
-const RATIOS = ['aspect-[4/5]', 'aspect-[4/3]', 'aspect-[3/4]', 'aspect-square']
-const OFFSETS = ['', 'lg:mt-20', 'lg:mt-10']
+// Ratio cycles per column, matching FeaturedWorks on the homepage.
+const LEFT_RATIOS  = ['aspect-[4/3]', 'aspect-[4/5]']
+const RIGHT_RATIOS = ['aspect-[3/4]', 'aspect-[4/3]']
 
 export default function PortfolioGrid({ projects }: { projects: ProjectCardData[] }) {
+  const leftCards  = projects.filter((_, i) => i % 2 === 0)
+  const rightCards = projects.filter((_, i) => i % 2 === 1)
+
   return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((project, i) => (
-        <GridCard
-          key={project.id}
-          project={project}
-          ratio={RATIOS[i % RATIOS.length]}
-          offset={OFFSETS[i % OFFSETS.length]}
-        />
-      ))}
+    <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
+      <div className="flex flex-col gap-y-14">
+        {leftCards.map((p, i) => (
+          <GridCard key={p.id} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
+        ))}
+      </div>
+      <div className="flex flex-col gap-y-14 md:pt-28">
+        {rightCards.map((p, i) => (
+          <GridCard key={p.id} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
+        ))}
+      </div>
     </div>
   )
 }
 
-function GridCard({ project, ratio, offset }: { project: ProjectCardData; ratio: string; offset: string }) {
+function GridCard({ project, ratio }: { project: ProjectCardData; ratio: string }) {
   const hero            = project.media[0]
   const primaryIndustry = project.industries.find(i => i.isPrimary)?.industry
   const primaryType     = project.stallTypes.find(t => t.isPrimary)?.stallType
 
   return (
-    <Link href={`/portfolio/${project.slug}`} className={`group block ${offset}`}>
+    <Link href={`/portfolio/${project.slug}`} className="group block">
       <div className={`relative ${ratio} overflow-hidden rounded-md border border-white/10 bg-surface`}>
         {hero ? (
           <Image
             src={hero.cdnUrl ?? hero.url}
             alt={hero.altText}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
         ) : (
@@ -82,7 +81,7 @@ function GridCard({ project, ratio, offset }: { project: ProjectCardData; ratio:
         )}
       </p>
 
-      <h3 className="mt-2 line-clamp-2 font-display text-xl font-semibold leading-tight text-foreground transition-colors group-hover:text-brand-green-glow md:text-2xl">
+      <h3 className="mt-2 line-clamp-2 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-brand-green-glow md:text-3xl">
         {project.title}
       </h3>
 
