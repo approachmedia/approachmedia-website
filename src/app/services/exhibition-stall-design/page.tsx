@@ -215,15 +215,15 @@ export default function ExhibitionStallDesignPage() {
               <Image src={`${CDN}/stall-gallery-4.jpg`} alt="Double-decker exhibition stand with full LED walls"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Tech Expo · 96 sqm · Double-Decker</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Renewable Energy Expo · 144 sqm · Double-Decker</p>
                 <p className="mt-1 font-display text-xl text-foreground">Two-storey statement build</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
-              <Image src={`${CDN}/stall-gallery-2.jpg`} alt="Bold geometric exhibition stall"
+              <Image src={`${CDN}/stall-gallery-5.jpg`} alt="Property expo exhibition stall, 72 sqm"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Auto Show · 64 sqm</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 72 sqm</p>
                 <p className="mt-1 font-display text-xl text-foreground">Architectural fin façade</p>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function ExhibitionStallDesignPage() {
               <Image src={`${CDN}/stall-gallery-3.jpg`} alt="Luxury wooden reception with brand wall"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Luxury Expo · 36 sqm</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Luxury Property Expo · 72 sqm</p>
                 <p className="mt-1 font-display text-xl text-foreground">Warm hospitality lounge</p>
               </div>
             </div>
