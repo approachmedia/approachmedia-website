@@ -101,7 +101,16 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
       industries: { where: { isPrimary: true }, include: { industry: true } },
       stallTypes: { where: { isPrimary: true }, include: { stallType: true } },
     },
-    orderBy: [{ isFeatured: 'desc' }, { displayOrder: 'asc' }, { buildYear: 'desc' }],
+    // Newest year first. Postgres sorts NULLs first on DESC, which floated
+    // undated projects above the latest work — nulls: 'last' keeps them at
+    // the end. Featured/displayOrder still rank within a year, and id is a
+    // stable tiebreak so the grid does not reshuffle between requests.
+    orderBy: [
+      { buildYear: { sort: 'desc', nulls: 'last' } },
+      { isFeatured: 'desc' },
+      { displayOrder: 'asc' },
+      { id: 'desc' },
+    ],
     take: opts?.limit,
   })
   return rows.map(p => resolveMediaUrls(p, cdnBase))
