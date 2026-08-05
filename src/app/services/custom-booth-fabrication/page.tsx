@@ -262,24 +262,24 @@ export default function CustomBoothFabricationPage() {
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
               <Image
                 src={`${CDN}/booth-gallery-2.jpg`}
-                alt="Glass-front exhibition brand lounge with an illuminated façade at a 72 sqm property expo"
+                alt="Glass-front exhibition brand lounge with an illuminated façade at a 48 sqm property expo"
                 fill loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 72 sqm · Custom Build</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 48 sqm · Custom Build</p>
                 <p className="mt-1 font-display text-xl text-foreground">Glass-front brand lounge with illuminated façade</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
               <Image
                 src={`${CDN}/booth-gallery-3.jpg`}
-                alt="Premium exhibition consultation lounge with feature partitions"
+                alt="Premium exhibition consultation lounge with feature partitions at a 54 sqm property expo"
                 fill loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Pharma Expo · 36 sqm</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 54 sqm · Custom Build</p>
                 <p className="mt-1 font-display text-xl text-foreground">Premium consultation lounge with feature partitions</p>
               </div>
             </div>
