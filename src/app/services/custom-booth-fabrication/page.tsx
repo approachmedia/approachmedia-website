@@ -250,37 +250,37 @@ export default function CustomBoothFabricationPage() {
             <div className="md:col-span-7 md:row-span-2 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '520px' }}>
               <Image
                 src={`${CDN}/booth-gallery-4.jpg`}
-                alt="Large-format custom booth with structural steel and premium finish materials"
+                alt="Warm-lit custom real estate exhibition booth at a 72 sqm property expo"
                 fill loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Manufacturing Expo · 108 sqm · Custom Build</p>
-                <p className="mt-1 font-display text-xl text-foreground">Full-frame structural statement booth</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 72 sqm · Custom Build</p>
+                <p className="mt-1 font-display text-xl text-foreground">Warm-lit custom real estate experience booth</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
               <Image
                 src={`${CDN}/booth-gallery-2.jpg`}
-                alt="Exhibition booth with edge-lit acrylic brand panels and veneer joinery"
+                alt="Glass-front exhibition brand lounge with an illuminated façade at a 72 sqm property expo"
                 fill loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">Tech Show · 54 sqm</p>
-                <p className="mt-1 font-display text-xl text-foreground">Edge-lit acrylic façade</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Property Expo · 72 sqm · Custom Build</p>
+                <p className="mt-1 font-display text-xl text-foreground">Glass-front brand lounge with illuminated façade</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
               <Image
                 src={`${CDN}/booth-gallery-3.jpg`}
-                alt="Premium booth interior with fluted laminate panels and concealed lighting"
+                alt="Premium exhibition consultation lounge with feature partitions"
                 fill loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
                 <p className="text-xs uppercase tracking-wider text-brand-green">Pharma Expo · 36 sqm</p>
-                <p className="mt-1 font-display text-xl text-foreground">Fluted-panel hospitality zone</p>
+                <p className="mt-1 font-display text-xl text-foreground">Premium consultation lounge with feature partitions</p>
               </div>
             </div>
           </div>
