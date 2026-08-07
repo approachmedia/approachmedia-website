@@ -4,6 +4,7 @@ import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
+import { cityPageFor } from '@/lib/seo/city-links'
 export const metadata: Metadata = {
   title: 'Work With Us — Exhibition Stall Design Partner | Approach Media',
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -207,11 +208,29 @@ export default function WorkWithUsPage() {
             <h2>We Execute Across India and Internationally</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px' }}>
-            {['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Pune', 'Ahmedabad', 'Kolkata', 'Jaipur', 'Noida', 'Greater Noida', 'Gandhinagar', 'Surat', 'Kochi', 'Chandigarh', 'Ludhiana', 'Navi Mumbai', 'Milan', 'Paris', 'Dubai', 'Singapore'].map((city, i) => (
-              <div key={i} style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem', color: 'hsl(0 0% 82%)', textAlign: 'center' }}>
-                {city}
-              </div>
-            ))}
+            {['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Pune', 'Ahmedabad', 'Kolkata', 'Jaipur', 'Noida', 'Greater Noida', 'Gandhinagar', 'Surat', 'Kochi', 'Chandigarh', 'Goa', 'Ludhiana', 'Navi Mumbai', 'Milan', 'Paris', 'Dubai', 'Singapore'].map(city => {
+              // Indian cities resolve to their own landing page; overseas ones
+              // to the country page that covers them.
+              const target = cityPageFor(city)
+              const chip: React.CSSProperties = {
+                background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)',
+                borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem',
+                color: 'hsl(0 0% 82%)', textAlign: 'center', display: 'block',
+              }
+              return target ? (
+                <Link
+                  key={city}
+                  href={target.path}
+                  title={`Exhibition stall design in ${city}`}
+                  style={{ ...chip, textDecoration: 'none' }}
+                  className="city-chip"
+                >
+                  {city}
+                </Link>
+              ) : (
+                <div key={city} style={chip}>{city}</div>
+              )
+            })}
           </div>
         </div>
       </section>

@@ -218,3 +218,14 @@ html { scrollbar-width: thin; scrollbar-color: hsl(222 12% 32%) transparent; }
   border: 2px solid transparent;
 }
 .styled-scroll::-webkit-scrollbar-thumb:hover { background-color: hsl(222 12% 52%); }
+
+/* Cities-we-cover chips on /work-with-us — they are links, so give them the
+   same affordance as the rest of the site's interactive surfaces. */
+.city-chip {
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.city-chip:hover {
+  border-color: hsl(110 55% 50% / 0.5) !important;
+  color: hsl(0 0% 98%) !important;
+  background: hsl(222 24% 12%) !important;
+}

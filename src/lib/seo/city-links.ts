@@ -34,6 +34,25 @@ const CITY_PAGES: Record<string, { path: string; label: string }> = {
   'panaji':        { path: '/exhibition-stall-design-goa',             label: 'Goa' },
   'kochi':         { path: '/exhibition-stall-design-kochi',           label: 'Kochi' },
   'ludhiana':      { path: '/exhibition-stall-design-ludhiana',        label: 'Ludhiana' },
+
+  // Overseas cities have no city page of their own, so they point at the
+  // country page that covers them. This also means the two expo pages in
+  // Milan and Paris get a link instead of nothing.
+  'dubai':         { path: '/exhibition-stall-design-agency-uae',       label: 'Dubai' },
+  'abu dhabi':     { path: '/exhibition-stall-design-agency-uae',       label: 'Abu Dhabi' },
+  'singapore':     { path: '/exhibition-stall-design-agency-singapore', label: 'Singapore' },
+  'milan':         { path: '/exhibition-stall-design-agency-italy',     label: 'Milan' },
+  'paris':         { path: '/exhibition-stall-design-agency-france',    label: 'Paris' },
+  'kuala lumpur':  { path: '/exhibition-stall-design-agency-malaysia',  label: 'Kuala Lumpur' },
+  'shanghai':      { path: '/exhibition-stall-design-agency-china',     label: 'Shanghai' },
+  'dhaka':         { path: '/exhibition-stall-design-agency-bangladesh', label: 'Dhaka' },
+  'kathmandu':     { path: '/exhibition-stall-design-agency-nepal',     label: 'Kathmandu' },
+  'amsterdam':     { path: '/exhibition-stall-design-agency-netherlands', label: 'Amsterdam' },
+  'madrid':        { path: '/exhibition-stall-design-agency-spain',     label: 'Madrid' },
+  'barcelona':     { path: '/exhibition-stall-design-agency-spain',     label: 'Barcelona' },
+  'frankfurt':     { path: '/exhibition-stall-design-agency-germany',   label: 'Frankfurt' },
+  'berlin':        { path: '/exhibition-stall-design-agency-germany',   label: 'Berlin' },
+  'nairobi':       { path: '/exhibition-stall-design-agency-kenya-africa', label: 'Nairobi' },
 }
 
 export function cityPageFor(city: string | null | undefined) {
