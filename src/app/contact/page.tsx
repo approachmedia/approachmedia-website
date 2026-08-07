@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { ContactForm } from './ContactForm'
 
+// Local part only — "+91 " is prefixed for display and stripped for the tel: link.
+const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
+
 export const metadata: Metadata = {
   title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
   description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
@@ -57,14 +60,22 @@ export default function ContactPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
-                  {/* Update with real number */}
-                  <a href="tel:+919820000000" className="hover:text-foreground transition-colors">
-                    +91 98200 00000
-                  </a>
+                  <span className="flex flex-col gap-1.5">
+                    {PHONE_NUMBERS.map(n => (
+                      <a key={n} href={`tel:+91${n.replace(/\s/g, '')}`} className="hover:text-foreground transition-colors">
+                        +91 {n}
+                      </a>
+                    ))}
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
-                  <span>Mumbai, Maharashtra, India</span>
+                  <address className="not-italic leading-relaxed">
+                    Approach Media Pvt. Ltd.<br />
+                    302, 3rd Floor, Chase House, Sheetal Baug Society,<br />
+                    Opp. Induben Khakhrawala, Off C. G. Road,<br />
+                    Nr. Mithakhali Circle, Ahmedabad, Gujarat
+                  </address>
                 </li>
               </ul>
             </div>

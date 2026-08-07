@@ -39,10 +39,13 @@ export function buildOrganizationNode(): JsonLdNode {
       'AV Technology Integration',
       'Turnkey Exhibition Management',
     ],
+    telephone: ['+919426912602', '+919898644327', '+919427614395'],
+    email:     'info@approachmedia.in',
     address: {
       '@type':         'PostalAddress',
-      addressLocality: 'Mumbai',
-      addressRegion:   'Maharashtra',
+      streetAddress:   '302, 3rd Floor, Chase House, Sheetal Baug Society, Opp. Induben Khakhrawala, Off C. G. Road, Nr. Mithakhali Circle',
+      addressLocality: 'Ahmedabad',
+      addressRegion:   'Gujarat',
       addressCountry:  'IN',
     },
   }
