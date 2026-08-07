@@ -1,11 +1,12 @@
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
-  title: 'Exhibition Stall Services — Approach Media',
-  description: 'Exhibition stall design, custom booth fabrication, turnkey management, AV integration, double decker stands and immersive brand experiences.',
-  alternates: { canonical: 'https://approachmedia.in/services' },
+  title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
+  description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
+  alternates: { canonical: `${SITE_URL}/services` },
   openGraph: {
-    title: 'Exhibition Stall Services — Approach Media',
-    description: 'Exhibition stall design, custom booth fabrication, turnkey management, AV integration, double decker stands and immersive brand experiences.',
-    url: 'https://approachmedia.in/services',
+    title: "Exhibition Stall Design & Fabrication Services | India",
+    description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
+    url: `${SITE_URL}/services`,
   },
 }
 

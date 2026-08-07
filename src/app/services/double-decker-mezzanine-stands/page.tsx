@@ -9,14 +9,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
-  title: 'Double Decker & Mezzanine Exhibition Stands — Approach Media',
-  description: 'Custom double-decker and mezzanine exhibition stands — engineered multi-level structures with private upper lounges, VIP meeting rooms and elevated brand presence across India and 14+ countries.',
-  alternates: { canonical: 'https://approachmedia.in/services/double-decker-mezzanine-stands' },
+  title: { absolute: "Double Decker & Mezzanine Stall Design | Approach Media" },
+  description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
+  alternates: { canonical: `${SITE_URL}/services/double-decker-mezzanine-stands` },
   openGraph: {
-    title: 'Double Decker & Mezzanine Exhibition Stands — Approach Media',
-    description: 'Custom double-decker and mezzanine exhibition stands — engineered multi-level structures with private upper lounges, VIP meeting rooms and elevated brand presence across India and 14+ countries.',
-    url: 'https://approachmedia.in/services/double-decker-mezzanine-stands',
+    title: "Double Decker & Mezzanine Stall Design | Approach Media",
+    description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
+    url: `${SITE_URL}/services/double-decker-mezzanine-stands`,
   },
 }
 
@@ -86,10 +87,8 @@ export default function DoubleDeckerMezzanineStandsPage() {
               <Sparkles className="h-3.5 w-3.5" /> Double Decker &amp; Mezzanine Stands
             </div>
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
-              Two floors of impact.{' '}
-              <span className="text-brand-blue-glow">One statement</span>
-              <br />
-              on the floor.
+              Double Decker &amp; Mezzanine Stall Design —{' '}
+              <span className="text-brand-blue-glow">Two Floors of Impact</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Maximise your footprint with a multi-level structure that does twice the work.

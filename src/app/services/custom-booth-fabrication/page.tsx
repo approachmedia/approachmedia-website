@@ -9,14 +9,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
-  title: 'Custom Booth Fabrication — Approach Media',
-  description: 'In-house custom booth fabrication across India and 14+ countries. Built in our 30,000 sq ft workshop, mock-up tested before dispatch, and delivered on time.',
-  alternates: { canonical: 'https://approachmedia.in/services/custom-booth-fabrication' },
+  title: { absolute: "Custom Booth Fabrication | Exhibition Stall Builders India" },
+  description: "Custom booth fabrication and exhibition stall building across India. In-house workshop, millimetre tolerances, on-time handover. Get a fabrication quote.",
+  alternates: { canonical: `${SITE_URL}/services/custom-booth-fabrication` },
   openGraph: {
-    title: 'Custom Booth Fabrication — Approach Media',
-    description: 'In-house custom booth fabrication across India and 14+ countries. Built in our 30,000 sq ft workshop, mock-up tested before dispatch, and delivered on time.',
-    url: 'https://approachmedia.in/services/custom-booth-fabrication',
+    title: "Custom Booth Fabrication | Exhibition Stall Builders India",
+    description: "Custom booth fabrication and exhibition stall building across India. In-house workshop, millimetre tolerances, on-time handover. Get a fabrication quote.",
+    url: `${SITE_URL}/services/custom-booth-fabrication`,
   },
 }
 
@@ -108,9 +109,8 @@ export default function CustomBoothFabricationPage() {
               <Sparkles className="h-3.5 w-3.5" /> Precision Fabrication
             </div>
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
-              Built to the <span className="text-brand-blue-glow">millimetre.</span>
-              <br />
-              Delivered on time.
+              Custom Booth Fabrication —{' '}
+              <span className="text-brand-blue-glow">Built to the Millimetre, Delivered on Time</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               In-house custom booth fabrication engineered for precision, built for

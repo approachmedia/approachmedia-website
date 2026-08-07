@@ -5,8 +5,8 @@ const shows = buildCityShows(/chennai/i)
 
 export const chennaiData: CityPageData = {
   citySlug: 'chennai',
-  metaTitle: 'Exhibition Stall Designer in Chennai | Stand Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Chennai trade shows.',
+  metaTitle: 'Exhibition Stall Designer in Chennai | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall designer in Chennai for CTC and Chennai Trade Centre. 23+ years, 6000+ stalls, turnkey build. Get costing in 48 hours.',
   canonicalPath: '/exhibition-stall-designer-chennai',
 
   eyebrow: 'Chennai Exhibition Stall Design & Fabrication',

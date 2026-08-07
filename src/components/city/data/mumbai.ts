@@ -6,8 +6,8 @@ const shows = buildCityShows(/mumbai|navi mumbai|bombay/i)
 
 export const mumbaiData: CityPageData = {
   citySlug: 'mumbai',
-  metaTitle: 'Exhibition Stall Designer in Mumbai | Stand Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Mumbai trade shows.',
+  metaTitle: 'Exhibition Stall Designer in Mumbai | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall designer in Mumbai for BEC, NESCO and Jio World. 23+ years, 6000+ stalls, turnkey fabrication. Get a concept and costing in 48 hours.',
   canonicalPath: '/exhibition-stall-designer-mumbai',
 
   eyebrow: 'Mumbai · Maharashtra · India',

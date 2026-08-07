@@ -9,14 +9,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
-  title: 'Turnkey Exhibition Project Management — Approach Media',
-  description: 'End-to-end turnkey exhibition project management — concept to dismantling, one team, one point of accountability, zero coordination gaps across India and 14+ countries.',
-  alternates: { canonical: 'https://approachmedia.in/services/turnkey-project-management' },
+  title: { absolute: "Turnkey Exhibition Project Management | India & Overseas" },
+  description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
+  alternates: { canonical: `${SITE_URL}/services/turnkey-project-management` },
   openGraph: {
-    title: 'Turnkey Exhibition Project Management — Approach Media',
-    description: 'End-to-end turnkey exhibition project management — concept to dismantling, one team, one point of accountability, zero coordination gaps across India and 14+ countries.',
-    url: 'https://approachmedia.in/services/turnkey-project-management',
+    title: "Turnkey Exhibition Project Management | India & Overseas",
+    description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
+    url: `${SITE_URL}/services/turnkey-project-management`,
   },
 }
 
@@ -109,8 +110,8 @@ export default function TurnkeyProjectManagementPage() {
               <Sparkles className="h-3.5 w-3.5" /> Turnkey Project Management
             </div>
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
-              One team. One brief.{' '}
-              <span className="text-brand-blue-glow">Zero coordination gaps.</span>
+              Turnkey Exhibition Project Management —{' '}
+              <span className="text-brand-blue-glow">One Team, One Brief, Zero Gaps</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               We manage the entire exhibition lifecycle — concept through dismantling —

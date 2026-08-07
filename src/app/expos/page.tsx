@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata: Metadata = {
   title: 'Exhibition Stall Design for Upcoming Expos 2026 | Approach Media',
   description: 'Browse 80+ upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',

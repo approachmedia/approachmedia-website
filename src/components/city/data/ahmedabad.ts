@@ -7,18 +7,18 @@ const shows = buildCityShows(/ahmedabad/i)
 
 export const ahmedabadData: CityPageData = {
   citySlug: 'ahmedabad',
-  metaTitle: 'Exhibition Stand Builders in Ahmedabad | Stall Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stand design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Ahmedabad trade shows.',
+  metaTitle: 'Exhibition Stall Designer in Ahmedabad | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall designer in Ahmedabad with 23+ years and 6000+ stalls delivered. Design, fabrication and on-site handover. Get costing in 48 hours.',
   canonicalPath: '/exhibition-stand-builders-in-ahmedabad',
 
   eyebrow: 'Ahmedabad · Gujarat · India',
-  h1Line1: 'Exhibition Stand Builders in Ahmedabad That Create',
-  h1Highlight: 'Brand-Led Trade Show Stalls',
+  h1Line1: 'Exhibition Stall Designer in Ahmedabad —',
+  h1Highlight: 'Design, Fabrication and On-Site Handover',
   subtitle: 'Approach Media Pvt Ltd helps exhibitors design and execute custom exhibition stalls for Ahmedabad trade shows. From 3D stall concepts and fabrication to graphics, venue coordination, installation and dismantling, we manage the complete exhibition workflow so your brand is ready before the show opens.',
   trustPills: ['Custom exhibition stand design', '3D stall visualization', 'Stall fabrication and branding', 'GUCEC and GMDC Ground execution', 'Turnkey exhibition management'],
 
-  introHeading: 'Exhibition Stall Design and Fabrication Support for Ahmedabad Trade Shows',
-  introP1: 'Ahmedabad is one of India\'s most commercially active exhibition markets, supported by Gujarat\'s strength in pharmaceuticals, textiles, engineering, chemicals, EV, energy, real estate, interiors and consumer products. Trade shows in the city attract manufacturers, dealers, distributors, institutional buyers, architects, healthcare professionals, investors and business owners from across Gujarat and western India.',
+  introHeading: 'Exhibition Stall Fabrication in Ahmedabad',
+  introP1: "Approach Media is an exhibition stall designer in Ahmedabad delivering design, fabrication and on-site handover as a single accountable scope. Over 23 years we have built more than 6,000 stalls across 9 industries and 14 countries, from 9 sqm shell schemes at Gujarat University Convention Centre to double-decker islands at Helipad Exhibition Centre. Our Ahmedabad workshop fabricates in-house, which means the team that draws your stall is the team that builds it — no subcontractor handoff, no drawing-to-delivery drift. Send us your stand size, show name and brand guidelines, and you will have a 3D concept and firm costing within 48 hours.",
   introP2: 'Approach Media Pvt Ltd works with companies that need an exhibition stand builder in Ahmedabad for design, 3D visualization, fabrication, branding, logistics, installation and dismantling. Whether you are planning a compact booth, a modular stall, a product display stand or a large custom island booth, we shape the stall around your brand, budget, venue rules and exhibition objective.',
 
   standOutHeading: 'Build a Stall That Works on a Busy Ahmedabad Show Floor',

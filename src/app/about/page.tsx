@@ -5,14 +5,15 @@ import { ArrowRight, Layers, Sparkles, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CtaBand } from '@/components/home/CtaBand'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata: Metadata = {
   title: 'About Approach Media | Exhibition Stall Design & Build Company',
   description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
-  alternates: { canonical: 'https://approachmedia.in/about' },
+  alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
     title: 'About Approach Media | Exhibition Stall Design & Build Company',
     description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
-    url: 'https://approachmedia.in/about',
+    url: `${SITE_URL}/about`,
   },
 }
 

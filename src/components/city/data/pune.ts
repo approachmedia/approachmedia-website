@@ -5,8 +5,8 @@ const shows = buildCityShows(/pune/i)
 
 export const puneData: CityPageData = {
   citySlug: 'pune',
-  metaTitle: 'Exhibition Stall Design in Pune | Stall Fabrication & 3D Booth Design',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Pune trade shows.',
+  metaTitle: 'Exhibition Stall Design in Pune | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall design in Pune for Auto Cluster and Agriculture College Ground. 23+ years, 6000+ stalls delivered. Get costing in 48 hours.',
   canonicalPath: '/exhibition-stall-design-pune',
 
   eyebrow: 'Pune Exhibition Stall Design & Fabrication',

@@ -5,8 +5,8 @@ const shows = buildCityShows(/hyderabad/i)
 
 export const hyderabadData: CityPageData = {
   citySlug: 'hyderabad',
-  metaTitle: 'Exhibition Stall Design in Hyderabad | Stall Fabrication & 3D Booth Design',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Hyderabad trade shows.',
+  metaTitle: 'Exhibition Stall Design in Hyderabad | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall design in Hyderabad for HITEX and HICC. 23+ years, 6000+ stalls delivered, turnkey fabrication. Get a concept and costing in 48 hours.',
   canonicalPath: '/exhibition-stall-design-hyderabad',
 
   eyebrow: 'Hyderabad Exhibition Stall Design & Fabrication',

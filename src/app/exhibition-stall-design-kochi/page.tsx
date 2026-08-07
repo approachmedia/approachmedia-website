@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import CityPageTemplate from '@/components/city/CityPageTemplate'
 import { kochiData } from '@/components/city/data/kochi'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {

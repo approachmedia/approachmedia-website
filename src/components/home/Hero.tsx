@@ -51,8 +51,8 @@ export function Hero() {
         </div>
 
         <h1 className="mt-6 max-w-5xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
-          Exhibition Spaces That Make Your Brand{' '}
-          <span className="text-gradient-brand">Impossible to Ignore.</span>
+          Exhibition Stall Design &amp; Fabrication —{' '}
+          <span className="text-gradient-brand">Spaces That Make Your Brand Impossible to Ignore.</span>
         </h1>
 
         <p className="mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">

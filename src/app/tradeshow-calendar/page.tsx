@@ -7,8 +7,9 @@ import eventsData from '@/data/tradeshow-events.json'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'India Tradeshow Calendar 2026 — Exhibition Events',
-  description: 'Complete calendar of trade shows, exhibitions, and industry conferences in India for 2026. Filter by city, month, and industry to find the right events for your brand.',
+  title: { absolute: 'India Trade Show Calendar 2026 | Exhibition Dates & Venues' },
+  description: 'India trade show calendar 2026 with dates, venues and cities for every major exhibition. Plan your stall early and lock fabrication slots.',
+  alternates: { canonical: '/tradeshow-calendar' },
 }
 
 export default function TradeshowCalendarPage() {
@@ -31,7 +32,7 @@ export default function TradeshowCalendarPage() {
         <div className="container text-center">
           <span className="section-label">India Tradeshow Calendar</span>
           <h1>
-            Find Your Next <span className="highlight">Exhibition</span>
+            India Trade Show Calendar 2026 — <span className="highlight">Exhibition Dates, Venues and Cities</span>
           </h1>
           <p className="section-subtitle">
             Browse {upcoming.length}+ upcoming trade shows, exhibitions, and industry conferences

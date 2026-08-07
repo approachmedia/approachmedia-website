@@ -3,17 +3,18 @@ import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { ContactForm } from './ContactForm'
 
+import { SITE_URL } from '@/lib/site-url'
 // Local part only — "+91 " is prefixed for display and stripped for the tel: link.
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
 export const metadata: Metadata = {
   title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
   description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
-  alternates: { canonical: 'https://approachmedia.in/contact' },
+  alternates: { canonical: `${SITE_URL}/contact` },
   openGraph: {
     title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
     description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
-    url: 'https://approachmedia.in/contact',
+    url: `${SITE_URL}/contact`,
   },
 }
 

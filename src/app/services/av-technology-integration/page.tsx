@@ -10,14 +10,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
   title: 'AV & Technology Integration for Exhibition Stalls — Approach Media',
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
-  alternates: { canonical: 'https://approachmedia.in/services/av-technology-integration' },
+  alternates: { canonical: `${SITE_URL}/services/av-technology-integration` },
   openGraph: {
     title: 'AV & Technology Integration for Exhibition Stalls — Approach Media',
     description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
-    url: 'https://approachmedia.in/services/av-technology-integration',
+    url: `${SITE_URL}/services/av-technology-integration`,
   },
 }
 

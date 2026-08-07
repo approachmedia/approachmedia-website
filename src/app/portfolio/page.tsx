@@ -6,8 +6,8 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
 // Data is cached for 5 minutes at the function level via unstable_cache below.
 export const dynamic = 'force-dynamic'

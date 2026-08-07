@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import CityPageTemplate from '@/components/city/CityPageTemplate'
 import { ahmedabadData } from '@/components/city/data/ahmedabad'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: ahmedabadData.metaTitle,
+  title: { absolute: ahmedabadData.metaTitle },
   description: ahmedabadData.metaDescription,
   alternates: { canonical: `${SITE_URL}${ahmedabadData.canonicalPath}` },
 }

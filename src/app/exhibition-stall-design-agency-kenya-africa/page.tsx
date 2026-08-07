@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { CountryPageTemplate, type CountryPageData } from '@/components/country/CountryPageTemplate'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {

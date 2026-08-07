@@ -9,14 +9,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
   title: 'Immersive Brand Experience Design — Approach Media',
   description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
-  alternates: { canonical: 'https://approachmedia.in/services/immersive-brand-experience' },
+  alternates: { canonical: `${SITE_URL}/services/immersive-brand-experience` },
   openGraph: {
     title: 'Immersive Brand Experience Design — Approach Media',
     description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
-    url: 'https://approachmedia.in/services/immersive-brand-experience',
+    url: `${SITE_URL}/services/immersive-brand-experience`,
   },
 }
 

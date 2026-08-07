@@ -6,8 +6,8 @@ const shows = buildCityShows(/delhi|new delhi/i)
 
 export const delhiData: CityPageData = {
   citySlug: 'delhi',
-  metaTitle: 'Exhibition Stall Designer in Delhi | Stand Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Delhi and NCR trade shows.',
+  metaTitle: 'Exhibition Stall Designer in Delhi | 6000+ Stalls Built',
+  metaDescription: 'Exhibition stall designer in Delhi for Pragati Maidan, IEML and Yashobhoomi. 23+ years, 6000+ stalls delivered. Get costing in 48 hours.',
   canonicalPath: '/exhibition-stall-designer-delhi',
 
   eyebrow: 'Delhi · NCR · India',

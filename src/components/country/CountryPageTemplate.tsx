@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, CheckCircle2, Globe2, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 // ── Shared data (same across all country pages) ───────────────
 
 const SHARED_SERVICES = [

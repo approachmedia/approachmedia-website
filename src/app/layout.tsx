@@ -5,10 +5,9 @@ import './legacy.css'
 import SiteChrome from '@/components/site/SiteChrome'
 import SmoothScroll from '@/components/site/SmoothScroll'
 
+import { SITE_URL } from '@/lib/site-url'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' })
-
-const SITE_URL = 'https://approachmedia.in'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

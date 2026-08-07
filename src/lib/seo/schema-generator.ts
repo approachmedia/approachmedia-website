@@ -1,6 +1,6 @@
 import type { Project, Client, Exhibition, Media, SeoMetadata, Industry, StallType } from '@prisma/client'
-import { SITE_URL } from '@/lib/site-url'
 
+import { SITE_URL } from '@/lib/site-url'
 // ─────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────

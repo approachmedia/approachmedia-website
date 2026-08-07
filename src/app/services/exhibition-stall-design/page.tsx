@@ -11,14 +11,15 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { SITE_URL } from '@/lib/site-url'
 export const metadata = {
-  title: 'Exhibition Stall Design & Fabrication — Approach Media',
-  description: 'Custom exhibition stall design, fabrication and on-site execution. 6000+ stalls across 14+ countries, built in our own 30,000 sq ft workshop with full mock-up testing.',
-  alternates: { canonical: 'https://approachmedia.in/services/exhibition-stall-design' },
+  title: { absolute: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs" },
+  description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
+  alternates: { canonical: `${SITE_URL}/services/exhibition-stall-design` },
   openGraph: {
-    title: 'Exhibition Stall Design & Fabrication — Approach Media',
-    description: 'Custom exhibition stall design, fabrication and on-site execution. 6000+ stalls across 14+ countries, built in our own 30,000 sq ft workshop with full mock-up testing.',
-    url: 'https://approachmedia.in/services/exhibition-stall-design',
+    title: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs",
+    description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
+    url: `${SITE_URL}/services/exhibition-stall-design`,
   },
 }
 
@@ -97,9 +98,8 @@ export default function ExhibitionStallDesignPage() {
               <Sparkles className="h-3.5 w-3.5" /> Exhibition Stall Design
             </div>
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.05] text-foreground md:text-7xl">
-              The stall your <span className="text-brand-blue-glow">buyers</span>
-              <br />
-              actually remember.
+              Exhibition Stall Design Services —{' '}
+              <span className="text-brand-blue-glow">The Stall Your Buyers Actually Remember</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               Custom-designed, in-house built exhibition stalls — engineered for first

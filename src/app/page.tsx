@@ -12,16 +12,18 @@ import { UpcomingExhibitions } from '@/components/home/UpcomingExhibitions'
 import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
 
+import { SITE_URL } from '@/lib/site-url'
 // force-dynamic: FeaturedWorks reads from the DB, and DATABASE_URL is not
 // available during the Docker build — only at runtime.
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Approach Media — Exhibition Stall Design & Build Company India',
-  description: "India's trusted exhibition stall design and build company. 23+ years, 6000+ stalls, 14+ countries.",
+  // absolute: bypasses the "%s | Approach Media" template in layout.tsx, which
+  // would otherwise print the brand twice.
+  title: { absolute: 'Exhibition Stall Design Company India | 6000+ Stalls Built' },
+  description: 'Exhibition stall design and fabrication across India. 23+ years, 6000+ stalls, 14+ countries. Get a concept and costing in 48 hours.',
+  alternates: { canonical: '/' },
 }
-
-const SITE_URL = 'https://approachmedia.in'
 
 const jsonLd = {
   '@context': 'https://schema.org',

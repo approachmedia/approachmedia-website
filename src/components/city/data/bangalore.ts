@@ -6,8 +6,8 @@ const shows = buildCityShows(/bangalore|bengaluru/i)
 
 export const bangaloreData: CityPageData = {
   citySlug: 'bangalore',
-  metaTitle: 'Exhibition Stall Designer in Bangalore | Stand Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Bangalore trade shows.',
+  metaTitle: 'Exhibition Stall Designer in Bangalore | 6000+ Stalls',
+  metaDescription: 'Exhibition stall designer in Bangalore for BIEC and Palace Grounds. 23+ years, 6000+ stalls, turnkey design and fabrication. Costing in 48 hours.',
   canonicalPath: '/exhibition-stall-designer-bangalore',
 
   eyebrow: 'Bangalore · Karnataka · India',
