@@ -161,6 +161,59 @@ function displayClientName(raw: string) {
     .trim()
 }
 
+export type AdjacentProject = {
+  slug:  string
+  title: string
+  image: string | null
+}
+
+/**
+ * The projects either side of `slug` in the portfolio index, for the
+ * previous/next links on a project page.
+ *
+ * Ordered identically to getPublishedProjects, so "next" always means the
+ * card that follows it in the grid. Selects only what the link needs — at
+ * a few hundred projects that is a cheap query, and the page caches it.
+ */
+export async function getAdjacentProjects(slug: string) {
+  const [rows, cdnBase] = await Promise.all([
+    prisma.project.findMany({
+      where:  { status: 'published' },
+      select: {
+        slug: true,
+        title: true,
+        media: { where: { isHero: true }, take: 1, select: { url: true, cdnUrl: true, thumbnailUrl: true } },
+      },
+      orderBy: [
+        { buildYear: { sort: 'desc', nulls: 'last' } },
+        { isFeatured: 'desc' },
+        { displayOrder: 'asc' },
+        { id: 'desc' },
+      ],
+    }),
+    getCdnBaseUrl(),
+  ])
+
+  const i = rows.findIndex(r => r.slug === slug)
+  if (i === -1) return { prev: null, next: null }
+
+  const toLink = (r: (typeof rows)[number] | undefined): AdjacentProject | null => {
+    if (!r) return null
+    const hero = r.media[0]
+    return {
+      slug:  r.slug,
+      title: r.title,
+      image: hero ? buildMediaUrl(hero.cdnUrl ?? hero.url, cdnBase) : null,
+    }
+  }
+
+  // Wrap around, so the first and last project are never dead ends.
+  return {
+    prev: toLink(rows[i - 1] ?? (rows.length > 1 ? rows[rows.length - 1] : undefined)),
+    next: toLink(rows[i + 1] ?? (rows.length > 1 ? rows[0] : undefined)),
+  }
+}
+
 export async function getAllPublishedSlugs() {
   const rows = await prisma.project.findMany({ where: { status: 'published' }, select: { slug: true } })
   return rows.map(r => r.slug)

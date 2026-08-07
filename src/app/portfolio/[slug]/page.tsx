@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
-import { getProjectBySlug } from '@/lib/db/portfolio'
+import { getProjectBySlug, getAdjacentProjects } from '@/lib/db/portfolio'
 import { generateProjectSchema, generateProjectMetadata } from '@/lib/seo/schema-generator'
 import ProjectDetail from '@/components/portfolio/ProjectDetail'
+import ProjectNav from '@/components/portfolio/ProjectNav'
 
 // ── ISR — rebuild each project page every 24 hours ────────────
 // On-demand revalidation via: fetch('/api/revalidate?slug=...')
@@ -32,6 +33,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   if (!project || project.status !== 'published') notFound()
 
+  const { prev, next } = await getAdjacentProjects(slug)
+
   // Full nested @graph JSON-LD: VisualArtwork + Event + Place + Organization + BreadcrumbList
   const jsonLd = generateProjectSchema(project)
 
@@ -48,6 +51,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       />
 
       <ProjectDetail project={project} />
+      <ProjectNav prev={prev} next={next} />
     </>
   )
 }
