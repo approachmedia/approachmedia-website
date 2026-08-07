@@ -12,6 +12,10 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
+import ProseSection from '@/components/seo/ProseSection'
+import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
+import { INTRO, BLOCKS } from '../_content/exhibition-stall-design'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs" },
   description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
@@ -77,6 +81,13 @@ const faqs = [
 export default function ExhibitionStallDesignPage() {
   return (
     <main>
+      <ServiceSchema
+        name="Exhibition Stall Design"
+        serviceType="Exhibition stall design and 3D concept development"
+        slug="exhibition-stall-design"
+        description="Exhibition stall design services with 3D concepts in 48 hours, across 9 industries and 14 countries."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO
@@ -430,6 +441,8 @@ export default function ExhibitionStallDesignPage() {
         </div>
       </section>
 
+      <ProseSection eyebrow="How we design" intro={INTRO} blocks={BLOCKS} />
+      <ServiceCityLinks />
     </main>
   )
 }

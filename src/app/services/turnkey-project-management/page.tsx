@@ -10,6 +10,10 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
+import ProseSection from '@/components/seo/ProseSection'
+import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
+import { INTRO, BLOCKS } from '../_content/turnkey-project-management'
 export const metadata = {
   title: { absolute: "Turnkey Exhibition Project Management | India & Overseas" },
   description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
@@ -89,6 +93,13 @@ const faqs = [
 export default function TurnkeyProjectManagementPage() {
   return (
     <main>
+      <ServiceSchema
+        name="Turnkey Exhibition Project Management"
+        serviceType="Turnkey exhibition project management"
+        slug="turnkey-project-management"
+        description="Design, fabrication, logistics, permissions and on-site handover managed under one team across India and overseas."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO
@@ -446,6 +457,8 @@ export default function TurnkeyProjectManagementPage() {
         </div>
       </section>
 
+      <ProseSection eyebrow="One scope, one team" intro={INTRO} blocks={BLOCKS} />
+      <ServiceCityLinks />
     </main>
   )
 }

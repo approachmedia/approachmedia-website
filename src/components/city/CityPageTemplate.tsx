@@ -432,18 +432,75 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl }: Props)
             <Link href="/contact" className="btn btn-primary" style={{ fontSize: '1rem', padding: '14px 32px' }}>Request a Quote</Link>
             <Link href="/contact" className="btn btn-outline" style={{ fontSize: '1rem', padding: '14px 32px' }}>Share Exhibition Brief</Link>
           </div>
+          <p style={{ marginTop: '28px', fontSize: '0.95rem', lineHeight: 1.85, color: 'hsl(220 10% 60%)' }}>
+            Already have a design approved? See how we handle{' '}
+            <Link href="/services/custom-booth-fabrication" style={{ color: 'hsl(110 55% 60%)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              custom booth fabrication
+            </Link>{' '}
+            in our own workshop, or read about{' '}
+            <Link href="/services/double-decker-mezzanine-stands" style={{ color: 'hsl(110 55% 60%)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              mezzanine stall design
+            </Link>{' '}
+            if your footprint can carry a second floor.
+          </p>
         </div>
       </section>
 
-      {/* JSON-LD */}
+      {/*
+        JSON-LD. Was a bare Service node; now a full graph so the page can
+        earn FAQ rich results and so the organisation is a real entity rather
+        than an inline name string. FAQ answers come from data.faqs — the copy
+        already on the page — so the markup never states anything the visitor
+        cannot also read.
+      */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        '@context': 'https://schema.org', '@type': 'Service',
-        name: data.schemaName,
-        provider: { '@type': 'Organization', name: 'Approach Media Pvt Ltd' },
-        areaServed: { '@type': 'City', name: data.schemaAreaServed },
-        serviceType: 'Exhibition stand design, stall fabrication and turnkey exhibition services',
-        description: data.metaDescription,
-        url: `${siteUrl}${data.canonicalPath}`,
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'LocalBusiness',
+            '@id': `${siteUrl}#organization`,
+            name: 'Approach Media Pvt. Ltd.',
+            url: `${siteUrl}/`,
+            description: 'Exhibition stall design and fabrication company in Ahmedabad, India.',
+            telephone: ['+919426912602', '+919898644327', '+919427614395'],
+            email: 'info@approachmedia.in',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: '302, 3rd Floor, Chase House, Sheetal Baug Society, Opp. Induben Khakhrawala, Off C. G. Road, Nr. Mithakhali Circle',
+              addressLocality: 'Ahmedabad',
+              addressRegion: 'Gujarat',
+              addressCountry: 'IN',
+            },
+            areaServed: [
+              'Ahmedabad', 'Mumbai', 'Delhi', 'Bangalore',
+              'Hyderabad', 'Chennai', 'Pune',
+            ].map(name => ({ '@type': 'City', name })),
+          },
+          {
+            '@type': 'Service',
+            name: data.schemaName,
+            serviceType: 'Exhibition stall design and fabrication',
+            provider: { '@id': `${siteUrl}#organization` },
+            areaServed: { '@type': 'City', name: data.schemaAreaServed },
+            description: data.metaDescription,
+            url: `${siteUrl}${data.canonicalPath}`,
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+              { '@type': 'ListItem', position: 2, name: data.schemaName, item: `${siteUrl}${data.canonicalPath}` },
+            ],
+          },
+          {
+            '@type': 'FAQPage',
+            mainEntity: data.faqs.map(f => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+          },
+        ],
       })}} />
 
     </main>

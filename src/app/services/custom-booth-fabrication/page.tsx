@@ -10,6 +10,10 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
+import ProseSection from '@/components/seo/ProseSection'
+import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
+import { INTRO, BLOCKS } from '../_content/custom-booth-fabrication'
 export const metadata = {
   title: { absolute: "Custom Booth Fabrication | Exhibition Stall Builders India" },
   description: "Custom booth fabrication and exhibition stall building across India. In-house workshop, millimetre tolerances, on-time handover. Get a fabrication quote.",
@@ -88,6 +92,13 @@ const faqs = [
 export default function CustomBoothFabricationPage() {
   return (
     <main>
+      <ServiceSchema
+        name="Custom Booth Fabrication"
+        serviceType="Exhibition booth fabrication"
+        slug="custom-booth-fabrication"
+        description="Custom booth fabrication and exhibition stall building across India from an in-house 30,000 sq ft workshop."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO
@@ -429,6 +440,8 @@ export default function CustomBoothFabricationPage() {
         </div>
       </section>
 
+      <ProseSection eyebrow="How we build" intro={INTRO} blocks={BLOCKS} />
+      <ServiceCityLinks />
     </main>
   )
 }

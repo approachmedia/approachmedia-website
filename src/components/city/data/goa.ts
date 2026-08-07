@@ -5,8 +5,8 @@ const shows = buildCityShows(/goa/i)
 
 export const goaData: CityPageData = {
   citySlug: 'goa',
-  metaTitle: 'Exhibition Stall Design in Goa | Stall Fabrication & 3D Booth Design',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D booth design, fabrication, branding, installation and turnkey exhibition services for Goa trade shows, hospitality expos, pharma expos and energy exhibitions.',
+  metaTitle: "Exhibition Stall Design in Goa | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall design in Goa for the Goa Convention Centre and Panaji venues. 23+ years, 6000+ stalls, turnkey fabrication. Costing in 48 hours.",
   canonicalPath: '/exhibition-stall-design-goa',
 
   eyebrow: 'Goa Exhibition Stall Design & Fabrication',

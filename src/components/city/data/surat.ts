@@ -20,8 +20,8 @@ const shows = buildCityShows(/surat/i, {
 
 export const suratData: CityPageData = {
   citySlug: 'surat',
-  metaTitle: 'Exhibition Agency in Surat | Exhibition Stall Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd helps brands plan, design, fabricate and install custom exhibition stalls in Surat for SIECC trade shows, textile expos, jewellery events, auto expos and B2B exhibitions.',
+  metaTitle: "Exhibition Stall Designer in Surat | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall designer in Surat for SIECC. 23+ years, 6000+ stalls, turnkey design, fabrication and on-site handover. Get costing in 48 hours.",
   canonicalPath: '/exhibition-agency-in-surat',
 
   eyebrow: 'Surat · Gujarat · India',

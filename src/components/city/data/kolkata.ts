@@ -20,8 +20,8 @@ const shows = buildCityShows(/kolkata|calcutta/i, {
 
 export const kolkataData: CityPageData = {
   citySlug: 'kolkata',
-  metaTitle: 'Exhibition Stand Builder in Kolkata | Stall Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stand design, 3D stall design, fabrication, branding, installation and turnkey exhibition support for trade shows in Kolkata.',
+  metaTitle: "Exhibition Stall Designer in Kolkata | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall designer in Kolkata for Biswa Bangla Mela Prangan. 23+ years, 6000+ stalls, turnkey design and fabrication. Costing in 48 hours.",
   canonicalPath: '/exhibition-stand-builder-in-kolkata',
 
   eyebrow: 'Kolkata · West Bengal · India',

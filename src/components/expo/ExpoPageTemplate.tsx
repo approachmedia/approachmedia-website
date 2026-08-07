@@ -1,5 +1,6 @@
 import type { ExpoPageData } from './types'
 import Link from 'next/link'
+import { cityPageFor } from '@/lib/seo/city-links'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
   construction: [
@@ -89,6 +90,7 @@ const WHY_US = [
 ]
 
 export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
+  const cityLink = cityPageFor(data.city)
   const whyPoints = INDUSTRY_WHY[data.industry] ?? INDUSTRY_WHY.multiindustry
   const concepts = STALL_CONCEPTS[data.industry] ?? STALL_CONCEPTS.multiindustry
 
@@ -146,6 +148,18 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
               <span className="section-label">Event Overview</span>
               <h2 style={{ marginBottom: '18px' }}>About {data.title}</h2>
               <p style={{ color: 'var(--muted)', lineHeight: 1.85, fontSize: '1rem' }}>{data.eventOverview}</p>
+              {cityLink && (
+                <p style={{ color: 'var(--muted)', lineHeight: 1.85, fontSize: '1rem', marginTop: '18px' }}>
+                  Exhibiting here? We also work across the wider {cityLink.label} circuit — see our{' '}
+                  <Link href={cityLink.path} style={{ color: 'hsl(110 55% 60%)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                    exhibition stall designer in {cityLink.label}
+                  </Link>{' '}
+                  page for venues, build-up windows and past stands, or read how we approach{' '}
+                  <Link href="/services/custom-booth-fabrication" style={{ color: 'hsl(110 55% 60%)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                    custom booth fabrication
+                  </Link>.
+                </p>
+              )}
             </div>
             <div className="animate-in delay-1" style={{ display: 'grid', gap: '12px' }}>
               {[

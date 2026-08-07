@@ -7,7 +7,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: kolkataData.metaTitle,
+  title: { absolute: kolkataData.metaTitle },
   description: kolkataData.metaDescription,
   alternates: { canonical: `${SITE_URL}${kolkataData.canonicalPath}` },
 }

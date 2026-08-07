@@ -6,8 +6,8 @@ const shows = buildCityShows(/noida/i)
 
 export const noidaData: CityPageData = {
   citySlug: 'noida',
-  metaTitle: 'Exhibition Stand Builders in Noida | Stall Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stand design, 3D stall design, fabrication, branding, installation and turnkey exhibition support for Noida and Greater Noida trade shows.',
+  metaTitle: "Exhibition Stall Designer in Noida | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall designer in Noida and Greater Noida for India Expo Centre and Expocentre. 23+ years, 6000+ stalls delivered. Costing in 48 hours.",
   canonicalPath: '/exhibition-stand-builders-in-noida',
 
   eyebrow: 'Noida & Greater Noida · Uttar Pradesh · India',

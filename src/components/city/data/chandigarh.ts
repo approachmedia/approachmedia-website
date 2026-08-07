@@ -5,8 +5,8 @@ const shows = buildCityShows(/chandigarh/i)
 
 export const chandigarhData: CityPageData = {
   citySlug: 'chandigarh',
-  metaTitle: 'Exhibition Stall Design in Chandigarh | PharmaTech Expo Stall Builder',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D booth design, fabrication, branding, installation and turnkey exhibition support for PharmaTech Expo, CII AgroTech, MACHMA Expo and other trade shows in Chandigarh.',
+  metaTitle: "Exhibition Stall Design in Chandigarh | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall design in Chandigarh for Parade Ground Sector 17 and Sector 34. 23+ years, 6000+ stalls delivered. Get costing in 48 hours.",
   canonicalPath: '/exhibition-stall-design-chandigarh',
 
   eyebrow: 'Chandigarh Exhibition Stall Design & Fabrication',

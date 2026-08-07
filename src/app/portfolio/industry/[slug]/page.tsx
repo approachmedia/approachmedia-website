@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { prisma } from '@/lib/db/prisma'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
@@ -48,6 +49,16 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
       ) : (
         <p className="text-slate-500 text-center py-20">No published projects for this industry yet.</p>
       )}
+      <p className="text-sm leading-relaxed text-slate-400">
+        Planning a stand in this sector? See our{' '}
+        <Link href="/services/exhibition-stall-design" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
+          {industry.name.toLowerCase()} exhibition stall design
+        </Link>{' '}
+        service, or browse{' '}
+        <Link href="/portfolio" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
+          every stall we have built
+        </Link>.
+      </p>
     </main>
   )
 }

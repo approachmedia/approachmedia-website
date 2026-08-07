@@ -5,8 +5,8 @@ const shows = buildCityShows(/kochi|cochin/i)
 
 export const kochiData: CityPageData = {
   citySlug: 'kochi',
-  metaTitle: 'Exhibition Stall Design in Kochi | Stall Fabrication & 3D Booth Design',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D booth design, fabrication, branding, installation and turnkey exhibition services for Kochi trade shows, conferences and expos.',
+  metaTitle: "Exhibition Stall Design in Kochi | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall design in Kochi for Adlux and KINFRA exhibition centres. 23+ years, 6000+ stalls, turnkey fabrication. Get costing in 48 hours.",
   canonicalPath: '/exhibition-stall-design-kochi',
 
   eyebrow: 'Kochi Exhibition Stall Design & Fabrication',

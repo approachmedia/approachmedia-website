@@ -6,8 +6,8 @@ const shows = buildCityShows(/jaipur/i)
 
 export const jaipurData: CityPageData = {
   citySlug: 'jaipur',
-  metaTitle: 'Exhibition Stand in Jaipur | Stall Design & Fabrication',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stand design, 3D stall design, fabrication, branding, installation and turnkey exhibition services for Jaipur trade shows.',
+  metaTitle: "Exhibition Stall Designer in Jaipur | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall designer in Jaipur for JECC Sitapura. 23+ years, 6000+ stalls, turnkey design and fabrication. Get a concept and costing in 48 hours.",
   canonicalPath: '/exhibition-stand-in-jaipur',
 
   eyebrow: 'Jaipur · Rajasthan · India',

@@ -5,8 +5,8 @@ const shows = buildCityShows(/ludhiana/i)
 
 export const ludhianaData: CityPageData = {
   citySlug: 'ludhiana',
-  metaTitle: 'Exhibition Stall Design in Ludhiana | Stall Fabrication & 3D Booth Design',
-  metaDescription: 'Approach Media Pvt Ltd provides exhibition stall design, 3D booth design, fabrication, branding, installation and turnkey exhibition services for Ludhiana trade shows including MachAuto Expo, India Agri Expo and PDFA Dairy Expo.',
+  metaTitle: "Exhibition Stall Design in Ludhiana | 6000+ Stalls Built",
+  metaDescription: "Exhibition stall design in Ludhiana for the Ludhiana Exhibition Centre, Sahnewal. 23+ years, 6000+ stalls delivered. Get costing in 48 hours.",
   canonicalPath: '/exhibition-stall-design-ludhiana',
 
   eyebrow: 'Ludhiana Exhibition Stall Design & Fabrication',

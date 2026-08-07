@@ -1,4 +1,7 @@
 import { SITE_URL } from '@/lib/site-url'
+import ProseSection from '@/components/seo/ProseSection'
+import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
+import { INTRO, BLOCKS } from './_content/services-hub'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
   description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
@@ -198,6 +201,8 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      <ProseSection eyebrow="What we do" intro={INTRO} blocks={BLOCKS} />
+      <ServiceCityLinks />
     </main>
   )
 }

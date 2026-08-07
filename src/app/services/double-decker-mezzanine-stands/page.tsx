@@ -10,6 +10,10 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
+import ProseSection from '@/components/seo/ProseSection'
+import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
+import { INTRO, BLOCKS } from '../_content/double-decker-mezzanine-stands'
 export const metadata = {
   title: { absolute: "Double Decker & Mezzanine Stall Design | Approach Media" },
   description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
@@ -66,6 +70,13 @@ const faqs = [
 export default function DoubleDeckerMezzanineStandsPage() {
   return (
     <main>
+      <ServiceSchema
+        name="Double Decker & Mezzanine Stall Design"
+        serviceType="Double decker and mezzanine exhibition stand design"
+        slug="double-decker-mezzanine-stands"
+        description="Double decker and mezzanine exhibition stall design with certified load engineering and organiser-approved structural drawings."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO
@@ -386,6 +397,8 @@ export default function DoubleDeckerMezzanineStandsPage() {
         </div>
       </section>
 
+      <ProseSection eyebrow="Two-storey stands" intro={INTRO} blocks={BLOCKS} />
+      <ServiceCityLinks />
     </main>
   )
 }

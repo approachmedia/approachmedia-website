@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
   title: 'AV & Technology Integration for Exhibition Stalls — Approach Media',
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
@@ -82,6 +83,13 @@ const faqs = [
 export default function AVTechnologyIntegrationPage() {
   return (
     <main>
+      <ServiceSchema
+        name="AV & Technology Integration"
+        serviceType="Exhibition audio-visual and technology integration"
+        slug="av-technology-integration"
+        description="LED walls, interactive displays, audio and show-control systems specified and integrated into exhibition stands."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO

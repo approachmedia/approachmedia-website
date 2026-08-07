@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
   title: 'Immersive Brand Experience Design — Approach Media',
   description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
@@ -58,6 +59,13 @@ const faqs = [
 export default function ImmersiveBrandExperiencePage() {
   return (
     <main>
+      <ServiceSchema
+        name="Immersive Brand Experience Design"
+        serviceType="Immersive brand experience design"
+        slug="immersive-brand-experience"
+        description="Experiential brand spaces and immersive exhibition environments designed around visitor journey and dwell time."
+        faqs={faqs}
+      />
 
       {/* ══════════════════════════════════════════════════
           HERO
