@@ -2,8 +2,7 @@ import type { MetadataRoute } from 'next'
 import { prisma } from '@/lib/db/prisma'
 import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
+import { SITE_URL } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
 

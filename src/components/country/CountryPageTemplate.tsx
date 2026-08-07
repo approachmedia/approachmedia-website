@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, CheckCircle2, Globe2, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { SITE_URL } from '@/lib/site-url'
 
 // ── Shared data (same across all country pages) ───────────────
 
@@ -109,7 +110,6 @@ export interface CountryPageData {
 // ── Template ─────────────────────────────────────────────────
 
 export function CountryPageTemplate({ data }: { data: CountryPageData }) {
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
   const pageUrl  = `${SITE_URL}/${data.slug}`
 
   const jsonLd = {

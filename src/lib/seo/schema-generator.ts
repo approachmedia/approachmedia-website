@@ -1,4 +1,5 @@
 import type { Project, Client, Exhibition, Media, SeoMetadata, Industry, StallType } from '@prisma/client'
+import { SITE_URL } from '@/lib/site-url'
 
 // ─────────────────────────────────────────────
 // TYPES
@@ -15,7 +16,6 @@ export type ProjectWithRelations = Project & {
 
 type JsonLdNode = Record<string, unknown>
 
-const SITE_URL    = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 const ORG_ID      = `${SITE_URL}#organization`
 const ORG_NAME    = 'Approach Media'
 

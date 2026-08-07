@@ -6,6 +6,7 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
+import { SITE_URL } from '@/lib/site-url'
 
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
 // Data is cached for 5 minutes at the function level via unstable_cache below.
@@ -25,8 +26,6 @@ const getPortfolioData = unstable_cache(
   ['portfolio-page-data-v2'],
   { revalidate: 300, tags: ['projects'] },
 )
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
 export const metadata: Metadata = {
   title: 'Exhibition Stall Portfolio — Approach Media',

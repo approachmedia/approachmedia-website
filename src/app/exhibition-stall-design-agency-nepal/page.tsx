@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { CountryPageTemplate, type CountryPageData } from '@/components/country/CountryPageTemplate'
+import { SITE_URL } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
 export const metadata: Metadata = {
   title: 'Exhibition Stall Design Agency in Nepal | Booth Design Kathmandu',

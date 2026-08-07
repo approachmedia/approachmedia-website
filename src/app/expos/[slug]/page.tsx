@@ -3,8 +3,7 @@ import type { Metadata } from 'next'
 import expoData from '@/data/expo-pages.json'
 import ExpoPageTemplate from '@/components/expo/ExpoPageTemplate'
 import type { ExpoPageData } from '@/components/expo/types'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
+import { SITE_URL } from '@/lib/site-url'
 
 export async function generateStaticParams() {
   return (expoData as ExpoPageData[]).map(e => ({ slug: e.slug }))

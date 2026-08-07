@@ -3,10 +3,9 @@ import { prisma } from '@/lib/db/prisma'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
+import { SITE_URL } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug }    = await params

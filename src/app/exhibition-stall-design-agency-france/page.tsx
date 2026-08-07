@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, CheckCircle2, Globe2, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { SITE_URL } from '@/lib/site-url'
 
 export const dynamic = 'force-dynamic'
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://approachmedia.in'
 
 export const metadata: Metadata = {
   title: 'Exhibition Stall Design Agency in France | Booth Design & Fabrication',
