@@ -1,6 +1,12 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
+  // Inlined at build time, so it is identical for every request a given
+  // deploy serves. The sitemap uses it for pages whose content is
+  // source-controlled — those genuinely only change when we deploy.
+  env: {
+    BUILD_TIME: new Date().toISOString(),
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.approachmedia.in' },

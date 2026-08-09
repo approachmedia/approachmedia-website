@@ -4,6 +4,7 @@ import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
+import { BUILD_TIME } from '@/lib/seo/build-time'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -25,15 +26,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB not reachable — return static pages only
   }
 
+  // Pages that list projects change when a project changes, so they take the
+  // newest project timestamp. Everything else is source-controlled content
+  // and genuinely only changes on deploy.
+  const latestProject = projects[0]?.updatedAt ?? BUILD_TIME
+
   const staticPages: MetadataRoute.Sitemap = [
-    { url: SITE_URL,                        lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${SITE_URL}/portfolio`,         lastModified: new Date(), changeFrequency: 'daily',   priority: 0.9 },
-    { url: `${SITE_URL}/services`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${SITE_URL}/about`,             lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE_URL}/contact`,           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${SITE_URL}/work-with-us`,      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${SITE_URL}/expos`,             lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
-    { url: `${SITE_URL}/tradeshow-calendar`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: SITE_URL,                        lastModified: BUILD_TIME, changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `${SITE_URL}/portfolio`,         lastModified: latestProject, changeFrequency: 'daily',   priority: 0.9 },
+    { url: `${SITE_URL}/services`,          lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/about`,             lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/contact`,           lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${SITE_URL}/work-with-us`,      lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/expos`,             lastModified: BUILD_TIME, changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${SITE_URL}/tradeshow-calendar`, lastModified: BUILD_TIME, changeFrequency: 'weekly', priority: 0.8 },
   ]
 
   // Commercial landing pages. These are hand-built routes rather than dynamic
@@ -49,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'immersive-brand-experience',
   ].map(slug => ({
     url:             `${SITE_URL}/services/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    BUILD_TIME,
     changeFrequency: 'monthly' as const,
     priority:        0.9,
   }))
@@ -72,7 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'exhibition-agency-in-surat',
   ].map(slug => ({
     url:             `${SITE_URL}/${slug}`,
-    lastModified:    new Date(),
+    lastModified:    BUILD_TIME,
     changeFrequency: 'monthly' as const,
     priority:        0.9,
   }))
@@ -82,14 +88,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'germany', 'france', 'italy', 'spain', 'netherlands', 'usa', 'kenya-africa',
   ].map(slug => ({
     url:             `${SITE_URL}/exhibition-stall-design-agency-${slug}`,
-    lastModified:    new Date(),
+    lastModified:    BUILD_TIME,
     changeFrequency: 'monthly' as const,
     priority:        0.7,
   }))
 
   const expoPages: MetadataRoute.Sitemap = (expoData as ExpoPageData[]).map(e => ({
     url:             `${SITE_URL}/expos/${e.slug}`,
-    lastModified:    new Date(),
+    lastModified:    BUILD_TIME,
     changeFrequency: 'monthly' as const,
     priority:        0.7,
   }))
@@ -103,14 +109,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const industryPages: MetadataRoute.Sitemap = industries.map(i => ({
     url:             `${SITE_URL}/portfolio/industry/${i.slug}`,
-    lastModified:    new Date(),
+    lastModified:    latestProject,
     changeFrequency: 'weekly' as const,
     priority:        0.7,
   }))
 
   const typePages: MetadataRoute.Sitemap = stallTypes.map(t => ({
     url:             `${SITE_URL}/portfolio/type/${t.slug}`,
-    lastModified:    new Date(),
+    lastModified:    latestProject,
     changeFrequency: 'weekly' as const,
     priority:        0.7,
   }))
