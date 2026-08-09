@@ -4,6 +4,7 @@ import ScrambleLink from '@/components/ui/ScrambleLink'
 import FooterCityList from './FooterCityList'
 import { INDIAN_CITIES } from '@/data/cities'
 
+import { ORG_PROFILES } from '@/lib/seo/organization'
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
     heading: 'Services',
@@ -35,12 +36,6 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
 ]
 
 
-const SOCIAL = [
-  { label: 'LinkedIn',  short: 'in' },
-  { label: 'Instagram', short: 'ig' },
-  { label: 'YouTube',   short: 'yt' },
-  { label: 'Facebook',  short: 'fb' },
-]
 
 export default function SiteFooter() {
   return (
@@ -65,11 +60,14 @@ export default function SiteFooter() {
               that attract, engage, and deliver lasting impact across India and 14+ countries.
             </p>
             <div className="mt-5 flex gap-2">
-              {SOCIAL.map(s => (
+              {ORG_PROFILES.map(s => (
                 <a
                   key={s.label}
-                  href="#"
-                  aria-label={s.label}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer me"
+                  aria-label={`Approach Media on ${s.label}`}
+                  title={s.label}
                   className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface-elevated text-xs font-semibold text-muted-foreground transition hover:border-brand-blue-glow/50 hover:text-foreground"
                 >
                   {s.short}

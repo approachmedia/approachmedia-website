@@ -7,9 +7,10 @@ import { SITE_URL } from '@/lib/site-url'
  * name/address/phone that disagrees between pages is a known drag on local
  * ranking.
  *
- * `sameAs` is deliberately absent — the footer lists social platforms as
- * labels with no URLs, so there is nothing verified to point at. Add the real
- * profile URLs and the property can go in.
+ * ORG_PROFILES is the single source for the social links: the footer renders
+ * them and the Organization node emits them as `sameAs`, so the two can never
+ * drift. sameAs is a genuine entity signal — it is how Google ties this site
+ * to the same business it knows from those profiles.
  */
 export const ORG_ID = `${SITE_URL}#organization`
 
@@ -21,6 +22,16 @@ export const ORG_LOGO =
 export const ORG_PHONES = ['+919426912602', '+919898644327', '+919427614395']
 
 export const ORG_EMAIL = 'info@approachmedia.in'
+
+/** Official profiles. Order controls the footer button order. */
+export const ORG_PROFILES = [
+  { label: 'LinkedIn',  short: 'in', url: 'https://www.linkedin.com/company/approach-media-pvt-ltd' },
+  { label: 'Instagram', short: 'ig', url: 'https://www.instagram.com/approachmediapvtltd/' },
+  { label: 'YouTube',   short: 'yt', url: 'https://www.youtube.com/@ApproachMediaPvtLtd' },
+  { label: 'Facebook',  short: 'fb', url: 'https://www.facebook.com/approachmedia.in/' },
+] as const
+
+export const ORG_SAME_AS = ORG_PROFILES.map(p => p.url)
 
 export const ORG_ADDRESS = {
   '@type': 'PostalAddress',
@@ -56,6 +67,7 @@ export function organizationNode(type: 'Organization' | 'LocalBusiness' = 'Organ
     email: ORG_EMAIL,
     address: ORG_ADDRESS,
     areaServed: ORG_AREA_SERVED,
+    sameAs: ORG_SAME_AS,
   }
 }
 
