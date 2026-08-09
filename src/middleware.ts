@@ -8,33 +8,61 @@ import type { NextRequest } from 'next/server'
  * Host consolidation happens here rather than at the edge because there is no
  * CDN in front of this domain — both hostnames resolve straight to Railway
  * (responses carry `server: railway-hikari`, no `cf-ray`), and DNS sits at the
- * registrar. The Cloudflare account is used for R2 storage only, so a
- * Cloudflare Redirect Rule was never an option.
+ * registrar. The Cloudflare account is used for R2 storage only.
+ *
+ * ── Why the first attempt at this rolled back ──────────────────────────────
+ * railway.toml sets a healthcheck, and it was pointed at `/`. Railway probes
+ * the deployment using the *.railway.app host, which is one of the hosts this
+ * middleware redirects. While the matcher was `/admin/:path*` the probe never
+ * reached middleware; widening it to the whole site meant `/` answered 301,
+ * the probe never saw a 2xx, and Railway rolled the deploy back after eight
+ * attempts. The build succeeded every time, so nothing looked wrong locally.
+ *
+ * Two guards now prevent that:
+ *   1. HEALTH_PATH is exempted here before any host logic runs.
+ *   2. railway.toml points healthcheckPath at HEALTH_PATH.
+ * Either alone would be enough; both together mean a future change to one
+ * cannot silently reintroduce the rollback.
  *
  * CANONICAL_HOST must stay in step with NEXT_PUBLIC_SITE_URL. If they ever
- * disagree, every page will 301 to a host whose canonical tag points back at
- * the other one, which is a redirect loop as far as a crawler is concerned.
+ * disagree, pages 301 to one host while their canonical tag names the other,
+ * which reads to a crawler as a loop.
  */
-const CANONICAL_ORIGIN = 'https://www.approachmedia.in'
 const CANONICAL_HOST = 'www.approachmedia.in'
+const CANONICAL_ORIGIN = `https://${CANONICAL_HOST}`
+
+/** Exempt from every host rule — Railway's probe must always get a 2xx. */
+const HEALTH_PATH = '/api/health'
+
+/**
+ * Only these hosts are redirected. Anything unrecognised — an internal probe,
+ * a bare IP or IPv6 literal, localhost, a preview domain — passes through
+ * untouched, so an unfamiliar host can never cost us a deploy again.
+ */
+function shouldRedirectHost(hostname: string) {
+  if (hostname === CANONICAL_HOST) return false
+  return hostname === 'approachmedia.in' || hostname.endsWith('.railway.app')
+}
 
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl
-  const host = request.headers.get('host') ?? ''
 
-  // Strip any port so localhost:3000 and previews are never redirected.
-  const hostname = host.split(':')[0].toLowerCase()
+  // Before anything else, whatever the host.
+  if (pathname === HEALTH_PATH) return NextResponse.next()
 
-  const isWrongHost =
-    hostname.endsWith('.railway.app') || hostname === 'approachmedia.in'
+  // Stale sitemap index still referenced in Search Console; 404 today.
+  if (pathname === '/sitemap_index.xml') {
+    return NextResponse.redirect(`${CANONICAL_ORIGIN}/sitemap.xml`, 301)
+  }
 
-  // Only redirect safe methods. Several HTTP clients silently downgrade a
-  // POST to GET when following a 301, which would turn a form or webhook
-  // submission on the wrong host into a broken no-op rather than a redirect.
-  const isSafeMethod = request.method === 'GET' || request.method === 'HEAD'
-
-  if (isWrongHost && isSafeMethod && hostname !== CANONICAL_HOST) {
-    return NextResponse.redirect(new URL(pathname + search, CANONICAL_ORIGIN), 301)
+  // Only safe methods. Several HTTP clients silently downgrade POST to GET
+  // when following a 301, which would turn a form or webhook submission on
+  // the wrong host into a no-op rather than a redirect.
+  if (request.method === 'GET' || request.method === 'HEAD') {
+    const hostname = (request.headers.get('host') ?? '').toLowerCase().split(':')[0]
+    if (shouldRedirectHost(hostname)) {
+      return NextResponse.redirect(`${CANONICAL_ORIGIN}${pathname}${search}`, 301)
+    }
   }
 
   // ── /admin guard ──────────────────────────────────────────
@@ -54,13 +82,12 @@ export function middleware(request: NextRequest) {
 }
 
 /**
- * Matches everything except Next's build output. The matcher previously
- * covered only /admin/:path*, which would have limited the host redirect to
- * admin routes — robots.txt, the sitemap and every public page would have
- * gone on serving from the wrong hostname.
+ * Everything except Next's build output. The /admin guard needs the wide
+ * matcher, so narrowing it back is not an option — the health exemption above
+ * is what makes the wide matcher safe.
  *
- * robots.txt and sitemap.xml are deliberately NOT excluded: those are exactly
- * the URLs a crawler fetches, so they need the 301 more than anything else.
+ * robots.txt and sitemap.xml are deliberately not excluded: those are exactly
+ * the URLs a crawler fetches on the wrong host, so they need the 301 most.
  */
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],

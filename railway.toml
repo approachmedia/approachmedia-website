@@ -2,7 +2,12 @@
 builder = "dockerfile"
 
 [deploy]
-healthcheckPath = "/"
+# Points at a dedicated route rather than "/". The site-wide middleware
+# redirects the *.railway.app host onto the canonical domain, and Railway
+# probes using that host — so a probe against "/" receives a 301 and the
+# deploy is rolled back. /api/health is exempted in middleware.ts and always
+# answers 200, whatever host the probe carries.
+healthcheckPath = "/api/health"
 healthcheckTimeout = 120
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
