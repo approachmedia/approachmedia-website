@@ -4,6 +4,8 @@ import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
+import JsonLd from '@/components/seo/JsonLd'
+import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design for Expos 2026 | India Shows" },
   description: 'Browse 80+ upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
@@ -42,6 +44,29 @@ export default function ExposIndexPage() {
 
   return (
     <main>
+      <JsonLd graph={[
+        organizationNode(),
+        {
+          '@type': 'CollectionPage',
+          name: 'Exhibition stall design for 2026 expos',
+          description: 'Stall design and fabrication for upcoming expos across India and internationally.',
+          url: `${SITE_URL}/expos`,
+          publisher: { '@id': `${SITE_URL}#organization` },
+        },
+        {
+          '@type': 'ItemList',
+          name: 'Expos we build at in 2026',
+          numberOfItems: expos.length,
+          itemListElement: expos.map((e, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: e.title,
+            url: `${SITE_URL}/expos/${e.slug}`,
+          })),
+        },
+        breadcrumb([{ name: 'Expos 2026', path: '/expos' }]),
+      ]} />
+
       {/* HERO */}
       <section className="page-hero">
         <div className="container">

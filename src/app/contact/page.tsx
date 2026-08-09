@@ -4,6 +4,8 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 import { ContactForm } from './ContactForm'
 
 import { SITE_URL } from '@/lib/site-url'
+import JsonLd from '@/components/seo/JsonLd'
+import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 // Local part only — "+91 " is prefixed for display and stripped for the tel: link.
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
@@ -21,6 +23,18 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <JsonLd graph={[
+        organizationNode('LocalBusiness'),
+        {
+          '@type': 'ContactPage',
+          name: 'Contact Approach Media',
+          description: 'Contact details and enquiry form for exhibition stall design and fabrication.',
+          url: `${SITE_URL}/contact`,
+          mainEntity: { '@id': `${SITE_URL}#organization` },
+        },
+        breadcrumb([{ name: 'Contact', path: '/contact' }]),
+      ]} />
+
       {/* ══════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════ */}

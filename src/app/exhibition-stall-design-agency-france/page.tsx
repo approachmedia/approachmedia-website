@@ -146,13 +146,37 @@ const faqs = [
 // ── Page ─────────────────────────────────────────────────────
 
 export default function FrancePage() {
+  // This route is hand-built rather than rendered through CountryPageTemplate,
+  // which is why it carried only a LocalBusiness node while the other twelve
+  // international pages also get BreadcrumbList and FAQPage. Matched here.
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: 'Approach Media — Exhibition Stall Design Agency in France',
-    areaServed: ['France', 'Paris', 'Lyon', 'Cannes', 'Marseille', 'Bordeaux', 'Lille'],
-    description: 'Custom exhibition booth design, 3D stand concepts, fabrication coordination, branding, installation and dismantling for trade fairs across France.',
-    url: `${SITE_URL}/exhibition-stall-design-agency-france`,
+    '@graph': [
+      {
+        '@type': 'LocalBusiness',
+        '@id': `${SITE_URL}#organization`,
+        name: 'Approach Media — Exhibition Stall Design Agency in France',
+        areaServed: ['France', 'Paris', 'Lyon', 'Cannes', 'Marseille', 'Bordeaux', 'Lille'],
+        description: 'Custom exhibition booth design, 3D stand concepts, fabrication coordination, branding, installation and dismantling for trade fairs across France.',
+        url: `${SITE_URL}/exhibition-stall-design-agency-france`,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'International', item: `${SITE_URL}/#international` },
+          { '@type': 'ListItem', position: 3, name: 'Exhibition Stall Design in France', item: `${SITE_URL}/exhibition-stall-design-agency-france` },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
   }
 
   return (

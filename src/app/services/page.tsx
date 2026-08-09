@@ -2,6 +2,8 @@ import { SITE_URL } from '@/lib/site-url'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from './_content/services-hub'
+import JsonLd from '@/components/seo/JsonLd'
+import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
   description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
@@ -16,6 +18,36 @@ export const metadata = {
 export default function ServicesPage() {
   return (
     <main>
+      <JsonLd graph={[
+        organizationNode(),
+        {
+          '@type': 'CollectionPage',
+          name: 'Exhibition stall design and fabrication services',
+          description: 'Design, custom booth fabrication, double-decker stands, AV integration and turnkey exhibition project management.',
+          url: `${SITE_URL}/services`,
+          publisher: { '@id': `${SITE_URL}#organization` },
+        },
+        {
+          '@type': 'ItemList',
+          name: 'Our services',
+          numberOfItems: 6,
+          itemListElement: [
+            ['exhibition-stall-design', 'Exhibition Stall Design'],
+            ['custom-booth-fabrication', 'Custom Booth Fabrication'],
+            ['double-decker-mezzanine-stands', 'Double Decker & Mezzanine Stands'],
+            ['turnkey-project-management', 'Turnkey Exhibition Project Management'],
+            ['av-technology-integration', 'AV & Technology Integration'],
+            ['immersive-brand-experience', 'Immersive Brand Experience Design'],
+          ].map(([slug, name], i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name,
+            url: `${SITE_URL}/services/${slug}`,
+          })),
+        },
+        breadcrumb([{ name: 'Services', path: '/services' }]),
+      ]} />
+
 
       {/* ═══ SECTION 1: PAGE HERO ══════════════════════════════════════════ */}
       <section className="page-hero" aria-labelledby="services-hero-heading">

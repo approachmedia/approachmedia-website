@@ -5,6 +5,8 @@ import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
 import { cityPageFor } from '@/lib/seo/city-links'
+import JsonLd from '@/components/seo/JsonLd'
+import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -46,6 +48,18 @@ export default function WorkWithUsPage() {
 
   return (
     <main>
+      <JsonLd graph={[
+        organizationNode(),
+        {
+          '@type': 'WebPage',
+          name: 'Work With Us — Exhibition Stall Design and Build Partner',
+          description: 'How we work, the industries we build for, and the expos we cover across India and internationally.',
+          url: `${SITE_URL}/work-with-us`,
+          publisher: { '@id': `${SITE_URL}#organization` },
+        },
+        breadcrumb([{ name: 'Work With Us', path: '/work-with-us' }]),
+      ]} />
+
 
       {/* ── HERO ───────────────────────────────────────────── */}
       <section className="page-hero">
