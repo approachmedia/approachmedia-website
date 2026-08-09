@@ -22,6 +22,11 @@ export const metadata = {
   // would otherwise print the brand twice.
   title: { absolute: 'Exhibition Stall Design Company India | 6000+ Stalls Built' },
   description: 'Exhibition stall design and fabrication across India. 23+ years, 6000+ stalls, 14+ countries. Get a concept and costing in 48 hours.',
+  // Renders as "https://www.approachmedia.in" with no trailing slash. Next
+  // normalises the root canonical because trailingSlash defaults to false, and
+  // writing the slash explicitly does not survive that. Harmless: the empty
+  // path and "/" are the same URL after normalisation, and the sitemap's root
+  // <loc> uses the identical form, so the two agree.
   alternates: { canonical: '/' },
 }
 

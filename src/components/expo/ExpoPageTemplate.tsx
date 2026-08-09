@@ -1,6 +1,7 @@
 import type { ExpoPageData } from './types'
 import Link from 'next/link'
 import { cityPageFor } from '@/lib/seo/city-links'
+import { SITE_URL } from '@/lib/site-url'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
   construction: [
@@ -101,7 +102,7 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
     provider: {
       '@type': 'Organization',
       name: 'Approach Media Pvt. Ltd.',
-      url: 'https://approachmedia.in',
+      url: SITE_URL,
     },
     areaServed: { '@type': 'City', name: data.city },
     serviceType: 'Exhibition Stall Design and Fabrication',

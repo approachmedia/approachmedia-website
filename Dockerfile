@@ -9,6 +9,15 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+# NEXT_PUBLIC_* values are inlined into the bundle at build time, and
+# statically prerendered pages bake their canonical URL from this. Docker
+# builds do not inherit the service environment unless it is declared as a
+# build arg, so without this the static pages baked the fallback origin while
+# dynamic pages read the real one at runtime — which is how the site ended up
+# with canonicals split across two hosts.
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
 # Copy source and build
 COPY . .
 RUN npx prisma generate
