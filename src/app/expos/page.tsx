@@ -5,7 +5,7 @@ import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design for Upcoming Expos 2026 | Approach Media',
+  title: { absolute: "Exhibition Stall Design for Expos 2026 | India Shows" },
   description: 'Browse 80+ upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
   alternates: { canonical: `${SITE_URL}/expos` },
 }

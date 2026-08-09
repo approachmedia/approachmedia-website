@@ -9,7 +9,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in France | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in France | Paris" },
   description: 'Approach Media is an exhibition stall design agency in France — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Paris, Lyon, Cannes, Marseille, Bordeaux and Lille.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-france` },
 }

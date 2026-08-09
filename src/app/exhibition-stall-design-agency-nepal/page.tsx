@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Nepal | Booth Design Kathmandu',
+  title: { absolute: "Exhibition Stall Design Agency in Nepal | Kathmandu" },
   description:
     'Approach Media is an exhibition stall design agency in Nepal — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Nepal International Trade Fair, NITE, Nepal Build and major Kathmandu trade shows.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-nepal` },
@@ -19,7 +19,7 @@ const data: CountryPageData = {
   areaServed: ['Nepal', 'Kathmandu', 'Pokhara', 'Biratnagar'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Nepal | Booth Design Kathmandu',
+    title: "Exhibition Stall Design Agency in Nepal | Kathmandu",
     description:
       'Approach Media is an exhibition stall design agency in Nepal — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Nepal International Trade Fair, NITE, Nepal Build and major Kathmandu trade shows.',
   },

@@ -28,10 +28,10 @@ const getPortfolioData = unstable_cache(
 )
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Portfolio — Approach Media',
+  title: { absolute: "Exhibition Stall Design Portfolio | 6000+ Stalls Built" },
   description: '600+ custom exhibition stall designs and booth fabrication projects across India. Double decker mezzanine stands, custom booths, modular and pavilion structures.',
   openGraph: {
-    title:       'Exhibition Stall Portfolio — Approach Media',
+    title: "Exhibition Stall Design Portfolio | 6000+ Stalls Built",
     description: '600+ custom exhibition stalls built across India.',
     url:         `${SITE_URL}/portfolio`,
   },

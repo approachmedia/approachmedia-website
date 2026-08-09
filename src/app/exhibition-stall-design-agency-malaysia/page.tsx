@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Malaysia | Booth Design Kuala Lumpur',
+  title: { absolute: "Exhibition Stall Design Agency in Malaysia | Kuala Lumpur" },
   description:
     'Approach Media is an exhibition stall design agency in Malaysia — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for MIHAS, IGEM, Malaysia Tech Week and major Kuala Lumpur trade fairs.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-malaysia` },
@@ -19,7 +19,7 @@ const data: CountryPageData = {
   areaServed: ['Malaysia', 'Kuala Lumpur', 'Penang', 'Johor Bahru'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Malaysia | Booth Design Kuala Lumpur',
+    title: "Exhibition Stall Design Agency in Malaysia | Kuala Lumpur",
     description:
       'Approach Media is an exhibition stall design agency in Malaysia — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for MIHAS, IGEM, Malaysia Tech Week and major Kuala Lumpur trade fairs.',
   },

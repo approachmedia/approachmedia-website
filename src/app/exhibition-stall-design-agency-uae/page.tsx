@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in UAE | Booth Design Dubai & Abu Dhabi',
+  title: { absolute: "Exhibition Stall Design Agency in UAE | Dubai & Abu Dhabi" },
   description: 'Approach Media is an exhibition stall design agency in the UAE — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for GITEX, Arab Health, Gulfood, Big 5 and all Dubai & Abu Dhabi trade shows.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-uae` },
 }
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   areaServed: ['UAE', 'Dubai', 'Abu Dhabi', 'Sharjah'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in UAE | Booth Design Dubai & Abu Dhabi',
+    title: "Exhibition Stall Design Agency in UAE | Dubai & Abu Dhabi",
     description: 'Approach Media is an exhibition stall design agency in the UAE — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for GITEX, Arab Health, Gulfood, Big 5 and all Dubai & Abu Dhabi trade shows.',
   },
 

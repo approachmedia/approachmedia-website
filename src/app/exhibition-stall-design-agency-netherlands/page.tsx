@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Netherlands | Booth Design Amsterdam',
+  title: { absolute: "Exhibition Stall Design Agency in Netherlands | Amsterdam" },
   description:
     'Approach Media is an exhibition stall design agency in the Netherlands -- custom booth design, 3D concepts, fabrication, branding, installation and dismantling for ISE Amsterdam, Interclean, Aquatech and major Dutch trade fairs.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-netherlands` },
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/netherlands-hero.jpg',
   areaServed: ['Netherlands', 'Amsterdam', 'Utrecht', 'Rotterdam', 'Eindhoven'],
   meta: {
-    title: 'Exhibition Stall Design Agency in Netherlands | Booth Design Amsterdam',
+    title: "Exhibition Stall Design Agency in Netherlands | Amsterdam",
     description:
       'Approach Media is an exhibition stall design agency in the Netherlands -- custom booth design, 3D concepts, fabrication, branding, installation and dismantling for ISE Amsterdam, Interclean, Aquatech and major Dutch trade fairs.',
   },

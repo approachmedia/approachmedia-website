@@ -13,11 +13,11 @@ import {
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
-  title: 'AV & Technology Integration for Exhibition Stalls — Approach Media',
+  title: { absolute: "Exhibition Stand AV & Technology Integration | LED Walls" },
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
   alternates: { canonical: `${SITE_URL}/services/av-technology-integration` },
   openGraph: {
-    title: 'AV & Technology Integration for Exhibition Stalls — Approach Media',
+    title: "Exhibition Stand AV & Technology Integration | LED Walls",
     description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
     url: `${SITE_URL}/services/av-technology-integration`,
   },

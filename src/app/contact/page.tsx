@@ -8,11 +8,11 @@ import { SITE_URL } from '@/lib/site-url'
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
+  title: { absolute: "Contact an Exhibition Stall Design Company | Ahmedabad" },
   description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
   alternates: { canonical: `${SITE_URL}/contact` },
   openGraph: {
-    title: 'Contact Us | Approach Media — Exhibition Stall Design Agency',
+    title: "Contact an Exhibition Stall Design Company | Ahmedabad",
     description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
     url: `${SITE_URL}/contact`,
   },

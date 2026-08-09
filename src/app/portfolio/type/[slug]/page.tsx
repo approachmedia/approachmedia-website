@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const stallType   = await prisma.stallType.findUnique({ where: { slug } })
   if (!stallType) return {}
   return {
-    title: `${stallType.name} Exhibition Stands Portfolio | Approach Media`,
+    title: { absolute: `${stallType.name} Exhibition Stands | Design Portfolio` },
     description: `${stallType.name} exhibition stand design and fabrication projects by Approach Media. Browse completed builds across India.`,
     alternates: { canonical: `${SITE_URL}/portfolio/type/${slug}` },
   }

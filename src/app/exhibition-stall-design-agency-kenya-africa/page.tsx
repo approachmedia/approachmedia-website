@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Kenya & Africa | Booth Design Nairobi',
+  title: { absolute: "Exhibition Stall Design Agency in Kenya | Nairobi" },
   description:
     'Approach Media is an exhibition stall design agency in Kenya and Africa — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Nairobi, Johannesburg, Lagos, Cape Town and major African trade shows.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-kenya-africa` },
@@ -19,7 +19,7 @@ const data: CountryPageData = {
   areaServed: ['Kenya', 'Nairobi', 'Johannesburg', 'Lagos', 'Cape Town', 'Accra', 'Africa'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Kenya & Africa | Booth Design Nairobi',
+    title: "Exhibition Stall Design Agency in Kenya | Nairobi",
     description:
       'Approach Media is an exhibition stall design agency in Kenya and Africa — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Nairobi, Johannesburg, Lagos, Cape Town and major African trade shows.',
   },

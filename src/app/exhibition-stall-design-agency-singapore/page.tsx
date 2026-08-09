@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Singapore | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in Singapore | Booth Build" },
   description: 'Approach Media is an exhibition stall design agency in Singapore — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Singapore Airshow, Food & Hotel Asia, GITEX Asia, CommunicAsia and more.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-singapore` },
 }
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   areaServed: ['Singapore', 'Marina Bay', 'Changi', 'Suntec City'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Singapore | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in Singapore | Booth Build",
     description: 'Approach Media is an exhibition stall design agency in Singapore — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Singapore Airshow, Food & Hotel Asia, GITEX Asia, CommunicAsia and more.',
   },
 

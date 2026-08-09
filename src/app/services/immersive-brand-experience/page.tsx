@@ -12,11 +12,11 @@ import {
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
-  title: 'Immersive Brand Experience Design — Approach Media',
+  title: { absolute: "Immersive Brand Experience Design | Exhibition Spaces" },
   description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
   alternates: { canonical: `${SITE_URL}/services/immersive-brand-experience` },
   openGraph: {
-    title: 'Immersive Brand Experience Design — Approach Media',
+    title: "Immersive Brand Experience Design | Exhibition Spaces",
     description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
     url: `${SITE_URL}/services/immersive-brand-experience`,
   },

@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in USA | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in USA | Booth Builders" },
   description: 'Approach Media is an exhibition stall design agency in the USA — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Las Vegas, Chicago, Orlando, New York, Houston and Atlanta.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-usa` },
 }
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   areaServed: ['USA', 'Las Vegas', 'Chicago', 'Orlando', 'New York', 'Houston', 'Atlanta'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in USA | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in USA | Booth Builders",
     description: 'Approach Media is an exhibition stall design agency in the USA — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Las Vegas, Chicago, Orlando, New York, Houston and Atlanta.',
   },
 

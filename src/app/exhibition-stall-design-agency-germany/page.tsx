@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Germany | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in Germany | Frankfurt" },
   description: 'Approach Media is an exhibition stall design agency in Germany — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Frankfurt, Hannover, Munich, Düsseldorf, Cologne and Berlin.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-germany` },
 }
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   areaServed: ['Germany', 'Frankfurt', 'Hannover', 'Munich', 'Düsseldorf', 'Cologne', 'Berlin'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Germany | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in Germany | Frankfurt",
     description: 'Approach Media is an exhibition stall design agency in Germany — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Frankfurt, Hannover, Munich, Düsseldorf, Cologne and Berlin.',
   },
 

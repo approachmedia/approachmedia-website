@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Italy | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in Italy | Milan" },
   description:
     'Approach Media is an exhibition stall design agency in Italy — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Salone del Mobile, HOST, Cosmoprof, Vinitaly, SIGEP and major Italian trade fairs.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-italy` },
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/italy-hero.jpg',
   areaServed: ['Italy', 'Milan', 'Bologna', 'Rimini', 'Verona', 'Florence'],
   meta: {
-    title: 'Exhibition Stall Design Agency in Italy | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in Italy | Milan",
     description:
       'Approach Media is an exhibition stall design agency in Italy — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Salone del Mobile, HOST, Cosmoprof, Vinitaly, SIGEP and major Italian trade fairs.',
   },

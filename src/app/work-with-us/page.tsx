@@ -6,7 +6,7 @@ import type { ExpoPageData } from '@/components/expo/types'
 import { SITE_URL } from '@/lib/site-url'
 import { cityPageFor } from '@/lib/seo/city-links'
 export const metadata: Metadata = {
-  title: 'Work With Us — Exhibition Stall Design Partner | Approach Media',
+  title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
   alternates: { canonical: `${SITE_URL}/work-with-us` },
 }

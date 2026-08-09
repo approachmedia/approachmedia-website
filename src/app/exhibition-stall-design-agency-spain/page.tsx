@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Spain | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in Spain | Madrid" },
   description:
     'Approach Media is an exhibition stall design agency in Spain — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for MWC Barcelona, FITUR Madrid, Alimentaria, Smart City Expo and major Spanish trade fairs.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-spain` },
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/spain-hero.jpg',
   areaServed: ['Spain', 'Barcelona', 'Madrid', 'Valencia', 'Bilbao'],
   meta: {
-    title: 'Exhibition Stall Design Agency in Spain | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in Spain | Madrid",
     description:
       'Approach Media is an exhibition stall design agency in Spain — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for MWC Barcelona, FITUR Madrid, Alimentaria, Smart City Expo and major Spanish trade fairs.',
   },

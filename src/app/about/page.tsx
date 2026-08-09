@@ -7,11 +7,11 @@ import { CtaBand } from '@/components/home/CtaBand'
 
 import { SITE_URL } from '@/lib/site-url'
 export const metadata: Metadata = {
-  title: 'About Approach Media | Exhibition Stall Design & Build Company',
+  title: { absolute: "Exhibition Stall Design Company in India Since 2002" },
   description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
   alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
-    title: 'About Approach Media | Exhibition Stall Design & Build Company',
+    title: "Exhibition Stall Design Company in India Since 2002",
     description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
     url: `${SITE_URL}/about`,
   },
@@ -22,17 +22,17 @@ export const metadata: Metadata = {
 const offerings = [
   {
     Icon: Layers,
-    title: 'Custom Services & Offerings',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'Exhibition stall design, custom booth fabrication, turnkey project management, audio-visual & technology integration, double decker / mezzanine stands, and immersive brand experience design.',
   },
   {
     Icon: Target,
-    title: 'Pan-India & Global Presence',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'We deliver across Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Ahmedabad, Rajkot, Surat, Baroda, Punjab and Haryana — and internationally across the USA, Germany, France, Netherlands, Italy, UAE, Spain, Nepal, Bangladesh, Singapore, China, Malaysia and Kenya.',
   },
   {
     Icon: Sparkles,
-    title: 'Industries Served',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'Real estate, pharma, manufacturing, FMCG, textiles, technology, automotive, healthcare, architecture, and construction & building materials — each space tailored to what matters most for the sector.',
   },
 ]
@@ -46,15 +46,15 @@ const stats = [
 
 const principles = [
   {
-    title: 'Thoughtful personalisation',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'Every space is tailored to your brand\'s objectives, ensuring that what you want to communicate is understood instantly and clearly by your audience.',
   },
   {
-    title: 'Industry-aware thinking',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'We factor in the context of your sector — what your audience expects, how they engage, and what builds credibility — so the space supports industry-specific goals.',
   },
   {
-    title: 'Clear, effective design',
+    title: "Exhibition Stall Design Company in India Since 2002",
     body: 'From layout and movement to interaction and detail, every element is intentional, designed to guide engagement and create a lasting impression.',
   },
 ]

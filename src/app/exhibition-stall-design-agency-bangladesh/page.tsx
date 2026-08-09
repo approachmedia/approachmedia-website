@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in Bangladesh | Booth Design Dhaka',
+  title: { absolute: "Exhibition Stall Design Agency in Bangladesh | Dhaka" },
   description:
     'Approach Media is an exhibition stall design agency in Bangladesh — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Dhaka International Trade Fair, Bangladesh Denim Expo, BGAPE and major Dhaka trade shows.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-bangladesh` },
@@ -19,7 +19,7 @@ const data: CountryPageData = {
   areaServed: ['Bangladesh', 'Dhaka', 'Chittagong', 'Sylhet'],
 
   meta: {
-    title: 'Exhibition Stall Design Agency in Bangladesh | Booth Design Dhaka',
+    title: "Exhibition Stall Design Agency in Bangladesh | Dhaka",
     description:
       'Approach Media is an exhibition stall design agency in Bangladesh — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Dhaka International Trade Fair, Bangladesh Denim Expo, BGAPE and major Dhaka trade shows.',
   },

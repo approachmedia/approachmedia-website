@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Exhibition Stall Design Agency in China | Booth Design & Fabrication',
+  title: { absolute: "Exhibition Stall Design Agency in China | Shanghai" },
   description:
     'Approach Media is an exhibition stall design agency in China — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Canton Fair, CIIE Shanghai, CHINAPLAS, Auto China and major Chinese trade fairs.',
   alternates: { canonical: `${SITE_URL}/exhibition-stall-design-agency-china` },
@@ -18,7 +18,7 @@ const data: CountryPageData = {
   heroImageUrl: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/china-hero.jpg',
   areaServed: ['China', 'Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen', 'Chengdu'],
   meta: {
-    title: 'Exhibition Stall Design Agency in China | Booth Design & Fabrication',
+    title: "Exhibition Stall Design Agency in China | Shanghai",
     description:
       'Approach Media is an exhibition stall design agency in China — custom booth design, 3D concepts, fabrication, branding, installation and dismantling for Canton Fair, CIIE Shanghai, CHINAPLAS, Auto China and major Chinese trade fairs.',
   },

@@ -14,7 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const expo = (expoData as ExpoPageData[]).find(e => e.slug === slug)
   if (!expo) return {}
   return {
-    title: expo.metaTitle,
+    // Dataset metaTitles already end in the brand; strip it so the layout
+    // template does not print it a second time.
+    title: { absolute: expo.metaTitle.replace(/\s*[|\u2014-]\s*Approach Media\s*$/, '') },
     description: expo.metaDescription,
     alternates: { canonical: `${SITE_URL}/expos/${expo.slug}` },
   }

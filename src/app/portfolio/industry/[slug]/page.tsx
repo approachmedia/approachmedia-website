@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const industry = await prisma.industry.findUnique({ where: { slug } })
   if (!industry) return {}
   return {
-    title: `${industry.name} Exhibition Stall Portfolio | Approach Media`,
+    title: { absolute: `${industry.name} Exhibition Stall Design | Portfolio` },
     description: `Custom exhibition stand designs for the ${industry.name} sector. Browse ${industry.name} trade show booth fabrication projects by Approach Media.`,
     alternates: { canonical: `${SITE_URL}/portfolio/industry/${slug}` },
   }
