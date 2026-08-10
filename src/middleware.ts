@@ -35,6 +35,37 @@ const CANONICAL_ORIGIN = `https://${CANONICAL_HOST}`
 const HEALTH_PATH = '/api/health'
 
 /**
+ * URLs from the old WordPress site that Google still ranks but which now 404.
+ * A 404 throws away whatever authority the URL had earned; a 301 hands it to
+ * the closest live equivalent.
+ *
+ * Targets are chosen for topical match, not convenience. Google treats a
+ * redirect to an unrelated page — the homepage being the usual offender — as a
+ * soft 404 and passes little or none of the ranking signal, so pointing an
+ * "exhibition stall designing company Ahmedabad" URL at the Ahmedabad page
+ * preserves far more than pointing it at "/".
+ *
+ * Handled here rather than in next.config's redirects() so the whole thing
+ * resolves in one hop: the indexed URLs are on the non-www host, and a config
+ * redirect would fire only after middleware had already 301'd the host,
+ * making a two-hop chain out of every one of them.
+ *
+ * Keys must be lowercase and have no trailing slash — lookup normalises both.
+ */
+const LEGACY_REDIRECTS: Record<string, string> = {
+  // Ranking on "exhibition stall design agency"; the source page carried the
+  // "designinging" typo, so both spellings are mapped.
+  '/exhibition-stall-designinging-company': '/exhibition-stand-builders-in-ahmedabad',
+  '/exhibition-stall-designing-company':    '/exhibition-stand-builders-in-ahmedabad',
+  '/exhibition-stall-design-company':       '/exhibition-stand-builders-in-ahmedabad',
+}
+
+function legacyTarget(pathname: string) {
+  const key = pathname.toLowerCase().replace(/\/+$/, '') || '/'
+  return LEGACY_REDIRECTS[key]
+}
+
+/**
  * Only these hosts are redirected. Anything unrecognised — an internal probe,
  * a bare IP or IPv6 literal, localhost, a preview domain — passes through
  * untouched, so an unfamiliar host can never cost us a deploy again.
@@ -53,6 +84,13 @@ export function middleware(request: NextRequest) {
   // Stale sitemap index still referenced in Search Console; 404 today.
   if (pathname === '/sitemap_index.xml') {
     return NextResponse.redirect(`${CANONICAL_ORIGIN}/sitemap.xml`, 301)
+  }
+
+  // Old WordPress URLs Google still ranks. Straight to the canonical origin so
+  // an indexed non-www URL resolves in one hop rather than two.
+  const legacy = legacyTarget(pathname)
+  if (legacy) {
+    return NextResponse.redirect(`${CANONICAL_ORIGIN}${legacy}`, 301)
   }
 
   // Only safe methods. Several HTTP clients silently downgrade POST to GET
