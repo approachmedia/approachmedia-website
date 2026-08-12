@@ -40,6 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="bg-[hsl(222,30%,6%)] text-[hsl(0,0%,96%)] font-sans antialiased">
+        {/* React 19 hoists this into <head> on every page. Declared here
+            rather than via metadata.alternates because pages that set their
+            own alternates.canonical would replace the whole alternates
+            object and silently drop the feed link. */}
+        <link rel="alternate" type="application/rss+xml" title="Approach Media Blog" href="/feed.xml" />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
       </body>

@@ -5,6 +5,7 @@ import type { ExpoPageData } from '@/components/expo/types'
 
 import { SITE_URL } from '@/lib/site-url'
 import { BUILD_TIME } from '@/lib/seo/build-time'
+import { getAllPosts } from '@/lib/blog'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -83,6 +84,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.9,
   }))
 
+  // Blog: index + one entry per published post. lastModified comes from each
+  // post's dateModified frontmatter, so it only moves when the content does.
+  const blogPosts = getAllPosts()
+  const blogPages: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: blogPosts[0] ? new Date(blogPosts[0].datePublished) : BUILD_TIME,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    ...blogPosts.map(post => ({
+      url:             `${SITE_URL}/blog/${post.slug}`,
+      lastModified:    new Date(post.dateModified),
+      changeFrequency: 'monthly' as const,
+      priority:        0.8,
+    })),
+  ]
+
   const countryPages: MetadataRoute.Sitemap = [
     'uae', 'singapore', 'malaysia', 'china', 'bangladesh', 'nepal',
     'germany', 'france', 'italy', 'spain', 'netherlands', 'usa', 'kenya-africa',
@@ -122,7 +141,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   return [
-    ...staticPages, ...servicePages, ...cityPages, ...countryPages,
+    ...staticPages, ...servicePages, ...cityPages, ...blogPages, ...countryPages,
     ...expoPages, ...projectPages, ...industryPages, ...typePages,
   ]
 }

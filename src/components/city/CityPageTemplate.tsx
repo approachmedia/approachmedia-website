@@ -52,9 +52,11 @@ interface Props {
   data: CityPageData
   cityProjects: ProjectCardData[]
   siteUrl: string
+  /** Optional "From the blog" block — only the Ahmedabad page passes this. */
+  fromTheBlog?: { title: string; href: string }[]
 }
 
-export default function CityPageTemplate({ data, cityProjects, siteUrl }: Props) {
+export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheBlog }: Props) {
   return (
     <main>
 
@@ -445,6 +447,26 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl }: Props)
           </p>
         </div>
       </section>
+
+      {/* ── FROM THE BLOG (optional) ─────────────────────── */}
+      {fromTheBlog && fromTheBlog.length > 0 && (
+        <section style={{ padding: '80px 0' }}>
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <span style={EYEBROW}>From the blog</span>
+              <h2 style={H2}>Guides for planning your next stall</h2>
+            </div>
+            <div style={CARD_GRID}>
+              {fromTheBlog.map(post => (
+                <Link key={post.href} href={post.href} style={{ ...CARD, display: 'block', textDecoration: 'none' }} className="expo-card-link">
+                  <h3 style={{ ...CARD_TITLE, fontSize: '1.02rem' }}>{post.title}</h3>
+                  <p style={{ ...CARD_BODY, color: 'hsl(110 55% 60%)' }}>Read the guide →</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/*
         JSON-LD. Was a bare Service node; now a full graph so the page can
