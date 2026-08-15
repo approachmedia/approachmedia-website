@@ -105,6 +105,29 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: 'design in India',        href: '/services/exhibition-stall-design' },
     { anchor: 'turnkey delivery abroad', href: '/services/turnkey-project-management' },
   ],
+
+  // ── Batch 4 ───────────────────────────────────────────────
+  // Two of these carry a link the pack asks to "hold as plain text until the
+  // split-venue guide deploys on 16 Sep". Registering the anchor now needs no
+  // follow-up: a blog href whose target is unpublished is skipped by the
+  // injector and starts resolving by itself the day that post goes live.
+
+  'cphi-milan-2026-indian-exhibitors-guide': [
+    { anchor: 'CPHI Milan',      href: '/expos/exhibition-stall-design-cphi-milan-2026' },
+    { anchor: 'turnkey partner', href: '/services/turnkey-project-management' },
+    { anchor: 'split-venue guide', href: '/blog/cphi-pmec-india-2026-split-venue-guide' },
+  ],
+
+  'windergy-india-2026-exhibitor-guide': [
+    // No /expos landing page exists for Windergy, so the show name stays text.
+    { anchor: '30,000 sq ft Ahmedabad workshop', href: '/services/custom-booth-fabrication' },
+  ],
+
+  'yashobhoomi-iicc-delhi-exhibitor-guide': [
+    { anchor: '100% mock-up testing in the workshop', href: '/services/custom-booth-fabrication' },
+    { anchor: 'Get it to your stall builder',         href: '/services/turnkey-project-management' },
+    { anchor: 'split-venue guide',                    href: '/blog/cphi-pmec-india-2026-split-venue-guide' },
+  ],
 }
 
 /**
@@ -132,6 +155,15 @@ export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: stri
   // RELATED_EXTRA already appends to every post, so only Mumbai is new.
   'anuga-foodtec-india-2026-exhibitor-guide': [
     { anchor: 'Exhibition stall designer in Mumbai', href: '/exhibition-stall-designer-mumbai' },
+  ],
+  // Batch 4. The CPHI Milan notes also name an iPHEX guide for its Related
+  // block, described as live — no such post exists in content/blog, so it is
+  // deliberately not listed here rather than shipped as a dead link.
+  'windergy-india-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stall designer in Chennai', href: '/exhibition-stall-designer-chennai' },
+  ],
+  'yashobhoomi-iicc-delhi-exhibitor-guide': [
+    { anchor: 'Exhibition stall designer in Delhi', href: '/exhibition-stall-designer-delhi' },
   ],
 }
 

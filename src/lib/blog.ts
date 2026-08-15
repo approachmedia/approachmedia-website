@@ -279,3 +279,23 @@ export function getScheduledPosts(): { slug: string; h1: string; datePublished: 
 export function getPostBySlug(slug: string): BlogPost | null {
   return getAllPosts().find(p => p.slug === slug) ?? null
 }
+
+/**
+ * Curated blog links for a landing page's "From the blog" block.
+ *
+ * Takes the slugs a page wants, in the order it wants them, and returns only
+ * the ones that are actually published — so a page can name a post that has
+ * not gone live yet without ever rendering a link to a 404. Titles come from
+ * the frontmatter rather than being repeated at each call site, which is how
+ * they stay in step with the post.
+ *
+ * An unknown slug is dropped silently: that is the same outcome as a
+ * scheduled one, and the link audit script is what catches typos.
+ */
+export function blogLinksFor(slugs: string[]): { title: string; href: string }[] {
+  const bySlug = new Map(getAllPosts().map(p => [p.slug, p]))
+  return slugs
+    .map(s => bySlug.get(s))
+    .filter((p): p is BlogPost => p !== undefined)
+    .map(p => ({ title: p.h1, href: `/blog/${p.slug}` }))
+}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import CityPageTemplate from '@/components/city/CityPageTemplate'
 import { ahmedabadData } from '@/components/city/data/ahmedabad'
+import { blogLinksFor } from '@/lib/blog'
 
 import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
@@ -19,13 +20,17 @@ export default async function AhmedabadCityPage() {
       data={ahmedabadData}
       cityProjects={cityProjects}
       siteUrl={SITE_URL}
-      fromTheBlog={[
-        { title: "Exhibitor's Guide to Helipad Exhibition Centre, Gandhinagar", href: '/blog/helipad-exhibition-centre-gandhinagar-guide' },
-        { title: 'How Much Does Exhibition Stall Design & Fabrication Cost in India? (2026 Rates)', href: '/blog/exhibition-stall-design-cost-india' },
-        { title: 'Double-Decker & Mezzanine Stall Rules in India: What You Must Clear Before You Build', href: '/blog/double-decker-stall-rules-india' },
-        { title: 'Custom vs Modular Exhibition Stands: Which Should Indian Exhibitors Choose?', href: '/blog/custom-vs-modular-exhibition-stands-india' },
-        { title: 'What Drives Exhibition Stand Cost in Dubai? A Guide for Indian Exhibitors', href: '/blog/exhibition-stand-cost-dubai-indian-exhibitors' },
-      ]}
+      // Slugs, not titles: blogLinksFor pulls each title from the post's own
+      // frontmatter and drops anything not yet published, so this list can
+      // name a scheduled post without ever rendering a link to a 404.
+      fromTheBlog={blogLinksFor([
+        'helipad-exhibition-centre-gandhinagar-guide',
+        'aluminium-bharat-2026-exhibitor-guide',
+        'exhibition-stall-design-cost-india',
+        'double-decker-stall-rules-india',
+        'custom-vs-modular-exhibition-stands-india',
+        'exhibition-stand-cost-dubai-indian-exhibitors',
+      ])}
     />
   )
 }
