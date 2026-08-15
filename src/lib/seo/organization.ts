@@ -1,4 +1,5 @@
 import { SITE_URL } from '@/lib/site-url'
+import { LOGO_URL } from '@/lib/brand'
 
 /**
  * Single source of truth for the business details that appear in structured
@@ -16,8 +17,7 @@ export const ORG_ID = `${SITE_URL}#organization`
 
 export const ORG_NAME = 'Approach Media Pvt. Ltd.'
 
-export const ORG_LOGO =
-  'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/logo_favicon/Appraoch%20Media%20Logo.svg'
+export const ORG_LOGO = LOGO_URL
 
 export const ORG_PHONES = ['+919426912602', '+919898644327', '+919427614395']
 

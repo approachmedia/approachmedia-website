@@ -5,6 +5,8 @@ import FooterCityList from './FooterCityList'
 import { INDIAN_CITIES } from '@/data/cities'
 
 import { ORG_PROFILES } from '@/lib/seo/organization'
+import { LOGO_URL } from '@/lib/brand'
+
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
     heading: 'Services',
@@ -48,7 +50,7 @@ export default function SiteFooter() {
           <div className="col-span-2">
             <Link href="/" aria-label="Approach Media — Home" className="inline-flex">
               <Image
-                src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/logo_favicon/Appraoch%20Media%20Logo.svg"
+                src={LOGO_URL}
                 alt="Approach Media"
                 width={200}
                 height={56}

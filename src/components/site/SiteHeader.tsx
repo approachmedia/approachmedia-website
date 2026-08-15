@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { LOGO_URL } from '@/lib/brand'
 
 const NAV = [
   { label: 'Home',         href: '/' },
@@ -46,7 +47,7 @@ export default function SiteHeader() {
         {/* Logo */}
         <Link href="/" aria-label="Approach Media — Home" className="flex shrink-0 items-center">
           <Image
-            src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/logo_favicon/Appraoch%20Media%20Logo.svg"
+            src={LOGO_URL}
             alt="Approach Media"
             width={220}
             height={56}
