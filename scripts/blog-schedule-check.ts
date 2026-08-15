@@ -83,12 +83,15 @@ const EXPECTED: [string, number][] = [
   ['2026-09-08T12:00:00+05:30', 12],  // + CPHI Milan
   ['2026-09-10T12:00:00+05:30', 13],  // + windergy
   ['2026-09-13T12:00:00+05:30', 14],  // + yashobhoomi venue guide
+  ['2026-09-16T12:00:00+05:30', 15],  // + CPHI/PMEC split-venue
+  ['2026-09-18T12:00:00+05:30', 16],  // + India ITME
+  ['2026-09-21T12:00:00+05:30', 17],  // + India Expo Mart venue guide
 ]
 for (const [iso, want] of EXPECTED) {
   check(`${iso.slice(0, 10)} → ${want} live`, at(iso, () => getAllPosts().length), want)
 }
-check('nothing left scheduled after 13 Sep',
-  at('2026-09-13T12:00:00+05:30', () => getScheduledPosts().length), 0)
+check('nothing left scheduled after 21 Sep',
+  at('2026-09-21T12:00:00+05:30', () => getScheduledPosts().length), 0)
 
 // ── cross-links to unpublished posts ─────────────────────────
 
@@ -137,6 +140,46 @@ const yashoHtml = at('2026-09-13T12:00:00+05:30',
 check('yashobhoomi — SEMICON link is live by 13 Sep (SEMICON published 26 Aug)',
   yashoHtml.includes('href="/blog/semicon-india-2026-exhibitor-guide"'), true)
 
+// ── the pack's "deploy actions", done without a deploy ───────
+//
+// Batch 5 asks a person to activate held links on 16 Sep and again on 21 Sep.
+// Both dates are asserted here against the real loader: inert the day before,
+// live the day of.
+
+console.log('\nDEPLOY ACTIONS (should need no deploy)\n')
+
+const htmlAt = (slug: string, iso: string) =>
+  at(iso, () => getAllPosts().find(p => p.slug === slug)?.html ?? '')
+
+const SPLIT_HREF = 'href="/blog/cphi-pmec-india-2026-split-venue-guide"'
+const IEML_HREF = 'href="/blog/india-expo-mart-greater-noida-exhibitor-guide"'
+
+// 16 Sep — the split-venue guide publishes; two Batch-4 posts link it.
+for (const slug of ['cphi-milan-2026-indian-exhibitors-guide', 'yashobhoomi-iicc-delhi-exhibitor-guide']) {
+  check(`15 Sep — ${slug.slice(0, 26).padEnd(26)} split-venue link still inert`,
+    htmlAt(slug, '2026-09-15T12:00:00+05:30').includes(SPLIT_HREF), false)
+  check(`16 Sep — ${slug.slice(0, 26).padEnd(26)} split-venue link activates`,
+    htmlAt(slug, '2026-09-16T12:00:00+05:30').includes(SPLIT_HREF), true)
+}
+
+// 21 Sep — the IEML venue guide publishes; two posts hold a link to it.
+for (const slug of ['cphi-pmec-india-2026-split-venue-guide', 'india-itme-2026-exhibitor-guide']) {
+  check(`20 Sep — ${slug.slice(0, 26).padEnd(26)} IEML link still inert`,
+    htmlAt(slug, '2026-09-20T12:00:00+05:30').includes(IEML_HREF), false)
+  check(`21 Sep — ${slug.slice(0, 26).padEnd(26)} IEML link activates`,
+    htmlAt(slug, '2026-09-21T12:00:00+05:30').includes(IEML_HREF), true)
+}
+
+// The IEML guide itself links three posts that publish before it.
+const ieml = htmlAt('india-expo-mart-greater-noida-exhibitor-guide', '2026-09-21T12:00:00+05:30')
+for (const href of [
+  'href="/blog/rei-expo-battery-show-india-2026-guide"',
+  SPLIT_HREF,
+  'href="/blog/india-itme-2026-exhibitor-guide"',
+]) {
+  check(`IEML guide resolves ${href.slice(12, 46)}`, ieml.includes(href), true)
+}
+
 // ── registered anchors actually became links ─────────────────
 
 console.log('\nREGISTERED INTERNAL LINKS RESOLVED\n')
@@ -155,6 +198,9 @@ const EXPECT_LINK: [string, string, string][] = [
   ['windergy-india-2026-exhibitor-guide', '2026-09-10T12:00:00+05:30', '/services/custom-booth-fabrication'],
   ['yashobhoomi-iicc-delhi-exhibitor-guide', '2026-09-13T12:00:00+05:30', '/services/custom-booth-fabrication'],
   ['yashobhoomi-iicc-delhi-exhibitor-guide', '2026-09-13T12:00:00+05:30', '/services/turnkey-project-management'],
+  ['india-itme-2026-exhibitor-guide', '2026-09-18T12:00:00+05:30', '/expos/exhibition-stall-design-india-itme-2026-greater-noida'],
+  ['india-itme-2026-exhibitor-guide', '2026-09-18T12:00:00+05:30', '/services/double-decker-mezzanine-stands'],
+  ['india-expo-mart-greater-noida-exhibitor-guide', '2026-09-21T12:00:00+05:30', '/services/custom-booth-fabrication'],
 ]
 for (const [slug, iso, href] of EXPECT_LINK) {
   const html = at(iso, () => getAllPosts().find(p => p.slug === slug)?.html ?? '')
@@ -191,6 +237,17 @@ check('Chennai today — 2 cards, Windergy withheld',
 check('Chennai on 10 Sep — 3 cards, Windergy joins at the top',
   at('2026-09-10T12:00:00+05:30', () => blogLinksFor(CHENNAI)[0].href),
   '/blog/windergy-india-2026-exhibitor-guide')
+const NOIDA = [
+  'india-expo-mart-greater-noida-exhibitor-guide',
+  'india-itme-2026-exhibitor-guide',
+  'cphi-pmec-india-2026-split-venue-guide',
+  'rei-expo-battery-show-india-2026-guide',
+  'exhibition-stall-design-cost-india',
+]
+check('Noida today — 1 card (only the cost guide is live)',
+  at('2026-08-15T12:00:00+05:30', () => blogLinksFor(NOIDA).length), 1)
+check('Noida on 21 Sep — all 5 cards',
+  at('2026-09-21T12:00:00+05:30', () => blogLinksFor(NOIDA).length), 5)
 check('an unknown slug is dropped, not rendered',
   at('2026-08-15T12:00:00+05:30', () => blogLinksFor(['no-such-post']).length), 0)
 

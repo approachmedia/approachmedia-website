@@ -128,6 +128,27 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: 'Get it to your stall builder',         href: '/services/turnkey-project-management' },
     { anchor: 'split-venue guide',                    href: '/blog/cphi-pmec-india-2026-split-venue-guide' },
   ],
+
+  // ── Batch 5 ───────────────────────────────────────────────
+  // Two more forward references to the India Expo Mart guide (21 Sep),
+  // registered the same way: inert until that post publishes, then live on
+  // their own. The pack's "deploy action" lists for 16 and 21 Sep are
+  // satisfied by this, not by a person remembering.
+
+  'cphi-pmec-india-2026-split-venue-guide': [
+    { anchor: 'India Expo Mart guide', href: '/blog/india-expo-mart-greater-noida-exhibitor-guide' },
+  ],
+
+  'india-itme-2026-exhibitor-guide': [
+    { anchor: 'INDIA ITME 2026',   href: '/expos/exhibition-stall-design-india-itme-2026-greater-noida' },
+    { anchor: 'mock-up testing before dispatch', href: '/services/custom-booth-fabrication' },
+    { anchor: 'double-decker',     href: '/services/double-decker-mezzanine-stands' },
+    { anchor: 'full venue guide',  href: '/blog/india-expo-mart-greater-noida-exhibitor-guide' },
+  ],
+
+  'india-expo-mart-greater-noida-exhibitor-guide': [
+    { anchor: 'mock-up test in the 30,000 sq ft Ahmedabad workshop', href: '/services/custom-booth-fabrication' },
+  ],
 }
 
 /**
@@ -164,6 +185,19 @@ export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: stri
   ],
   'yashobhoomi-iicc-delhi-exhibitor-guide': [
     { anchor: 'Exhibition stall designer in Delhi', href: '/exhibition-stall-designer-delhi' },
+  ],
+  // Batch 5. The split-venue post spans both NCR venues, so it names both
+  // city pages. Its notes also list an iPHEX guide for the pharma cluster,
+  // described as live — still not present in content/blog, so still omitted.
+  'cphi-pmec-india-2026-split-venue-guide': [
+    { anchor: 'Exhibition stall designer in Delhi', href: '/exhibition-stall-designer-delhi' },
+    { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
+  ],
+  'india-itme-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
+  ],
+  'india-expo-mart-greater-noida-exhibitor-guide': [
+    { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
   ],
 }
 
