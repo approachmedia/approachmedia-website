@@ -1,22 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { checkSubmission, escapeHtml, turnstileOk } from '@/lib/spam'
 
 const TO   = 'info@approachmedia.in'
 const FROM = 'Approach Media Website <noreply@approachmedia.in>'
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+
+/** Cap on any single value, so one field cannot carry a wall of text. */
+const MAX_FIELD = 2_000
+
+function subjectSafe(value: string | undefined) {
+  return (value || 'Unknown').replace(/[\r\n]+/g, ' ').slice(0, 120)
+}
 
 function row(label: string, value: string | undefined) {
   if (!value) return ''
   return `
     <tr>
       <td style="padding:8px 12px;color:#9ca3af;font-size:13px;width:180px;vertical-align:top">${label}</td>
-      <td style="padding:8px 12px;color:#f9fafb;font-size:13px;vertical-align:top">${value}</td>
+      <td style="padding:8px 12px;color:#f9fafb;font-size:13px;vertical-align:top">${escapeHtml(value)}</td>
     </tr>`
 }
 
 export async function POST(req: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
   try {
-    const d = await req.json() as Record<string, string>
+    const raw = await req.json() as Record<string, unknown>
+
+    // Coerce and bound every value before anything else looks at it.
+    const d: Record<string, string> = {}
+    for (const [k, v] of Object.entries(raw)) {
+      if (typeof v === 'string') d[k] = v.slice(0, MAX_FIELD).trim()
+    }
+
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      req.headers.get('x-real-ip') ||
+      'unknown'
+
+    // Bots are answered with success. An error tells them the shape of the
+    // filter and invites a retry with different values; a 200 does not.
+    const verdict = checkSubmission(d, ip)
+    if (verdict.spam) {
+      console.warn(`[contact] dropped submission from ${ip} — ${verdict.reason}`)
+      return NextResponse.json({ ok: true })
+    }
+
+    if (!(await turnstileOk(d['cf-turnstile-response']))) {
+      console.warn(`[contact] dropped submission from ${ip} — Turnstile rejected`)
+      return NextResponse.json({ ok: true })
+    }
+
+    // Genuine validation errors are reported, so a real person who mistypes
+    // an address is told about it rather than silently ignored.
+    if (!d.name || !d.company || !d.email) {
+      return NextResponse.json({ ok: false, error: 'Name, company and email are required.' }, { status: 400 })
+    }
+    if (!EMAIL_RE.test(d.email)) {
+      return NextResponse.json({ ok: false, error: 'That email address does not look right.' }, { status: 400 })
+    }
 
     const finalSize = d.stall_size === 'Other' ? (d.stall_size_custom || 'Other') : d.stall_size
 
@@ -33,8 +75,8 @@ export async function POST(req: NextRequest) {
         <tr>
           <td style="background:linear-gradient(135deg,#1a3a8f22,#16a34a22);padding:28px 32px;border-bottom:1px solid #ffffff26">
             <p style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:#4ade80">New Enquiry</p>
-            <h1 style="margin:6px 0 0;font-size:22px;color:#f9fafb">Exhibition Enquiry — ${d.name || '—'}</h1>
-            <p style="margin:4px 0 0;font-size:13px;color:#9ca3af">${d.company || ''}</p>
+            <h1 style="margin:6px 0 0;font-size:22px;color:#f9fafb">Exhibition Enquiry — ${escapeHtml(d.name)}</h1>
+            <p style="margin:4px 0 0;font-size:13px;color:#9ca3af">${escapeHtml(d.company || '')}</p>
           </td>
         </tr>
 
@@ -80,12 +122,12 @@ export async function POST(req: NextRequest) {
         ${d.message ? `
         <tr><td style="padding:20px 32px 0">
           <p style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#4ade80">Message</p>
-          <div style="background:#0f1117;border:1px solid #ffffff1a;border-radius:8px;padding:14px 16px;font-size:13px;color:#d1d5db;line-height:1.7">${d.message.replace(/\n/g, '<br>')}</div>
+          <div style="background:#0f1117;border:1px solid #ffffff1a;border-radius:8px;padding:14px 16px;font-size:13px;color:#d1d5db;line-height:1.7">${escapeHtml(d.message).replace(/\n/g, '<br>')}</div>
         </td></tr>` : ''}
 
         <!-- Footer -->
         <tr><td style="padding:24px 32px;border-top:1px solid #ffffff1a;margin-top:24px">
-          <p style="margin:0;font-size:12px;color:#6b7280">Sent from approachmedia.in contact form · Reply directly to this email to respond to ${d.name || 'the enquirer'}.</p>
+          <p style="margin:0;font-size:12px;color:#6b7280">Sent from approachmedia.in contact form · Reply directly to this email to respond to ${escapeHtml(d.name)}.</p>
         </td></tr>
 
       </table>
@@ -94,11 +136,18 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`
 
+    // Built here rather than at the top of the handler: the constructor
+    // throws when RESEND_API_KEY is absent, and a dropped spam submission
+    // should never need the mail client at all.
+    const resend = new Resend(process.env.RESEND_API_KEY)
+
     const { error } = await resend.emails.send({
       from: FROM,
       to:   TO,
       replyTo: d.email,
-      subject: `Exhibition Enquiry — ${d.name || 'Unknown'} · ${d.exhibition || d.company || 'General'}`,
+      // Newlines stripped: a subject is a mail header, and a header that can
+      // carry a line break can carry a second header.
+      subject: `Exhibition Enquiry — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
       html,
     })
 

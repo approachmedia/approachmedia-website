@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Send, CheckCircle2 } from 'lucide-react'
+import { HONEYPOT_FIELD, TIMESTAMP_FIELD } from '@/lib/form-fields'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -74,6 +75,14 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
   const [error,   setError]           = useState('')
   const [stallSize, setStallSize]     = useState('')
   const [customSize, setCustomSize]   = useState('')
+  const renderedAt                    = useRef<HTMLInputElement>(null)
+
+  // Stamped after mount, not in the JSX: this page is prerendered, so a value
+  // written into the markup would be the build time — the same for every
+  // visitor, and no measure of how long anyone took to fill the form.
+  useEffect(() => {
+    if (renderedAt.current) renderedAt.current.value = String(Date.now())
+  }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -92,13 +101,21 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-      if (!res.ok) throw new Error('Failed')
+      const body = await res.json().catch(() => ({})) as { error?: string }
+      if (!res.ok) throw new Error(body.error || 'Failed')
       setSuccess(true)
       ;(e.target as HTMLFormElement).reset()
       setStallSize('')
       setCustomSize('')
-    } catch {
-      setError('Something went wrong — please email us directly at info@approachmedia.in')
+    } catch (err) {
+      // The route reports genuine validation problems — a mistyped address,
+      // a missing required field — so show those rather than burying them
+      // under the generic failure message.
+      setError(
+        err instanceof Error && err.message !== 'Failed'
+          ? err.message
+          : 'Something went wrong — please email us directly at info@approachmedia.in',
+      )
     } finally {
       setLoading(false)
     }
@@ -126,6 +143,22 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-2xl border border-white/15 bg-surface/40 p-6 md:p-10">
+      {/* Bot trap. Positioned off-screen rather than display:none, which some
+          form-fillers know to skip, and kept out of the tab order and the
+          accessibility tree so nobody using a keyboard or a screen reader can
+          land in it. A value here means the sender was not a person. */}
+      <div aria-hidden="true" className="pointer-events-none absolute left-[-9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor={HONEYPOT_FIELD}>Company website</label>
+        <input
+          id={HONEYPOT_FIELD}
+          name={HONEYPOT_FIELD}
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+      <input ref={renderedAt} type="hidden" name={TIMESTAMP_FIELD} />
+
       {/* ── Contact info ── */}
       <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Contact information</p>
       <div className="mt-4 grid gap-5 md:grid-cols-2">
