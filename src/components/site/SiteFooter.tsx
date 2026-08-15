@@ -55,7 +55,7 @@ export default function SiteFooter() {
                 width={200}
                 height={56}
                 unoptimized
-                style={{ height: '52px', width: 'auto' }}
+                className="h-14 w-auto md:h-[72px]"
               />
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">

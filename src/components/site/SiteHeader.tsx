@@ -43,8 +43,12 @@ export default function SiteHeader() {
           : 'border-b border-transparent bg-background/60 backdrop-blur'
       }`}
     >
-      <div className="container-wide flex h-16 items-center justify-between gap-4 md:h-20">
-        {/* Logo */}
+      <div className="container-wide flex h-20 items-center justify-between gap-4 md:h-24">
+        {/* Logo. Sized in Tailwind rather than an inline style so it can step
+            up at md — an inline style would win over the breakpoint class.
+            72px matches how the mark reads at 150% browser zoom, which is
+            where the "MEDIA PVT. LTD." and tagline lines become legible; the
+            bar height grows with it to keep the same 12px breathing room. */}
         <Link href="/" aria-label="Approach Media — Home" className="flex shrink-0 items-center">
           <Image
             src={LOGO_URL}
@@ -53,7 +57,7 @@ export default function SiteHeader() {
             height={56}
             priority
             unoptimized
-            style={{ height: '48px', width: 'auto' }}
+            className="h-14 w-auto md:h-[72px]"
           />
         </Link>
 
