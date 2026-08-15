@@ -7,7 +7,14 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 
-export const dynamic = 'force-static'
+/**
+ * Revalidated rather than force-static: posts publish on a date held in their
+ * frontmatter, so the set of live posts changes without a deploy. Fifteen
+ * minutes is the worst-case lag between a post's date arriving and the index
+ * listing it — and /api/revalidate collapses that to zero when the daily
+ * publish trigger fires.
+ */
+export const revalidate = 900
 
 export const metadata: Metadata = {
   title: { absolute: 'Exhibition Stall Design Blog | Costs, Rules & Guides' },

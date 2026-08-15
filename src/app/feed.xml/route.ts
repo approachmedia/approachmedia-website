@@ -8,11 +8,13 @@ import { SITE_URL } from '@/lib/site-url'
  * so it carries the full rendered HTML of each post via content:encoded, not
  * just the description.
  *
- * force-static: built once per deploy. pubDate comes from each post's
- * frontmatter, so the feed is byte-stable between deploys — same discipline
- * as the sitemap's lastmod.
+ * Revalidated, not force-static: posts publish on a date in their frontmatter
+ * rather than at deploy time, and a feed that only refreshes on deploy would
+ * hand the social pipeline a stale list. pubDate still comes from the
+ * frontmatter, so the output stays byte-stable between revalidations — same
+ * discipline as the sitemap's lastmod.
  */
-export const dynamic = 'force-static'
+export const revalidate = 900
 
 function esc(s: string) {
   return s

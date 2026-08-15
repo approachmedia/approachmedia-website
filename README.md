@@ -21,8 +21,8 @@ The blog is a markdown CMS — no database, no admin panel. To publish:
    schema: ["Article", "FAQPage", "BreadcrumbList"]
    author: "Name — Role, Approach Media"
    authorBio: "One-line bio rendered at the foot of the post."
-   datePublished: "YYYY-MM-DD"
-   dateModified: "YYYY-MM-DD"
+   datePublished: "YYYY-MM-DD"   # publish date — see "Scheduling" below
+   dateModified: "YYYY-MM-DD"    # optional; defaults to datePublished
    status: "approved — publish"
    ---
    ```
@@ -44,6 +44,50 @@ The blog is a markdown CMS — no database, no admin panel. To publish:
    in `/blog`, in `sitemap.xml` and in the RSS feed at `/feed.xml`
    automatically. The feed drives the social-automation pipeline, so a
    deploy is also what triggers social distribution.
+
+## Scheduling posts ahead of time
+
+`datePublished` is a real switch, not a label. A post dated in the future is
+committed and deployed like any other and then **stays invisible until that
+date arrives in India** — absent from `/blog`, the sitemap, the RSS feed, the
+homepage cards and every Related block, and its own URL returns 404.
+
+So a batch of posts is written once, deployed once, and publishes itself over
+the following weeks. Nobody has to remember to deploy on the day.
+
+**How it goes live.** Two mechanisms, one backing up the other:
+
+- The blog routes revalidate every 15 minutes, so a post whose date has
+  arrived appears within that window of the first visit.
+- `src/lib/publish-scheduler.ts`, armed by `src/instrumentation.ts` when the
+  server boots, calls `/api/revalidate` a few minutes after midnight IST each
+  day. That publishes the day's posts before the day's traffic, rather than
+  waiting for a visitor to trigger the refresh. It runs inside the existing
+  Railway container — no second service, no external cron — and re-arms
+  itself from the clock on every restart, so a redeploy cannot lose it.
+
+Dates are evaluated in `Asia/Kolkata`, not the server's UTC. A post dated the
+24th goes live at 00:00 IST on the 24th.
+
+**Cross-references between scheduled posts** are handled automatically. A
+markdown link to `/blog/<slug>` whose target is not published yet renders as
+plain text and becomes a real link the day the target goes live — so a batch
+can reference itself freely without anyone sequencing links by hand. The same
+rule covers links to posts that do not exist at all.
+
+**To see the schedule:**
+
+```bash
+npx tsx scripts/blog-schedule-check.ts   # what is live, what is pending, on which dates
+npx tsx scripts/blog-link-audit.ts       # every internal link resolves
+```
+
+`POST /api/revalidate` with `{ "secret": "<ADMIN_SECRET>", "scope": "blog" }`
+publishes anything due immediately and returns the current live and scheduled
+lists — use it to bring a post forward without a deploy.
+
+To pull a scheduled post back, change its `datePublished` or its `status` and
+deploy; it disappears again.
 
 ### Content guardrails
 

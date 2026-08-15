@@ -8,8 +8,15 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage, ORG_LOGO, ORG_NAME } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 
-// Fully static: every post is generated at build time from content/blog/.
-export const dynamic = 'force-static'
+/**
+ * Published posts are prerendered at build time. A scheduled post is
+ * deliberately absent from generateStaticParams, so before its date its URL
+ * is rendered on demand, finds nothing published under that slug and 404s.
+ * On its date the same request finds the post and returns it — no deploy
+ * involved. dynamicParams is what allows that on-demand path to exist.
+ */
+export const revalidate = 900
+export const dynamicParams = true
 
 export function generateStaticParams() {
   return getAllPosts().map(p => ({ slug: p.slug }))

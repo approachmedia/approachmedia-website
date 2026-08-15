@@ -5,8 +5,14 @@ import { marked } from 'marked'
 import { INTERNAL_LINKS } from './blog-links'
 
 /**
- * Markdown blog. Posts live in content/blog/<slug>.md and are statically
- * generated at build time — publishing a post is "add a file, deploy".
+ * Markdown blog. Posts live in content/blog/<slug>.md.
+ *
+ * Publishing is by DATE, not by deploy. A file whose datePublished is in the
+ * future is committed and deployed like any other, but stays invisible — it
+ * is absent from /blog, the sitemap, the feed, the homepage and the Related
+ * blocks, and its own URL returns 404 — until that date arrives in India.
+ * The routes that read this module use ISR, so the post appears on its date
+ * without anyone deploying anything.
  *
  * The source files carry implementation notes at the bottom ("Internal links
  * used in this post", "Accuracy notes", "External sources policy"). Those are
@@ -20,6 +26,11 @@ const CONTENT_DIR = path.join(process.cwd(), 'content', 'blog')
 /** Only posts whose frontmatter carries this exact status are rendered. */
 const PUBLISH_STATUS = 'approved — publish'
 
+/** Publishing follows the business's own day, not the server's. Railway runs
+ *  in UTC, and without this a post dated the 24th would appear at 05:30 on
+ *  the 24th IST — or, worse for an evening date, on the wrong day entirely. */
+const PUBLISH_TIMEZONE = 'Asia/Kolkata'
+
 export type BlogFrontmatter = {
   seoTitle: string
   metaDescription: string
@@ -28,7 +39,8 @@ export type BlogFrontmatter = {
   author: string
   authorBio: string
   datePublished: string
-  dateModified: string
+  /** Optional: falls back to datePublished when a file does not carry it. */
+  dateModified?: string
   status: string
 }
 
@@ -38,6 +50,25 @@ export type BlogPost = BlogFrontmatter & {
   /** Rendered HTML body — notes stripped, links applied, CTAs styled. */
   html: string
   faqs: FaqPair[]
+  /** Always set — datePublished when the file omits dateModified. */
+  dateModified: string
+}
+
+// ── publication date ─────────────────────────────────────────
+
+/**
+ * Today in India as YYYY-MM-DD. Compared as strings, which is safe because
+ * ISO dates sort lexicographically and both sides are the same format — no
+ * timezone arithmetic, no off-by-one at month ends.
+ */
+export function todayInIndia(): string {
+  // en-CA formats as YYYY-MM-DD, which is what the frontmatter uses.
+  return new Intl.DateTimeFormat('en-CA', { timeZone: PUBLISH_TIMEZONE }).format(new Date())
+}
+
+/** A post is live once its publish date is today or earlier, India time. */
+function isPublished(post: BlogFrontmatter, today: string): boolean {
+  return post.datePublished <= today
 }
 
 // ── body preparation ─────────────────────────────────────────
@@ -78,12 +109,33 @@ function stripUnpublishedReferences(body: string) {
 }
 
 /**
+ * Unlink cross-references to posts that have not published yet.
+ *
+ * Posts are written as a batch and reference each other, but they go live on
+ * different days — the bauma guide links the REI/Battery guide that follows
+ * it five days later. Shipping that as a hyperlink means five days of a link
+ * to a 404. Rather than tracking it by hand at each deploy, the link is
+ * demoted to its own anchor text while the target is unpublished and becomes
+ * a real link on its own, the day the target goes live.
+ */
+function unlinkUnpublished(body: string, publishedSlugs: Set<string>) {
+  return body.replace(
+    /\[([^\]]+)\]\(\/blog\/([a-z0-9-]+)\)/gi,
+    (whole, text: string, slug: string) => (publishedSlugs.has(slug) ? whole : text),
+  )
+}
+
+/**
  * Turn the anchor phrases from each file's internal-links notes into real
  * links. First case-insensitive occurrence only, never inside a heading,
  * never inside an existing link.
  */
-function applyInternalLinks(body: string, slug: string) {
-  const links = INTERNAL_LINKS[slug] ?? []
+function applyInternalLinks(body: string, slug: string, publishedSlugs: Set<string>) {
+  const links = (INTERNAL_LINKS[slug] ?? []).filter(l => {
+    // Same rule as unlinkUnpublished, applied before the link is created.
+    const target = l.href.match(/^\/blog\/([a-z0-9-]+)$/i)
+    return !target || publishedSlugs.has(target[1])
+  })
   const lines = body.split('\n')
 
   for (const { anchor, href } of links) {
@@ -151,35 +203,77 @@ function renderMarkdown(body: string) {
   return marked.parse(body, { async: false }) as string
 }
 
-function loadFile(filename: string): BlogPost | null {
-  const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), 'utf8')
-  const { data, content } = matter(raw)
-  const fm = data as BlogFrontmatter
-  if (fm.status !== PUBLISH_STATUS) return null
+type RawPost = { fm: BlogFrontmatter; content: string }
 
-  let body = stripImplementationNotes(content)
-  body = stripLeadingH1(body)
-  body = stripUnpublishedReferences(body)
-  body = applyInternalLinks(body, fm.slug)
-  const faqs = extractFaqs(body)
-  body = transformCtas(body)
-
-  return { ...fm, html: renderMarkdown(body), faqs }
-}
-
-export function getAllPosts(): BlogPost[] {
+/** Frontmatter only — cheap enough to run over every file before rendering
+ *  any of them, which is what deciding the published set requires. */
+function readAll(): RawPost[] {
   if (!fs.existsSync(CONTENT_DIR)) return []
   return fs
     .readdirSync(CONTENT_DIR)
     .filter(f => f.endsWith('.md'))
-    .map(loadFile)
-    .filter((p): p is BlogPost => p !== null)
-    // Slug is a stable tiebreak: four posts share a publish date, and without
-    // it the order — and so which posts the homepage's top-3 shows — would
-    // depend on filesystem read order.
-    .sort((a, b) =>
-      b.datePublished.localeCompare(a.datePublished) || a.slug.localeCompare(b.slug),
-    )
+    .map(f => {
+      const raw = fs.readFileSync(path.join(CONTENT_DIR, f), 'utf8')
+      const { data, content } = matter(raw)
+      return { fm: data as BlogFrontmatter, content }
+    })
+    .filter(p => p.fm.status === PUBLISH_STATUS)
+}
+
+function render({ fm, content }: RawPost, publishedSlugs: Set<string>): BlogPost {
+  let body = stripImplementationNotes(content)
+  body = stripLeadingH1(body)
+  body = stripUnpublishedReferences(body)
+  body = unlinkUnpublished(body, publishedSlugs)
+  body = applyInternalLinks(body, fm.slug, publishedSlugs)
+  const faqs = extractFaqs(body)
+  body = transformCtas(body)
+
+  return {
+    ...fm,
+    // Schema and OpenGraph both want a modified date; a file that omits it
+    // has not been modified since it was written.
+    dateModified: fm.dateModified ?? fm.datePublished,
+    html: renderMarkdown(body),
+    faqs,
+  }
+}
+
+function sortNewestFirst(posts: BlogPost[]): BlogPost[] {
+  // Slug is a stable tiebreak: several posts share a publish date, and
+  // without it the order — and so which posts the homepage's top-3 shows —
+  // would depend on filesystem read order.
+  return posts.sort(
+    (a, b) => b.datePublished.localeCompare(a.datePublished) || a.slug.localeCompare(b.slug),
+  )
+}
+
+/**
+ * Every post whose publish date has arrived. This is what the site renders:
+ * the index, the sitemap, the feed, the homepage cards and Related blocks all
+ * go through here, so a scheduled post cannot leak into any of them.
+ */
+export function getAllPosts(): BlogPost[] {
+  const today = todayInIndia()
+  const raw = readAll()
+  const publishedSlugs = new Set(raw.filter(p => isPublished(p.fm, today)).map(p => p.fm.slug))
+
+  return sortNewestFirst(
+    raw.filter(p => publishedSlugs.has(p.fm.slug)).map(p => render(p, publishedSlugs)),
+  )
+}
+
+/**
+ * Posts still waiting for their date, soonest first. Nothing user-facing
+ * reads this — it exists so the publishing schedule can be inspected from
+ * the build report and the status endpoint.
+ */
+export function getScheduledPosts(): { slug: string; h1: string; datePublished: string }[] {
+  const today = todayInIndia()
+  return readAll()
+    .filter(p => !isPublished(p.fm, today))
+    .map(p => ({ slug: p.fm.slug, h1: p.fm.h1, datePublished: p.fm.datePublished }))
+    .sort((a, b) => a.datePublished.localeCompare(b.datePublished))
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {

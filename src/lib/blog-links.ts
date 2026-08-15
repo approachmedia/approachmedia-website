@@ -58,6 +58,53 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: '30,000 sq ft',                        href: '/services/custom-booth-fabrication' },
     { anchor: 'custom stall',                        href: '/services/exhibition-stall-design' },
   ],
+
+  // ── Batch 2: the three scheduled expo guides ──────────────
+  // Each file's notes end with "Check at build: /expos landing page for
+  // <show> — deep-link if present." All four shows have pages, verified
+  // against src/data/expo-pages.json, so all four are linked.
+
+  'bauma-conexpo-india-2026-exhibitor-guide': [
+    { anchor: 'bauma CONEXPO INDIA', href: '/expos/exhibition-stall-design-bauma-conexpo-india-2026-greater-noida' },
+    // Sits before the authored [double-decker rules guide] link on the same
+    // line, so it takes the plain "double-deck structures" mention.
+    { anchor: 'double-deck',         href: '/services/double-decker-mezzanine-stands' },
+    { anchor: 'mock-up tested in our 30,000 sq ft workshop', href: '/services/custom-booth-fabrication' },
+  ],
+
+  'semicon-india-2026-exhibitor-guide': [
+    { anchor: 'SEMICON India',                 href: '/expos/exhibition-stall-design-semicon-india-2026-new-delhi' },
+    { anchor: 'mock-up test 100% of builds',   href: '/services/custom-booth-fabrication' },
+  ],
+
+  'rei-expo-battery-show-india-2026-guide': [
+    { anchor: 'Renewable Energy India (REI) Expo', href: '/expos/exhibition-stall-design-renewable-energy-india-expo-2026-greater-noida' },
+    { anchor: 'The Battery Show India',            href: '/expos/exhibition-stall-design-the-battery-show-india-2026-greater-noida' },
+    { anchor: '30,000 sq ft workshop with 100% mock-up testing', href: '/services/custom-booth-fabrication' },
+    { anchor: 'concept and costing',               href: '/services/exhibition-stall-design' },
+  ],
+
+  // ── Batch 3 ───────────────────────────────────────────────
+  // Aluminium Bharat and Beautyworld have no /expos landing page (checked
+  // against expo-pages.json), so their show names stay plain text rather
+  // than becoming 404s — the same rule the earlier batches followed.
+
+  'aluminium-bharat-2026-exhibitor-guide': [
+    { anchor: 'mock-up tested before it ever reaches the venue', href: '/services/custom-booth-fabrication' },
+    { anchor: 'concept and costing',                             href: '/services/exhibition-stall-design' },
+  ],
+
+  'anuga-foodtec-india-2026-exhibitor-guide': [
+    { anchor: 'Anuga FoodTec India', href: '/expos/exhibition-stall-design-anuga-foodtec-india-2026-mumbai' },
+    { anchor: 'mock-up tested in our 30,000 sq ft workshop', href: '/services/custom-booth-fabrication' },
+  ],
+
+  'beautyworld-dubai-2026-indian-exhibitors-guide': [
+    // Both anchors sit on the same sentence; the injector balances brackets,
+    // so whichever runs first the other still resolves outside the new link.
+    { anchor: 'design in India',        href: '/services/exhibition-stall-design' },
+    { anchor: 'turnkey delivery abroad', href: '/services/turnkey-project-management' },
+  ],
 }
 
 /**
@@ -69,6 +116,22 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
 export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: string }[]> = {
   'helipad-exhibition-centre-gandhinagar-guide': [
     { anchor: 'India trade show calendar — dates, venues and cities', href: '/tradeshow-calendar' },
+  ],
+  // Batch 2 — each file names a city landing page for its Related block.
+  // Both pages were confirmed to exist before being linked.
+  'bauma-conexpo-india-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
+  ],
+  'semicon-india-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stall designer in Delhi', href: '/exhibition-stall-designer-delhi' },
+  ],
+  'rei-expo-battery-show-india-2026-guide': [
+    { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
+  ],
+  // Batch 3. Aluminium Bharat and Beautyworld name the Ahmedabad page, which
+  // RELATED_EXTRA already appends to every post, so only Mumbai is new.
+  'anuga-foodtec-india-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stall designer in Mumbai', href: '/exhibition-stall-designer-mumbai' },
   ],
 }
 
@@ -93,6 +156,11 @@ const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services
  *
  * The Dubai post has no verified UAE project photo, so it gets the
  * typographic header fallback (no entry here) — flagged in the build report.
+ *
+ * The three Batch-2 expo guides each ask for a sector photo — machinery,
+ * technology, energy — and mark it [NEEDS CLIENT IMAGE]. None has been
+ * supplied and cleared, so all three take the typographic fallback. Adding
+ * one is a single entry here once the owner names a real project photo.
  */
 export const POST_IMAGES: Record<string, { src: string; alt: string }> = {
   'exhibition-stall-design-cost-india': {
