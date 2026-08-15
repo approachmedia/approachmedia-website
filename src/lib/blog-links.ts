@@ -149,6 +149,25 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
   'india-expo-mart-greater-noida-exhibitor-guide': [
     { anchor: 'mock-up test in the 30,000 sq ft Ahmedabad workshop', href: '/services/custom-booth-fabrication' },
   ],
+
+  // ── Batch 6 ───────────────────────────────────────────────
+  // Of the four co-located shows only METEC India has an /expos page. The
+  // one "tube" match in expo-pages.json is the Tube & Pipe Fair in
+  // Hyderabad — a different show in a different city — so it is not used;
+  // wire India and India Essen Welding have no page. Those three stay text.
+
+  'metec-wire-tube-india-2026-exhibitor-guide': [
+    { anchor: 'METEC India', href: '/expos/exhibition-stall-design-metec-india-2026-mumbai' },
+    { anchor: 'mock-up tested in our 30,000 sq ft workshop', href: '/services/custom-booth-fabrication' },
+  ],
+
+  're-plus-2026-indian-exhibitors-guide': [
+    { anchor: 'turnkey execution', href: '/services/turnkey-project-management' },
+  ],
+
+  'stand-design-approval-process-india': [
+    { anchor: '100% mock-up tested before dispatch', href: '/services/custom-booth-fabrication' },
+  ],
 }
 
 /**
@@ -198,6 +217,11 @@ export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: stri
   ],
   'india-expo-mart-greater-noida-exhibitor-guide': [
     { anchor: 'Exhibition stand builders in Noida', href: '/exhibition-stand-builders-in-noida' },
+  ],
+  // Batch 6. RE+ and the approval evergreen both name the Ahmedabad page,
+  // which RELATED_EXTRA already appends everywhere.
+  'metec-wire-tube-india-2026-exhibitor-guide': [
+    { anchor: 'Exhibition stall designer in Mumbai', href: '/exhibition-stall-designer-mumbai' },
   ],
 }
 

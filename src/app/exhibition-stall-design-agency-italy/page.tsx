@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { CountryPageTemplate, type CountryPageData } from '@/components/country/CountryPageTemplate'
+import { blogLinksFor } from '@/lib/blog'
 
 import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
@@ -217,5 +218,16 @@ const data: CountryPageData = {
 }
 
 export default function ItalyPage() {
-  return <CountryPageTemplate data={data} />
+  return (
+    <CountryPageTemplate
+      data={data}
+      // Batch 4 asked for this and it was deferred: country pages had no
+      // From-the-blog block. Batch 6 asked for the same on the USA page, so
+      // the block now exists on CountryPageTemplate and both are wired.
+      fromTheBlog={blogLinksFor([
+        'cphi-milan-2026-indian-exhibitors-guide',
+        'exhibition-stall-design-cost-india',
+      ])}
+    />
+  )
 }

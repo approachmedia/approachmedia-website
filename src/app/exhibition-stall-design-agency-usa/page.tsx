@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { CountryPageTemplate, type CountryPageData } from '@/components/country/CountryPageTemplate'
+import { blogLinksFor } from '@/lib/blog'
 
 import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
@@ -214,5 +215,13 @@ const data: CountryPageData = {
 }
 
 export default function USAPage() {
-  return <CountryPageTemplate data={data} />
+  return (
+    <CountryPageTemplate
+      data={data}
+      fromTheBlog={blogLinksFor([
+        're-plus-2026-indian-exhibitors-guide',
+        'exhibition-stand-cost-dubai-indian-exhibitors',
+      ])}
+    />
+  )
 }

@@ -86,12 +86,15 @@ const EXPECTED: [string, number][] = [
   ['2026-09-16T12:00:00+05:30', 15],  // + CPHI/PMEC split-venue
   ['2026-09-18T12:00:00+05:30', 16],  // + India ITME
   ['2026-09-21T12:00:00+05:30', 17],  // + India Expo Mart venue guide
+  ['2026-09-23T12:00:00+05:30', 18],  // + METEC cluster
+  ['2026-09-26T12:00:00+05:30', 19],  // + RE+ Las Vegas
+  ['2026-09-28T12:00:00+05:30', 20],  // + stand-approval evergreen
 ]
 for (const [iso, want] of EXPECTED) {
   check(`${iso.slice(0, 10)} → ${want} live`, at(iso, () => getAllPosts().length), want)
 }
-check('nothing left scheduled after 21 Sep',
-  at('2026-09-21T12:00:00+05:30', () => getScheduledPosts().length), 0)
+check('nothing left scheduled after 28 Sep',
+  at('2026-09-28T12:00:00+05:30', () => getScheduledPosts().length), 0)
 
 // ── cross-links to unpublished posts ─────────────────────────
 
@@ -170,6 +173,18 @@ for (const slug of ['cphi-pmec-india-2026-split-venue-guide', 'india-itme-2026-e
     htmlAt(slug, '2026-09-21T12:00:00+05:30').includes(IEML_HREF), true)
 }
 
+// 28 Sep — the approval evergreen publishes; METEC holds a link to it.
+const APPROVAL_HREF = 'href="/blog/stand-design-approval-process-india"'
+check('27 Sep — METEC approval link still inert',
+  htmlAt('metec-wire-tube-india-2026-exhibitor-guide', '2026-09-27T12:00:00+05:30').includes(APPROVAL_HREF), false)
+check('28 Sep — METEC approval link activates',
+  htmlAt('metec-wire-tube-india-2026-exhibitor-guide', '2026-09-28T12:00:00+05:30').includes(APPROVAL_HREF), true)
+
+// The evergreen's FAQ links RE+, which publishes two days before it.
+check('approval evergreen resolves its RE+ link on day one',
+  htmlAt('stand-design-approval-process-india', '2026-09-28T12:00:00+05:30')
+    .includes('href="/blog/re-plus-2026-indian-exhibitors-guide"'), true)
+
 // The IEML guide itself links three posts that publish before it.
 const ieml = htmlAt('india-expo-mart-greater-noida-exhibitor-guide', '2026-09-21T12:00:00+05:30')
 for (const href of [
@@ -201,6 +216,9 @@ const EXPECT_LINK: [string, string, string][] = [
   ['india-itme-2026-exhibitor-guide', '2026-09-18T12:00:00+05:30', '/expos/exhibition-stall-design-india-itme-2026-greater-noida'],
   ['india-itme-2026-exhibitor-guide', '2026-09-18T12:00:00+05:30', '/services/double-decker-mezzanine-stands'],
   ['india-expo-mart-greater-noida-exhibitor-guide', '2026-09-21T12:00:00+05:30', '/services/custom-booth-fabrication'],
+  ['metec-wire-tube-india-2026-exhibitor-guide', '2026-09-23T12:00:00+05:30', '/expos/exhibition-stall-design-metec-india-2026-mumbai'],
+  ['re-plus-2026-indian-exhibitors-guide', '2026-09-26T12:00:00+05:30', '/services/turnkey-project-management'],
+  ['stand-design-approval-process-india', '2026-09-28T12:00:00+05:30', '/services/custom-booth-fabrication'],
 ]
 for (const [slug, iso, href] of EXPECT_LINK) {
   const html = at(iso, () => getAllPosts().find(p => p.slug === slug)?.html ?? '')
@@ -248,6 +266,18 @@ check('Noida today — 1 card (only the cost guide is live)',
   at('2026-08-15T12:00:00+05:30', () => blogLinksFor(NOIDA).length), 1)
 check('Noida on 21 Sep — all 5 cards',
   at('2026-09-21T12:00:00+05:30', () => blogLinksFor(NOIDA).length), 5)
+check('Mumbai on 23 Sep — METEC joins at the top',
+  at('2026-09-23T12:00:00+05:30', () => blogLinksFor([
+    'metec-wire-tube-india-2026-exhibitor-guide',
+    'anuga-foodtec-india-2026-exhibitor-guide',
+    'exhibition-stall-design-cost-india',
+  ])[0].href), '/blog/metec-wire-tube-india-2026-exhibitor-guide')
+check('Italy today — CPHI Milan withheld, 1 card',
+  at('2026-08-15T12:00:00+05:30', () => blogLinksFor([
+    'cphi-milan-2026-indian-exhibitors-guide', 'exhibition-stall-design-cost-india']).length), 1)
+check('USA on 26 Sep — RE+ joins, 2 cards',
+  at('2026-09-26T12:00:00+05:30', () => blogLinksFor([
+    're-plus-2026-indian-exhibitors-guide', 'exhibition-stand-cost-dubai-indian-exhibitors']).length), 2)
 check('an unknown slug is dropped, not rendered',
   at('2026-08-15T12:00:00+05:30', () => blogLinksFor(['no-such-post']).length), 0)
 

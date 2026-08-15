@@ -109,7 +109,15 @@ export interface CountryPageData {
 
 // ── Template ─────────────────────────────────────────────────
 
-export function CountryPageTemplate({ data }: { data: CountryPageData }) {
+export function CountryPageTemplate({
+  data,
+  fromTheBlog,
+}: {
+  data: CountryPageData
+  /** Optional "From the blog" block, mirroring CityPageTemplate. Pass slugs
+   *  through blogLinksFor() so a scheduled post cannot be linked early. */
+  fromTheBlog?: { title: string; href: string }[]
+}) {
   const pageUrl  = `${SITE_URL}/${data.slug}`
 
   const jsonLd = {
@@ -511,6 +519,32 @@ export function CountryPageTemplate({ data }: { data: CountryPageData }) {
           </ol>
         </div>
       </section>
+
+      {/* ══════════════════════════════════════════════════
+          FROM THE BLOG (optional)
+      ══════════════════════════════════════════════════ */}
+      {fromTheBlog && fromTheBlog.length > 0 && (
+        <section className="relative py-24 md:py-32">
+          <div className="container-narrow">
+            <p className="text-xs uppercase tracking-[0.28em] text-brand-green">From the blog</p>
+            <h2 className="mt-4 font-display text-3xl font-semibold text-foreground md:text-5xl">
+              Guides for exhibiting here
+            </h2>
+            <div className="mt-12 grid gap-5 md:grid-cols-2">
+              {fromTheBlog.map(post => (
+                <Link
+                  key={post.href}
+                  href={post.href}
+                  className="surface-card group rounded-2xl border border-white/10 p-6 transition-colors hover:border-brand-green-glow/40"
+                >
+                  <h3 className="font-display text-lg font-semibold text-foreground">{post.title}</h3>
+                  <p className="mt-3 text-sm text-brand-green">Read the guide →</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ══════════════════════════════════════════════════
           FAQ
