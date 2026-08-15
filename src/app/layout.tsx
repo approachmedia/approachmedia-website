@@ -16,6 +16,18 @@ export const metadata: Metadata = {
     template: '%s | Approach Media',
   },
   description: 'Custom exhibition stall design and fabrication company. Double decker stands, turnkey project management, AV integration across India.',
+  // Served from public/ at the site root. Declared explicitly rather than
+  // relying on Next's src/app/favicon.ico convention, because the set spans
+  // .ico, two PNG sizes, the Apple touch icon and the web manifest.
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  manifest: '/site.webmanifest',
   openGraph: {
     type: 'website',
     siteName: 'Approach Media',

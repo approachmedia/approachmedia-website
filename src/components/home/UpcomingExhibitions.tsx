@@ -53,7 +53,9 @@ export function UpcomingExhibitions() {
                 <div className="flex items-start gap-4 md:gap-6">
                   <div className="rounded-xl border border-brand-blue-glow/30 bg-brand-blue/15 px-3.5 py-2.5 text-center">
                     <div className="font-display text-xs uppercase tracking-wider text-brand-green-glow">{e.monthName.slice(0, 3)}</div>
-                    <div className="font-display text-2xl font-semibold leading-none text-foreground">{e.year}</div>
+                    {/* Two digits — the badge is a compact date chip, and the
+                        full year is already spelled out in the meta row below. */}
+                    <div className="font-display text-2xl font-semibold leading-none text-foreground">{String(e.year).slice(-2)}</div>
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-semibold text-foreground md:text-xl">{e.title}</h3>
