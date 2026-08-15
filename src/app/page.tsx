@@ -9,6 +9,7 @@ import { WhyChoose } from '@/components/home/WhyChoose'
 import { Process } from '@/components/home/Process'
 import { Testimonials } from '@/components/home/Testimonials'
 import { UpcomingExhibitions } from '@/components/home/UpcomingExhibitions'
+import { LatestPosts } from '@/components/home/LatestPosts'
 import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
 
@@ -97,6 +98,7 @@ export default function HomePage() {
         <FeaturedWorks />
         <Testimonials />
         <UpcomingExhibitions />
+        <LatestPosts />
         <CtaBand />
         <Faq />
       </main>

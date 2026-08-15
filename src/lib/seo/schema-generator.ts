@@ -30,7 +30,7 @@ export function buildOrganizationNode(): JsonLdNode {
     name:           ORG_NAME,
     url:            SITE_URL,
     description:    'Exhibition stall design and fabrication company. Custom booths, double decker mezzanine stands, turnkey project management across India.',
-    foundingDate:   '2015',
+    foundingDate:   '2002',
     areaServed:     ['India', 'UAE', 'Singapore'],
     serviceType: [
       'Exhibition Stall Design',

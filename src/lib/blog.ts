@@ -174,7 +174,12 @@ export function getAllPosts(): BlogPost[] {
     .filter(f => f.endsWith('.md'))
     .map(loadFile)
     .filter((p): p is BlogPost => p !== null)
-    .sort((a, b) => b.datePublished.localeCompare(a.datePublished))
+    // Slug is a stable tiebreak: four posts share a publish date, and without
+    // it the order — and so which posts the homepage's top-3 shows — would
+    // depend on filesystem read order.
+    .sort((a, b) =>
+      b.datePublished.localeCompare(a.datePublished) || a.slug.localeCompare(b.slug),
+    )
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
