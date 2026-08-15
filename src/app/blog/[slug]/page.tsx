@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getAllPosts, getPostBySlug } from '@/lib/blog'
-import { POST_IMAGES, RELATED_EXTRA } from '@/lib/blog-links'
+import { POST_IMAGES, RELATED_EXTRA, RELATED_EXTRAS_BY_SLUG } from '@/lib/blog-links'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage, ORG_LOGO, ORG_NAME } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
@@ -134,11 +134,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href={RELATED_EXTRA.href} className="text-brand-green underline underline-offset-4 transition-colors hover:text-brand-green-glow">
-                {RELATED_EXTRA.anchor}
-              </Link>
-            </li>
+            {[RELATED_EXTRA, ...(RELATED_EXTRAS_BY_SLUG[post.slug] ?? [])].map(x => (
+              <li key={x.href}>
+                <Link href={x.href} className="text-brand-green underline underline-offset-4 transition-colors hover:text-brand-green-glow">
+                  {x.anchor}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </article>

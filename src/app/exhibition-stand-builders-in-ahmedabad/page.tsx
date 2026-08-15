@@ -20,6 +20,7 @@ export default async function AhmedabadCityPage() {
       cityProjects={cityProjects}
       siteUrl={SITE_URL}
       fromTheBlog={[
+        { title: "Exhibitor's Guide to Helipad Exhibition Centre, Gandhinagar", href: '/blog/helipad-exhibition-centre-gandhinagar-guide' },
         { title: 'How Much Does Exhibition Stall Design & Fabrication Cost in India? (2026 Rates)', href: '/blog/exhibition-stall-design-cost-india' },
         { title: 'Double-Decker & Mezzanine Stall Rules in India: What You Must Clear Before You Build', href: '/blog/double-decker-stall-rules-india' },
         { title: 'Custom vs Modular Exhibition Stands: Which Should Indian Exhibitors Choose?', href: '/blog/custom-vs-modular-exhibition-stands-india' },

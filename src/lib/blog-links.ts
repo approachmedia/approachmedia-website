@@ -47,6 +47,29 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: 'designed by the team that knows your brand', href: '/services/exhibition-stall-design' },
     { anchor: 'International shows',            href: '/expos' },
   ],
+  'helipad-exhibition-centre-gandhinagar-guide': [
+    // The post's notes asked to deep-link show names in the calendar table to
+    // matching /expos pages "if pages exist". Checked at build: PharmaTech and
+    // Agri Asia have pages; Global Solar Expo, Aluminium Bharat and Khadhya
+    // Khurak do not, so those stay plain text rather than becoming 404s.
+    { anchor: 'PharmaTech Expo & LabTech Expo 2026', href: '/expos/exhibition-stall-design-pharmatech-and-labtech-expo-2026-gandhinagar' },
+    { anchor: 'Agri Asia 2026',                      href: '/expos/exhibition-stall-design-agri-asia-2026-gandhinagar' },
+    { anchor: 'stall design and fabrication team',   href: '/exhibition-stand-builders-in-ahmedabad' },
+    { anchor: '30,000 sq ft',                        href: '/services/custom-booth-fabrication' },
+    { anchor: 'custom stall',                        href: '/services/exhibition-stall-design' },
+  ],
+}
+
+/**
+ * Extra links appended to a post's Related block, where the source file's
+ * notes call for a related-block link with no matching anchor phrase in the
+ * body. Linking it there is honest; inventing body copy to carry the anchor
+ * would not be.
+ */
+export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: string }[]> = {
+  'helipad-exhibition-centre-gandhinagar-guide': [
+    { anchor: 'India trade show calendar — dates, venues and cities', href: '/tradeshow-calendar' },
+  ],
 }
 
 /** The Related block every post ends with: the other three posts plus the
