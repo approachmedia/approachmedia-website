@@ -26,6 +26,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   motion,
@@ -141,13 +142,20 @@ function Plane({
           className="group relative block h-full w-full overflow-hidden rounded-xl border border-white/10 bg-surface shadow-2xl"
         >
           {hero ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            /* next/image, not a raw <img>. The city pages were requesting the
+               full-size R2 original for every photo — fine-ish at six, but
+               this row shows twenty, and a 320px plane does not need a
+               multi-megapixel file. The optimiser was already configured for
+               this host and already used on /portfolio; it just was not used
+               here. sizes matches the two plane widths so the served file
+               tracks the breakpoint. */
+            <Image
               src={hero.cdnUrl ?? hero.url}
               alt={hero.altText}
-              loading="lazy"
+              fill
+              sizes="(max-width: 768px) 210px, 320px"
               draggable={false}
-              className="pointer-events-none h-full w-full select-none object-cover"
+              className="pointer-events-none select-none object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">

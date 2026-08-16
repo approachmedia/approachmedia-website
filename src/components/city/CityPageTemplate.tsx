@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectCardData } from '@/components/portfolio/ProjectCard'
 import CityProjectsCarousel from './CityProjectsCarousel'
@@ -331,8 +332,13 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheB
                   return (
                     <Link key={p.id} href={`/portfolio/${p.slug}`} style={{ position: 'relative', aspectRatio: '4/3', display: 'block', overflow: 'hidden', background: 'hsl(222 24% 12%)' }}>
                       {hero ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={hero.cdnUrl ?? hero.url} alt={hero.altText} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s' }} />
+                        <Image
+                          src={hero.cdnUrl ?? hero.url}
+                          alt={hero.altText}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          style={{ objectFit: 'cover' }}
+                        />
                       ) : (
                         <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <span style={{ color: 'hsl(220 10% 30%)', fontSize: '0.85rem' }}>No image</span>
