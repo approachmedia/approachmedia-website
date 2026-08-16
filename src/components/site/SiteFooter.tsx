@@ -42,7 +42,10 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
 
 export default function SiteFooter() {
   return (
-    <footer className="relative mt-20 border-t border-white/15 bg-surface">
+    <footer
+      className="relative mt-20 border-t border-white/15"
+      style={{ background: 'var(--gradient-footer)' }}
+    >
       <div className="container-wide py-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
 
