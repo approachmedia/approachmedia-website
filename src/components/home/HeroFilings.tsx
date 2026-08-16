@@ -44,13 +44,12 @@ const CELL_DESKTOP = 48
 /** Proportionally coarser on phones, where the hero is a narrow column. */
 const CELL_MOBILE = 56
 /**
- * The supplied dimensions, left alone. Thickening these to 30x3 made the
- * field read as a hatch pattern rather than iron filings — heavier lines at
- * this spacing merge into each other instead of staying legible as
- * individual needles.
+ * Length is the supplied 22. Thickness is 1 rather than 2: asked for thin
+ * and sharp, and a hairline at this length reads as a needle where 2px reads
+ * as a dash.
  */
 const FILING_LENGTH = 22
-const FILING_THICKNESS = 2
+const FILING_THICKNESS = 1
 
 /** The supplied spring. Lower damping wobbles more. */
 const STIFFNESS = 250
@@ -63,7 +62,7 @@ const WANDER_SPEED = 1
  * through; at the original 22x2 the field is light enough to carry its own
  * strength, and the copy side is dimmed by a wash in Hero.tsx instead.
  */
-const FILING_OPACITY = 0.85
+const FILING_OPACITY = 0.95
 
 /** Blue to bright green — the site's accent sweep, and the supplied stops. */
 const GRADIENT_STOPS: [number, number, number][] = [
@@ -148,7 +147,7 @@ export function HeroFilings() {
         }
       }
 
-      ctx.lineCap = 'round'
+      ctx.lineCap = 'butt'
       ctx.lineWidth = FILING_THICKNESS
       draw()
     }
@@ -158,7 +157,7 @@ export function HeroFilings() {
     const draw = () => {
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.lineCap = 'round'
+      ctx.lineCap = 'butt'
       ctx.lineWidth = FILING_THICKNESS * dpr
 
       for (let i = 0; i < count; i++) {

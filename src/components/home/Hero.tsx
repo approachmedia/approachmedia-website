@@ -128,13 +128,13 @@ export function Hero() {
           z-10 for the purpose. */}
       <div className="absolute inset-0 overflow-hidden">
         <HeroFilings />
-        {/* An even veil, not a left-to-right ramp. The ramp held the copy
-            well but left the field visible only on the right, which is the
-            single biggest difference from the demo — there the filings carry
-            evenly across the full width. This dims the whole field a little
-            instead, and the demo's own answer for legibility, a text shadow,
-            does the rest on the copy itself. */}
-        <div className="absolute inset-0 bg-background/45" />
+        {/* Back to the left-to-right ramp. The even veil matched the demo,
+            where the field carries edge to edge — but the demo's only content
+            is a centred headline, and over four lines of body copy that even
+            wash did not hold the text. The ramp is dark where the copy sits
+            and clear where it does not, so readability comes from the one
+            place it is needed rather than from dimming the whole field. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/75 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </div>
 
