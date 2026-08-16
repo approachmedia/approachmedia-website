@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ProjectCardData } from '@/components/portfolio/ProjectCard'
+import CityProjectsCarousel from './CityProjectsCarousel'
 import ExhibitionCarousel from './ExhibitionCarousel'
 import VenueImage from './VenueImage'
 import type { CityPageData } from './types'
@@ -47,6 +48,13 @@ const MUTED: React.CSSProperties = {
 }
 
 // ── Template ─────────────────────────────────────────────────
+
+/**
+ * Below this many projects the 3D carousel has too few planes to read as a
+ * row — it looks like a bug rather than an effect — so those cities keep the
+ * grid. Cities with a deep portfolio get the carousel.
+ */
+const CAROUSEL_MIN = 8
 
 interface Props {
   data: CityPageData
@@ -307,7 +315,14 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheB
             </p>
           </div>
 
-          {cityProjects.length > 0 ? (
+          {cityProjects.length >= CAROUSEL_MIN ? (
+            <>
+              <CityProjectsCarousel projects={cityProjects} />
+              <div style={{ textAlign: 'center', marginTop: '32px' }}>
+                <Link href="/portfolio" className="btn btn-primary">View Full Portfolio →</Link>
+              </div>
+            </>
+          ) : cityProjects.length > 0 ? (
             <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '4px' }}>
                 {cityProjects.map(p => {

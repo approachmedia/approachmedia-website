@@ -13,6 +13,6 @@ export const metadata: Metadata = {
 }
 
 export default async function ChandigarhCityPage() {
-  const cityProjects = await getPublishedProjects({ city: 'Chandigarh', limit: 6 })
+  const cityProjects = await getPublishedProjects({ city: 'Chandigarh', limit: 20 })
   return <CityPageTemplate data={chandigarhData} cityProjects={cityProjects} siteUrl={SITE_URL} />
 }

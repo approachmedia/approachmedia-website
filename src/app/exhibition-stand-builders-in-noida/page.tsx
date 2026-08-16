@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function NoidaCityPage() {
-  const cityProjects = await getPublishedProjects({ city: 'Noida', limit: 6 })
+  const cityProjects = await getPublishedProjects({ city: 'Noida', limit: 20 })
   return (
     <CityPageTemplate
       data={noidaData}
