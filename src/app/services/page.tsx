@@ -4,6 +4,7 @@ import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from './_content/services-hub'
 import { SERVICE_CARDS } from './_content/service-cards'
 import { ServiceExpandGrid } from '@/components/services/ServiceExpandGrid'
+import { ProcessSteps, type ProcessStep } from '@/components/services/ProcessSteps'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata = {
@@ -16,6 +17,43 @@ export const metadata = {
     url: `${SITE_URL}/services`,
   },
 }
+
+/**
+ * The four steps, with the photos uploaded to images/process. Copy is the
+ * numbered cards' own wording, moved out of the JSX so the row renders from
+ * a list. Alt text describes the photograph for someone who cannot see it;
+ * the step title is already a heading beside it, so it is not repeated.
+ */
+const PROCESS_STEPS: ProcessStep[] = [
+  {
+    num: '01',
+    title: 'Understand & Plan',
+    copy: 'We define your brand, audience, exhibition objectives, stand dimensions, and budget — then build the brief that drives every decision.',
+    image: '01-understand-plan.jpg',
+    alt: 'Approach Media team planning an exhibition stand brief with a client',
+  },
+  {
+    num: '02',
+    title: 'Design & Detail',
+    copy: 'Requirements translate into spatial concepts and 3D renderings. Once approved, full engineering drawings and material specs are locked before fabrication begins.',
+    image: '02-design-detail.jpg',
+    alt: 'A 3D exhibition stand rendering under review before fabrication',
+  },
+  {
+    num: '03',
+    title: 'Build & Test',
+    copy: 'Your stand is fabricated in our own workshop and assembled at full scale before dispatch — every element signed off before leaving our facility.',
+    image: '03-build-test.jpg',
+    alt: 'An exhibition stand being fabricated and assembled in the Approach Media workshop',
+  },
+  {
+    num: '04',
+    title: 'Execute & Close',
+    copy: 'We manage installation, hand over a ready-to-show stand, dismantle after the event, and close with full documentation.',
+    image: '04-execute-close.jpg',
+    alt: 'Installation of a completed exhibition stand on the show floor',
+  },
+]
 
 export default function ServicesPage() {
   return (
@@ -110,33 +148,9 @@ export default function ServicesPage() {
             <span className="section-label">What happens after you reach out?</span>
             <h2 id="process-srv-heading">A clear process from idea to installation</h2>
           </div>
-          <div className="flow-grid">
-
-            <div className="flow-card animate-in delay-1">
-              <span className="flow-num">01</span>
-              <h3>Understand &amp; Plan</h3>
-              <p>We define your brand, audience, exhibition objectives, stand dimensions, and budget — then build the brief that drives every decision.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-2">
-              <span className="flow-num">02</span>
-              <h3>Design &amp; Detail</h3>
-              <p>Requirements translate into spatial concepts and 3D renderings. Once approved, full engineering drawings and material specs are locked before fabrication begins.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-3">
-              <span className="flow-num">03</span>
-              <h3>Build &amp; Test</h3>
-              <p>Your stand is fabricated in our own workshop and assembled at full scale before dispatch — every element signed off before leaving our facility.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-4">
-              <span className="flow-num">04</span>
-              <h3>Execute &amp; Close</h3>
-              <p>We manage installation, hand over a ready-to-show stand, dismantle after the event, and close with full documentation.</p>
-            </div>
-
-          </div>
+          {/* Photo cards. Copy is unchanged from the numbered cards these
+              replace — same four steps, same words, same order. */}
+          <ProcessSteps steps={PROCESS_STEPS} />
         </div>
       </section>
 
