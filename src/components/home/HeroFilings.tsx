@@ -32,17 +32,17 @@
 
 import { useEffect, useRef } from 'react'
 
-// ── the supplied constants. Only the grid spacing is changed. ──
+// ── the supplied constants, unchanged ──
 
 /**
- * px per filing. Lower is denser, and this is the one constant that moved:
- * 48 to 30, which is the "more lines" that was asked for. At 30 the gap
- * between a filing and its neighbour is 8px rather than 26, so the field
- * reads as a continuous grain rather than scattered marks.
+ * px per filing, at the demo's own spacing. Tightened to 30 first, which put
+ * the filings 8px apart instead of 26 and turned an airy field into a
+ * texture — side by side with the demo it read as a different effect. Every
+ * constant in this file is now the supplied one.
  */
-const CELL_DESKTOP = 30
-/** Phones get a coarser grid — same density there is work nobody sees. */
-const CELL_MOBILE = 42
+const CELL_DESKTOP = 48
+/** Proportionally coarser on phones, where the hero is a narrow column. */
+const CELL_MOBILE = 56
 /**
  * The supplied dimensions, left alone. Thickening these to 30x3 made the
  * field read as a hatch pattern rather than iron filings — heavier lines at

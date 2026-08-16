@@ -128,12 +128,14 @@ export function Hero() {
           z-10 for the purpose. */}
       <div className="absolute inset-0 overflow-hidden">
         <HeroFilings />
-        {/* The copy is left-aligned in a narrow column, so the field is
-            dimmed on that side and left at full strength on the right where
-            there is nothing to read. A flat wash over the whole hero would
-            have cost the effect everywhere to fix it in one place. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+        {/* An even veil, not a left-to-right ramp. The ramp held the copy
+            well but left the field visible only on the right, which is the
+            single biggest difference from the demo — there the filings carry
+            evenly across the full width. This dims the whole field a little
+            instead, and the demo's own answer for legibility, a text shadow,
+            does the rest on the copy itself. */}
+        <div className="absolute inset-0 bg-background/45" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </div>
 
       <StaggerReveal className="container-wide relative z-10" onSplit={restoreAccent}>
@@ -142,7 +144,7 @@ export function Hero() {
             arriving before the headline than queued behind it. */}
         <div className="flex items-center gap-2 animate-fade-in">
           <span className="h-1.5 w-1.5 rounded-full bg-brand-green animate-glow" />
-          <p key={idx} className="animate-fade-up text-xs uppercase tracking-[0.22em] text-muted-foreground md:text-sm">
+          <p key={idx} className="animate-fade-up text-xs uppercase tracking-[0.22em] text-muted-foreground [text-shadow:0_2px_16px_rgba(10,15,30,0.95)] md:text-sm">
             {taglines[idx]}
           </p>
         </div>
@@ -153,13 +155,13 @@ export function Hero() {
             puts the gradient back. */}
         <h1
           data-stagger-headline
-          className="mt-6 max-w-5xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
+          className="mt-6 max-w-5xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-foreground [text-shadow:0_2px_24px_rgba(10,15,30,0.9)] sm:text-5xl md:text-6xl lg:text-7xl"
         >
           {HEADLINE_LEAD}{' '}
           <span className="text-gradient-brand">{HEADLINE_ACCENT}</span>
         </h1>
 
-        <p data-stagger-item className="mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p data-stagger-item className="mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground [text-shadow:0_2px_16px_rgba(10,15,30,0.95)] md:text-lg">
           Your exhibition stall is more than a display. It is a space where your brand is
           experienced, understood, and remembered. We design and build exhibition spaces that
           attract the right audience, guide walk-in interactions, and turn attention into
