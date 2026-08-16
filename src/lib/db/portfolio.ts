@@ -219,6 +219,19 @@ export async function getAllPublishedSlugs() {
   return rows.map(r => r.slug)
 }
 
+/**
+ * Slug, title and city for every published project — the corpus the legacy
+ * /casestudy redirects are matched against. Title and city are included
+ * because the migration regenerated slugs from titles, so an old WordPress
+ * slug often shares wording with the title rather than with the new slug.
+ */
+export const getLegacyMatchCandidates = cache(async function getLegacyMatchCandidates() {
+  return prisma.project.findMany({
+    where: { status: 'published' },
+    select: { slug: true, title: true, city: true },
+  })
+})
+
 // ─── Create project ───────────────────────────────────────────
 
 export async function createProject(data: ProjectInput) {

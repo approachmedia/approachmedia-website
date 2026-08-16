@@ -1,6 +1,15 @@
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
+  // Middleware owns trailing slashes instead of Next's built-in 308.
+  //
+  // That 308 runs before middleware and redirects to whatever host it was
+  // asked on, so an indexed `https://approachmedia.in/casestudy/x/` cost three
+  // hops — strip slash, add www, then the legacy redirect. Every URL left
+  // indexed from the WordPress site ends in a slash, so that was the common
+  // case rather than the edge case. Middleware now emits one 301 with both
+  // corrections applied; see src/middleware.ts.
+  skipTrailingSlashRedirect: true,
   // Inlined at build time, so it is identical for every request a given
   // deploy serves. The sitemap uses it for pages whose content is
   // source-controlled — those genuinely only change when we deploy.

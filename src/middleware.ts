@@ -60,9 +60,26 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   '/exhibition-stall-design-company':       '/exhibition-stand-builders-in-ahmedabad',
 }
 
+/**
+ * Old WordPress trees that move wholesale. The events calendar carried the
+ * Events Calendar plugin's query strings (`?tribe-bar-date=…`), which have no
+ * equivalent here, so the query is dropped rather than carried to a page that
+ * would ignore it.
+ *
+ * Case studies and individual event pages are NOT here: choosing a sensible
+ * target for those needs the portfolio and expo data, so they are resolved by
+ * route handlers under /casestudy and /upcoming_events__exhibitions.
+ */
+const LEGACY_PREFIXES: { prefix: string; target: string }[] = [
+  { prefix: '/exhibitions/list', target: '/expos' },
+  { prefix: '/exhibitions',      target: '/expos' },
+]
+
 function legacyTarget(pathname: string) {
   const key = pathname.toLowerCase().replace(/\/+$/, '') || '/'
-  return LEGACY_REDIRECTS[key]
+  if (LEGACY_REDIRECTS[key]) return LEGACY_REDIRECTS[key]
+  const prefixed = LEGACY_PREFIXES.find(p => key === p.prefix || key.startsWith(`${p.prefix}/`))
+  return prefixed?.target
 }
 
 /**
@@ -86,9 +103,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(`${CANONICAL_ORIGIN}/sitemap.xml`, 301)
   }
 
+  // Every indexed WordPress URL ends in a slash. next.config sets
+  // skipTrailingSlashRedirect so that Next's own 308 does not fire first —
+  // it ran before middleware and kept whatever host it was asked on, which
+  // made an indexed non-www URL cost three hops: 308 to strip the slash, 301
+  // to add www, then the legacy redirect. Handling the slash here folds the
+  // first two into one.
+  const trimmed = pathname.length > 1 ? pathname.replace(/\/+$/, '') || '/' : pathname
+
   // Old WordPress URLs Google still ranks. Straight to the canonical origin so
   // an indexed non-www URL resolves in one hop rather than two.
-  const legacy = legacyTarget(pathname)
+  const legacy = legacyTarget(trimmed)
   if (legacy) {
     return NextResponse.redirect(`${CANONICAL_ORIGIN}${legacy}`, 301)
   }
@@ -98,8 +123,13 @@ export function middleware(request: NextRequest) {
   // the wrong host into a no-op rather than a redirect.
   if (request.method === 'GET' || request.method === 'HEAD') {
     const hostname = (request.headers.get('host') ?? '').toLowerCase().split(':')[0]
-    if (shouldRedirectHost(hostname)) {
-      return NextResponse.redirect(`${CANONICAL_ORIGIN}${pathname}${search}`, 301)
+    const wrongHost = shouldRedirectHost(hostname)
+    if (wrongHost || trimmed !== pathname) {
+      // One 301 carrying both corrections. On the canonical host a bare
+      // trailing slash still has to be removed, or /portfolio/ and /portfolio
+      // serve the same page at two URLs.
+      const origin = wrongHost || trimmed !== pathname ? CANONICAL_ORIGIN : ''
+      return NextResponse.redirect(`${origin}${trimmed}${search}`, 301)
     }
   }
 
