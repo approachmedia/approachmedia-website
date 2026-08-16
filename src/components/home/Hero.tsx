@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StaggerReveal, STAGGER_WORD_CLASS, type StaggerSplit } from '@/components/motion/StaggerReveal'
+import { HeroFilings } from './HeroFilings'
 
 // The headline, split at the point the brand gradient starts. Kept as
 // constants rather than inline JSX because the word index below is derived
@@ -118,7 +119,24 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,hsl(var(--brand-blue-glow)/0.15),transparent_55%)]" />
       </div>
 
-      <StaggerReveal className="container-wide" onSplit={restoreAccent}>
+      {/* Not inside the -z-10 layer above. That layer sits behind the
+          section's own --gradient-hero, whose last stop is an opaque
+          hsl(222 30% 4%), so anything in it is painted over — the filings
+          were invisible there, and elementFromPoint in the hero returns the
+          section rather than its own background layer. This sits above the
+          section background and below the copy, which is given relative
+          z-10 for the purpose. */}
+      <div className="absolute inset-0 overflow-hidden">
+        <HeroFilings />
+        {/* The copy is left-aligned in a narrow column, so the field is
+            dimmed on that side and left at full strength on the right where
+            there is nothing to read. A flat wash over the whole hero would
+            have cost the effect everywhere to fix it in one place. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      </div>
+
+      <StaggerReveal className="container-wide relative z-10" onSplit={restoreAccent}>
         {/* Rotating eyebrow. Deliberately not a stagger item: it re-runs its
             own fade every 4.2s as the tagline rotates, and it reads better
             arriving before the headline than queued behind it. */}
