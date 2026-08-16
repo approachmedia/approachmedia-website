@@ -3,9 +3,44 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { AnimatePresence, motion, stagger } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+import { MenuToggleIcon } from '@/components/motion/MenuToggleIcon'
 import { LOGO_URL } from '@/lib/brand'
+
+/**
+ * The panel's own open/close. The example reveals a left sidebar by growing
+ * a clip-path circle out of the toggle; this menu is a full-width sheet
+ * under the header, so it opens on height instead — a circle centred on a
+ * button in the top-right corner would sweep across the page rather than out
+ * from the control.
+ */
+const panelVariants = {
+  open: { height: 'auto', opacity: 1, transition: { type: 'spring' as const, stiffness: 260, damping: 30 } },
+  closed: { height: 0, opacity: 0, transition: { type: 'spring' as const, stiffness: 400, damping: 40 } },
+}
+
+/**
+ * The example's orchestration, unchanged: opening deals the items out from
+ * the top after the panel has started moving, closing gathers them from the
+ * last one back. Closing is quicker than opening, which is what stops the
+ * menu feeling reluctant to go away.
+ */
+const listVariants = {
+  open: { transition: { delayChildren: stagger(0.07, { startDelay: 0.15 }) } },
+  closed: { transition: { delayChildren: stagger(0.04, { from: 'last' as const }) } },
+}
+
+/**
+ * The example throws items 50px which suits a full-height sidebar; over a
+ * short sheet that reads as a jump, so the travel is the site's own
+ * enter distance. Its stiffness of 1000 is kept — that snap is the character
+ * of the effect.
+ */
+const itemVariants = {
+  open: { y: 0, opacity: 1, transition: { y: { stiffness: 1000, velocity: -100 } } },
+  closed: { y: 24, opacity: 0, transition: { y: { stiffness: 1000 } } },
+}
 
 const NAV = [
   { label: 'Home',         href: '/' },
@@ -94,37 +129,51 @@ export default function SiteHeader() {
           aria-label="Toggle navigation menu"
           aria-expanded={open}
         >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <MenuToggleIcon open={open} />
         </button>
       </div>
 
       {/* Mobile menu */}
-      {open && (
-        <div className="border-t border-white/15 bg-background/95 backdrop-blur-xl xl:hidden">
-          <nav className="container-wide flex flex-col py-4" aria-label="Mobile">
-            {NAV.map(item => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={`py-2.5 text-sm transition-colors ${
-                  isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-3 flex flex-col gap-2">
-              <Button asChild variant="glass" size="sm">
-                <Link href="/portfolio" onClick={() => setOpen(false)}>View Portfolio</Link>
-              </Button>
-              <Button asChild variant="hero" size="sm">
-                <Link href="/contact" onClick={() => setOpen(false)}>Book A Consultation</Link>
-              </Button>
-            </div>
-          </nav>
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            className="overflow-hidden border-t border-white/15 bg-background/95 backdrop-blur-xl xl:hidden"
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={panelVariants}
+          >
+            <motion.nav
+              className="container-wide flex flex-col py-4"
+              aria-label="Mobile"
+              variants={listVariants}
+            >
+              {NAV.map(item => (
+                <motion.div key={item.href} variants={itemVariants}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={`block py-2.5 text-sm transition-colors ${
+                      isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+              <motion.div className="mt-3 flex flex-col gap-2" variants={itemVariants}>
+                <Button asChild variant="glass" size="sm">
+                  <Link href="/portfolio" onClick={() => setOpen(false)}>View Portfolio</Link>
+                </Button>
+                <Button asChild variant="hero" size="sm">
+                  <Link href="/contact" onClick={() => setOpen(false)}>Book A Consultation</Link>
+                </Button>
+              </motion.div>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }
