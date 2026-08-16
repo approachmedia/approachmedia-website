@@ -21,6 +21,11 @@ const config: NextConfig = {
       { protocol: 'https', hostname: 'cdn.approachmedia.in' },
       { protocol: 'https', hostname: 'approachmedia.in' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
+      // The old WordPress host on Cloudways. Some media rows still point at
+      // it, and city photos now go through next/image — which throws on a
+      // host that is not listed here, where a raw <img> would simply have
+      // loaded it. Keep until every Media.url has been migrated to R2.
+      { protocol: 'https', hostname: 'wordpress-1471738-5564673.cloudwaysapps.com' },
       // Cloudflare R2 public bucket — all project/venue media
       { protocol: 'https', hostname: 'pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev' },
     ],
