@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { MagneticCta } from '@/components/motion/MagneticCta'
 
 export function CtaBand() {
   return (
@@ -15,10 +16,17 @@ export function CtaBand() {
           Whether you are showcasing, launching, or expanding — your space defines how your brand
           is experienced and how your clients remember you.
         </p>
+        {/* The primary action carries the magnetic pull and the rolling
+            label; the secondary stays a plain button. Both on one row would
+            be two things competing for the same attention, and this is the
+            page's single most important click. */}
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button asChild variant="hero" size="xl">
-            <Link href="/contact">Request a Proposal <ArrowRight className="h-4 w-4" /></Link>
-          </Button>
+          <MagneticCta
+            href="/contact"
+            icon={<ArrowRight className="h-4 w-4" />}
+          >
+            Request a Proposal
+          </MagneticCta>
           <Button asChild variant="glass" size="xl">
             <Link href="/portfolio">View Our Portfolio</Link>
           </Button>
