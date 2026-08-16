@@ -39,7 +39,42 @@ export function ServicesImageAccordion() {
   const [active, setActive] = useState(0)
 
   return (
-    <div className="flex w-full items-stretch gap-2 md:gap-4">
+    <>
+      {/* ── Phones: a plain grid ──────────────────────────────
+          The accordion expands on hover, and touch has no hover — so on a
+          phone the five inactive services stayed collapsed with no way to
+          open them. Six strips sharing a 375px screen left each one about
+          27px wide: a sliver of sideways text, and the open one truncated to
+          "Exhib…". Tapping worked, but nothing told you what you were
+          tapping.
+
+          A grid answers that directly: every service shows its own photo and
+          its full name, so the destination is obvious before the tap. Both
+          sets of images are lazy, and the hidden set is display:none, so a
+          phone does not pay to download the desktop strips. */}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-5 md:hidden">
+        {ITEMS.map(item => (
+          <Link key={item.slug} href={`/services/${item.slug}`} className="group block">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-surface">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${CDN}/${item.image}`}
+                alt={`${item.title} — Approach Media`}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+            </div>
+            <span className="mt-2.5 flex items-start gap-1.5 font-display text-sm font-semibold leading-snug text-foreground">
+              <span>{item.title}</span>
+              <ArrowUpRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-green-glow" />
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      {/* ── md and up: the hover accordion, unchanged ───────── */}
+      <div className="hidden w-full items-stretch gap-2 md:flex md:gap-4">
       {ITEMS.map((item, i) => {
         const isActive = i === active
         return (
@@ -85,6 +120,7 @@ export function ServicesImageAccordion() {
           </Link>
         )
       })}
-    </div>
+      </div>
+    </>
   )
 }
