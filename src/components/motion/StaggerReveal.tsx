@@ -30,6 +30,7 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react'
 import { animate, useReducedMotion } from 'framer-motion'
 import { splitText } from 'motion-plus-dom'
+import { GENTLE, STAGGER, TRAVEL, UI, fade } from './tokens'
 
 const HEADLINE_ATTR = 'data-stagger-headline'
 const ITEM_ATTR = 'data-stagger-item'
@@ -37,29 +38,21 @@ const ITEM_ATTR = 'data-stagger-item'
 export const STAGGER_LINE_CLASS = 'stagger-line'
 export const STAGGER_WORD_CLASS = 'stagger-word'
 
-/**
- * The @motion/ui-theme default preset, resolved. Springs rather than
- * durations so an interrupted animation keeps its velocity; `duration` is
- * kept as the matched timing for the opacity channel, which is a tween so
- * that fade and travel land together.
- */
-const GENTLE = { type: 'spring' as const, stiffness: 109.66, damping: 19.9, duration: 0.5 }
 /** ui, slowed by the section's 1.25x follower factor. */
-const FOLLOWER = { type: 'spring' as const, stiffness: 194.95, damping: 26.53, duration: 0.375 }
+const FOLLOWER = {
+  type: 'spring' as const,
+  stiffness: UI.stiffness / 1.25 ** 2,
+  damping: UI.damping / 1.25,
+  duration: UI.duration * 1.25,
+}
 /** stagger.relaxed between headline lines, stagger.base between followers. */
-const LINE_STAGGER = 0.15
-const ITEM_STAGGER = 0.08
-/** travel.enter */
-const ITEM_TRAVEL = 24
+const LINE_STAGGER = STAGGER.relaxed
+const ITEM_STAGGER = STAGGER.base
+const ITEM_TRAVEL = TRAVEL.enter
 
 /** Lines rise by a fraction of their own size, so it scales with the type. */
 const LINE_RISE = '0.4em'
 const ENTER_BLUR = 'blur(4px)'
-
-/** Opacity is linear on purpose: eased fades front-load and read as a pop. */
-function fade(duration: number) {
-  return { type: 'tween' as const, duration, ease: 'linear' as const, inherit: true }
-}
 
 export interface StaggerSplit {
   lines: HTMLElement[]

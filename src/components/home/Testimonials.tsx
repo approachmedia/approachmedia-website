@@ -10,6 +10,7 @@
  */
 
 import { GoogleReviews } from './GoogleReviews'
+import { TestimonialsStack } from './TestimonialsStack'
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/clientlogo'
 
@@ -62,38 +63,19 @@ export function Testimonials() {
   return (
     <section className="bg-surface/40 py-20 md:py-28">
       <div className="container-wide">
-        <div className="max-w-2xl">
+        {/* Centred, unlike the left-aligned heading this section used to
+            carry. The grid it replaced filled the row, so a left heading had
+            something under it; a single card in the middle of the container
+            left the heading stranded against empty space. This matches the
+            clientele row directly above, which is centred already. */}
+        <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Client voices</p>
           <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
             Brands that come back, <span className="text-gradient-brand">show after show.</span>
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map(t => (
-            <figure key={t.name} className="surface-card flex flex-col rounded-2xl p-7">
-              {/* white chip so colourful light-bg logos read on the dark theme */}
-              <div className="inline-flex h-16 w-fit max-w-full items-center rounded-lg bg-white px-4 py-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`${CDN}/${t.logo}`}
-                  alt={`${t.company} logo`}
-                  loading="lazy"
-                  className="h-full w-auto max-w-[150px] object-contain"
-                />
-              </div>
-
-              <blockquote className="mt-5 flex-1 text-[15px] leading-relaxed text-foreground/90">
-                {`“${t.quote}”`}
-              </blockquote>
-
-              <figcaption className="mt-6">
-                <p className="font-display text-base font-semibold text-foreground">{t.name}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{t.role} · {t.company}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        <TestimonialsStack testimonials={testimonials} cdn={CDN} />
 
         {/* Live Google reviews — renders once GOOGLE_PLACES_API_KEY +
             GOOGLE_PLACE_ID are configured on Railway */}
