@@ -9,6 +9,7 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { sensoryLayers } from '../_content/immersive-brand-experience'
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
@@ -24,14 +25,6 @@ export const metadata = {
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'
 
-const sensoryLayers = [
-  { icon: Layers3,          title: 'Spatial Narrative',       copy: 'A walk-through story arc — anticipation, reveal, interaction, recall.' },
-  { icon: Lightbulb,        title: 'Cinematic Lighting',      copy: 'Choreographed beams, gradients and reveals that steer the eye.' },
-  { icon: Volume2,          title: 'Soundscape Design',       copy: 'Directional audio zones that change as visitors move through space.' },
-  { icon: Wand2,            title: 'Material & Texture',      copy: 'Tactile surfaces — wood, brass, fluted glass, micro-mesh — to feel premium.' },
-  { icon: MousePointerClick, title: 'Interactive Touchpoints', copy: 'Touch walls, AR previews, kinetic installations, branded games.' },
-  { icon: Sparkles,         title: 'Moments of Surprise',     copy: 'Projection mapping, kinetic ceilings, hidden reveals — designed to be shared.' },
-]
 
 const outcomes = [
   { stat: '3.2×', label: 'Average dwell time vs. a standard stall' },

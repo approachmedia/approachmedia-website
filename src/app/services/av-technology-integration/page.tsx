@@ -10,6 +10,7 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import { whyChoose } from '../_content/av-technology-integration'
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 export const metadata = {
@@ -32,14 +33,6 @@ const trustBadges = [
   { icon: ShieldCheck, label: 'On-site AV crew' },
 ]
 
-const whyChoose = [
-  { icon: Monitor,           title: 'LED Video Walls',               copy: 'Seamless, high-brightness LED panels sized to your footprint — from a sharp 6 sqm accent wall to a commanding 48 sqm hero display.' },
-  { icon: Volume2,           title: 'Immersive Soundscapes',         copy: 'Directional speaker arrays that bathe your zone in brand audio without bleeding into neighbouring stalls.' },
-  { icon: MousePointerClick, title: 'Interactive Touchscreens',      copy: 'Large-format multi-touch displays running product configurators, catalogues and data-capture experiences.' },
-  { icon: Sparkles,          title: 'Projection Mapping',            copy: 'Projector-mapped content onto curved surfaces, product shells and architectural features — the moment every visitor photographs.' },
-  { icon: Zap,               title: 'Lighting Design',               copy: 'Cove, spot, dynamic colour-wash and kinetic lighting choreographed to steer attention and set the mood.' },
-  { icon: Wifi,              title: 'Smart Technology Integration',  copy: 'RFID check-ins, real-time analytics dashboards, CRM-connected lead capture and IoT-controlled environments.' },
-]
 
 const outcomes = [
   { stat: '10×',   label: 'Engagement vs. standard stall' },

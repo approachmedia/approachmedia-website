@@ -2,6 +2,8 @@ import { SITE_URL } from '@/lib/site-url'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from './_content/services-hub'
+import { SERVICE_CARDS } from './_content/service-cards'
+import { ServiceExpandGrid } from '@/components/services/ServiceExpandGrid'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata = {
@@ -69,66 +71,11 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ═══ SECTION 2: SIX SERVICE CARDS (3-col, numbered) ═══════════════ */}
+      {/* ═══ SECTION 2: SIX SERVICE CARDS (expand on tap) ════════════════ */}
       <section className="section" id="services-list" aria-labelledby="services-list-heading">
         <div className="container">
-          <div className="srv-cards-grid" id="services-list-heading">
-
-            {/* Card 1 */}
-            <a href="/services/exhibition-stall-design" className="srv-card animate-in delay-1" aria-label="Exhibition Stall Design">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 01</span>
-              <h3>Exhibition Stall Design</h3>
-              <p>Concept-led spatial design that translates your brand identity into a high-impact exhibition space — from brief to 3D visualisation.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 2 */}
-            <a href="/services/custom-booth-fabrication" className="srv-card animate-in delay-2" aria-label="Custom Booth Fabrication">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 02</span>
-              <h3>Custom Booth Fabrication</h3>
-              <p>Precision-built structures from our own workshop — custom joinery, structural frames, surface finishes, to exact specifications.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 3 */}
-            <a href="/services/turnkey-project-management" className="srv-card animate-in delay-3" aria-label="Turnkey Project Management">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 03</span>
-              <h3>Turnkey Project Management</h3>
-              <p>Single-team accountability from first brief to post-event dismantle. One point of contact, zero coordination gaps.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 4 */}
-            <a href="/services/av-technology-integration" className="srv-card animate-in delay-1" aria-label="Audio Visual & Technology Integration">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 04</span>
-              <h3>Audio-Visual &amp; Tech Integration</h3>
-              <p>LED walls, interactive screens, immersive sound and lighting — all planned and integrated within your stall from day one.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 5 */}
-            <a href="/services/double-decker-mezzanine-stands" className="srv-card animate-in delay-2" aria-label="Double Decker / Mezzanine Stands">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 05</span>
-              <h3>Double Decker / Mezzanine Stands</h3>
-              <p>Engineered multi-level structures that maximise floor presence and create a landmark on any show floor.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 6 */}
-            <a href="/services/immersive-brand-experience" className="srv-card animate-in delay-3" aria-label="Immersive Brand Experience Design">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 06</span>
-              <h3>Immersive Brand Experiences</h3>
-              <p>Sensory-led brand environments — spatial narrative, lighting, sound, and interaction — designed to be remembered.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-          </div>
+          <h2 id="services-list-heading" className="sr-only">Our six services</h2>
+          <ServiceExpandGrid services={SERVICE_CARDS} />
         </div>
       </section>
 
