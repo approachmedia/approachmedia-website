@@ -32,14 +32,25 @@
 
 import { useEffect, useRef } from 'react'
 
-// ── the supplied constants, with the field made denser and heavier ──
+// ── the supplied constants. Only the grid spacing is changed. ──
 
-/** px per filing. Lower is denser. Canvas affords the density asked for. */
+/**
+ * px per filing. Lower is denser, and this is the one constant that moved:
+ * 48 to 30, which is the "more lines" that was asked for. At 30 the gap
+ * between a filing and its neighbour is 8px rather than 26, so the field
+ * reads as a continuous grain rather than scattered marks.
+ */
 const CELL_DESKTOP = 30
 /** Phones get a coarser grid — same density there is work nobody sees. */
 const CELL_MOBILE = 42
-const FILING_LENGTH = 30
-const FILING_THICKNESS = 3
+/**
+ * The supplied dimensions, left alone. Thickening these to 30x3 made the
+ * field read as a hatch pattern rather than iron filings — heavier lines at
+ * this spacing merge into each other instead of staying legible as
+ * individual needles.
+ */
+const FILING_LENGTH = 22
+const FILING_THICKNESS = 2
 
 /** The supplied spring. Lower damping wobbles more. */
 const STIFFNESS = 250
@@ -47,12 +58,12 @@ const DAMPING = 35
 const WANDER_SPEED = 1
 
 /**
- * The supplied 0.85 is for a hero whose only content is a centred headline
- * with a text-shadow. This hero carries a headline, a four-line paragraph,
- * two buttons and four metrics over the field, and at full strength the
- * paragraph was genuinely hard to read against it.
+ * The supplied value. It was dropped to 0.5 while the filings were 30x3,
+ * because that much ink over four lines of body copy was hard to read
+ * through; at the original 22x2 the field is light enough to carry its own
+ * strength, and the copy side is dimmed by a wash in Hero.tsx instead.
  */
-const FILING_OPACITY = 0.5
+const FILING_OPACITY = 0.85
 
 /** Blue to bright green — the site's accent sweep, and the supplied stops. */
 const GRADIENT_STOPS: [number, number, number][] = [
