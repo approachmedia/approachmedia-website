@@ -5,6 +5,7 @@ import { INTRO, BLOCKS } from './_content/services-hub'
 import { SERVICE_CARDS } from './_content/service-cards'
 import { ServiceExpandGrid } from '@/components/services/ServiceExpandGrid'
 import { ProcessSteps, type ProcessStep } from '@/components/services/ProcessSteps'
+import { BorderBeam } from '@/components/motion/BorderBeam'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata = {
@@ -163,20 +164,26 @@ export default function ServicesPage() {
           </div>
           <div className="principles-grid">
 
-            <div className="principle-card animate-in delay-1">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-1">
               <h3>Thoughtful personalisation</h3>
               <p>Every space is tailored to your brand's objectives, so what you want to communicate is understood instantly. No templates, no repeating formulas — each stall is built from the ground up with your brief at the centre.</p>
             </div>
+            </BorderBeam>
 
-            <div className="principle-card animate-in delay-2">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-2">
               <h3>Industry-aware thinking</h3>
               <p>We factor in your sector's context — what audiences expect and what builds credibility — so the space reflects industry-specific goals. A pharma brand and a real estate developer need very different things from the same show floor.</p>
             </div>
+            </BorderBeam>
 
-            <div className="principle-card animate-in delay-3">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-3">
               <h3>Clear, effective design</h3>
               <p>From layout and movement to interaction and detail, every element is intentional and designed to create a lasting impression. We design for outcomes, not aesthetics alone.</p>
             </div>
+            </BorderBeam>
 
           </div>
         </div>
