@@ -33,8 +33,18 @@ export interface ServiceCard {
   number: string
   title: string
   summary: string
+  /**
+   * Filename in the R2 folder images/services — the same six photographs the
+   * home page's service accordion already uses, deliberately not a second set.
+   * They are named after the slug, but kept explicit here so a rename cannot
+   * silently break a card.
+   */
+  image: string
   points: ServicePoint[]
 }
+
+/** The bucket folder the home accordion reads from. */
+export const SERVICE_IMAGE_CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'
 
 /**
  * The first block with a bullet list. Which block that is differs by service
@@ -57,6 +67,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Exhibition Stall Design',
     summary:
       'Concept-led spatial design that translates your brand identity into a high-impact exhibition space — from brief to 3D visualisation.',
+    image: 'exhibition-stall-design.jpg',
     points: firstBullets(designBlocks),
   },
   {
@@ -65,6 +76,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Custom Booth Fabrication',
     summary:
       'Precision-built structures from our own workshop — custom joinery, structural frames, surface finishes, to exact specifications.',
+    image: 'custom-booth-fabrication.jpg',
     points: firstBullets(fabricationBlocks),
   },
   {
@@ -73,6 +85,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Turnkey Project Management',
     summary:
       'Single-team accountability from first brief to post-event dismantle. One point of contact, zero coordination gaps.',
+    image: 'turnkey-project-management.jpg',
     points: firstBullets(turnkeyBlocks),
   },
   {
@@ -81,6 +94,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Audio-Visual & Tech Integration',
     summary:
       'LED walls, interactive screens, immersive sound and lighting — all planned and integrated within your stall from day one.',
+    image: 'av-technology-integration.jpg',
     points: fromTitled(avPoints),
   },
   {
@@ -89,6 +103,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Double Decker / Mezzanine Stands',
     summary:
       'Engineered multi-level structures that maximise floor presence and create a landmark on any show floor.',
+    image: 'double-decker-mezzanine-stands.jpg',
     points: firstBullets(doubleDeckerBlocks),
   },
   {
@@ -97,6 +112,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: 'Immersive Brand Experiences',
     summary:
       'Sensory-led brand environments — spatial narrative, lighting, sound, and interaction — designed to be remembered.',
+    image: 'immersive-brand-experience.jpg',
     points: fromTitled(immersivePoints),
   },
 ]
