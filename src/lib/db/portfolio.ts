@@ -407,3 +407,118 @@ export async function getAdminProjectList() {
     }
   })
 }
+
+// ─── Category board (admin) ──────────────────────────────────
+//
+// The category clean-up screen. A project sits in a category through a
+// ProjectIndustry row, and the public portfolio filters on `some` — any row,
+// primary or not — so this reads and writes the same way. Primary only
+// decides which name the main admin table shows in its Industry column.
+
+export async function getIndustryCategoryCounts() {
+  const [industries, uncategorised] = await Promise.all([
+    prisma.industry.findMany({
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true, slug: true, _count: { select: { projects: true } } },
+    }),
+    prisma.project.count({ where: { industries: { none: {} } } }),
+  ])
+
+  return {
+    industries: industries.map(i => ({ id: i.id, name: i.name, slug: i.slug, count: i._count.projects })),
+    uncategorised,
+  }
+}
+
+/** Everything in one category. Pass null for the projects that are in none. */
+export async function getProjectsInIndustry(slug: string | null) {
+  const [rows, cdnBase] = await Promise.all([
+    prisma.project.findMany({
+      where: slug
+        ? { industries: { some: { industry: { slug } } } }
+        : { industries: { none: {} } },
+      select: {
+        id: true, title: true, slug: true, status: true, buildYear: true,
+        client:     { select: { name: true } },
+        exhibition: { select: { name: true } },
+        industries: {
+          select: { isPrimary: true, industry: { select: { id: true, name: true, slug: true } } },
+        },
+        media: {
+          take: 1,
+          orderBy: [{ isHero: 'desc' }, { displayOrder: 'asc' }],
+          select: { url: true, cdnUrl: true, thumbnailUrl: true, altText: true },
+        },
+      },
+      orderBy: [{ client: { name: 'asc' } }, { title: 'asc' }],
+    }),
+    getCdnBaseUrl(),
+  ])
+
+  return rows.map(p => {
+    const m = p.media[0]
+    return {
+      id: p.id,
+      title: p.title,
+      slug: p.slug,
+      status: p.status,
+      buildYear: p.buildYear,
+      client: p.client?.name ?? null,
+      exhibition: p.exhibition?.name ?? null,
+      // Every category the project is in, so it is visible whether removing
+      // this one would leave it with none.
+      categories: p.industries.map(i => ({ ...i.industry, isPrimary: i.isPrimary })),
+      thumbnail: m ? buildMediaUrl(m.thumbnailUrl || m.cdnUrl || m.url, cdnBase) : null,
+      thumbnailAlt: m?.altText ?? p.title,
+    }
+  })
+}
+
+/**
+ * Put a project in a category, or take it out of one. Single row in, single
+ * row out — deliberately not updateProject, which replaces the whole set and
+ * whose schema requires at least one industry, so it cannot express "this
+ * project belongs in no category yet".
+ *
+ * isPrimary is housekeeping: the main admin table reads the primary row for
+ * its Industry column, so removing the primary from a project that still has
+ * other categories promotes one of them rather than leaving the column blank
+ * on a project that is still categorised.
+ */
+export async function setProjectIndustry(
+  projectId: number,
+  industryId: number,
+  op: 'add' | 'remove',
+) {
+  return prisma.$transaction(async tx => {
+    const rows = await tx.projectIndustry.findMany({
+      where: { projectId },
+      orderBy: { industryId: 'asc' },
+    })
+
+    if (op === 'add') {
+      if (rows.some(r => r.industryId === industryId)) return { ok: true, changed: false }
+      await tx.projectIndustry.create({
+        data: { projectId, industryId, isPrimary: rows.length === 0 },
+      })
+      return { ok: true, changed: true }
+    }
+
+    const target = rows.find(r => r.industryId === industryId)
+    if (!target) return { ok: true, changed: false }
+
+    await tx.projectIndustry.delete({
+      where: { projectId_industryId: { projectId, industryId } },
+    })
+
+    const remaining = rows.filter(r => r.industryId !== industryId)
+    if (target.isPrimary && remaining.length > 0) {
+      await tx.projectIndustry.update({
+        where: { projectId_industryId: { projectId, industryId: remaining[0].industryId } },
+        data: { isPrimary: true },
+      })
+    }
+
+    return { ok: true, changed: true }
+  })
+}
