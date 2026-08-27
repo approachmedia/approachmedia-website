@@ -123,6 +123,7 @@ export async function POST(req: NextRequest) {
             <tbody>
               ${row('Service',    d.service)}
               ${row('Stall Size', finalSize)}
+              ${row('Open Sides', d.open_sides)}
               ${row('Budget',     d.budget)}
               ${row('Floor Plan', attachment ? `${attachment.filename} — attached to this email` : undefined)}
             </tbody>

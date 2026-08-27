@@ -30,6 +30,22 @@ const SERVICES = [
   'Not sure yet',
 ]
 
+/**
+ * How many sides of the stand are open to the aisle — a corner, an end, an
+ * island. It changes the design before anything else does, which is why it
+ * sits next to the size rather than in the message.
+ *
+ * "Island" rather than the "Iland" it was asked for: that is the spelling
+ * used everywhere else on this site, including the stall-type names on the
+ * portfolio, and it should not read differently on the enquiry form.
+ */
+const OPEN_SIDES = [
+  'One Side Open',
+  'Two Side Open',
+  'Three Side Open',
+  'Island Stall',
+]
+
 const BUDGETS = [
   'Under ₹10L', '₹10L – ₹25L', '₹25L – ₹50L', '₹50L – ₹1Cr', '₹1Cr+',
 ]
@@ -60,7 +76,10 @@ function SelectField({
     <div>
       <Label htmlFor={name} className="text-sm">{label}</Label>
       <Select name={name} onValueChange={onValueChange}>
-        <SelectTrigger className="mt-2"><SelectValue placeholder="Select…" /></SelectTrigger>
+        {/* id, so the Label above actually points at something. Radix puts
+            the name on a hidden native select for the form data and leaves
+            the trigger without one, so htmlFor had nothing to bind to. */}
+        <SelectTrigger id={name} className="mt-2"><SelectValue placeholder="Select…" /></SelectTrigger>
         <SelectContent>
           {options.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
         </SelectContent>
@@ -321,6 +340,8 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
             the list went in as "Other", so the one number the brief actually
             turns on arrived rounded or missing. */}
         <Field label="Stall size" name="stall_size" placeholder="e.g. 6m x 6m" />
+
+        <SelectField label="Open sides" name="open_sides" options={OPEN_SIDES} />
 
         <SelectField label="Indicative budget" name="budget" options={BUDGETS} />
 
