@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { checkSubmission, escapeHtml, turnstileOk } from '@/lib/spam'
+import { readAttachment } from '@/lib/attachment'
 
 const TO   = 'info@approachmedia.in'
 const FROM = 'Approach Media Website <noreply@approachmedia.in>'
@@ -60,7 +61,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: 'That email address does not look right.' }, { status: 400 })
     }
 
+    // Stall size is typed now. The fallback is for a page still open in
+    // somebody's browser from before the change, which would post the old
+    // "Other" plus a separate custom value.
     const finalSize = d.stall_size === 'Other' ? (d.stall_size_custom || 'Other') : d.stall_size
+
+    // Read after the spam checks, so a dropped submission never costs the
+    // base64 decode of a 10 MB file.
+    const attachment = readAttachment(raw.floor_plan)
 
     const html = `
 <!DOCTYPE html>
@@ -102,6 +110,8 @@ export async function POST(req: NextRequest) {
               ${row('Venue',           d.venue)}
               ${row('Event Date',      d.event_date)}
               ${row('City / Country',  d.location)}
+              ${row('Stall No.',       d.stall_no)}
+              ${row('Hall No.',        d.hall_no)}
             </tbody>
           </table>
         </td></tr>
@@ -114,6 +124,7 @@ export async function POST(req: NextRequest) {
               ${row('Service',    d.service)}
               ${row('Stall Size', finalSize)}
               ${row('Budget',     d.budget)}
+              ${row('Floor Plan', attachment ? `${attachment.filename} — attached to this email` : undefined)}
             </tbody>
           </table>
         </td></tr>
@@ -149,6 +160,7 @@ export async function POST(req: NextRequest) {
       // carry a line break can carry a second header.
       subject: `Exhibition Enquiry — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
       html,
+      ...(attachment ? { attachments: [attachment] } : {}),
     })
 
     if (error) {

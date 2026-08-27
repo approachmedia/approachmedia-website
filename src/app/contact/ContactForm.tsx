@@ -1,8 +1,15 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Send, CheckCircle2 } from 'lucide-react'
-import { HONEYPOT_FIELD, TIMESTAMP_FIELD } from '@/lib/form-fields'
+import { Send, CheckCircle2, Paperclip, X } from 'lucide-react'
+import {
+  ATTACHMENT_ACCEPT,
+  ATTACHMENT_MAX_BYTES,
+  ATTACHMENT_TYPES,
+  HONEYPOT_FIELD,
+  TIMESTAMP_FIELD,
+  type AttachmentPayload,
+} from '@/lib/form-fields'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,11 +28,6 @@ const SERVICES = [
   'Double Decker / Mezzanine Stands',
   'Immersive Brand Experience Design',
   'Not sure yet',
-]
-
-const STALL_SIZES = [
-  '9 sqm', '18 sqm', '27 sqm', '36 sqm', '50 sqm',
-  '60–100 sqm', '100–200 sqm', '200–500 sqm', '500+ sqm', 'Other',
 ]
 
 const BUDGETS = [
@@ -67,15 +69,132 @@ function SelectField({
   )
 }
 
+// ── Floor-plan attachment ────────────────────────────────
+
+/** MB reads as "0.0 MB" for anything small, which looks like a failed read. */
+function fileSize(bytes: number) {
+  return bytes < 1024 * 1024
+    ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+    : `${(bytes / 1024 / 1024).toFixed(1)} MB`
+}
+
+/**
+ * An optional file, kept in React state rather than posted as part of the
+ * FormData. The submit handler flattens every FormData entry with
+ * `.toString()`, and a File stringifies to "[object File]" — so the input is
+ * deliberately nameless and the file is added to the payload by hand.
+ */
+function FloorPlanField({
+  file, error, onPick, onClear,
+}: {
+  file:    File | null
+  error:   string
+  onPick:  (f: File | null) => void
+  onClear: () => void
+}) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  return (
+    <div>
+      {/* A span, not a Label. The drop zone below is itself a <label for>, so
+          a second one pointing at the same input would give it two competing
+          associations; the input carries its own aria-label instead, which
+          also covers the attached state where the drop zone is gone. */}
+      <span className="block text-sm font-medium leading-none">
+        Floor plan <span className="text-muted-foreground">(optional)</span>
+      </span>
+
+      {file ? (
+        <div className="mt-2 flex h-10 items-center gap-2 rounded-md border border-input bg-background px-3 text-sm">
+          <Paperclip className="h-3.5 w-3.5 shrink-0 text-brand-green" />
+          <span className="flex-1 truncate text-foreground" title={file.name}>{file.name}</span>
+          <span className="shrink-0 text-xs text-muted-foreground">{fileSize(file.size)}</span>
+          <button
+            type="button"
+            onClick={() => {
+              onClear()
+              // The input keeps its value after a clear, so picking the same
+              // file again would not fire change.
+              if (inputRef.current) inputRef.current.value = ''
+            }}
+            aria-label="Remove the attached floor plan"
+            className="shrink-0 rounded p-0.5 text-muted-foreground transition-colors hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      ) : (
+        <label
+          htmlFor="floor_plan"
+          className="mt-2 flex h-10 cursor-pointer items-center gap-2 rounded-md border border-dashed border-input bg-background px-3 text-sm text-muted-foreground transition-colors hover:border-brand-green/60 hover:text-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background"
+        >
+          <Paperclip className="h-3.5 w-3.5 shrink-0" />
+          Attach the organiser&apos;s floor plan
+        </label>
+      )}
+
+      <input
+        ref={inputRef}
+        id="floor_plan"
+        type="file"
+        accept={ATTACHMENT_ACCEPT}
+        aria-label="Floor plan (optional)"
+        aria-describedby="floor_plan_hint"
+        onChange={e => onPick(e.target.files?.[0] ?? null)}
+        className="sr-only"
+      />
+
+      <p
+        id="floor_plan_hint"
+        role={error ? 'alert' : undefined}
+        className={`mt-1.5 text-xs ${error ? 'text-red-400' : 'text-muted-foreground'}`}
+      >
+        {error || `PDF or image, up to ${ATTACHMENT_MAX_BYTES / 1024 / 1024} MB.`}
+      </p>
+    </div>
+  )
+}
+
+/** Read a file as bare base64 — Resend takes the content without the data: prefix. */
+function toBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = String(reader.result)
+      resolve(result.slice(result.indexOf(',') + 1))
+    }
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
 // ── Main form ─────────────────────────────────────────────
 
 export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
-  const [loading, setLoading]         = useState(false)
-  const [success, setSuccess]         = useState(false)
-  const [error,   setError]           = useState('')
-  const [stallSize, setStallSize]     = useState('')
-  const [customSize, setCustomSize]   = useState('')
-  const renderedAt                    = useRef<HTMLInputElement>(null)
+  const [loading, setLoading]       = useState(false)
+  const [success, setSuccess]       = useState(false)
+  const [error,   setError]         = useState('')
+  const [plan,    setPlan]          = useState<File | null>(null)
+  const [planError, setPlanError]   = useState('')
+  const renderedAt                  = useRef<HTMLInputElement>(null)
+
+  // Checked here as well as in the route. The route is the one that counts —
+  // this only saves the visitor from uploading 40 MB before being told.
+  function pickPlan(file: File | null) {
+    if (!file) { setPlan(null); setPlanError(''); return }
+    if (file.size > ATTACHMENT_MAX_BYTES) {
+      setPlan(null)
+      setPlanError(`That file is ${fileSize(file.size)} — the limit is ${ATTACHMENT_MAX_BYTES / 1024 / 1024} MB.`)
+      return
+    }
+    if (!(ATTACHMENT_TYPES as readonly string[]).includes(file.type)) {
+      setPlan(null)
+      setPlanError('Attach a PDF or an image. For anything else, email it to info@approachmedia.in.')
+      return
+    }
+    setPlan(file)
+    setPlanError('')
+  }
 
   // Stamped after mount, not in the JSX: this page is prerendered, so a value
   // written into the markup would be the build time — the same for every
@@ -89,24 +208,32 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
     setLoading(true)
     setError('')
 
-    const formData = new FormData(e.currentTarget)
-    const data: Record<string, string> = {}
-    formData.forEach((v, k) => { data[k] = v.toString() })
-
-    if (stallSize === 'Other') data.stall_size_custom = customSize
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const payload: Record<string, unknown> = {}
+    formData.forEach((v, k) => { payload[k] = v.toString() })
 
     try {
+      if (plan) {
+        const attachment: AttachmentPayload = {
+          filename: plan.name,
+          mimeType: plan.type,
+          data:     await toBase64(plan),
+        }
+        payload.floor_plan = attachment
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       })
       const body = await res.json().catch(() => ({})) as { error?: string }
       if (!res.ok) throw new Error(body.error || 'Failed')
       setSuccess(true)
-      ;(e.target as HTMLFormElement).reset()
-      setStallSize('')
-      setCustomSize('')
+      form.reset()
+      setPlan(null)
+      setPlanError('')
     } catch (err) {
       // The route reports genuine validation problems — a mistyped address,
       // a missing required field — so show those rather than burying them
@@ -178,6 +305,10 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
           <Label htmlFor="event_date" className="text-sm">Event date <span className="text-muted-foreground">(optional)</span></Label>
           <Input id="event_date" name="event_date" type="date" className="mt-2" />
         </div>
+        {/* Stall and hall are what the organiser allocates, so they belong
+            with the exhibition rather than with the project brief. */}
+        <Field label="Stall no." name="stall_no" placeholder="e.g. B-14" />
+        <Field label="Hall no."  name="hall_no"  placeholder="e.g. Hall 5" />
       </div>
 
       {/* ── Project details ── */}
@@ -185,26 +316,20 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
       <div className="mt-4 grid gap-5 md:grid-cols-2">
         <SelectField label="Service of interest" name="service" options={SERVICES} />
 
-        {/* Stall size with "Other" expansion */}
-        <div className="space-y-2">
-          <SelectField
-            label="Stall size"
-            name="stall_size"
-            options={STALL_SIZES}
-            onValueChange={setStallSize}
-          />
-          {stallSize === 'Other' && (
-            <Input
-              name="stall_size_custom"
-              placeholder="Enter your stall size (e.g. 45 sqm)"
-              value={customSize}
-              onChange={e => setCustomSize(e.target.value)}
-              className="mt-2"
-            />
-          )}
-        </div>
+        {/* Typed rather than picked. The bracketed list could not express a
+            real allocation — 6m x 6m went in as "36 sqm", and anything not on
+            the list went in as "Other", so the one number the brief actually
+            turns on arrived rounded or missing. */}
+        <Field label="Stall size" name="stall_size" placeholder="e.g. 6m x 6m" />
 
         <SelectField label="Indicative budget" name="budget" options={BUDGETS} />
+
+        <FloorPlanField
+          file={plan}
+          error={planError}
+          onPick={pickPlan}
+          onClear={() => { setPlan(null); setPlanError('') }}
+        />
       </div>
 
       {/* ── Message ── */}
