@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About Approach Media · Exhibition Stall Design Since 2002</title>
+<meta name="description" content="Approach Media designs and builds custom exhibition stalls. 23+ years, 6000+ stalls, delivered across India and 14+ countries.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230A0D14'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="scrollcraft.css">
+<style>
+  /* The site's own tokens, hex-resolved. One accent: the brand green. */
+  :root {
+    --sc-canvas:     #0A0D14;
+    --sc-surface:    #111621;
+    --sc-ink:        #F5F5F6;
+    --sc-ink-soft:   #9AA1AD;
+    --sc-accent:     #4FC63A;
+    --sc-accent-ink: #0A0D14;
+    --sc-font-display: "Space Grotesk", system-ui, sans-serif;
+    --sc-font-text:    "Inter", system-ui, sans-serif;
+  }
+
+  /* ── site bar ─────────────────────────────────────────── */
+  .site-bar {
+    position: fixed; inset: 0 0 auto 0; z-index: 60;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem var(--sc-gutter);
+    background: linear-gradient(180deg, rgba(10,13,20,0.85), rgba(10,13,20,0));
+  }
+  .site-bar__mark {
+    font-family: var(--sc-font-display); font-weight: 700; font-size: 1rem;
+    letter-spacing: 0.01em; color: var(--sc-ink); text-decoration: none;
+  }
+  .site-bar__mark span { color: var(--sc-accent); }
+  .site-bar__cta {
+    font: 600 0.85rem/1 var(--sc-font-text); color: var(--sc-accent-ink);
+    background: var(--sc-accent); text-decoration: none;
+    padding: 0.65rem 1.1rem; border-radius: 0.55rem;
+    transition: transform 140ms var(--sc-ease-out);
+  }
+  .site-bar__cta:hover { transform: translateY(-1px); }
+  .site-bar__cta:active { transform: translateY(1px) scale(0.98); }
+
+  /* ── act 1 · hero ─────────────────────────────────────── */
+  .hero-copy p { max-width: 34ch; }
+  .hero-copy .sc-eyebrow { color: var(--sc-accent); }
+  /* The clip's white fascia passes under the copy at one frame, and the
+     headline reaches high into the frame, so a corner gradient cannot cover
+     it (stock corner measured 1.49:1 worst, a bottom-left radial 1.08:1).
+     Column of density under the text column instead: full height, left third,
+     and the stall stays clear of it on the right where the camera holds it. */
+  .hero-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(10,13,20,0.95) 0%, rgba(10,13,20,0.86) 40%, rgba(10,13,20,0.5) 62%, transparent 80%);
+  }
+  /* xl let "Remembered." run 60% across the frame and onto the white fascia
+     (2.13:1 at the worst frame). One size down keeps the words inside the
+     scrimmed column and gives the stall back the right half of the shot. */
+  .hero-copy .sc-display { font-size: clamp(2.6rem, 5.6vw, 4.6rem); }
+
+  /* ── act 2 · tension ──────────────────────────────────── */
+  .argument {
+    display: grid; place-items: center; text-align: center;
+    padding: 0 var(--sc-gutter);
+  }
+  .argument > p {
+    grid-area: 1 / 1; margin: 0; max-width: 24ch;
+    font-family: var(--sc-font-display); font-weight: 600;
+    font-size: clamp(1.6rem, 4.2vw, 3.4rem); line-height: 1.14;
+    letter-spacing: var(--sc-track-tight); text-wrap: balance;
+  }
+  .argument > p em { font-style: normal; color: var(--sc-accent); }
+
+  /* ── act 3 · inside ───────────────────────────────────── */
+  .inside-note .sc-eyebrow { color: var(--sc-accent); }
+  .inside-note h2 { max-width: 16ch; }
+  .inside-note p  { max-width: 36ch; }
+
+  /* ── act 4 · process ──────────────────────────────────── */
+  .process { padding-top: calc(var(--sc-section) * 0.4); }
+  .process ol {
+    list-style: none; margin: var(--sc-7) 0 0; padding: 0;
+    display: grid; gap: var(--sc-4);
+  }
+  .process li {
+    display: grid; grid-template-columns: 3.2rem 1fr; gap: var(--sc-4);
+    align-items: baseline; padding-top: var(--sc-4);
+    border-top: 1px solid rgba(245,245,246,0.12);
+  }
+  .process li b {
+    font-family: var(--sc-font-display); font-weight: 600;
+    color: var(--sc-ink-soft); font-variant-numeric: tabular-nums;
+  }
+  .process li h3 {
+    margin: 0; font-family: var(--sc-font-display); font-weight: 600;
+    font-size: 1.05rem; color: var(--sc-ink);
+  }
+  .process li p { margin: 0.3rem 0 0; font-size: 0.92rem; color: var(--sc-ink-soft); max-width: 62ch; }
+
+  /* ── act 5 · the install wall (peak, signature move) ──── */
+  .wall-stage { display: grid; place-items: center; overflow: hidden; }
+  .wall {
+    position: absolute; inset: 0; display: grid;
+    grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr);
+    gap: 10px; padding: 10px;
+  }
+  .wall figure { position: relative; margin: 0; overflow: hidden; border-radius: 6px; }
+  .wall img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  /* The move: each tile owns a threshold --t and a fly-from vector --fx/--fy.
+     Its own progress k ramps over 0.14 of act progress past the threshold,
+     driven from the act's --sc-p. No engine involvement. */
+  .wall figure {
+    --k: clamp(0, calc((var(--sc-p, 0) - var(--t)) / 0.14), 1);
+    opacity: var(--k);
+    transform: translate(calc((1 - var(--k)) * var(--fx)),
+                         calc((1 - var(--k)) * var(--fy)))
+               scale(calc(0.9 + 0.1 * var(--k)));
+  }
+  /* The wall dims as it completes so the tally reads on top of it. */
+  .wall::after {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(10,13,20, calc(0.4 + 0.28 * clamp(0, calc((var(--sc-p, 0) - 0.55) / 0.3), 1)));
+  }
+  /* A sibling of the copy, never a child: the harness hides the copy element
+     to photograph the frame beneath it, so a scrim inside it is unmeasured. */
+  .tally-scrim {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 68% 64% at 50% 50%, rgba(10,13,20,0.93), rgba(10,13,20,0.45) 70%, transparent 100%);
+  }
+  .tally { position: relative; text-align: center; padding: 0 var(--sc-gutter); }
+  .tally .sc-eyebrow { color: var(--sc-accent); }
+  .tally__big {
+    display: block; font-family: var(--sc-font-display); font-weight: 700;
+    font-size: clamp(4rem, 14vw, 11rem); line-height: 0.95;
+    letter-spacing: var(--sc-track-tight); color: var(--sc-ink);
+    text-shadow: 0 4px 40px rgba(10,13,20,0.8);
+  }
+  .tally__big small {
+    display: block; font: 600 clamp(0.8rem, 1.6vw, 1rem)/1.4 var(--sc-font-text);
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--sc-ink-soft);
+    margin-top: 0.6rem;
+  }
+  .tally__row {
+    display: flex; gap: clamp(1.2rem, 4vw, 3.2rem); justify-content: center;
+    margin-top: var(--sc-7); flex-wrap: wrap;
+  }
+  .tally__row div { text-align: center; }
+  .tally__row .sc-nums {
+    font-family: var(--sc-font-display); font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 2.2rem); color: var(--sc-ink);
+  }
+  .tally__row span.lbl {
+    display: block; font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--sc-ink-soft); margin-top: 0.25rem;
+  }
+
+  /* ── act 6 · close ────────────────────────────────────── */
+  .close { padding-bottom: var(--sc-6); }
+  .close__grid {
+    display: grid; gap: var(--sc-8); align-items: center;
+    grid-template-columns: 1.1fr 1fr;
+  }
+  .close__media {
+    position: relative; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(245,245,246,0.14);
+    aspect-ratio: 960 / 454; background: var(--sc-surface);
+  }
+  .close__media video, .close__media img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  .close__media figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 2rem 1.1rem 0.8rem;
+    background: linear-gradient(180deg, transparent, rgba(10,13,20,0.85));
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sc-ink-soft);
+  }
+  .close__copy h2 { max-width: 14ch; }
+  .close__copy .sc-body { max-width: 44ch; }
+  .close__cta {
+    display: inline-block; margin-top: var(--sc-6);
+    font: 600 1rem/1 var(--sc-font-text); color: var(--sc-accent-ink);
+    background: var(--sc-accent); text-decoration: none;
+    padding: 1rem 1.6rem; border-radius: 0.65rem;
+    transition: transform 140ms var(--sc-ease-out);
+  }
+  .close__cta:hover  { transform: translateY(-2px); }
+  .close__cta:active { transform: translateY(1px) scale(0.98); }
+  .foot {
+    margin-top: var(--sc-9); padding-top: var(--sc-5);
+    border-top: 1px solid rgba(245,245,246,0.1);
+    display: flex; justify-content: space-between; gap: var(--sc-4);
+    font-size: 0.8rem; color: var(--sc-ink-soft); flex-wrap: wrap;
+  }
+  .foot a { color: var(--sc-ink-soft); }
+
+  @media (max-width: 860px) {
+    .wall { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, 1fr); }
+    .close__grid { grid-template-columns: 1fr; }
+    .argument > p { font-size: clamp(1.5rem, 6.4vw, 2.2rem); }
+    /* On a portrait phone the copy spans the full width, so a left column
+       leaves its right half unscrimmed (1.33:1 measured). Bottom band. */
+    .hero-scrim {
+      background: linear-gradient(to top, rgba(10,13,20,0.95) 0%, rgba(10,13,20,0.9) 42%, rgba(10,13,20,0.5) 68%, transparent 88%);
+    }
+    .hero-copy .sc-display { font-size: clamp(2.1rem, 9vw, 2.9rem); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wall figure { opacity: 1; transform: none; }
+    .wall::after { background: rgba(10,13,20,0.6); }
+  }
+</style>
+</head>
+<body>
+
+<span data-sc-progress></span>
+<div class="sc-grain" aria-hidden="true"></div>
+
+<header class="site-bar">
+  <a class="site-bar__mark" href="https://www.approachmedia.in/">Approach<span>&nbsp;Media</span></a>
+  <a class="site-bar__cta" href="https://www.approachmedia.in/contact">Book a Consultation</a>
+</header>
+
+<main id="top">
+
+  <!-- 1 · RECOGNITION: the aisle, a stall ahead, moving under your hand -->
+  <section data-sc-act="scrub" data-sc-span="2.4" data-sc-dwell="0.34" data-sc-drift="#0A0D14" aria-label="Arrival">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="assets/01-approach-poster.webp" alt="">
+      <video data-sc-scrub data-sc-src="assets/01-approach.mp4"
+             data-sc-src-mobile="assets/01-approach-m.mp4" muted playsinline></video>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="sc-copy sc-copy--lead hero-copy" data-sc-cue="0 0.78 0">
+        <p class="sc-eyebrow">About Approach Media</p>
+        <h1 class="sc-display sc-display--xl" data-sc-kinetic="lines">Understood. Experienced. Remembered.</h1>
+        <p class="sc-body">We design unique exhibition stalls so that your brand is all three. This is one of ours, at a live show.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · TENSION: what a few seconds of attention costs -->
+  <section data-sc-act="pin" data-sc-span="2.2" data-sc-drift="#0C1019" aria-label="The stakes">
+    <div data-sc-stage class="argument">
+      <p data-sc-cue="0 0.34 0">Exhibitions are high-investment environments.</p>
+      <p data-sc-cue="0.28 0.62">A space has moments to communicate, engage, and be remembered.</p>
+      <p data-sc-cue="0.56 1 0.3 0"><em>In an ocean of lookalikes, those who stand apart will survive.</em></p>
+    </div>
+  </section>
+
+  <!-- 3 · CURIOSITY: inside the build, the parts called out where they sit -->
+  <section data-sc-act="scrub" data-sc-span="2.4" data-sc-dwell="0.3" data-sc-drift="#0E1219" aria-label="Inside the build">
+    <div data-sc-stage>
+      <img class="sc-stage__poster" src="assets/02-inside-poster.webp" alt="">
+      <video data-sc-scrub data-sc-src="assets/02-inside.mp4"
+             data-sc-src-mobile="assets/02-inside-m.mp4" muted playsinline></video>
+      <div class="sc-scrim sc-scrim--lead" aria-hidden="true"></div>
+      <div class="sc-copy sc-copy--lead inside-note" data-sc-cue="0 0.4 0">
+        <p class="sc-eyebrow">Step inside</p>
+        <h2 class="sc-display sc-display--lg">Everything here is built, not bought.</h2>
+      </div>
+      <div class="sc-copy sc-copy--lead inside-note" data-sc-cue="0.36 0.68">
+        <p class="sc-body">Custom fabrication from our own workshop. Joinery, structure and finishes to exact specification.</p>
+      </div>
+      <div class="sc-copy sc-copy--lead inside-note" data-sc-cue="0.62 0.94">
+        <p class="sc-body">Screens, lighting and sound planned inside the stall from day one, not bolted on at the venue.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · CONFIDENCE: the method, compressed. The authored quiet before the peak. -->
+  <section class="sc-section process" data-sc-act="flow" data-sc-drift="#0B0E15" aria-label="Process">
+    <div class="sc-wrap">
+      <div class="sc-stack" data-sc-in data-sc-stagger="60">
+        <h2 class="sc-display sc-display--md">How a stall gets built.</h2>
+        <p class="sc-body">One team, seven stages, no hand-offs. You stay informed at the decision points. We manage the rest.</p>
+      </div>
+      <ol data-sc-in data-sc-stagger="50">
+        <li><b>01</b><div><h3>Consultation and brief planning</h3><p>Brand, audience, objectives, space, budget, timelines.</p></div></li>
+        <li><b>02</b><div><h3>Concept and spatial design</h3><p>A customised concept that guides visitor flow.</p></div></li>
+        <li><b>03</b><div><h3>Engineering and technical detailing</h3><p>Drawings and specifications for structural integrity.</p></div></li>
+        <li><b>04</b><div><h3>Fabrication and build</h3><p>Produced in-house under controlled conditions.</p></div></li>
+        <li><b>05</b><div><h3>Full-scale mock-up testing</h3><p>The complete stall assembled and tested in our warehouse first.</p></div></li>
+        <li><b>06</b><div><h3>Logistics, installation and on-site execution</h3><p>Packing, transport, install: ready ahead of the event.</p></div></li>
+        <li><b>07</b><div><h3>Dismantling and post-event wrap-up</h3><p>Careful teardown, materials handled for reuse or storage.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 5 · AWE, the PEAK: the install wall. Tiles mortar in like panels on a
+       build, the tally is wired to the same scroll. Signature move. -->
+  <section data-sc-act="pin" data-sc-span="3.4" data-sc-drift="#0A0D14" aria-label="Since 2002">
+    <div data-sc-stage class="wall-stage">
+      <div class="wall" aria-hidden="true">
+        <figure style="--t:-0.1; --fx:-40vw; --fy:0vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/exhibition-stall-design.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.06; --fx:0vw;   --fy:-40vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/custom-booth-fabrication.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.12; --fx:40vw;  --fy:0vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/turnkey-project-management.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.18; --fx:0vw;   --fy:40vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/av-technology-integration.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.24; --fx:-40vw; --fy:10vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/double-decker-mezzanine-stands.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.30; --fx:40vw;  --fy:-10vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services/immersive-brand-experience.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.36; --fx:0vw;   --fy:-40vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/process/01-understand-plan.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.42; --fx:-40vw; --fy:0vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/process/02-design-detail.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.48; --fx:0vw;   --fy:40vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/process/03-build-test.jpg" loading="lazy" alt=""></figure>
+        <figure style="--t:0.54; --fx:40vw;  --fy:0vh"><img src="https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/process/04-execute-close.jpg" loading="lazy" alt=""></figure>
+      </div>
+      <div class="tally-scrim" aria-hidden="true"></div>
+      <div class="tally">
+        <p class="sc-eyebrow" data-sc-cue="0 0.96 0 0.12">Since 2002</p>
+        <span class="tally__big">
+          <span class="sc-nums" data-sc-count="0 6,000" data-sc-count-at="0.1 0.62">0</span>+
+          <small>stalls designed and built</small>
+        </span>
+        <div class="tally__row" data-sc-cue="0.5 0.96 0.2 0.12">
+          <div><span class="sc-nums" data-sc-count="0 23" data-sc-count-at="0.55 0.75">0</span>+<span class="lbl">years</span></div>
+          <div><span class="sc-nums" data-sc-count="0 14" data-sc-count-at="0.6 0.8">0</span>+<span class="lbl">countries</span></div>
+          <div><span class="sc-nums" data-sc-count="0 500" data-sc-count-at="0.65 0.85">0</span>+<span class="lbl">exhibitions a year</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · RESOLVE: the lounge. Sit down. One line, one action. Holds. -->
+  <section class="sc-section close" data-sc-act="flow" data-sc-drift="#0A0D14" aria-label="Start yours">
+    <div class="sc-wrap">
+      <div class="close__grid">
+        <figure class="close__media" data-sc-reveal="left" data-sc-reveal-at="0.05 0.45">
+          <video class="close__loop" muted loop playsinline preload="none"
+                 poster="assets/03-lounge-poster.webp" src="assets/03-lounge.mp4"></video>
+          <figcaption>Inside the client lounge, on the show floor</figcaption>
+        </figure>
+        <div class="close__copy sc-stack" data-sc-in data-sc-stagger="70">
+          <h2 class="sc-display sc-display--lg">Your stall is next.</h2>
+          <p class="sc-body">Tell us about your show. A project lead reviews every brief within one business day.</p>
+          <a class="close__cta" href="https://www.approachmedia.in/contact">Book a Consultation</a>
+        </div>
+      </div>
+      <footer class="foot">
+        <span>Approach Media Pvt. Ltd. · Ahmedabad, Gujarat</span>
+        <span><a href="https://www.approachmedia.in/portfolio">Portfolio</a> · <a href="https://www.approachmedia.in/services">Services</a></span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<script src="scrollcraft.js"></script>
+<script>
+  ScrollCraft.mount(document.body);
+  // The lounge loop plays only when in view and never under reduced motion.
+  (function () {
+    var v = document.querySelector('.close__loop');
+    if (!v || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.isIntersecting ? v.play().catch(function(){}) : v.pause(); });
+    }, { threshold: 0.25 }).observe(v);
+  })();
+</script>
+</body>
+</html>
