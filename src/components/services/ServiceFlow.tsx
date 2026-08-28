@@ -77,14 +77,16 @@ export type FlowItem = { num?: string; icon: LucideIcon; title: string; copy: st
  * (the un-pin slide would carry a lit cue across the next section).
  */
 function groupWindows(n: number): string[] {
-  // Width 0.32 against a step of ~0.235 leaves ~0.085 of overlap, so the
-  // outgoing pair is still fading while the next arrives. Abutting windows
-  // measured as a visible gap: both pairs near zero at the crossover.
+  // ~0.085 of overlap, so the outgoing pair is still fading while the next
+  // arrives. Abutting windows measured as a visible gap: both pairs near zero
+  // at the crossover. Solved from the overlap so any group count keeps it
+  // (n=3 lands on the verified 0.32-wide windows exactly).
   const windows: string[] = []
   const start = 0.18
   const end = 0.97
-  const width = 0.32
-  const step = (end - width - start) / Math.max(1, n - 1)
+  const overlap = 0.085
+  const step = (end - start - overlap) / Math.max(1, n)
+  const width = step + overlap
   for (let i = 0; i < n; i++) {
     const from = start + i * step
     windows.push(i === n - 1 ? `${from.toFixed(2)} ${end} 0.2 0.1` : `${from.toFixed(2)} ${(from + width).toFixed(2)}`)
@@ -93,7 +95,7 @@ function groupWindows(n: number): string[] {
 }
 
 export function FlowScrubSection({
-  ariaLabel, clip, eyebrow, title, cta, pairs,
+  ariaLabel, clip, eyebrow, title, cta, pairs, span = 3.6,
 }: {
   ariaLabel: string
   /** Basename in public/services-flow, encoded for scrubbing. */
@@ -103,6 +105,8 @@ export function FlowScrubSection({
   cta?: { href: string; label: string }
   /** Items grouped as they should land together, usually in twos. */
   pairs: FlowItem[][]
+  /** Scroll span in viewport-heights; raise it when there are more groups. */
+  span?: number
 }) {
   const rootRef = useRef<HTMLElement>(null)
   useScrollcraft(rootRef)
@@ -111,7 +115,7 @@ export function FlowScrubSection({
 
   return (
     <section ref={rootRef} className="sc-scope svc-flow" aria-label={ariaLabel}>
-      <div data-sc-act="scrub" data-sc-span="3.6" data-sc-dwell="0.3">
+      <div data-sc-act="scrub" data-sc-span={span} data-sc-dwell="0.3">
         <div data-sc-stage>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="sc-stage__poster" src={`${FLOW}/${clip}-poster.webp`} alt="" />
@@ -182,15 +186,22 @@ export function ProseReveal({ children }: { children: ReactNode }) {
         intro.setAttribute('data-sc-kinetic', 'lines')
       }
 
-      // Every block rises in with a stagger, once, as it enters.
-      // data-sc-in is what the engine's observer watches; data-sc-stagger on
-      // the same element staggers its children once it fires.
-      container.querySelectorAll(':scope > div').forEach(block => {
-        block.setAttribute('data-sc-in', '')
-        block.setAttribute('data-sc-stagger', '60')
-        block.querySelectorAll(':scope > ul').forEach(ul => {
-          ul.setAttribute('data-sc-in', '')
-          ul.setAttribute('data-sc-stagger', '50')
+      // Everything else reveals element by element as it enters, so the
+      // effect runs the full length of the section down to the closing plate.
+      // One data-sc-in per heading, paragraph and bullet: a whole block
+      // staggered from its top edge finishes animating (time-based) while its
+      // lower half is still below the fold, which reads as the effect
+      // stopping partway. data-sc-in is what the engine's observer watches.
+      const annotate = (el: Element) => el.setAttribute('data-sc-in', '')
+      Array.from(container.children).forEach(child => {
+        if (child === intro) return
+        if (child.tagName !== 'DIV') { annotate(child); return }
+        Array.from(child.children).forEach(part => {
+          if (part.tagName === 'UL' || part.tagName === 'OL') {
+            Array.from(part.children).forEach(annotate)
+          } else {
+            annotate(part)
+          }
         })
       })
 

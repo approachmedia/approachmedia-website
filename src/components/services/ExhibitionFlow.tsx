@@ -23,6 +23,7 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { canH264, useScrollcraft } from './ServiceFlow'
 import {
   ArrowRight, Award, Compass, Hammer, PenTool, Ruler, ShieldCheck, Truck,
   type LucideIcon,
@@ -56,49 +57,9 @@ const STEPS: Step[] = [
   { step: '06', icon: Truck, title: 'On-Site Execution', copy: 'Logistics, install, AV calibration and standby team for the full show duration.' },
 ]
 
-// ── engine loader, shared by both sections ──────────────────
-
-declare global {
-  interface Window { ScrollCraft?: { mount: (el: Element) => void } }
-}
-
-let enginePromise: Promise<void> | null = null
-
-function loadEngine(): Promise<void> {
-  if (window.ScrollCraft) return Promise.resolve()
-  if (!enginePromise) {
-    enginePromise = new Promise(resolve => {
-      const script = document.createElement('script')
-      script.src = '/about-flow/scrollcraft.js'
-      script.onload = () => resolve()
-      document.body.appendChild(script)
-    })
-  }
-  return enginePromise
-}
-
-function canH264(): boolean {
-  return document.createElement('video').canPlayType('video/mp4; codecs="avc1.42E01E"') !== ''
-}
-
-/** Mount the engine on one root, swapping scrub sources to VP9 where H.264 is unavailable. */
-function useScrollcraft(rootRef: React.RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    let cancelled = false
-    loadEngine().then(() => {
-      const root = rootRef.current
-      if (cancelled || !root) return
-      if (!canH264()) {
-        root.querySelectorAll<HTMLVideoElement>('video[data-sc-src]').forEach(v => {
-          v.dataset.scSrc = v.dataset.scSrc!.replace(/\.mp4$/, '.webm')
-          if (v.dataset.scSrcMobile) v.dataset.scSrcMobile = v.dataset.scSrc
-        })
-      }
-      window.ScrollCraft?.mount(root)
-    })
-    return () => { cancelled = true }
-  }, [rootRef])
-}
+// The engine loader and mount hook come from ServiceFlow (imported above), so
+// a page mixing these sections with ProseReveal never injects the engine
+// script twice.
 
 // ── section 1: why choose ───────────────────────────────────
 

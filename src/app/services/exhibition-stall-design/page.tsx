@@ -9,6 +9,7 @@ import {
 
 import { SITE_URL } from '@/lib/site-url'
 import { WhyChooseFlow, ProcessFlow } from '@/components/services/ExhibitionFlow'
+import { ProseReveal } from '@/components/services/ServiceFlow'
 import '@/styles/scrollcraft-engine.css'
 import '@/styles/service-flow.css'
 import './services-flow.css'
@@ -376,7 +377,9 @@ export default function ExhibitionStallDesignPage() {
         </div>
       </section>
 
-      <ProseSection eyebrow="How we design" intro={INTRO} blocks={BLOCKS} />
+      <ProseReveal>
+        <ProseSection eyebrow="How we design" intro={INTRO} blocks={BLOCKS} />
+      </ProseReveal>
       <ServiceCityLinks />
     </main>
   )

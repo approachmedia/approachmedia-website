@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  ArrowRight, Sparkles, ClipboardList, Calendar, Users, Globe2,
-  ShieldCheck, FileText, Trophy, MapPin,
+  ArrowRight, Sparkles, ClipboardList, Globe2,
+  ShieldCheck, Trophy, MapPin,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +12,10 @@ import {
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
+import { TurnkeyWhyFlow, TurnkeyProcessFlow } from '@/components/services/TurnkeyFlow'
+import { ProseReveal } from '@/components/services/ServiceFlow'
+import '@/styles/scrollcraft-engine.css'
+import '@/styles/service-flow.css'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/turnkey-project-management'
 export const metadata = {
@@ -39,25 +43,6 @@ const outcomes = [
   { stat: '1',     label: 'dedicated project manager' },
   { stat: '6000+', label: 'projects delivered' },
   { stat: '14+',   label: 'countries managed' },
-]
-
-const whyChoose = [
-  { icon: ClipboardList, title: 'Single accountability',      copy: 'One team owns every stage — design, fabrication, logistics, installation, and dismantling. No finger-pointing, no gaps, no surprises.' },
-  { icon: Calendar,      title: 'Timeline management',        copy: 'Structured milestone schedules, built-in buffer windows, and proactive replanning if anything shifts — so the show always opens on time.' },
-  { icon: Users,         title: 'Cross-team coordination',    copy: 'We coordinate internal teams, venue authorities, freight partners, and on-site crews under a single master plan you always have visibility into.' },
-  { icon: Globe2,        title: 'International execution',    copy: 'Exhibitions across 14+ countries. We manage local compliance, import documentation, ground-level logistics, and trusted regional partners.' },
-  { icon: ShieldCheck,   title: 'Risk management',            copy: 'Contingency plans for every critical path item. We identify and de-risk before mobilisation — not on the show floor.' },
-  { icon: FileText,      title: 'Transparent reporting',      copy: 'Regular status updates, budget trackers, and post-event documentation. You always know exactly where the project stands.' },
-]
-
-const processSteps = [
-  { step: '01', title: 'Brief',                   copy: 'We capture your event, brand goals, footprint, timeline, and budget in a focused discovery session.' },
-  { step: '02', title: 'Design',                  copy: 'Concept, mood, spatial layout and 3D walkthroughs — refined until you can see and feel the result.' },
-  { step: '03', title: 'Scope & Quote',            copy: 'A transparent, line-item budget covering every stage. No hidden vendor charges, no scope ambiguity.' },
-  { step: '04', title: 'Fabrication',              copy: 'Built in our 30,000 sq ft in-house warehouse — carpentry, metal, print, lighting, and AV under one roof.' },
-  { step: '05', title: 'QC Mock-up',               copy: 'The entire stand is erected and inspected end-to-end before it leaves our workshop.' },
-  { step: '06', title: 'Logistics & Installation', copy: 'Freight, venue approvals, on-site build, AV calibration, and a standby crew for every show day.' },
-  { step: '07', title: 'Dismantling',              copy: 'Clean, safe dismantle, asset return, and a full post-event project close-out report.' },
 ]
 
 const featurePills = [
@@ -210,39 +195,9 @@ export default function TurnkeyProjectManagementPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          WHY CHOOSE US
+          WHY CHOOSE US — scroll-driven, full-screen clip
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why choose Approach Media</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-                Six reasons project teams hand it over to us and sleep soundly.
-              </h2>
-            </div>
-            <Button asChild variant="glass" size="lg">
-              <Link href="/contact">Discuss your project <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {whyChoose.map(s => (
-              <div
-                key={s.title}
-                className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50"
-              >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
-                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TurnkeyWhyFlow />
 
       {/* ══════════════════════════════════════════════════
           GALLERY
@@ -343,42 +298,9 @@ export default function TurnkeyProjectManagementPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          PROCESS — 7 STEPS
+          PROCESS — 7 STEPS — scroll-driven, full-screen clip
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to dismantling</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-              A 7-step process with zero gaps in ownership.
-            </h2>
-            <p className="mt-5 text-muted-foreground">
-              Every step is planned, assigned, and tracked before the previous one
-              closes. No stage is handed to an external coordinator — our team owns
-              every transition.
-            </p>
-            <Button asChild variant="hero" size="lg" className="mt-7">
-              <Link href="/contact">Start your project <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
-          <div className="lg:col-span-8">
-            <ol className="space-y-4">
-              {processSteps.map(p => (
-                <li
-                  key={p.step}
-                  className="flex gap-5 rounded-2xl border border-white/15 bg-surface/40 p-6 transition-colors hover:border-brand-blue-glow/50"
-                >
-                  <div className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</div>
-                  <div>
-                    <h3 className="font-display text-lg font-semibold text-foreground">{p.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
+      <TurnkeyProcessFlow />
 
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
@@ -457,7 +379,9 @@ export default function TurnkeyProjectManagementPage() {
         </div>
       </section>
 
-      <ProseSection eyebrow="One scope, one team" intro={INTRO} blocks={BLOCKS} />
+      <ProseReveal>
+        <ProseSection eyebrow="One scope, one team" intro={INTRO} blocks={BLOCKS} />
+      </ProseReveal>
       <ServiceCityLinks />
     </main>
   )
