@@ -2,6 +2,10 @@ import { SITE_URL } from '@/lib/site-url'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from './_content/services-hub'
+import { SERVICE_CARDS } from './_content/service-cards'
+import { ServiceExpandGrid } from '@/components/services/ServiceExpandGrid'
+import { ProcessSteps, type ProcessStep } from '@/components/services/ProcessSteps'
+import { BorderBeam } from '@/components/motion/BorderBeam'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata = {
@@ -14,6 +18,43 @@ export const metadata = {
     url: `${SITE_URL}/services`,
   },
 }
+
+/**
+ * The four steps, with the photos uploaded to images/process. Copy is the
+ * numbered cards' own wording, moved out of the JSX so the row renders from
+ * a list. Alt text describes the photograph for someone who cannot see it;
+ * the step title is already a heading beside it, so it is not repeated.
+ */
+const PROCESS_STEPS: ProcessStep[] = [
+  {
+    num: '01',
+    title: 'Understand & Plan',
+    copy: 'We define your brand, audience, exhibition objectives, stand dimensions, and budget — then build the brief that drives every decision.',
+    image: '01-understand-plan.jpg',
+    alt: 'Approach Media team planning an exhibition stand brief with a client',
+  },
+  {
+    num: '02',
+    title: 'Design & Detail',
+    copy: 'Requirements translate into spatial concepts and 3D renderings. Once approved, full engineering drawings and material specs are locked before fabrication begins.',
+    image: '02-design-detail.jpg',
+    alt: 'A 3D exhibition stand rendering under review before fabrication',
+  },
+  {
+    num: '03',
+    title: 'Build & Test',
+    copy: 'Your stand is fabricated in our own workshop and assembled at full scale before dispatch — every element signed off before leaving our facility.',
+    image: '03-build-test.jpg',
+    alt: 'An exhibition stand being fabricated and assembled in the Approach Media workshop',
+  },
+  {
+    num: '04',
+    title: 'Execute & Close',
+    copy: 'We manage installation, hand over a ready-to-show stand, dismantle after the event, and close with full documentation.',
+    image: '04-execute-close.jpg',
+    alt: 'Installation of a completed exhibition stand on the show floor',
+  },
+]
 
 export default function ServicesPage() {
   return (
@@ -69,66 +110,11 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ═══ SECTION 2: SIX SERVICE CARDS (3-col, numbered) ═══════════════ */}
+      {/* ═══ SECTION 2: SIX SERVICE CARDS (expand on tap) ════════════════ */}
       <section className="section" id="services-list" aria-labelledby="services-list-heading">
         <div className="container">
-          <div className="srv-cards-grid" id="services-list-heading">
-
-            {/* Card 1 */}
-            <a href="/services/exhibition-stall-design" className="srv-card animate-in delay-1" aria-label="Exhibition Stall Design">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 01</span>
-              <h3>Exhibition Stall Design</h3>
-              <p>Concept-led spatial design that translates your brand identity into a high-impact exhibition space — from brief to 3D visualisation.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 2 */}
-            <a href="/services/custom-booth-fabrication" className="srv-card animate-in delay-2" aria-label="Custom Booth Fabrication">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 02</span>
-              <h3>Custom Booth Fabrication</h3>
-              <p>Precision-built structures from our own workshop — custom joinery, structural frames, surface finishes, to exact specifications.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 3 */}
-            <a href="/services/turnkey-project-management" className="srv-card animate-in delay-3" aria-label="Turnkey Project Management">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 03</span>
-              <h3>Turnkey Project Management</h3>
-              <p>Single-team accountability from first brief to post-event dismantle. One point of contact, zero coordination gaps.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 4 */}
-            <a href="/services/av-technology-integration" className="srv-card animate-in delay-1" aria-label="Audio Visual & Technology Integration">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 04</span>
-              <h3>Audio-Visual &amp; Tech Integration</h3>
-              <p>LED walls, interactive screens, immersive sound and lighting — all planned and integrated within your stall from day one.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 5 */}
-            <a href="/services/double-decker-mezzanine-stands" className="srv-card animate-in delay-2" aria-label="Double Decker / Mezzanine Stands">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 05</span>
-              <h3>Double Decker / Mezzanine Stands</h3>
-              <p>Engineered multi-level structures that maximise floor presence and create a landmark on any show floor.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-            {/* Card 6 */}
-            <a href="/services/immersive-brand-experience" className="srv-card animate-in delay-3" aria-label="Immersive Brand Experience Design">
-              <div className="srv-card-glow" aria-hidden="true"></div>
-              <span className="srv-card-number">Service 06</span>
-              <h3>Immersive Brand Experiences</h3>
-              <p>Sensory-led brand environments — spatial narrative, lighting, sound, and interaction — designed to be remembered.</p>
-              <span className="srv-card-cta">Explore service &#8599;</span>
-            </a>
-
-          </div>
+          <h2 id="services-list-heading" className="sr-only">Our six services</h2>
+          <ServiceExpandGrid services={SERVICE_CARDS} />
         </div>
       </section>
 
@@ -163,33 +149,9 @@ export default function ServicesPage() {
             <span className="section-label">What happens after you reach out?</span>
             <h2 id="process-srv-heading">A clear process from idea to installation</h2>
           </div>
-          <div className="flow-grid">
-
-            <div className="flow-card animate-in delay-1">
-              <span className="flow-num">01</span>
-              <h3>Understand &amp; Plan</h3>
-              <p>We define your brand, audience, exhibition objectives, stand dimensions, and budget — then build the brief that drives every decision.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-2">
-              <span className="flow-num">02</span>
-              <h3>Design &amp; Detail</h3>
-              <p>Requirements translate into spatial concepts and 3D renderings. Once approved, full engineering drawings and material specs are locked before fabrication begins.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-3">
-              <span className="flow-num">03</span>
-              <h3>Build &amp; Test</h3>
-              <p>Your stand is fabricated in our own workshop and assembled at full scale before dispatch — every element signed off before leaving our facility.</p>
-            </div>
-
-            <div className="flow-card animate-in delay-4">
-              <span className="flow-num">04</span>
-              <h3>Execute &amp; Close</h3>
-              <p>We manage installation, hand over a ready-to-show stand, dismantle after the event, and close with full documentation.</p>
-            </div>
-
-          </div>
+          {/* Photo cards. Copy is unchanged from the numbered cards these
+              replace — same four steps, same words, same order. */}
+          <ProcessSteps steps={PROCESS_STEPS} />
         </div>
       </section>
 
@@ -202,20 +164,26 @@ export default function ServicesPage() {
           </div>
           <div className="principles-grid">
 
-            <div className="principle-card animate-in delay-1">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-1">
               <h3>Thoughtful personalisation</h3>
               <p>Every space is tailored to your brand's objectives, so what you want to communicate is understood instantly. No templates, no repeating formulas — each stall is built from the ground up with your brief at the centre.</p>
             </div>
+            </BorderBeam>
 
-            <div className="principle-card animate-in delay-2">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-2">
               <h3>Industry-aware thinking</h3>
               <p>We factor in your sector's context — what audiences expect and what builds credibility — so the space reflects industry-specific goals. A pharma brand and a real estate developer need very different things from the same show floor.</p>
             </div>
+            </BorderBeam>
 
-            <div className="principle-card animate-in delay-3">
+            <BorderBeam radius="16px" className="h-full">
+              <div className="h-full principle-card animate-in delay-3">
               <h3>Clear, effective design</h3>
               <p>From layout and movement to interaction and detail, every element is intentional and designed to create a lasting impression. We design for outcomes, not aesthetics alone.</p>
             </div>
+            </BorderBeam>
 
           </div>
         </div>
