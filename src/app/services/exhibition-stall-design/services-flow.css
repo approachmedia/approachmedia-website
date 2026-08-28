@@ -75,33 +75,6 @@
   opacity: min(var(--rise), var(--fall));
 }
 
-/* ── process: steps landing over the scrub ──────────────── */
-.pf-scrim {
-  position: absolute; inset: 0;
-  background: linear-gradient(to right, rgba(10, 13, 20, 0.94) 0%, rgba(10, 13, 20, 0.82) 42%, rgba(10, 13, 20, 0.45) 64%, transparent 82%);
-}
-.pf-copy { max-width: 34rem; }
-.pf-title {
-  margin: 0.6rem 0 0; max-width: 18ch;
-  font-family: var(--sc-font-display); font-weight: 600;
-  font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1.1;
-  letter-spacing: var(--sc-track-tight); color: var(--sc-ink); text-wrap: balance;
-}
-.pf-step { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1rem; }
-.pf-step + .pf-step { margin-top: 1.4rem; }
-.pf-num {
-  font-family: var(--sc-font-display); font-weight: 700;
-  font-size: 2rem; line-height: 1; color: var(--sc-accent);
-  font-variant-numeric: tabular-nums;
-}
-.pf-step h3 {
-  display: flex; align-items: center; gap: 0.5rem; margin: 0;
-  font-family: var(--sc-font-display); font-weight: 600;
-  font-size: 1.15rem; color: var(--sc-ink);
-}
-.pf-step h3 svg { width: 1rem; height: 1rem; color: var(--sc-accent); }
-.pf-step p { margin: 0.35rem 0 0; font-size: 0.9rem; line-height: 1.6; color: rgba(245, 245, 246, 0.82); max-width: 44ch; }
-
 /* ── narrow screens ─────────────────────────────────────── */
 @media (max-width: 860px) {
   .wf-stage { padding-top: 4rem; gap: var(--sc-5); }
@@ -123,10 +96,11 @@
     transform: translateY(calc((1 - var(--k)) * 10px));
   }
   .wf-more { display: none; }
-  .pf-scrim {
+  /* This page's process section keeps its original fading head, so its
+     mobile scrim is a single bottom band rather than the shared two-band. */
+  .esd-flow .pf-scrim {
     background: linear-gradient(to top, rgba(10, 13, 20, 0.94) 0%, rgba(10, 13, 20, 0.88) 46%, rgba(10, 13, 20, 0.5) 70%, transparent 90%);
   }
-  .pf-step + .pf-step { margin-top: 1rem; }
 }
 
 /* ── reduced motion: everything visible, nothing moving ─── */

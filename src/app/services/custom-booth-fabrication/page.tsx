@@ -1,9 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  ArrowRight, Sparkles, Hammer, ShieldCheck, Wrench, Truck,
-  Layers, Award, Trophy, Clock, Ruler,
-} from 'lucide-react'
+import { ArrowRight, Sparkles, ShieldCheck, Wrench, Truck, Layers, Award, Trophy, Ruler } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
@@ -12,6 +9,10 @@ import {
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
+import { FabWhyFlow, FabProcessFlow } from '@/components/services/CustomBoothFlow'
+import { ProseReveal } from '@/components/services/ServiceFlow'
+import '@/styles/scrollcraft-engine.css'
+import '@/styles/service-flow.css'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/custom-booth-fabrication'
 export const metadata = {
@@ -34,29 +35,11 @@ const trustBadges = [
   { icon: ShieldCheck, label: 'ISO-grade quality' },
 ]
 
-const whyChoose = [
-  { icon: Hammer,     title: 'In-house workshop',          copy: 'Our own 30,000 sq ft facility houses carpentry, metal, print, electricals and finishing under one roof — no third-party delays, no quality compromises.' },
-  { icon: ShieldCheck, title: 'Full mock-up QC',            copy: 'Every booth is fully erected and inspected in our warehouse before it ships. What you approve in the warehouse is exactly what appears on the floor.' },
-  { icon: Wrench,     title: 'Precision engineering',       copy: 'Working drawings, tight tolerances and experienced fabricators mean every component fits the first time — millimetre accuracy on every joint and surface.' },
-  { icon: Truck,      title: 'End-to-end logistics',        copy: 'Crating, freight, customs clearance, on-site installation and post-show dismantling — one accountable team from our workshop door to the exhibition floor.' },
-  { icon: Layers,     title: 'Material mastery',            copy: 'Premium veneers, structural steel, fire-rated panels, edge-lit acrylic — we specify and source the right material for the right structural and aesthetic role.' },
-  { icon: Award,      title: 'International standards',     copy: 'Booths built to satisfy venue safety norms in Frankfurt, Dubai, Singapore and Mumbai — load ratings, fire certifications, and clean finishes every time.' },
-]
-
 const outcomes = [
   { stat: '30,000',  label: 'sq ft in-house workshop' },
   { stat: '100%',    label: 'mock-up tested before dispatch' },
   { stat: '6000+',   label: 'booths fabricated' },
   { stat: '14+',     label: 'countries delivered' },
-]
-
-const process = [
-  { step: '01', icon: Wrench,     title: 'Brief & Engineering',      copy: 'We review your design brief, exhibition specs and site conditions — turning creative intent into a buildable, costed plan.' },
-  { step: '02', icon: Ruler,      title: 'Technical Drawings',        copy: 'Precise fabrication drawings with component breakdowns, tolerances and material callouts. Nothing goes to the shop floor without engineering sign-off.' },
-  { step: '03', icon: Layers,     title: 'Material Sourcing',         copy: 'We procure veneers, structural steel, panels, hardware and finishes from vetted suppliers — checked against spec before cutting begins.' },
-  { step: '04', icon: Hammer,     title: 'In-House Fabrication',      copy: 'Carpentry, metalwork, finishing and branding elements are all produced in our 30,000 sq ft workshop by permanent, skilled teams.' },
-  { step: '05', icon: ShieldCheck, title: 'Mock-Up & QC',              copy: 'The entire booth is assembled and inspected under show conditions. Dimensions, finishes, joints and hardware are signed off before crating.' },
-  { step: '06', icon: Truck,      title: 'On-Site Installation',      copy: 'Our crew handles freight, on-site assembly, AV hook-up and standby support for the full show duration, then full dismantling after.' },
 ]
 
 const materials = [
@@ -209,36 +192,10 @@ export default function CustomBoothFabricationPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          WHY CHOOSE US
+          WHY CHOOSE US · full-screen video + text: reasons land in
+          pairs over a real build scrubbing under the wheel.
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why choose Approach Media</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-                Six reasons project managers sleep better with us on the build.
-              </h2>
-            </div>
-            <Button asChild variant="glass" size="lg">
-              <Link href="/contact">Discuss your project <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {whyChoose.map(s => (
-              <div key={s.title} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50">
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
-                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FabWhyFlow />
 
       {/* ══════════════════════════════════════════════════
           GALLERY SHOWCASE
@@ -336,31 +293,10 @@ export default function CustomBoothFabricationPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          PROCESS — 6 STEPS
+          PROCESS · full-screen video + text: the six steps land in
+          pairs over the build clip.
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to on-site installation</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-              A 6-step fabrication process built around zero surprises.
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {process.map(p => (
-              <div key={p.step} className="relative rounded-2xl border border-white/15 bg-surface/40 p-7 transition-colors hover:border-brand-blue-glow/50">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</span>
-                  <p.icon className="h-5 w-5 text-brand-green" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FabProcessFlow />
 
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
@@ -440,7 +376,10 @@ export default function CustomBoothFabricationPage() {
         </div>
       </section>
 
-      <ProseSection eyebrow="How we build" intro={INTRO} blocks={BLOCKS} />
+      {/* Text animation on the client only; the served prose is untouched. */}
+      <ProseReveal>
+        <ProseSection eyebrow="How we build" intro={INTRO} blocks={BLOCKS} />
+      </ProseReveal>
       <ServiceCityLinks />
     </main>
   )

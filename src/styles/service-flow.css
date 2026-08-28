@@ -1,0 +1,79 @@
+/* Shared styles for the service-page scrollcraft sections: the
+   full-screen video + text pattern (pf-*) used by FlowScrubSection on every
+   service page, and the prose reveal wrapper. Engine base styles and brand
+   tokens come from scrollcraft-engine.css under .sc-scope. */
+
+.svc-flow .sc-eyebrow, .svc-prose .sc-eyebrow { color: var(--sc-accent); }
+
+/* ── process: steps landing over the scrub ──────────────── */
+.pf-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(10, 13, 20, 0.94) 0%, rgba(10, 13, 20, 0.82) 42%, rgba(10, 13, 20, 0.45) 64%, transparent 82%);
+}
+.pf-copy { max-width: 34rem; }
+.pf-title {
+  margin: 0.6rem 0 0; max-width: 18ch;
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1.1;
+  letter-spacing: var(--sc-track-tight); color: var(--sc-ink); text-wrap: balance;
+}
+.pf-step { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1rem; }
+.pf-step + .pf-step { margin-top: 1.4rem; }
+.pf-num {
+  font-family: var(--sc-font-display); font-weight: 700;
+  font-size: 2rem; line-height: 1; color: var(--sc-accent);
+  font-variant-numeric: tabular-nums;
+}
+.pf-step h3 {
+  display: flex; align-items: center; gap: 0.5rem; margin: 0;
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: 1.15rem; color: var(--sc-ink);
+}
+.pf-step h3 svg { width: 1rem; height: 1rem; color: var(--sc-accent); }
+.pf-step p { margin: 0.35rem 0 0; font-size: 0.9rem; line-height: 1.6; color: rgba(245, 245, 246, 0.82); max-width: 44ch; }
+
+
+/* The persistent head: eyebrow, title and the one CTA hold near the top of
+   the frame for the whole act while the item pairs land at the lower left. */
+.pf-copy--head { bottom: auto; top: clamp(5.5rem, 12vh, 8rem); }
+.pf-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 1.1rem; padding: 0.8rem 1.3rem; border-radius: 0.6rem;
+  font: 600 0.92rem/1 var(--sc-font-text);
+  color: var(--sc-accent-ink); background: var(--sc-accent); text-decoration: none;
+  transition: transform 140ms var(--sc-ease-out);
+}
+.pf-cta:hover  { transform: translateY(-2px); }
+.pf-cta:active { transform: translateY(1px) scale(0.98); }
+.pf-cta svg { width: 1rem; height: 1rem; }
+.pf-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.6rem; height: 2.6rem; border-radius: 10px;
+  background: rgba(79, 198, 58, 0.14); color: var(--sc-accent);
+}
+.pf-badge svg { width: 1.2rem; height: 1.2rem; }
+
+/* The prose wrapper sits on the page's own ground, not the engine canvas. */
+.svc-prose { background: transparent; }
+
+@media (max-width: 860px) {
+  .pf-copy--head { top: 5rem; }
+  .pf-cta { margin-top: 0.9rem; padding: 0.7rem 1.1rem; }
+  /* Head at the top and pairs at the bottom both need ground on a phone,
+     where the copy spans the full width: two bands, clear middle. */
+  .pf-scrim {
+    background: linear-gradient(to bottom,
+      rgba(10, 13, 20, 0.95) 0%, rgba(10, 13, 20, 0.9) 34%, transparent 47%,
+      transparent 51%, rgba(10, 13, 20, 0.9) 64%, rgba(10, 13, 20, 0.95) 100%);
+  }
+  .pf-step + .pf-step { margin-top: 1rem; }
+  .pf-title { font-size: clamp(1.45rem, 6.4vw, 2rem); }
+  /* The item pairs stack tall on a phone and cross the scrim's waist, which
+     measured 2.2:1 at the clip's brightest frame. A plate under the copy is
+     immune to whatever the film does. */
+  .pf-copy:not(.pf-copy--head) {
+    background: rgba(10, 13, 20, 0.88);
+    border-radius: 12px; padding: 1rem 1.1rem;
+    right: var(--sc-gutter); max-width: none;
+  }
+}

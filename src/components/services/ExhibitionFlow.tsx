@@ -207,7 +207,7 @@ export function ProcessFlow() {
   const windows = ['0.24 0.5', '0.46 0.72', '0.66 0.97 0.2 0.1']
 
   return (
-    <section ref={rootRef} className="sc-scope svc-flow" aria-label="Our six step process">
+    <section ref={rootRef} className="sc-scope svc-flow esd-flow" aria-label="Our six step process">
       <div data-sc-act="scrub" data-sc-span="3.6" data-sc-dwell="0.3">
         <div data-sc-stage>
           {/* eslint-disable-next-line @next/next/no-img-element */}

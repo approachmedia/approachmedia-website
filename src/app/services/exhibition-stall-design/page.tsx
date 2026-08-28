@@ -10,6 +10,7 @@ import {
 import { SITE_URL } from '@/lib/site-url'
 import { WhyChooseFlow, ProcessFlow } from '@/components/services/ExhibitionFlow'
 import '@/styles/scrollcraft-engine.css'
+import '@/styles/service-flow.css'
 import './services-flow.css'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
