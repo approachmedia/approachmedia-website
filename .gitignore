@@ -11,3 +11,4 @@ scrollcraft/builds/*/node_modules/
 scrollcraft/builds/*/verify.html
 scrollcraft/builds/*/assets/*.webm
 scrollcraft/builds/*/assets/v*.webp
+clips/.DS_Store

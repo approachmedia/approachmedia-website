@@ -1,10 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  ArrowRight, CheckCircle2, Compass, PenTool, Hammer, Truck,
-  ShieldCheck, Sparkles, Trophy, Users, Clock, Ruler, Layers,
-  Lightbulb, Award,
-} from 'lucide-react'
+import { ArrowRight, PenTool, ShieldCheck, Sparkles, Trophy, Users, Clock, Ruler, Layers, Lightbulb } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import RevealList from '@/components/ui/RevealList'
 import {
@@ -12,6 +8,9 @@ import {
 } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import { WhyChooseFlow, ProcessFlow } from '@/components/services/ExhibitionFlow'
+import '@/styles/scrollcraft-engine.css'
+import './services-flow.css'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
@@ -36,29 +35,11 @@ const trustBadges = [
   { icon: ShieldCheck, label: 'ISO-grade build quality' },
 ]
 
-const whyChoose = [
-  { icon: PenTool,    title: 'Concept-first design',        copy: 'Every stall starts with a brand truth and a visitor journey — not a template. 3D walkthroughs before a single panel is cut.' },
-  { icon: Hammer,     title: 'Owned 30,000 sq ft workshop', copy: 'Carpentry, metal, print, electricals and finishing all under one roof — no third-party guesswork, no last-minute compromises.' },
-  { icon: ShieldCheck, title: 'Full-scale mock-up testing',  copy: 'Your stall is fully built and inspected in our warehouse before it ships. What you approve is what shows up on the floor.' },
-  { icon: Truck,      title: 'End-to-end execution',        copy: 'Design, fabrication, logistics, on-site installation and dismantling — one team, one point of accountability, zero finger-pointing.' },
-  { icon: Compass,    title: 'Industry-aware design',       copy: 'Pharma, real estate, FMCG, textiles, manufacturing, automotive — we shape stalls around how your buyers actually behave.' },
-  { icon: Award,      title: 'International build standards', copy: 'Stalls built to perform in Frankfurt, Dubai, Paris and Mumbai — premium materials, safe loadings, clean finishes.' },
-]
-
 const stallTypes = [
   { title: 'Custom Built Stalls',   copy: 'Fully bespoke, brand-led architecture — your most powerful on-floor asset.',                      img: 'stall-gallery-1.jpg', alt: 'Modern white custom exhibition stall with lounge' },
   { title: 'Double-Decker Stalls',  copy: 'Maximize footprint with a private upper lounge for high-value meetings.',                        img: 'stall-gallery-4.jpg', alt: 'Double-decker exhibition stand with full LED walls' },
   { title: 'Modular Stalls',        copy: 'Reusable, reconfigurable systems for brands exhibiting across multiple shows.',                   img: 'stall-gallery-2.jpg', alt: 'Bold geometric exhibition booth with LED fins' },
   { title: 'Country Pavilions',     copy: 'Large-format pavilions that host multiple brands under one cohesive story.',                     img: 'stall-gallery-3.jpg', alt: 'Luxury reception with wood paneling and ring light' },
-]
-
-const process = [
-  { step: '01', icon: Compass,    title: 'Brief & Discovery',     copy: 'We map your goals, audience, footprint and KPIs in a focused 30-minute session.' },
-  { step: '02', icon: PenTool,    title: 'Concept & 3D Design',   copy: 'Mood, layout and 3D walkthrough renders — refined until you can already feel the stall.' },
-  { step: '03', icon: Ruler,      title: 'Engineering & Costing', copy: 'Working drawings, material specs and a transparent line-item budget. No surprises.' },
-  { step: '04', icon: Hammer,     title: 'Fabrication',           copy: 'Built in our 30,000 sq ft warehouse by in-house carpenters, metal and finishing teams.' },
-  { step: '05', icon: ShieldCheck, title: 'Mock-Up & QC',          copy: 'Stall is fully erected and inspected end-to-end before it leaves the workshop.' },
-  { step: '06', icon: Truck,      title: 'On-Site Execution',     copy: 'Logistics, install, AV calibration and standby team for the full show duration.' },
 ]
 
 const promises = [
@@ -173,36 +154,10 @@ export default function ExhibitionStallDesignPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          WHY CHOOSE US
+          WHY CHOOSE US · scroll-driven: reasons dock beside a proof
+          panel of real build footage. Copy unchanged, served HTML.
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">Why choose Approach Media</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-                Six reasons marketing heads sleep better with us on the project.
-              </h2>
-            </div>
-            <Button asChild variant="glass" size="lg">
-              <Link href="/portfolio">See recent stalls <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {whyChoose.map(s => (
-              <div key={s.title} className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50">
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
-                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WhyChooseFlow />
 
       {/* ══════════════════════════════════════════════════
           GALLERY SHOWCASE
@@ -318,31 +273,10 @@ export default function ExhibitionStallDesignPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          PROCESS — 6 STEPS
+          PROCESS · scroll-driven: the six steps land in pairs over a
+          clip of a finished build scrubbing under the wheel.
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to dismantling</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-              A 6-step process built around your peace of mind.
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {process.map(p => (
-              <div key={p.step} className="relative rounded-2xl border border-white/15 bg-surface/40 p-7 transition-colors hover:border-brand-blue-glow/50">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</span>
-                  <p.icon className="h-5 w-5 text-brand-green" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ProcessFlow />
 
       {/* ══════════════════════════════════════════════════
           OUR PROMISE

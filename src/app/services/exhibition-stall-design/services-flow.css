@@ -1,0 +1,137 @@
+/* The two scroll-driven sections on /services/exhibition-stall-design.
+   Engine base styles and brand tokens come from styles/scrollcraft-engine.css
+   under .sc-scope; this file is only the sections' own layout.
+
+   Both sections dock and crossfade from the act's --sc-p with a plateau
+   window per element: rise into the window centre --w, hold, fall after it.
+   min(rise, fall) is the element's own progress k. The last element's fall is
+   pinned to 1 (--last) so the act never ends on a faded state. */
+
+/* ── shared ─────────────────────────────────────────────── */
+.svc-flow .sc-eyebrow { color: var(--sc-accent); }
+
+/* ── why choose: the docking list + proof panel ─────────── */
+.wf-stage {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: var(--sc-5); padding: 6.5rem var(--sc-gutter) var(--sc-5);
+  max-width: 88rem; margin: 0 auto; width: 100%;
+}
+.wf-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sc-4) var(--sc-7); }
+.wf-title {
+  margin: 0.5rem 0 0; max-width: 30ch;
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.12;
+  letter-spacing: var(--sc-track-tight); color: var(--sc-ink); text-wrap: balance;
+}
+.wf-head > p { margin: 0; width: 100%; }
+.wf-more {
+  display: inline-flex; align-items: center; gap: 0.4rem; margin-left: auto;
+  font: 500 0.9rem/1 var(--sc-font-text); color: var(--sc-accent); text-decoration: none;
+}
+.wf-more svg { width: 1rem; height: 1rem; }
+
+.wf-grid {
+  display: grid; grid-template-columns: 1fr 1.05fr;
+  gap: var(--sc-8); align-items: center; min-height: 0;
+}
+
+.wf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.wf-list li {
+  --rise: clamp(0, calc((var(--sc-p, 0) - (var(--w) - 0.12)) / 0.07), 1);
+  --fall: max(var(--last), clamp(0, calc(((var(--w) + 0.12) - var(--sc-p, 0)) / 0.07), 1));
+  --k: min(var(--rise), var(--fall));
+  display: grid; grid-template-columns: 2.3rem 1fr; gap: 0.8rem;
+  padding: 0.7rem 0.9rem; border-radius: 12px;
+  border: 1px solid rgba(245, 245, 246, calc(0.08 + 0.22 * var(--k)));
+  background: rgba(17, 22, 33, calc(0.25 + 0.55 * var(--k)));
+  opacity: calc(0.45 + 0.55 * var(--k));
+  transform: translateX(calc((1 - var(--k)) * 14px));
+}
+.wf-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.3rem; height: 2.3rem; border-radius: 9px;
+  background: rgba(79, 198, 58, calc(0.06 + 0.14 * var(--k)));
+  color: var(--sc-accent);
+}
+.wf-icon svg { width: 1.15rem; height: 1.15rem; }
+.wf-list h3 {
+  margin: 0; font-family: var(--sc-font-display); font-weight: 600;
+  font-size: 0.95rem; color: var(--sc-ink);
+}
+.wf-list p {
+  margin: 0.2rem 0 0; font-size: 0.8rem; line-height: 1.45;
+  color: var(--sc-ink-soft);
+}
+
+.wf-panel {
+  position: relative; margin: 0; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(245, 245, 246, 0.14); background: var(--sc-surface);
+  aspect-ratio: 16 / 9; align-self: center;
+}
+.wf-panel video {
+  --rise: clamp(0, calc((var(--sc-p, 0) - (var(--w) - 0.1)) / 0.06), 1);
+  --fall: max(var(--last), clamp(0, calc(((var(--w) + 0.1) - var(--sc-p, 0)) / 0.06), 1));
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: min(var(--rise), var(--fall));
+}
+
+/* ── process: steps landing over the scrub ──────────────── */
+.pf-scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(10, 13, 20, 0.94) 0%, rgba(10, 13, 20, 0.82) 42%, rgba(10, 13, 20, 0.45) 64%, transparent 82%);
+}
+.pf-copy { max-width: 34rem; }
+.pf-title {
+  margin: 0.6rem 0 0; max-width: 18ch;
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: clamp(1.8rem, 3.6vw, 3.2rem); line-height: 1.1;
+  letter-spacing: var(--sc-track-tight); color: var(--sc-ink); text-wrap: balance;
+}
+.pf-step { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1rem; }
+.pf-step + .pf-step { margin-top: 1.4rem; }
+.pf-num {
+  font-family: var(--sc-font-display); font-weight: 700;
+  font-size: 2rem; line-height: 1; color: var(--sc-accent);
+  font-variant-numeric: tabular-nums;
+}
+.pf-step h3 {
+  display: flex; align-items: center; gap: 0.5rem; margin: 0;
+  font-family: var(--sc-font-display); font-weight: 600;
+  font-size: 1.15rem; color: var(--sc-ink);
+}
+.pf-step h3 svg { width: 1rem; height: 1rem; color: var(--sc-accent); }
+.pf-step p { margin: 0.35rem 0 0; font-size: 0.9rem; line-height: 1.6; color: rgba(245, 245, 246, 0.82); max-width: 44ch; }
+
+/* ── narrow screens ─────────────────────────────────────── */
+@media (max-width: 860px) {
+  .wf-stage { padding-top: 4rem; gap: var(--sc-5); }
+  .wf-grid { grid-template-columns: 1fr; gap: var(--sc-5); align-content: start; }
+  .wf-panel { order: -1; aspect-ratio: 16 / 8; }
+  /* One card at a time: the six stack in the same slot and the active one
+     shows. All six stay in the DOM and in the served HTML. */
+  .wf-list { display: grid; }
+  /* Steeper ramps than desktop (0.03 of act progress against 0.07) and a
+     near-solid ground at full k: the six stack in one slot, and two
+     half-faded translucent cards ghosting through each other mid-fade was
+     the measured defect. */
+  .wf-list li {
+    grid-area: 1 / 1;
+    --rise: clamp(0, calc((var(--sc-p, 0) - (var(--w) - 0.1)) / 0.03), 1);
+    --fall: max(var(--last), clamp(0, calc(((var(--w) + 0.1) - var(--sc-p, 0)) / 0.03), 1));
+    opacity: var(--k);
+    background: rgba(17, 22, 33, calc(0.95 * var(--k)));
+    transform: translateY(calc((1 - var(--k)) * 10px));
+  }
+  .wf-more { display: none; }
+  .pf-scrim {
+    background: linear-gradient(to top, rgba(10, 13, 20, 0.94) 0%, rgba(10, 13, 20, 0.88) 46%, rgba(10, 13, 20, 0.5) 70%, transparent 90%);
+  }
+  .pf-step + .pf-step { margin-top: 1rem; }
+}
+
+/* ── reduced motion: everything visible, nothing moving ─── */
+@media (prefers-reduced-motion: reduce) {
+  .wf-list li { --k: 1; transform: none; grid-area: auto; opacity: 1; }
+  .wf-panel video { opacity: 0; }
+  .wf-panel { background: var(--sc-surface) url('/services-flow/award-winning-stall-design-and-fabrication-agency-03-poster.webp') center / cover; }
+}

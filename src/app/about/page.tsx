@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { AboutFlow } from '@/components/about/AboutFlow'
 
-import './scrollcraft-engine.css'
+import '@/styles/scrollcraft-engine.css'
 import './about-flow.css'
 
 export const metadata: Metadata = {

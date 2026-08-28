@@ -87,7 +87,7 @@ export function AboutFlow() {
   }, [])
 
   return (
-    <div ref={rootRef} className="about-flow">
+    <div ref={rootRef} className="sc-scope about-flow">
       <span data-sc-progress></span>
       <div className="sc-grain" aria-hidden="true"></div>
 

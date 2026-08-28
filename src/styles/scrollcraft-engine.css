@@ -1,5 +1,5 @@
 /* scrollcraft engine CSS, with its global body/selection/focus rules scoped
-   to .about-flow so client-side navigation cannot leak them site-wide.
+   to .sc-scope so client-side navigation cannot leak them site-wide.
    Generated from scrollcraft/builds/about-walkin/scrollcraft.css. */
 /* ============================================================================
    scrollcraft.css: the taste floor
@@ -100,7 +100,7 @@
 
 
 
-.about-flow {
+.sc-scope {
   margin: 0;
   background: var(--sc-canvas);
   color: var(--sc-ink);
@@ -121,14 +121,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
    ring, scrollbar and tabular numerals all ship with defaults that belong to no
    design system. Theming them is the cheapest signal that a page was built
    rather than assembled, and it is the step that gets skipped most reliably. */
-.about-flow ::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
-.about-flow { caret-color: var(--sc-accent); accent-color: var(--sc-accent); }
-.about-flow :focus-visible {
+.sc-scope ::selection { background: var(--sc-accent); color: var(--sc-accent-ink); }
+.sc-scope { caret-color: var(--sc-accent); accent-color: var(--sc-accent); }
+.sc-scope :focus-visible {
   outline: 2px solid var(--sc-accent);
   outline-offset: 3px;
   border-radius: var(--sc-r-sm);
 }
-.about-flow :where(a) { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+.sc-scope :where(a) { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
 @supports (scrollbar-color: auto) {
   html { scrollbar-color: color-mix(in oklab, var(--sc-ink) 26%, transparent) transparent; scrollbar-width: thin; }
 }
@@ -432,4 +432,19 @@ video[data-sc-scrub].sc-has-clip { opacity: 1; }
       color-mix(in oklab, var(--sc-canvas) 30%, transparent) 42%,
       transparent 58%);
   }
+}
+
+/* ── brand tokens ─────────────────────────────────────────────
+   The site's palette and next/font families, applied to every scrollcraft
+   scope on the site so the About walk-in and the services sections read as
+   one system. */
+.sc-scope {
+  --sc-canvas:     #0A0D14;
+  --sc-surface:    #111621;
+  --sc-ink:        #F5F5F6;
+  --sc-ink-soft:   #9AA1AD;
+  --sc-accent:     #4FC63A;
+  --sc-accent-ink: #0A0D14;
+  --sc-font-display: var(--font-display), "Space Grotesk", system-ui, sans-serif;
+  --sc-font-text:    var(--font-inter), "Inter", system-ui, sans-serif;
 }
