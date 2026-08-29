@@ -2,17 +2,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, Monitor, Zap, Globe2, ShieldCheck,
-  Volume2, MousePointerClick, Sparkles, Wifi,
-  Lightbulb, Cpu, Film, Settings, Play, Users,
+  Volume2, MousePointerClick, Sparkles,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion'
 
-import { whyChoose } from '../_content/av-technology-integration'
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
+import { AvWhyFlow, AvProcessFlow } from '@/components/services/AvFlow'
+import '@/styles/scrollcraft-engine.css'
+import '@/styles/service-flow.css'
 export const metadata = {
   title: { absolute: "Exhibition Stand AV & Technology Integration | LED Walls" },
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
@@ -39,15 +40,6 @@ const outcomes = [
   { stat: 'Day 1', label: 'AV integrated into design' },
   { stat: '6000+', label: 'Stalls with AV delivered' },
   { stat: '24/7',  label: 'On-site crew during show' },
-]
-
-const process = [
-  { step: '01', icon: Lightbulb, title: 'AV Brief & Goals',                   copy: 'We map your technology objectives, content strategy and audience journey before a single component is specified.' },
-  { step: '02', icon: Cpu,       title: 'Concept Integration',                copy: 'AV is designed into the stall architecture from the start — LED walls become structural, speakers disappear into ceilings.' },
-  { step: '03', icon: Settings,  title: 'Engineering & Spec',                 copy: 'Power loads, signal paths, rigging weights and cable runs resolved in CAD — no surprises on the show floor.' },
-  { step: '04', icon: Film,      title: 'Content Production',                 copy: 'Motion graphics, product reels, interactive UI and ambient loops produced in-house to match screen spec perfectly.' },
-  { step: '05', icon: Play,      title: 'On-Site Installation & Calibration', copy: 'Our crew installs, configures and colour-calibrates every display, speaker and lighting fixture — then runs a full dress rehearsal.' },
-  { step: '06', icon: Users,     title: 'Live Show Support',                  copy: 'Dedicated on-floor AV technician throughout the show — content swaps, re-calibrations and incident response in minutes.' },
 ]
 
 const faqs = [
@@ -199,39 +191,9 @@ export default function AVTechnologyIntegrationPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          WHY CHOOSE US — 6 CARDS
+          WHY CHOOSE US — scroll-driven, full-screen clip
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs uppercase tracking-[0.18em] text-brand-green">What we integrate</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-                Six technologies. One seamless stall experience.
-              </h2>
-            </div>
-            <Button asChild variant="glass" size="lg">
-              <Link href="/contact">Discuss your AV brief <ArrowRight className="h-4 w-4" /></Link>
-            </Button>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {whyChoose.map(s => (
-              <div
-                key={s.title}
-                className="group relative overflow-hidden rounded-2xl border border-white/15 bg-surface/40 p-7 transition-all hover:-translate-y-1 hover:border-brand-blue-glow/50"
-              >
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue-glow/10 text-brand-blue-glow">
-                  <s.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.copy}</p>
-                <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-brand-green/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <AvWhyFlow />
 
       {/* ══════════════════════════════════════════════════
           GALLERY SHOWCASE
@@ -342,31 +304,9 @@ export default function AVTechnologyIntegrationPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════
-          PROCESS — 6 STEPS
+          PROCESS — 6 STEPS — scroll-driven, full-screen clip
       ══════════════════════════════════════════════════ */}
-      <section className="py-20 md:py-24">
-        <div className="container-wide">
-          <div className="max-w-2xl">
-            <p className="text-xs uppercase tracking-[0.18em] text-brand-green">From brief to live show</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold text-foreground md:text-5xl">
-              A 6-step process that never leaves AV to the last day.
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {process.map(p => (
-              <div key={p.step} className="relative rounded-2xl border border-white/15 bg-surface/40 p-7 transition-colors hover:border-brand-blue-glow/50">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-3xl font-semibold text-brand-blue-glow">{p.step}</span>
-                  <p.icon className="h-5 w-5 text-brand-green" />
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.copy}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <AvProcessFlow />
 
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
