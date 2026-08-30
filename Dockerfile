@@ -29,4 +29,9 @@ EXPOSE 3000
 # temporarily unreachable). NO seeding here — the seed script re-created
 # deleted demo data (Sun Pharma project, old industries) on every deploy.
 # Seed a fresh database manually with: npm run db:seed
-CMD ["sh", "-c", "npx prisma db push; exec npm start"]
+#
+# import-portfolio.mjs is NOT seeding: each batch file under
+# data/portfolio-import/ runs once, ever, gated by a marker row in
+# app_config — deleted projects stay deleted on later deploys. It never
+# exits non-zero, so the healthcheck is unaffected.
+CMD ["sh", "-c", "npx prisma db push; node scripts/import-portfolio.mjs; exec npm start"]
