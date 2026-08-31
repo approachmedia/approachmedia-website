@@ -262,6 +262,13 @@ html { scrollbar-width: thin; scrollbar-color: hsl(222 12% 32%) transparent; }
 }
 .blog-prose a:hover { color: hsl(var(--brand-green-glow)); }
 
+/* Project photos inside a post (the PharmaTech case study's 14 stall shots) */
+.blog-prose img {
+  display: block; width: 100%; height: auto;
+  border-radius: 14px; border: 1px solid hsl(0 0% 100% / 0.12);
+  margin: 0.4rem 0 1.5rem;
+}
+
 /* Tables (the cost table in the India cost post) */
 .blog-prose table {
   width: 100%; margin: 1.5rem 0; border-collapse: collapse;

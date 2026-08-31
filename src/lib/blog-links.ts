@@ -177,6 +177,11 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
  * would not be.
  */
 export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: string }[]> = {
+  // The PharmaTech case study's notes name the main portfolio page for its
+  // Related block (the 14 in-body links go to individual project pages).
+  'pharmatech-expo-2026-gandhinagar-14-exhibition-stalls': [
+    { anchor: 'The full Approach Media portfolio', href: '/portfolio' },
+  ],
   'helipad-exhibition-centre-gandhinagar-guide': [
     { anchor: 'India trade show calendar — dates, venues and cities', href: '/tradeshow-calendar' },
   ],
@@ -253,6 +258,13 @@ const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services
  * one is a single entry here once the owner names a real project photo.
  */
 export const POST_IMAGES: Record<string, { src: string; alt: string }> = {
+  // The PharmaTech 2026 case study: hero named by the owner (the RR Clean
+  // Room stand), a real project photo already serving as that project's
+  // portfolio hero from the same R2 folder.
+  'pharmatech-expo-2026-gandhinagar-14-exhibition-stalls': {
+    src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/pharmatech-expo-2026-gandhinagar/r-r-clean-room/r_r_clean_room_exhibition_stall_design_at_Pharmatech_Expo_Gandhinagar.webp',
+    alt: '77 sqm three-side-open exhibition stall for RR CleanRoom Projects at PharmaTech Expo 2026, Gandhinagar, with cleanroom partition rooms built on the stand',
+  },
   'exhibition-stall-design-cost-india': {
     src: `${CDN}/stall-gallery-1.jpg`,
     alt: 'Custom exhibition stall designed and fabricated by Approach Media, showing the finish level that moves cost within the per-sqm range',
