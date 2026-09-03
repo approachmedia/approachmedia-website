@@ -1,0 +1,232 @@
+/* City pages, chaptered-editorial rebuild.
+   The page is a printed feature: chapters are the unit, each lands on its own
+   ground with a hard cut, and no two chapters behave alike. Five identical
+   card grids (Stand Out, Services, Industries, Why Us, Process) became five
+   different things; the Portfolio chapter is the owner's and is untouched.
+
+   Grounds are three, alternating, so a cut is visible:
+     INK    #080A0F  media and the peak
+     SLATE  #0E121A  the reading ground
+     RAISED #141922  plates
+   Type rides the site's next/font families. Accent greens and blues are the
+   city pages' own existing values, so the rebuild reads as the same site. */
+
+.cty {
+  --ink: #080A0F;
+  --slate: #0E121A;
+  --raised: #141922;
+  --rule: hsl(222 18% 20%);
+  --rule-soft: hsl(222 18% 15%);
+  --text: hsl(0 0% 95%);
+  --muted: hsl(220 10% 58%);
+  /* The card template used 38-42% for micro-labels, which measures 3.5:1 on
+     these grounds. Lifted until every label clears 4.5:1 on the render. */
+  --dim: hsl(220 10% 54%);
+  --green: hsl(110 55% 55%);
+  --blue: hsl(230 70% 65%);
+  --measure: 68ch;
+  --gut: clamp(20px, 5vw, 64px);
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+}
+
+.cty__wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: var(--gut); }
+.cty section { position: relative; }
+
+/* ── the two device rules the engine needs ─────────────────────
+   The engine's own stylesheet is not imported (it would restyle every page
+   that shares this layout), so the pinned/scrub acts get their sticky stage
+   here instead, scoped to .cty. Without this the stage is `static`, the act
+   animates correctly while scrolling past off-screen, and every automated
+   check still passes — the exact silent failure the engine warns about.
+   The stage is inset by the site's fixed header (.nav-header, ~88px) so the
+   top of a pinned composition is never behind it. */
+.cty [data-sc-act] { position: relative; }
+.cty .sc-stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: clip;
+  padding-top: 88px;
+}
+/* The poster holds the frame until a real video frame has painted. */
+.cty video[data-sc-scrub] { opacity: 0; transition: opacity 380ms ease; }
+.cty .sc-has-clip video[data-sc-scrub],
+.cty video[data-sc-scrub].sc-has-clip { opacity: 1; }
+.cty .sc-stage__poster { transition: opacity 380ms ease; }
+.cty .sc-has-clip .sc-stage__poster { opacity: 0; }
+/* Inside a fixed-height stage the plate takes the room that is left rather
+   than its own aspect ratio, or it pushes the caption off the bottom. */
+.cty .sc-stage .cty-plate { flex: 1 1 auto; min-height: 0; aspect-ratio: auto; }
+
+/* ── the folio: chapter number and title in the margin ──────── */
+.cty-folio {
+  position: sticky; top: 88px; z-index: 4;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 10px 0 9px;
+  background: linear-gradient(to bottom, var(--ground, var(--slate)) 72%, transparent);
+  font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--dim);
+  border-bottom: 1px solid var(--rule-soft);
+  transition: color 0.4s ease;
+}
+.cty-folio b { color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }
+.cty-folio span { color: var(--muted); letter-spacing: 0.14em; }
+
+/* ── chapter shell ─────────────────────────────────────────── */
+.cty-ch { padding: clamp(64px, 8vw, 112px) 0; background: var(--ground); }
+.cty-ch--ink { --ground: var(--ink); }
+.cty-ch--slate { --ground: var(--slate); }
+.cty-ch--raised { --ground: var(--raised); }
+
+.cty-h2 {
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 700; line-height: 1.14; letter-spacing: -0.02em;
+  font-size: clamp(1.7rem, 3.4vw, 2.7rem); color: var(--text);
+  margin: 0; text-wrap: balance;
+}
+.cty-lede { color: var(--muted); line-height: 1.8; font-size: 1.03rem; margin: 0; text-wrap: pretty; }
+.cty-eyebrow {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--green); margin: 0 0 14px;
+}
+
+/* ── title page ────────────────────────────────────────────── */
+.cty-title { background: var(--slate); padding: clamp(48px, 7vw, 92px) 0 clamp(56px, 7vw, 96px); }
+.cty-title__city {
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--green); margin: 0 0 22px;
+}
+.cty-title h1 {
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  font-size: clamp(2rem, 5.6vw, 3.6rem); font-weight: 800; line-height: 1.08;
+  letter-spacing: -0.025em; margin: 0 0 22px; max-width: 20ch; color: var(--text);
+  text-wrap: balance;
+}
+.cty-title h1 .hl { color: var(--blue); }
+.cty-title__sub { color: var(--muted); font-size: 1.05rem; line-height: 1.78; max-width: 62ch; margin: 0 0 30px; }
+.cty-title__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+.cty-title__pills { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid var(--rule-soft); }
+.cty-title__pills li {
+  list-style: none; font-size: 0.78rem; color: var(--muted);
+  padding: 11px 20px 11px 0; margin-right: 20px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+/* ── 01 the city: asymmetric spread, wipes in ──────────────── */
+.cty-spread { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.cty-spread__rule { grid-column: 1 / -1; height: 1px; background: var(--rule); margin-bottom: clamp(24px, 3vw, 40px); }
+.cty-spread p + p { margin-top: 14px; }
+
+/* ── 02 on the floor: the one media chapter ────────────────── */
+.cty-plate { position: relative; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; background: #05070A; aspect-ratio: 16 / 8.4; }
+.cty-plate video, .cty-plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.cty-plate__cap {
+  display: flex; gap: 12px; align-items: baseline;
+  margin-top: 12px; font-size: 0.78rem; color: var(--dim); line-height: 1.6;
+}
+.cty-plate__cap b { color: var(--muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap; }
+.cty-notes { columns: 2; column-gap: clamp(28px, 4vw, 56px); margin-top: clamp(36px, 5vw, 60px); }
+.cty-note { break-inside: avoid; padding: 16px 0; border-top: 1px solid var(--rule-soft); }
+.cty-note__n { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; color: var(--green); font-variant-numeric: tabular-nums; }
+.cty-note h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin: 6px 0 6px; line-height: 1.35; }
+.cty-note p { font-size: 0.87rem; color: var(--muted); line-height: 1.72; margin: 0; }
+
+/* ── 03 venues: media in its own column, captioned ─────────── */
+.cty-venue { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(22px, 3.5vw, 48px); align-items: center; padding: clamp(28px, 4vw, 52px) 0; border-top: 1px solid var(--rule-soft); }
+.cty-venue:first-of-type { border-top: 0; }
+.cty-venue--flip .cty-venue__media { order: 2; }
+.cty-venue__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--rule); border-radius: 4px; background: var(--raised); }
+.cty-venue__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cty-venue h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--green); margin: 0 0 10px; line-height: 1.35; }
+.cty-venue p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0 0 16px; }
+.cty-venue__lbl { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 0 0 10px; }
+.cty-venue ul { list-style: none; margin: 0 0 18px; padding: 0; }
+.cty-venue li { font-size: 0.86rem; color: var(--muted); line-height: 1.6; padding: 7px 0 7px 18px; border-top: 1px solid var(--rule-soft); position: relative; }
+.cty-venue li::before { content: ""; position: absolute; left: 0; top: 15px; width: 7px; height: 1px; background: var(--green); }
+.cty-venue__specs { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule-soft); margin-bottom: 18px; }
+.cty-venue__specs div { padding: 11px 14px 11px 0; border-bottom: 1px solid var(--rule-soft); }
+.cty-venue__specs dt { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
+.cty-venue__specs dd { font-size: 0.87rem; font-weight: 700; color: hsl(0 0% 87%); margin: 0; line-height: 1.35; }
+.cty-venue__badge { position: absolute; top: 12px; left: 12px; z-index: 1; background: hsl(110 55% 42%); color: #fff; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; padding: 4px 11px; border-radius: 100px; text-transform: uppercase; }
+.cty-venue__addr { display: flex; gap: 7px; font-size: 0.78rem; color: var(--dim); line-height: 1.5; margin: 0 0 16px; }
+
+/* ── 04 services: a running numbered list ──────────────────── */
+.cty-run { border-top: 1px solid var(--rule); }
+.cty-run__row { display: grid; grid-template-columns: 4.5rem minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(16px, 2.5vw, 40px); padding: clamp(20px, 2.6vw, 30px) 0; border-bottom: 1px solid var(--rule-soft); align-items: baseline; }
+.cty-run__n { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; line-height: 1; }
+.cty-run h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.08rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
+.cty-run p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0; }
+
+/* ── 05 sectors: dense specimen index ──────────────────────── */
+.cty-index { columns: 3; column-gap: clamp(24px, 3.5vw, 48px); }
+.cty-index__item { break-inside: avoid; padding: 13px 0; border-top: 1px solid var(--rule-soft); }
+.cty-index h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.94rem; font-weight: 700; color: var(--text); margin: 0 0 5px; line-height: 1.35; }
+.cty-index p { font-size: 0.83rem; color: var(--muted); line-height: 1.68; margin: 0; }
+
+/* ── 06 why us: alternating asymmetric pairs ───────────────── */
+.cty-pairs { border-top: 1px solid var(--rule); }
+.cty-pair { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(18px, 3vw, 44px); padding: clamp(20px, 2.8vw, 32px) 0; border-bottom: 1px solid var(--rule-soft); align-items: baseline; }
+.cty-pair:nth-child(even) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+.cty-pair:nth-child(even) .cty-pair__t { order: 2; }
+.cty-pair__t { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.08rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
+.cty-pair p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0; }
+
+/* ── 07 the build: the peak, the plan draws itself ─────────── */
+.cty-build__stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(24px, 4vw, 60px); align-items: center; min-height: 0; }
+.cty-plan { position: relative; width: 100%; aspect-ratio: 4 / 3; }
+.cty-plan svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.cty-plan__g { opacity: var(--k, 0); transition: none; }
+.cty-steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-soft); }
+.cty-step {
+  display: grid; grid-template-columns: 2.6rem 1fr; gap: 14px;
+  padding: 11px 0; border-bottom: 1px solid var(--rule-soft);
+  opacity: calc(0.3 + 0.7 * var(--k, 0));
+}
+.cty-step__n { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; color: var(--green); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.cty-step h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--text); margin: 0 0 3px; line-height: 1.35; }
+.cty-step p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; margin: 0; max-height: calc(var(--k, 0) * 8rem); overflow: hidden; transition: none; }
+
+/* ── 08 questions ──────────────────────────────────────────── */
+.cty-faq { max-width: 820px; }
+
+/* ── colophon ──────────────────────────────────────────────── */
+.cty-colo { border-top: 1px solid var(--rule); padding-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(22px, 4vw, 56px); align-items: start; }
+.cty-colo__acts { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 20px; }
+.cty-colo__run { font-size: 0.92rem; line-height: 1.85; color: var(--muted); margin: 0; }
+.cty-colo__run a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── scroll choreography ───────────────────────────────────── */
+.cty [data-sc-in] { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.cty [data-sc-in].sc-in { opacity: 1; transform: none; }
+.cty [data-sc-stagger] > * { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.cty [data-sc-stagger] > .sc-in { opacity: 1; transform: none; }
+/* the chapter-boundary wipe */
+.cty-wipe { clip-path: inset(0 0 100% 0); transition: clip-path 900ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.cty-wipe.sc-in { clip-path: inset(0 0 0 0); }
+
+/* ── narrow ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .cty-spread, .cty-venue, .cty-build__stage, .cty-colo { grid-template-columns: 1fr; }
+  .cty-venue--flip .cty-venue__media { order: 0; }
+  .cty-notes { columns: 1; }
+  .cty-index { columns: 2; }
+  .cty-run__row { grid-template-columns: 3rem 1fr; }
+  .cty-run__row > p { grid-column: 2; }
+  .cty-pair, .cty-pair:nth-child(even) { grid-template-columns: 1fr; gap: 8px; }
+  .cty-pair:nth-child(even) .cty-pair__t { order: 0; }
+  .cty-build__stage { gap: 28px; }
+  .cty-plan { max-width: 460px; margin-inline: auto; }
+}
+@media (max-width: 620px) {
+  .cty-index { columns: 1; }
+  .cty-venue__specs { grid-template-columns: 1fr; }
+}
+
+/* ── reduced motion: everything visible, nothing moving ────── */
+@media (prefers-reduced-motion: reduce) {
+  .cty [data-sc-in], .cty [data-sc-stagger] > * { opacity: 1; transform: none; transition: none; }
+  .cty-wipe { clip-path: none; transition: none; }
+  .cty-plan__g { opacity: 1; }
+  .cty-step { opacity: 1; }
+  .cty-step p { max-height: none; }
+}

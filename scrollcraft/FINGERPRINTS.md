@@ -28,6 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
+| city-chapters (15 city landing pages) | chaptered editorial | site header plus a sticky chapter folio that reports the chapter being read | title page: type on the ground, no media above the fold | flow·reveal·scrub·flow·rail·flow·reveal·[untouched]·flow·pin·flow·reveal, 11 chapters, ~19.4vh | colophon masthead plate, the ask set beside running text and held | the plan: the seven process steps draw a stall out of an empty plot, then pack it away again | photographic (owner's own show-floor footage) plus a vector plan | Next.js shared CityPageTemplate |
 
 *(empty: your first build has nothing to clear, so build whatever the interview
 points at. From the second onwards, this table is the constraint.)*
@@ -41,7 +42,11 @@ reusing: a grammar, a nav treatment, a close pattern, a signature move, an
 act-count-and-length band. The shared columns are what the next build inherits
 as a constraint, so writing them down is the whole point.
 
-Nothing is taken yet.
+- **chaptered editorial** with a **chapter folio** as the running head, the **title-page hero** (type only, no media above
+  the fold), the **colophon masthead close**, and the signature move **"the plan draws itself"** (a build sequence that
+  constructs an object from a page's own numbered steps and then reverses it). The 10-12 chapter band is claimed.
+- Note: the `about-walkin` row below sits under "Worked example" rather than in the table above. It is a real build of
+  this project's, not an illustration, and the gate was run against it.
 
 ---
 
