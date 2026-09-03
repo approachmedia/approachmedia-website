@@ -179,13 +179,19 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
   return (
     <div className="cty" ref={rootRef}>
 
-      {/* ── TITLE PAGE. Type on the ground, no media above the fold. ── */}
+      {/* ── TITLE PAGE. Type on the ground, no media above the fold.
+             The subtitle assembles line by line (kinetic). The h1 is NOT
+             kinetic on purpose: the engine's splitter rebuilds the element
+             from its textContent, which would destroy the highlight span. ── */}
       <section className="cty-title" data-chapter={0} aria-label={`Exhibition stall design in ${City}`}>
+        <div data-sc-act="flow">
         <div className="cty__wrap">
           <div data-sc-in data-sc-stagger="90">
             <p className="cty-title__city">{data.eyebrow}</p>
             <h1>{data.h1Line1} <span className="hl">{data.h1Highlight}</span></h1>
-            <p className="cty-title__sub">{data.subtitle}</p>
+          </div>
+          <p className="cty-title__sub" data-sc-cue="0.02 0.62 0.28 0.2" data-sc-kinetic="lines">{data.subtitle}</p>
+          <div data-sc-in data-sc-stagger="90">
             <div className="cty-title__acts">
               <Link href="/contact" className="btn btn-primary">Get Exhibition Stall Quote</Link>
               <Link href="/contact" className="btn btn-outline">Discuss Your Exhibition Plan</Link>
@@ -195,6 +201,7 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
             </ul>
           </div>
         </div>
+        </div>
       </section>
 
       {/* The running head. Sticky, reports the chapter actually being read. */}
@@ -203,17 +210,22 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
         <span>{CH[Math.max(1, current) - 1] ?? CH[0]}</span>
       </div>
 
-      {/* ── 01 · THE CITY. Asymmetric spread, wipes in at the boundary. ── */}
-      <Chapter n={1} title="The city" ground="slate">
-        <div className="cty-spread cty-wipe" data-sc-in>
-          <div className="cty-spread__rule" />
-          <h2 className="cty-h2">{data.introHeading}</h2>
-          <div>
-            <p className="cty-lede">{data.introP1}</p>
-            <p className="cty-lede">{data.introP2}</p>
+      {/* ── 01 · THE CITY. Asymmetric spread, wiped in at the chapter
+             boundary by the engine's own act-driven reveal. ── */}
+      <section className="cty-ch cty-ch--slate" data-chapter={1} aria-label="The city">
+        <div data-sc-act="flow">
+          <div className="cty__wrap">
+            <div className="cty-spread" data-sc-reveal="up" data-sc-reveal-at="0.02 0.4">
+              <div className="cty-spread__rule" />
+              <h2 className="cty-h2">{data.introHeading}</h2>
+              <div>
+                <p className="cty-lede">{data.introP1}</p>
+                <p className="cty-lede">{data.introP2}</p>
+              </div>
+            </div>
           </div>
         </div>
-      </Chapter>
+      </section>
 
       {/* ── 02 · ON THE FLOOR. The one moving image on the page: a real
              stand on a real show floor, scrubbing under the reader's hand.
@@ -250,8 +262,12 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
       </section>
 
       {/* ── 03 · THE VENUES. Media in its own column with a caption, the
-             editorial rule; alternating sides so the eye keeps moving. ── */}
-      <Chapter n={3} title="The venues" ground="raised">
+             editorial rule; alternating sides so the eye keeps moving, and
+             the photographs drift inside their frames at opposing rates.
+             Parallax inside a media column is what this grammar leans on. ── */}
+      <section className="cty-ch cty-ch--raised" data-chapter={3} aria-label="The venues">
+       <div data-sc-act="flow">
+        <div className="cty__wrap">
         <div data-sc-in>
           <h2 className="cty-h2" style={{ maxWidth: '18ch' }}>Exhibition venues we serve <span style={{ color: 'hsl(110 55% 55%)' }}>in {City}</span></h2>
           <p className="cty-lede" style={{ marginTop: '18px', maxWidth: 'var(--measure)' }}>{data.venueIntro}</p>
@@ -263,7 +279,9 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
             <div className="cty-venue" data-sc-in>
               <div className="cty-venue__media">
                 <span className="cty-venue__badge">Premier Venue</span>
-                <VenueImage src={data.featuredVenue.imageUrl} alt={`${data.featuredVenue.name} — exhibition venue`} />
+                <div className="cty-venue__par" data-sc-parallax="0.55">
+                  <VenueImage src={data.featuredVenue.imageUrl} alt={`${data.featuredVenue.name} — exhibition venue`} />
+                </div>
               </div>
               <div>
                 <h3>{data.featuredVenue.name}</h3>
@@ -287,7 +305,9 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
             <div key={v.name} className={`cty-venue${i % 2 ? ' cty-venue--flip' : ''}`} data-sc-in>
               <div className="cty-venue__media">
                 <span className="cty-venue__badge">Venue</span>
-                <VenueImage src={v.imageUrl} alt={`${v.name} — exhibition venue`} />
+                <div className="cty-venue__par" data-sc-parallax={i % 2 ? '-0.5' : '0.55'}>
+                  <VenueImage src={v.imageUrl} alt={`${v.name} — exhibition venue`} />
+                </div>
               </div>
               <div>
                 <h3>{v.name}</h3>
@@ -299,7 +319,9 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
             </div>
           ))}
         </div>
-      </Chapter>
+        </div>
+       </div>
+      </section>
 
       {/* ── 04 · THE CALENDAR. The shows at those venues; the carousel is
              the page's own component and keeps its behaviour. ── */}
@@ -324,23 +346,29 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
         </div>
       </Chapter>
 
-      {/* ── 06 · THE SECTORS. Dense specimen index, small type. The block
-             wipes in whole rather than staggering, so it does not repeat
-             the device the running list just used. ── */}
-      <Chapter n={6} title="The sectors" ground="raised">
-        <div data-sc-in>
-          <p className="cty-eyebrow">Sectors we serve</p>
-          <h2 className="cty-h2">Industries we serve in {City}</h2>
-        </div>
-        <div className="cty-index cty-wipe" style={{ marginTop: 'clamp(24px,3vw,38px)' }} data-sc-in>
-          {data.industries.map(ind => (
-            <div key={ind.title} className="cty-index__item">
-              <h3>{ind.title}</h3>
-              <p>{ind.body}</p>
+      {/* ── 06 · THE SECTORS. A rail. Lateral travel reads as breadth where
+             vertical reads as argument, and a list of sectors served is
+             breadth. Span scales with the count so every city's rail runs
+             the same speed; under reduced motion the engine hands the travel
+             back as an ordinary scroll region. ── */}
+      <section className="cty-ch cty-ch--raised" data-chapter={6} aria-label="The sectors" style={{ padding: 0 }}>
+        <div data-sc-act="pan" data-sc-span={(1.4 + data.industries.length * 0.22).toFixed(2)}>
+          <div data-sc-stage className="sc-stage" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="cty__wrap cty-pan__head">
+              <p className="cty-eyebrow">Sectors we serve</p>
+              <h2 className="cty-h2">Industries we serve in {City}</h2>
             </div>
-          ))}
+            <div className="cty-rail" data-sc-pan="0.05">
+              {data.industries.map(ind => (
+                <div key={ind.title} className="cty-rail__item">
+                  <h3>{ind.title}</h3>
+                  <p>{ind.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </Chapter>
+      </section>
 
       {/* ── 07 · THE WORK. The owner's Portfolio chapter, untouched. ── */}
       <div data-chapter={7}>{portfolio}</div>
@@ -396,9 +424,16 @@ export function CityChapters({ data, cap, calendar, portfolio, faq, colophon }: 
         <div className="cty-faq" data-sc-in>{faq}</div>
       </Chapter>
 
-      {/* ── COLOPHON. The close: a masthead plate, small type, held. ── */}
+      {/* ── COLOPHON. The close: a masthead plate, small type, held. The
+             wipe comes in from the left, the one direction used nowhere
+             else, so the last chapter reads as arriving rather than as one
+             more section fading up. ── */}
       <section className="cty-ch cty-ch--raised" aria-label="Start your project">
-        <div className="cty__wrap"><div className="cty-colo cty-wipe" data-sc-in>{colophon}</div></div>
+        <div data-sc-act="flow">
+          <div className="cty__wrap">
+            <div className="cty-colo" data-sc-reveal="left" data-sc-reveal-at="0.04 0.42">{colophon}</div>
+          </div>
+        </div>
       </section>
     </div>
   )

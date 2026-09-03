@@ -28,7 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
-| city-chapters (15 city landing pages) | chaptered editorial | site header plus a sticky chapter folio that reports the chapter being read | title page: type on the ground, no media above the fold | flow·reveal·scrub·flow·rail·flow·reveal·[untouched]·flow·pin·flow·reveal, 11 chapters, ~19.4vh | colophon masthead plate, the ask set beside running text and held | the plan: the seven process steps draw a stall out of an empty plot, then pack it away again | photographic (owner's own show-floor footage) plus a vector plan | Next.js shared CityPageTemplate |
+| city-chapters (15 city landing pages) | chaptered editorial | site header plus a sticky chapter folio that reports the chapter being read | title page: type on the ground, no media above the fold | kinetic·reveal·scrub·parallax·rail·flow·pan·[untouched]·flow·pin·flow·reveal, 11 chapters, ~22vh | colophon masthead plate, the ask set beside running text and held | the plan: the seven process steps draw a stall out of an empty plot, then pack it away again | photographic (owner's own show-floor footage) plus a vector plan | Next.js shared CityPageTemplate |
 
 *(empty: your first build has nothing to clear, so build whatever the interview
 points at. From the second onwards, this table is the constraint.)*

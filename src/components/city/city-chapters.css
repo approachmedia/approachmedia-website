@@ -200,9 +200,35 @@
 .cty [data-sc-in].sc-in { opacity: 1; transform: none; }
 .cty [data-sc-stagger] > * { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1); }
 .cty [data-sc-stagger] > .sc-in { opacity: 1; transform: none; }
-/* the chapter-boundary wipe */
-.cty-wipe { clip-path: inset(0 0 100% 0); transition: clip-path 900ms cubic-bezier(0.2, 0.7, 0.2, 1); }
-.cty-wipe.sc-in { clip-path: inset(0 0 0 0); }
+/* Chapter-boundary wipes are the ENGINE's reveal, driven from act progress.
+   They were briefly a hand-rolled `clip-path` toggled by the engine's
+   IntersectionObserver, which cannot work: the observer computes intersection
+   AFTER clipping, so an element clipped to zero height is never seen entering,
+   never gets `.sc-in`, and stays clipped for ever. The element hid itself from
+   the thing meant to reveal it. Act-driven reveals have no such loop. */
+.cty [data-sc-reveal] { will-change: clip-path; }
+
+/* kinetic split (carried from the engine sheet, which is not imported) */
+.cty .sc-split { display: inline-block; overflow: hidden; vertical-align: top; }
+.cty .sc-split--line { display: block; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.cty .sc-split__i { display: inline-block; will-change: transform, opacity; }
+.cty .sc-is-split { opacity: 1 !important; }
+
+/* parallax inside a media column: the layer is oversized so its travel never
+   exposes an edge of the frame */
+.cty [data-sc-parallax] { will-change: transform; }
+.cty-venue__par { position: absolute; inset: -9% 0; }
+
+/* the sectors rail: lateral travel reads as breadth */
+.cty [data-sc-pan] { display: flex; will-change: transform; }
+.cty-rail { gap: 18px; padding-inline: var(--gut); align-items: stretch; }
+.cty-rail__item {
+  flex: 0 0 clamp(14rem, 21vw, 19rem);
+  border-top: 1px solid var(--rule); padding-top: 14px;
+}
+.cty-rail__item h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--text); margin: 0 0 7px; line-height: 1.35; }
+.cty-rail__item p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin: 0; }
+.cty-pan__head { margin-bottom: clamp(22px, 3vw, 36px); }
 
 /* ── narrow ────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -222,10 +248,21 @@
   .cty-venue__specs { grid-template-columns: 1fr; }
 }
 
-/* ── reduced motion: everything visible, nothing moving ────── */
+/* ── reduced motion: everything visible, nothing moving ──────
+   Zeroing a rail's transform the way parallax and kinetic are zeroed would
+   park it on its first screenful and make the rest unreachable: a device
+   degrading into missing content. The travel is handed back as an ordinary
+   scroll region instead, so every sector is still gettable. */
 @media (prefers-reduced-motion: reduce) {
   .cty [data-sc-in], .cty [data-sc-stagger] > * { opacity: 1; transform: none; transition: none; }
-  .cty-wipe { clip-path: none; transition: none; }
+  .cty [data-sc-parallax], .cty [data-sc-pan], .cty .sc-split__i { transform: none !important; }
+  .cty [data-sc-reveal] { clip-path: none !important; }
+  .cty [data-sc-act="pan"] .sc-stage,
+  .cty [data-sc-act="pan"] [data-sc-stage] {
+    overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+  }
+  .cty [data-sc-pan] > * { scroll-snap-align: center; }
   .cty-plan__g { opacity: 1; }
   .cty-step { opacity: 1; }
   .cty-step p { max-height: none; }
