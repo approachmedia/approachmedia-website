@@ -3,7 +3,8 @@ import { ClientsMarquee } from '@/components/home/ClientsMarquee'
 import { About } from '@/components/home/About'
 import { FeaturedWorks } from '@/components/home/FeaturedWorks'
 import { ServicesGrid } from '@/components/home/ServicesGrid'
-import { Presence } from '@/components/home/Presence'
+import { PresenceMap } from '@/components/home/PresenceMap'
+import '@/components/home/presence-map.css'
 import { Industries } from '@/components/home/Industries'
 import { WhyChoose } from '@/components/home/WhyChoose'
 import { Process } from '@/components/home/Process'
@@ -91,7 +92,7 @@ export default function HomePage() {
         <ClientsMarquee />
         <About />
         <ServicesGrid />
-        <Presence />
+        <PresenceMap />
         <Industries />
         <WhyChoose />
         <Process />
