@@ -114,6 +114,7 @@ export default function SiteFooter() {
         <div className="flex items-center gap-5 text-xs text-muted-foreground">
           <ScrambleLink href="/portfolio" className="transition hover:text-foreground">Portfolio</ScrambleLink>
           <ScrambleLink href="/contact" className="transition hover:text-foreground">Contact</ScrambleLink>
+          <ScrambleLink href="/privacy-policy" className="transition hover:text-foreground">Privacy Policy</ScrambleLink>
           <ScrambleLink href="/sitemap.xml" external className="transition hover:text-foreground">Sitemap</ScrambleLink>
         </div>
       </div>
