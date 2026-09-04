@@ -26,9 +26,11 @@
 
 .wwd .maps { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); gap: 28px; align-items: stretch; }
 .wwd .panel { position: relative; background: rgba(17,21,29,.78); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.08); border-radius: 22px; padding: clamp(20px, 2.4vw, 34px); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-.wwd .panel--world { opacity: 0; transform: translateY(24px); transition: opacity 1.6s ease .6s, transform 1.6s cubic-bezier(.2,.7,.2,1) .6s; }
-.wwd .panel--india { opacity: 0; transform: translateY(24px) scale(.97); transition: opacity 1.6s ease, transform 1.6s cubic-bezier(.2,.7,.2,1); }
-.wwd.is-live .panel--world, .wwd.india-on .panel--india { opacity: 1; transform: none; }
+/* Both panels rise on the same cue. They used to be staggered by a class the
+   script added only after the world map had finished, which left the India
+   map blank for the first thirteen seconds of the section. */
+.wwd .panel--world, .wwd .panel--india { opacity: 0; transform: translateY(24px); transition: opacity 1.6s ease .3s, transform 1.6s cubic-bezier(.2,.7,.2,1) .3s; }
+.wwd.is-live .panel--world, .wwd.is-live .panel--india { opacity: 1; transform: none; }
 .wwd .panel__head { display: flex; align-items: center; gap: 14px; }
 .wwd .panel__icon { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; flex: none; }
 .wwd .panel__icon--blue { background: rgba(91,140,255,.14); }
@@ -50,8 +52,8 @@
 .wwd .legend span { display: flex; align-items: center; gap: 8px; }
 .wwd .legend i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 10px currentColor; }
 
-.wwd .lists { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; opacity: 0; transition: opacity 1.4s ease; }
-.wwd.india-on .lists { opacity: 1; }
+.wwd .lists { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; opacity: 0; transition: opacity 1.4s ease .5s; }
+.wwd.is-live .lists { opacity: 1; }
 .wwd .list { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .wwd .list__title { font-size: 12px; letter-spacing: .22em; color: #a9b0be; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
 .wwd .list__title i { width: 8px; height: 8px; border-radius: 50%; }

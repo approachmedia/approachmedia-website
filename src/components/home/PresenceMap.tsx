@@ -15,6 +15,10 @@
  * site's existing pages from data/cities and data/countries — the handoff's
  * /locations/* placeholders mapped per its must-do list — and the two
  * Explore links keep their existing destinations (/portfolio, /about).
+ *
+ * One departure from the handoff: it played the two maps in series, holding
+ * the India panel and both link lists back until every country had landed.
+ * Both maps, both lists and both ripple sequences now start together.
  */
 
 import { useEffect, useRef } from 'react'
@@ -269,32 +273,35 @@ export function PresenceMap() {
     const timers: ReturnType<typeof setTimeout>[] = []
     const schedule = (fn: () => void, ms: number) => timers.push(setTimeout(fn, ms))
     const activateAll = (m: MapState) => m.nodes.forEach((_, i) => m.activate(i))
+    // Both maps run together. The handoff played them in series, world first
+    // and India only after the last country had landed, which put the India
+    // map thirteen seconds out and its last city past twenty: long enough that
+    // the section read as still loading. The two panels, the two link lists
+    // and both ripple sequences now start on the same frame.
+    const LEAD = 700, STEP = 220
     function start() {
       started = true; section!.classList.add('is-live'); t0 = performance.now()
       if (REDUCED) {
         world.alpha = india.alpha = 1
         activateAll(world); activateAll(india)
-        section!.classList.add('india-on')
         return
       }
-      COUNTRY_NODES.forEach((_, i) => schedule(() => world.activate(i), 3400 + i * 850))
-      const tIndia = 3400 + COUNTRY_NODES.length * 850 - 1400
-      schedule(() => section!.classList.add('india-on'), tIndia)
-      CITY_NODES.forEach((_, i) => schedule(() => india.activate(i), tIndia + 1600 + i * 620))
+      COUNTRY_NODES.forEach((_, i) => schedule(() => world.activate(i), LEAD + i * STEP))
+      CITY_NODES.forEach((_, i) => schedule(() => india.activate(i), LEAD + i * STEP))
+      const settled = LEAD + Math.max(COUNTRY_NODES.length, CITY_NODES.length) * STEP + 1200
       schedule(() => {
         idleTimer = setInterval(() => {
           if (!visible) return
           const m = Math.random() < 0.5 ? india : world
           m.ripples.push({ i: (Math.random() * m.nodes.length) | 0, t0: performance.now() })
         }, 2800)
-      }, tIndia + 1600 + CITY_NODES.length * 620 + 1500)
+      }, settled)
     }
     function frame(now: number) {
       if (!visible) return
       const t = (now - t0) / 1000
       if (!REDUCED) {
-        world.alpha = Math.min(1, Math.max(0, (t - 1.0) / 1.8))
-        india.alpha = section!.classList.contains('india-on') ? Math.min(1, india.alpha + 0.012) : 0
+        world.alpha = india.alpha = Math.min(1, Math.max(0, (t - 0.4) / 1.4))
       }
       world.draw(now, t); india.draw(now, t)
       raf = requestAnimationFrame(frame)
