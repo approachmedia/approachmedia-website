@@ -3,20 +3,28 @@ import Link from 'next/link'
 import type { ProjectCardData } from '@/components/portfolio/ProjectCard'
 import CityProjectsCarousel from './CityProjectsCarousel'
 import ExhibitionCarousel from './ExhibitionCarousel'
+import { getPublishedProjects } from '@/lib/db/portfolio'
 import { CityChapters, type SectorShot } from './CityChapters'
 import './city-chapters.css'
 import type { CityPageData } from './types'
 
 /**
- * Pair each sector the page names with a real project of this city's that
- * actually works in it, so the photograph on a sector card is that sector's
- * work rather than decoration. Matching is by shared significant word
- * between the page's sector title ("Pharmaceuticals & Healthcare") and the
- * project's own industry records ("Pharmaceuticals"), because the two
- * vocabularies were authored separately and rarely match exactly.
+ * Pair each sector the page names with a real project that actually works in
+ * it, so the photograph on a sector card is that sector's work rather than
+ * decoration.
  *
- * A project is used once at most, and a sector with no genuine match gets no
- * photograph: an unmatched picture would be a claim the data does not make.
+ * The pool is the WHOLE portfolio, not this city's projects: the claim the
+ * section makes is sector experience, which travels, whereas restricting to
+ * one city left most cards blank for no good reason. Only stands of 36 sqm
+ * and up are drawn on, so a card carries substantial work rather than
+ * whatever happened to match.
+ *
+ * Matching is by shared significant word between the page's sector title
+ * ("Pharmaceuticals & Healthcare") and the project's own industry records
+ * ("Pharmaceuticals"), because the two vocabularies were authored
+ * separately and rarely match exactly. A project is used once at most, and
+ * a sector with no genuine match gets no photograph: an unmatched picture
+ * would be a claim the data does not make.
  */
 const SECTOR_STOPWORDS = new Set([
   'and', 'the', 'for', 'with', 'goods', 'services', 'service', 'industry',
@@ -103,8 +111,12 @@ interface Props {
   fromTheBlog?: { title: string; href: string }[]
 }
 
-export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheBlog }: Props) {
+/** The floor a stand has to clear to stand as a sector example. */
+const SECTOR_MIN_SQM = 36
+
+export default async function CityPageTemplate({ data, cityProjects, siteUrl, fromTheBlog }: Props) {
   const City = data.citySlug.charAt(0).toUpperCase() + data.citySlug.slice(1)
+  const sectorPool = await getPublishedProjects({ minAreaSqm: SECTOR_MIN_SQM, limit: 120 })
 
   // ── The untouched Portfolio section, verbatim from the previous template ──
   const portfolio = (
@@ -279,7 +291,7 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheB
       <CityChapters
         data={data}
         cap={`A custom stand on the show floor. Designed, fabricated and installed by Approach Media.`}
-        sectorShots={matchSectorShots(data.industries, cityProjects)}
+        sectorShots={matchSectorShots(data.industries, sectorPool)}
         calendar={calendar}
         portfolio={portfolio}
         faq={faq}

@@ -207,16 +207,23 @@
 .cty-pair__t { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
 .cty-pair p { font-size: 0.875rem; color: var(--body); line-height: 1.7; margin: 0; }
 
-/* ── 09 the build: the peak ────────────────────────────────── */
-.cty-build__stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px; align-items: center; min-height: 0; }
-.cty-plan { position: relative; width: 100%; aspect-ratio: 4 / 3; }
-.cty-plan svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.cty-plan__g { opacity: var(--k, 0); }
-.cty-steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-soft); }
-.cty-step { display: grid; grid-template-columns: 2.8rem 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); opacity: calc(0.32 + 0.68 * var(--k, 0)); }
-.cty-step__n { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; color: var(--green); font-variant-numeric: tabular-nums; padding-top: 4px; }
-.cty-step h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin: 0 0 4px; line-height: 1.35; }
-.cty-step p { font-size: 0.85rem; color: var(--body); line-height: 1.65; margin: 0; max-height: calc(var(--k, 0) * 8rem); overflow: hidden; }
+/* ── 09 the process: the isometric stand that builds itself ──
+   Ported from the owner's design handoff. The visual is sticky beside the
+   stage list; the active stage follows scroll, hover previews a stage and a
+   click pins it. Stage descriptions are height-collapsed, never removed, so
+   the copy stays in the DOM for crawlers. */
+.ps__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+  gap: clamp(28px, 5vw, 88px); margin-top: clamp(40px, 5vw, 72px); align-items: start;
+}
+.ps__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, .08); }
+.ps__row {
+  display: grid; grid-template-columns: 3px 48px 1fr; gap: 0 20px;
+  padding: 26px 0; border-bottom: 1px solid rgba(255, 255, 255, .08); cursor: pointer;
+}
+@keyframes psDash { to { stroke-dashoffset: -64; } }
+@keyframes psPulse { 0%, 100% { opacity: .35 } 50% { opacity: 1 } }
+@keyframes psFlick { 0% { opacity: 0 } 12% { opacity: .6 } 22% { opacity: .08 } 38% { opacity: .6 } 48% { opacity: .18 } 62%, 100% { opacity: .55 } }
 
 /* ── questions + colophon ──────────────────────────────────── */
 .cty-faq { max-width: 800px; }
@@ -279,7 +286,5 @@
     overscroll-behavior-x: contain; scroll-snap-type: x proximity;
   }
   .cty [data-sc-pan] > * { scroll-snap-align: center; }
-  .cty-plan__g { opacity: 1; }
-  .cty-step { opacity: 1; }
-  .cty-step p { max-height: none; }
+  .ps [style*="animation"] { animation: none !important; }
 }

@@ -20,6 +20,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { loadEngine, canH264 } from '@/components/services/ServiceFlow'
 import VenueImage from './VenueImage'
+import { ProcessStand } from './ProcessStand'
 import type { CityPageData } from './types'
 
 const FLOW = '/city-flow'
@@ -118,58 +119,6 @@ function useFolio(rootRef: React.RefObject<HTMLElement | null>) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [rootRef])
   return current
-}
-
-// ── the signature move ───────────────────────────────────────
-
-const STEP_CENTRES = [0.10, 0.225, 0.35, 0.475, 0.60, 0.725, 0.85]
-
-function layerStyle(at: number, persists = false): React.CSSProperties {
-  const rise = `clamp(0, calc((var(--sc-p, 0) - ${at}) / 0.055), 1)`
-  const fall = persists ? '1' : `clamp(0, calc((0.965 - var(--sc-p, 0)) / 0.055), 1)`
-  return { ['--k' as string]: `min(${rise}, ${fall})` }
-}
-
-/**
- * Seven process steps, seven layers: an empty plot is measured, zoned,
- * walled, dimensioned, clad and fitted out, and on the seventh step
- * (Dismantling & Exit) everything but the plot outline goes away again.
- * No figures appear: stall sizes differ per project and the page states none.
- */
-function PlanDrawing() {
-  return (
-    <div className="cty-plan" aria-hidden="true">
-      <svg viewBox="0 0 400 300" fill="none">
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[0], true)}>
-          <rect x="70" y="60" width="260" height="180" stroke="hsl(220 10% 45%)" strokeWidth="1.5" strokeDasharray="7 6" />
-        </g>
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[1])}>
-          <path d="M200 60 V240 M200 150 H330" stroke="hsl(220 10% 38%)" strokeWidth="1" strokeDasharray="5 5" />
-        </g>
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[2])}>
-          <path d="M70 240 V60 H330" stroke="hsl(0 0% 95%)" strokeWidth="4" strokeLinecap="square" />
-        </g>
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[3])}>
-          <path d="M70 262 H330 M70 256 v12 M330 256 v12 M48 60 V240 M42 60 h12 M42 240 h12"
-                stroke="hsl(110 55% 55%)" strokeWidth="1" />
-        </g>
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[4])}>
-          <rect x="70" y="60" width="260" height="180" fill="hsl(0 0% 100% / 0.05)" />
-          <rect x="70" y="44" width="260" height="12" fill="hsl(110 55% 45% / 0.85)" />
-        </g>
-        <g className="cty-plan__g" style={layerStyle(STEP_CENTRES[5])}>
-          <g stroke="hsl(230 70% 65%)" strokeWidth="1.4">
-            <circle cx="120" cy="100" r="7" /><circle cx="200" cy="100" r="7" />
-            <circle cx="280" cy="100" r="7" /><circle cx="120" cy="196" r="7" />
-          </g>
-          <rect x="92" y="140" width="74" height="22" stroke="hsl(230 70% 65%)" strokeWidth="1.4" />
-          <rect x="232" y="176" width="30" height="30" stroke="hsl(230 70% 65%)" strokeWidth="1.4" />
-          <rect x="278" y="176" width="30" height="30" stroke="hsl(230 70% 65%)" strokeWidth="1.4" />
-          <rect x="232" y="82" width="76" height="34" stroke="hsl(230 70% 65%)" strokeWidth="1.4" />
-        </g>
-      </svg>
-    </div>
-  )
 }
 
 // ── chapters ─────────────────────────────────────────────────
@@ -412,33 +361,18 @@ export function CityChapters({ data, cap, sectorShots, calendar, portfolio, faq,
         </div>
       </Chapter>
 
-      {/* ── 09 · THE BUILD. The peak. ── */}
-      <section className="cty-ch cty-ch--c" data-chapter={9} aria-label="The build" style={{ padding: 0 }}>
-        <div data-sc-act="pin" data-sc-span="3.6">
-          <div data-sc-stage className="sc-stage">
-            <div className="cty__wrap" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(18px,2.5vw,28px)' }}>
-              <div>
-                <span className="cty-eyebrow">How we work</span>
-                <h2 className="cty-h2">Our exhibition stand process</h2>
-              </div>
-              <div className="cty-build__stage">
-                <PlanDrawing />
-                <ol className="cty-steps">
-                  {data.process.map((p, i) => (
-                    <li key={p.step} className="cty-step" style={layerStyle(STEP_CENTRES[i] - 0.045, true)}>
-                      <span className="cty-step__n">{p.step}</span>
-                      <div>
-                        <h3>{p.title}</h3>
-                        <p>{p.body}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-          </div>
+      {/* ── 09 · THE PROCESS. The owner's design-handoff animation: an
+             isometric stand that is briefed, zoned, folded into 3D, costed,
+             branded, installed and struck across the page's own seven
+             stages. Scroll drives the stage, hover previews one, a click
+             pins it. Every stage's copy stays in the DOM. ── */}
+      <Chapter n={9} title="The build" ground="c">
+        <div className="cty-head" data-sc-in>
+          <span className="cty-eyebrow">How we work</span>
+          <h2 className="cty-h2">Our exhibition stand process</h2>
         </div>
-      </section>
+        <ProcessStand steps={data.process} />
+      </Chapter>
 
       {/* ── 10 · QUESTIONS. The accordion's own markup and script. ── */}
       <Chapter n={10} title="Questions" ground="a">

@@ -75,7 +75,7 @@ export async function getProjectById(id: number): Promise<ProjectWithRelations |
 
 // ─── Portfolio index (public ISR page) ───────────────────────
 
-export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number; featured?: boolean }) {
+export async function getPublishedProjects(opts?: { industrySlug?: string; stallTypeSlug?: string; city?: string; limit?: number; featured?: boolean; minAreaSqm?: number }) {
   const cdnBase = await getCdnBaseUrl()
   const rows = await prisma.project.findMany({
     where: {
@@ -87,6 +87,9 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
       ...(opts?.stallTypeSlug && {
         stallTypes: { some: { stallType: { slug: opts.stallTypeSlug } } },
       }),
+      // Used where the work has to be substantial enough to stand as a
+      // sector example rather than merely present.
+      ...(opts?.minAreaSqm != null && { stallAreaSqm: { gte: opts.minAreaSqm } }),
       ...(opts?.city && {
         OR: [
           { city: { contains: opts.city, mode: 'insensitive' as const } },

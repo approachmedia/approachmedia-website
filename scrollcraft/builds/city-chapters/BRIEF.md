@@ -102,3 +102,32 @@ built.*
 - Never the words premier, trusted, leading, world-class, passionate in anything
   authored here. (The existing "Premier Venue" badge is the page's own copy and
   is left alone — reported, not silently changed.)
+
+## Revision: the owner's own process animation
+
+The peak chapter was originally my hand-drawn plan that inked itself in a pinned
+act. The owner then supplied `Exhibition_Stand_Process_Animation.zip`, a Claude
+Design handoff of the same idea built properly: an isometric stand that assembles
+itself over seven stages beside a stage list, with a truck arriving at logistics.
+That replaces the drawing. The peak, the feeling and the tell-someone sentence
+are unchanged; only the mechanism is now theirs rather than mine.
+
+Two deliberate departures from the handoff, both recorded in the component:
+
+- the stage copy is each page's own `process` data, not the handoff's hard-coded
+  list, because that list names Mumbai and these are per-city pages;
+- the eyebrow and heading use the site's chapter styles so the section matches
+  its neighbours.
+
+The act is now a normal flow chapter rather than a pinned act: the visual is
+sticky beside the list, offset by `--hdr` so it clears the site's sticky header.
+Getting that offset wrong hid the top of the graphic under the nav, which is the
+one defect this revision's verification pass caught.
+
+## Revision: sector photographs come from the whole portfolio
+
+"Industries we serve" now draws its photographs from every published project,
+not the city's own, because the industry experience is what the section claims
+and it is not city-bound. Floor of 36 sq m on stall area, one project used once,
+and a card stays text-only where no genuine industry match exists rather than
+being filled with a project that does not belong to that sector.
