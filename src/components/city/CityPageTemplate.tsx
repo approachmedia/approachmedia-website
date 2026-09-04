@@ -3,9 +3,59 @@ import Link from 'next/link'
 import type { ProjectCardData } from '@/components/portfolio/ProjectCard'
 import CityProjectsCarousel from './CityProjectsCarousel'
 import ExhibitionCarousel from './ExhibitionCarousel'
-import { CityChapters } from './CityChapters'
+import { CityChapters, type SectorShot } from './CityChapters'
 import './city-chapters.css'
 import type { CityPageData } from './types'
+
+/**
+ * Pair each sector the page names with a real project of this city's that
+ * actually works in it, so the photograph on a sector card is that sector's
+ * work rather than decoration. Matching is by shared significant word
+ * between the page's sector title ("Pharmaceuticals & Healthcare") and the
+ * project's own industry records ("Pharmaceuticals"), because the two
+ * vocabularies were authored separately and rarely match exactly.
+ *
+ * A project is used once at most, and a sector with no genuine match gets no
+ * photograph: an unmatched picture would be a claim the data does not make.
+ */
+const SECTOR_STOPWORDS = new Set([
+  'and', 'the', 'for', 'with', 'goods', 'services', 'service', 'industry',
+  'industries', 'sector', 'sectors', 'other', 'others', 'general',
+])
+
+function significantWords(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .map(w => w.replace(/(ies|s)$/, ''))
+    .filter(w => w.length > 3 && !SECTOR_STOPWORDS.has(w))
+}
+
+function matchSectorShots(
+  industries: { title: string }[],
+  projects: ProjectCardData[],
+): SectorShot[] {
+  const pool = projects
+    .filter(p => p.media.length > 0)
+    .map(p => ({
+      project: p,
+      words: new Set(p.industries.flatMap(i => significantWords(i.industry.name))),
+    }))
+  const used = new Set<string>()
+
+  return industries.map(ind => {
+    const want = significantWords(ind.title)
+    const hit = pool.find(c => !used.has(c.project.slug) && want.some(w => c.words.has(w)))
+    if (!hit) return null
+    used.add(hit.project.slug)
+    const hero = hit.project.media[0]
+    return {
+      src: hero.cdnUrl ?? hero.url,
+      alt: hero.altText,
+      label: hit.project.client?.name ?? hit.project.title,
+    }
+  })
+}
 
 /**
  * The 15 city landing pages, as a chaptered editorial feature.
@@ -229,6 +279,7 @@ export default function CityPageTemplate({ data, cityProjects, siteUrl, fromTheB
       <CityChapters
         data={data}
         cap={`A custom stand on the show floor. Designed, fabricated and installed by Approach Media.`}
+        sectorShots={matchSectorShots(data.industries, cityProjects)}
         calendar={calendar}
         portfolio={portfolio}
         faq={faq}

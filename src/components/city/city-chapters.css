@@ -1,211 +1,241 @@
-/* City pages, chaptered-editorial rebuild.
-   The page is a printed feature: chapters are the unit, each lands on its own
-   ground with a hard cut, and no two chapters behave alike. Five identical
-   card grids (Stand Out, Services, Industries, Why Us, Process) became five
-   different things; the Portfolio chapter is the owner's and is untouched.
-
-   Grounds are three, alternating, so a cut is visible:
-     INK    #080A0F  media and the peak
-     SLATE  #0E121A  the reading ground
-     RAISED #141922  plates
-   Type rides the site's next/font families. Accent greens and blues are the
-   city pages' own existing values, so the rebuild reads as the same site. */
+/* City pages, chaptered rebuild.
+   The layouts and the scroll devices vary chapter by chapter, but the visual
+   vocabulary is the SITE'S, not a new one: the card surface, radii, type
+   scale, colours and section rhythm below are the values the city template
+   already used, so these pages read as part of approachmedia.in rather than
+   as a separate publication. An earlier pass invented a tighter editorial
+   scale with hairline rules and it did not match the rest of the site. */
 
 .cty {
-  --ink: #080A0F;
-  --slate: #0E121A;
-  --raised: #141922;
-  --rule: hsl(222 18% 20%);
-  --rule-soft: hsl(222 18% 15%);
+  /* grounds: the site's own three section backgrounds */
+  --g-a: hsl(222 30% 6%);
+  --g-b: hsl(222 22% 9%);
+  --g-c: hsl(220 18% 7%);
+  /* the site's card */
+  --card: hsl(222 22% 12%);
+  --line: hsl(222 18% 20%);
+  --line-soft: hsl(222 18% 16%);
+  /* the site's type colours */
   --text: hsl(0 0% 95%);
-  --muted: hsl(220 10% 58%);
-  /* The card template used 38-42% for micro-labels, which measures 3.5:1 on
-     these grounds. Lifted until every label clears 4.5:1 on the render. */
-  --dim: hsl(220 10% 54%);
+  --lede: hsl(220 10% 58%);
+  --body: hsl(220 10% 55%);
+  --dim: hsl(220 10% 52%);
   --green: hsl(110 55% 55%);
   --blue: hsl(230 70% 65%);
-  --measure: 68ch;
-  --gut: clamp(20px, 5vw, 64px);
+  --gut: clamp(20px, 5vw, 40px);
+  /* the site header is sticky at top:0 and overlaps anything else pinned
+     there; measured 97px at desktop and 81px at 390px */
+  --hdr: 97px;
   font-family: var(--font-inter), Inter, system-ui, sans-serif;
 }
 
-.cty__wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: var(--gut); }
+.cty__wrap { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: var(--gut); }
 .cty section { position: relative; }
 
 /* ── the two device rules the engine needs ─────────────────────
    The engine's own stylesheet is not imported (it would restyle every page
-   that shares this layout), so the pinned/scrub acts get their sticky stage
-   here instead, scoped to .cty. Without this the stage is `static`, the act
-   animates correctly while scrolling past off-screen, and every automated
-   check still passes — the exact silent failure the engine warns about.
-   The stage is inset by the site's fixed header (.nav-header, ~88px) so the
-   top of a pinned composition is never behind it. */
+   sharing this layout), so the pinned/scrub acts get their sticky stage
+   here, scoped to .cty. Without this the stage is `static`, the act animates
+   correctly while scrolling past off-screen, and every automated check still
+   passes: the silent failure the engine warns about. The stage is inset by
+   the site header, which is sticky at top:0 and would otherwise overlap it. */
 .cty [data-sc-act] { position: relative; }
 .cty .sc-stage {
   position: sticky; top: 0;
   height: 100vh; height: 100svh;
   overflow: clip;
-  padding-top: 88px;
+  padding-top: var(--hdr);
 }
-/* The poster holds the frame until a real video frame has painted. */
 .cty video[data-sc-scrub] { opacity: 0; transition: opacity 380ms ease; }
 .cty .sc-has-clip video[data-sc-scrub],
 .cty video[data-sc-scrub].sc-has-clip { opacity: 1; }
 .cty .sc-stage__poster { transition: opacity 380ms ease; }
 .cty .sc-has-clip .sc-stage__poster { opacity: 0; }
-/* Inside a fixed-height stage the plate takes the room that is left rather
-   than its own aspect ratio, or it pushes the caption off the bottom. */
 .cty .sc-stage .cty-plate { flex: 1 1 auto; min-height: 0; aspect-ratio: auto; }
 
-/* ── the folio: chapter number and title in the margin ──────── */
+/* ── running head ──────────────────────────────────────────── */
 .cty-folio {
-  position: sticky; top: 88px; z-index: 4;
+  position: sticky; top: var(--hdr); z-index: 4;
   display: flex; align-items: baseline; gap: 14px;
-  padding: 10px 0 9px;
-  background: linear-gradient(to bottom, var(--ground, var(--slate)) 72%, transparent);
-  font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 11px 0 10px;
+  background: linear-gradient(to bottom, var(--ground, var(--g-a)) 72%, transparent);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--dim);
-  border-bottom: 1px solid var(--rule-soft);
-  transition: color 0.4s ease;
+  border-bottom: 1px solid var(--line-soft);
 }
-.cty-folio b { color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }
-.cty-folio span { color: var(--muted); letter-spacing: 0.14em; }
+.cty-folio b { color: var(--green); font-variant-numeric: tabular-nums; }
+.cty-folio span { color: var(--body); letter-spacing: 0.18em; }
 
-/* ── chapter shell ─────────────────────────────────────────── */
-.cty-ch { padding: clamp(64px, 8vw, 112px) 0; background: var(--ground); }
-.cty-ch--ink { --ground: var(--ink); }
-.cty-ch--slate { --ground: var(--slate); }
-.cty-ch--raised { --ground: var(--raised); }
+/* ── chapter shell, on the site's section rhythm ───────────── */
+.cty-ch { padding: 80px 0; background: var(--ground); }
+.cty-ch--a { --ground: var(--g-a); }
+.cty-ch--b { --ground: var(--g-b); }
+.cty-ch--c { --ground: var(--g-c); }
 
 .cty-h2 {
   font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
-  font-weight: 700; line-height: 1.14; letter-spacing: -0.02em;
-  font-size: clamp(1.7rem, 3.4vw, 2.7rem); color: var(--text);
+  font-size: clamp(1.75rem, 3.5vw, 2.8rem); font-weight: 700;
+  line-height: 1.2; letter-spacing: -0.02em; color: var(--text);
   margin: 0; text-wrap: balance;
 }
-.cty-lede { color: var(--muted); line-height: 1.8; font-size: 1.03rem; margin: 0; text-wrap: pretty; }
+.cty-lede { color: var(--lede); line-height: 1.8; font-size: 1.05rem; margin: 0; text-wrap: pretty; }
 .cty-eyebrow {
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--green); margin: 0 0 14px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--green); margin: 0 0 12px; display: block;
 }
+.cty-head { margin-bottom: 48px; }
+.cty-head--center { text-align: center; max-width: 760px; margin-inline: auto; }
+
+/* the site's card */
+.cty-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 16px; padding: 28px;
+  transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cty-card:hover { border-color: hsl(230 80% 58% / 0.5); }
+.cty-card h3 {
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1.1rem; font-weight: 700; line-height: 1.35;
+  color: var(--text); margin: 0 0 10px;
+}
+.cty-card p { font-size: 0.875rem; color: var(--body); line-height: 1.7; margin: 0; }
 
 /* ── title page ────────────────────────────────────────────── */
-.cty-title { background: var(--slate); padding: clamp(48px, 7vw, 92px) 0 clamp(56px, 7vw, 96px); }
+.cty-title { background: var(--g-a); padding: 96px 0 72px; }
 .cty-title__city {
-  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--green); margin: 0 0 22px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--green); margin: 0 0 20px; display: block;
 }
 .cty-title h1 {
   font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
-  font-size: clamp(2rem, 5.6vw, 3.6rem); font-weight: 800; line-height: 1.08;
-  letter-spacing: -0.025em; margin: 0 0 22px; max-width: 20ch; color: var(--text);
+  font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 800; line-height: 1.15;
+  letter-spacing: -0.02em; margin: 0 0 20px; max-width: 20ch; color: var(--text);
   text-wrap: balance;
 }
 .cty-title h1 .hl { color: var(--blue); }
-.cty-title__sub { color: var(--muted); font-size: 1.05rem; line-height: 1.78; max-width: 62ch; margin: 0 0 30px; }
-.cty-title__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
-.cty-title__pills { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid var(--rule-soft); }
+.cty-title__sub { color: hsl(220 10% 62%); font-size: 1.05rem; line-height: 1.75; max-width: 680px; margin: 0 0 28px; }
+.cty-title__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.cty-title__pills { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
 .cty-title__pills li {
-  list-style: none; font-size: 0.78rem; color: var(--muted);
-  padding: 11px 20px 11px 0; margin-right: 20px;
-  border-bottom: 1px solid var(--rule-soft);
+  font-size: 0.8rem; padding: 5px 14px; border-radius: 100px;
+  background: hsl(222 20% 14%); border: 1px solid hsl(222 18% 22%); color: hsl(220 10% 70%);
 }
 
-/* ── 01 the city: asymmetric spread, wipes in ──────────────── */
-.cty-spread { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
-.cty-spread__rule { grid-column: 1 / -1; height: 1px; background: var(--rule); margin-bottom: clamp(24px, 3vw, 40px); }
+/* ── 01 the city: an asymmetric spread ─────────────────────── */
+.cty-spread { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 48px; align-items: start; }
 .cty-spread p + p { margin-top: 14px; }
 
 /* ── 02 on the floor: the one media chapter ────────────────── */
-.cty-plate { position: relative; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; background: #05070A; aspect-ratio: 16 / 8.4; }
+.cty-plate { position: relative; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: hsl(222 24% 8%); aspect-ratio: 16 / 8.4; }
 .cty-plate video, .cty-plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.cty-plate__cap {
-  display: flex; gap: 12px; align-items: baseline;
-  margin-top: 12px; font-size: 0.78rem; color: var(--dim); line-height: 1.6;
+.cty-plate__cap { display: flex; gap: 12px; align-items: baseline; margin-top: 14px; font-size: 0.8rem; color: var(--body); line-height: 1.6; }
+.cty-plate__cap b { color: var(--green); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap; }
+.cty-notes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 56px; }
+.cty-note__n {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 10px; margin-bottom: 16px;
+  background: hsl(110 55% 50% / 0.1); border: 1px solid hsl(110 55% 50% / 0.2);
+  font-size: 0.72rem; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums;
 }
-.cty-plate__cap b { color: var(--muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap; }
-.cty-notes { columns: 2; column-gap: clamp(28px, 4vw, 56px); margin-top: clamp(36px, 5vw, 60px); }
-.cty-note { break-inside: avoid; padding: 16px 0; border-top: 1px solid var(--rule-soft); }
-.cty-note__n { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; color: var(--green); font-variant-numeric: tabular-nums; }
-.cty-note h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin: 6px 0 6px; line-height: 1.35; }
-.cty-note p { font-size: 0.87rem; color: var(--muted); line-height: 1.72; margin: 0; }
 
-/* ── 03 venues: media in its own column, captioned ─────────── */
-.cty-venue { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(22px, 3.5vw, 48px); align-items: center; padding: clamp(28px, 4vw, 52px) 0; border-top: 1px solid var(--rule-soft); }
-.cty-venue:first-of-type { border-top: 0; }
+/* ── 03 venues: media beside copy, the photo zooming ───────── */
+.cty-venue { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 40px 0; border-top: 1px solid var(--line-soft); }
+.cty-venue:first-of-type { border-top: 0; padding-top: 0; }
 .cty-venue--flip .cty-venue__media { order: 2; }
-.cty-venue__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--rule); border-radius: 4px; background: var(--raised); }
-.cty-venue__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.cty-venue h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--green); margin: 0 0 10px; line-height: 1.35; }
-.cty-venue p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0 0 16px; }
-.cty-venue__lbl { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 0 0 10px; }
-.cty-venue ul { list-style: none; margin: 0 0 18px; padding: 0; }
-.cty-venue li { font-size: 0.86rem; color: var(--muted); line-height: 1.6; padding: 7px 0 7px 18px; border-top: 1px solid var(--rule-soft); position: relative; }
-.cty-venue li::before { content: ""; position: absolute; left: 0; top: 15px; width: 7px; height: 1px; background: var(--green); }
-.cty-venue__specs { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule-soft); margin-bottom: 18px; }
-.cty-venue__specs div { padding: 11px 14px 11px 0; border-bottom: 1px solid var(--rule-soft); }
-.cty-venue__specs dt { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
-.cty-venue__specs dd { font-size: 0.87rem; font-weight: 700; color: hsl(0 0% 87%); margin: 0; line-height: 1.35; }
-.cty-venue__badge { position: absolute; top: 12px; left: 12px; z-index: 1; background: hsl(110 55% 42%); color: #fff; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; padding: 4px 11px; border-radius: 100px; text-transform: uppercase; }
-.cty-venue__addr { display: flex; gap: 7px; font-size: 0.78rem; color: var(--dim); line-height: 1.5; margin: 0 0 16px; }
+.cty-venue__media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.cty-venue__badge { position: absolute; top: 14px; left: 14px; z-index: 2; background: hsl(110 55% 42%); color: #fff; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; padding: 4px 11px; border-radius: 100px; text-transform: uppercase; }
+.cty-venue h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--green); line-height: 1.35; margin: 0 0 12px; }
+.cty-venue p { font-size: 0.9rem; color: var(--body); line-height: 1.75; margin: 0 0 18px; }
+.cty-venue__lbl { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin: 0 0 12px; }
+.cty-venue ul { display: grid; gap: 10px; list-style: none; padding: 0; margin: 0 0 22px; }
+.cty-venue li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.86rem; color: hsl(220 10% 62%); line-height: 1.5; }
+.cty-venue li::before {
+  content: ""; flex: none; margin-top: 6px; width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid var(--green);
+  background: no-repeat center / 8px 8px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237ad45c' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+.cty-venue__specs { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+.cty-venue__specs div { padding: 13px 16px; background: hsl(222 22% 10%); border-bottom: 1px solid var(--line-soft); }
+.cty-venue__specs dt { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-bottom: 4px; }
+.cty-venue__specs dd { font-size: 0.88rem; font-weight: 700; color: hsl(0 0% 87%); margin: 0; line-height: 1.35; }
+.cty-venue__addr { display: flex; gap: 7px; font-size: 0.8rem; color: var(--dim); line-height: 1.5; margin: 0 0 16px; }
+
+/* The zoom. `data-sc-parallax` moves a layer by rate*100px over a whole act,
+   which inside a framed photo is ~55px and reads as the picture simply
+   sitting there. A scale driven from the frame's own travel through the
+   viewport is the effect that is actually legible: the photograph enters
+   slightly enlarged and settles back to true size. */
+/* The default is the START of the travel, not the middle: a frame still
+   below the fold must already be at full zoom, or it pops on entry. */
+.cty-zoom { position: absolute; inset: 0; transform: scale(var(--z, 1.14)); transform-origin: center; will-change: transform; }
 
 /* ── 04 services: a running numbered list ──────────────────── */
-.cty-run { border-top: 1px solid var(--rule); }
-.cty-run__row { display: grid; grid-template-columns: 4.5rem minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(16px, 2.5vw, 40px); padding: clamp(20px, 2.6vw, 30px) 0; border-bottom: 1px solid var(--rule-soft); align-items: baseline; }
-.cty-run__n { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; line-height: 1; }
-.cty-run h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.08rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
-.cty-run p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0; }
+.cty-run { border-top: 1px solid var(--line); }
+.cty-run__row { display: grid; grid-template-columns: 4.5rem minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 32px; padding: 26px 0; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+.cty-run__n { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; line-height: 1; }
+.cty-run h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
+.cty-run p { font-size: 0.875rem; color: var(--body); line-height: 1.7; margin: 0; }
 
-/* ── 05 sectors: dense specimen index ──────────────────────── */
-.cty-index { columns: 3; column-gap: clamp(24px, 3.5vw, 48px); }
-.cty-index__item { break-inside: avoid; padding: 13px 0; border-top: 1px solid var(--rule-soft); }
-.cty-index h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.94rem; font-weight: 700; color: var(--text); margin: 0 0 5px; line-height: 1.35; }
-.cty-index p { font-size: 0.83rem; color: var(--muted); line-height: 1.68; margin: 0; }
+/* ── 06 sectors: a rail of cards, each with the city's own work ── */
+.cty [data-sc-pan] { display: flex; will-change: transform; }
+.cty-rail { gap: 20px; padding-inline: max(var(--gut), calc((100vw - 1200px) / 2 + var(--gut))); align-items: stretch; }
+.cty-rail__item {
+  flex: 0 0 clamp(16rem, 24vw, 21rem);
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.cty-rail__shot { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: hsl(222 24% 10%); border-bottom: 1px solid var(--line); }
+.cty-rail__shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cty-rail__tag {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 16px 10px;
+  background: linear-gradient(to top, hsl(222 30% 5% / 0.92), transparent);
+  font-size: 0.7rem; color: hsl(0 0% 88%); font-weight: 600;
+}
+/* Cards are equal height, but only the sectors this city has actually
+   built in carry a photograph. Centring the copy in whatever room is left
+   keeps a text-only card looking deliberate rather than like a card whose
+   image failed to load. */
+.cty-rail__body { padding: 22px 22px 24px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.cty-rail__item h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0 0 9px; line-height: 1.35; }
+.cty-rail__item p { font-size: 0.85rem; color: var(--body); line-height: 1.7; margin: 0; }
 
-/* ── 06 why us: alternating asymmetric pairs ───────────────── */
-.cty-pairs { border-top: 1px solid var(--rule); }
-.cty-pair { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(18px, 3vw, 44px); padding: clamp(20px, 2.8vw, 32px) 0; border-bottom: 1px solid var(--rule-soft); align-items: baseline; }
-.cty-pair:nth-child(even) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+/* ── 08 why us: alternating asymmetric pairs ───────────────── */
+.cty-pairs { border-top: 1px solid var(--line); }
+.cty-pair { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 40px; padding: 26px 0; border-bottom: 1px solid var(--line-soft); align-items: baseline; }
+.cty-pair:nth-child(even) { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
 .cty-pair:nth-child(even) .cty-pair__t { order: 2; }
-.cty-pair__t { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.08rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
-.cty-pair p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin: 0; }
+.cty-pair__t { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0; line-height: 1.35; }
+.cty-pair p { font-size: 0.875rem; color: var(--body); line-height: 1.7; margin: 0; }
 
-/* ── 07 the build: the peak, the plan draws itself ─────────── */
-.cty-build__stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(24px, 4vw, 60px); align-items: center; min-height: 0; }
+/* ── 09 the build: the peak ────────────────────────────────── */
+.cty-build__stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px; align-items: center; min-height: 0; }
 .cty-plan { position: relative; width: 100%; aspect-ratio: 4 / 3; }
 .cty-plan svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.cty-plan__g { opacity: var(--k, 0); transition: none; }
-.cty-steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-soft); }
-.cty-step {
-  display: grid; grid-template-columns: 2.6rem 1fr; gap: 14px;
-  padding: 11px 0; border-bottom: 1px solid var(--rule-soft);
-  opacity: calc(0.3 + 0.7 * var(--k, 0));
-}
-.cty-step__n { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; color: var(--green); font-variant-numeric: tabular-nums; padding-top: 3px; }
-.cty-step h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--text); margin: 0 0 3px; line-height: 1.35; }
-.cty-step p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; margin: 0; max-height: calc(var(--k, 0) * 8rem); overflow: hidden; transition: none; }
+.cty-plan__g { opacity: var(--k, 0); }
+.cty-steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-soft); }
+.cty-step { display: grid; grid-template-columns: 2.8rem 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); opacity: calc(0.32 + 0.68 * var(--k, 0)); }
+.cty-step__n { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; color: var(--green); font-variant-numeric: tabular-nums; padding-top: 4px; }
+.cty-step h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin: 0 0 4px; line-height: 1.35; }
+.cty-step p { font-size: 0.85rem; color: var(--body); line-height: 1.65; margin: 0; max-height: calc(var(--k, 0) * 8rem); overflow: hidden; }
 
-/* ── 08 questions ──────────────────────────────────────────── */
-.cty-faq { max-width: 820px; }
-
-/* ── colophon ──────────────────────────────────────────────── */
-.cty-colo { border-top: 1px solid var(--rule); padding-top: clamp(28px, 4vw, 44px); display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(22px, 4vw, 56px); align-items: start; }
-.cty-colo__acts { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 20px; }
-.cty-colo__run { font-size: 0.92rem; line-height: 1.85; color: var(--muted); margin: 0; }
+/* ── questions + colophon ──────────────────────────────────── */
+.cty-faq { max-width: 800px; }
+.cty-colo { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 48px; align-items: start; }
+.cty-colo__acts { display: flex; flex-wrap: wrap; gap: 14px; margin: 24px 0 22px; }
+.cty-colo__run { font-size: 0.95rem; line-height: 1.85; color: var(--lede); margin: 0; }
 .cty-colo__run a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── scroll choreography ───────────────────────────────────── */
-.cty [data-sc-in] { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.cty [data-sc-in] { opacity: 0; transform: translate3d(0, 16px, 0); transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1); }
 .cty [data-sc-in].sc-in { opacity: 1; transform: none; }
-.cty [data-sc-stagger] > * { opacity: 0; transform: translate3d(0, 12px, 0); transition: opacity 620ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.cty [data-sc-stagger] > * { opacity: 0; transform: translate3d(0, 16px, 0); transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1); }
 .cty [data-sc-stagger] > .sc-in { opacity: 1; transform: none; }
+
 /* Chapter-boundary wipes are the ENGINE's reveal, driven from act progress.
-   They were briefly a hand-rolled `clip-path` toggled by the engine's
+   They were briefly a hand-rolled clip-path toggled by the engine's
    IntersectionObserver, which cannot work: the observer computes intersection
-   AFTER clipping, so an element clipped to zero height is never seen entering,
-   never gets `.sc-in`, and stays clipped for ever. The element hid itself from
-   the thing meant to reveal it. Act-driven reveals have no such loop. */
+   AFTER clipping, so an element clipped to zero height is never seen
+   entering, never gets `.sc-in`, and stays clipped for ever. */
 .cty [data-sc-reveal] { will-change: clip-path; }
 
 /* kinetic split (carried from the engine sheet, which is not imported) */
@@ -214,38 +244,23 @@
 .cty .sc-split__i { display: inline-block; will-change: transform, opacity; }
 .cty .sc-is-split { opacity: 1 !important; }
 
-/* parallax inside a media column: the layer is oversized so its travel never
-   exposes an edge of the frame */
-.cty [data-sc-parallax] { will-change: transform; }
-.cty-venue__par { position: absolute; inset: -9% 0; }
-
-/* the sectors rail: lateral travel reads as breadth */
-.cty [data-sc-pan] { display: flex; will-change: transform; }
-.cty-rail { gap: 18px; padding-inline: var(--gut); align-items: stretch; }
-.cty-rail__item {
-  flex: 0 0 clamp(14rem, 21vw, 19rem);
-  border-top: 1px solid var(--rule); padding-top: 14px;
-}
-.cty-rail__item h3 { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--text); margin: 0 0 7px; line-height: 1.35; }
-.cty-rail__item p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin: 0; }
-.cty-pan__head { margin-bottom: clamp(22px, 3vw, 36px); }
-
 /* ── narrow ────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .cty-spread, .cty-venue, .cty-build__stage, .cty-colo { grid-template-columns: 1fr; }
+  .cty { --hdr: 81px; }
+  .cty-ch { padding: 64px 0; }
+  .cty-title { padding: 80px 0 56px; }
+  .cty-spread, .cty-venue, .cty-build__stage, .cty-colo { grid-template-columns: 1fr; gap: 24px; }
   .cty-venue--flip .cty-venue__media { order: 0; }
-  .cty-notes { columns: 1; }
-  .cty-index { columns: 2; }
-  .cty-run__row { grid-template-columns: 3rem 1fr; }
-  .cty-run__row > p { grid-column: 2; }
-  .cty-pair, .cty-pair:nth-child(even) { grid-template-columns: 1fr; gap: 8px; }
+  .cty-run__row { grid-template-columns: 3rem 1fr; gap: 16px; }
+  .cty-run__row > p { grid-column: 2; margin-top: 8px; }
+  .cty-pair, .cty-pair:nth-child(even) { grid-template-columns: 1fr; gap: 10px; }
   .cty-pair:nth-child(even) .cty-pair__t { order: 0; }
-  .cty-build__stage { gap: 28px; }
-  .cty-plan { max-width: 460px; margin-inline: auto; }
+  .cty-plan { max-width: 440px; margin-inline: auto; }
+  .cty-head { margin-bottom: 32px; }
 }
 @media (max-width: 620px) {
-  .cty-index { columns: 1; }
   .cty-venue__specs { grid-template-columns: 1fr; }
+  .cty-notes { margin-top: 36px; }
 }
 
 /* ── reduced motion: everything visible, nothing moving ──────
@@ -255,8 +270,9 @@
    scroll region instead, so every sector is still gettable. */
 @media (prefers-reduced-motion: reduce) {
   .cty [data-sc-in], .cty [data-sc-stagger] > * { opacity: 1; transform: none; transition: none; }
-  .cty [data-sc-parallax], .cty [data-sc-pan], .cty .sc-split__i { transform: none !important; }
+  .cty [data-sc-pan], .cty .sc-split__i { transform: none !important; }
   .cty [data-sc-reveal] { clip-path: none !important; }
+  .cty-zoom { transform: none; }
   .cty [data-sc-act="pan"] .sc-stage,
   .cty [data-sc-act="pan"] [data-sc-stage] {
     overflow-x: auto; overflow-y: hidden;
