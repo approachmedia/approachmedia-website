@@ -23,12 +23,14 @@ export default function PortfolioGrid({ projects }: { projects: ProjectCardData[
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
-      <div className="flex flex-col gap-y-14">
+      {/* Each column staggers its own objects in, so the two columns arrive
+          out of step with each other the way they already sit out of step. */}
+      <div className="flex flex-col gap-y-14" data-sc-stagger>
         {leftCards.map((p, i) => (
           <GridCard key={p.id} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
         ))}
       </div>
-      <div className="flex flex-col gap-y-14 md:pt-28">
+      <div className="flex flex-col gap-y-14 md:pt-28" data-sc-stagger>
         {rightCards.map((p, i) => (
           <GridCard key={p.id} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
         ))}
@@ -43,7 +45,7 @@ function GridCard({ project, ratio }: { project: ProjectCardData; ratio: string 
   const primaryType     = project.stallTypes.find(t => t.isPrimary)?.stallType
 
   return (
-    <Link href={`/portfolio/${project.slug}`} className="group block">
+    <Link href={`/portfolio/${project.slug}`} className="group block" data-sc-in>
       <div className={`relative ${ratio} overflow-hidden rounded-md border border-white/10 bg-surface`}>
         {hero ? (
           <Image

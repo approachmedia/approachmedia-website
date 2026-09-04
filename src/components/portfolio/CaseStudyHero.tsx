@@ -48,8 +48,13 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
         <img src={image} alt={imageAlt} className="h-full w-full object-cover" />
       </motion.div>
 
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.55)_100%)]" />
+      {/* Scrims sit only where type sits: a band at the top for the two upper
+          labels, a band at the bottom for the lower two and the name. A
+          full-frame dark wash over the whole photograph was flattening the
+          picture to buy contrast it did not need everywhere. */}
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/70 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/80 via-black/45 to-transparent" />
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Golden ratio construction — the final selected shape, full-bleed */}
       <div className="absolute inset-0 z-10">
@@ -64,11 +69,15 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
         </motion.div>
       </div>
 
-      {/* Corner metadata */}
+      {/* The object's label. Four corners on a wide screen; on a phone the two
+          bottom labels were landing on top of each other, so they stack into a
+          single left-aligned block instead of fighting for the same line. */}
       {year     && <p className={`${corner} left-5 top-6 md:left-10 md:top-9`}>Year: {year}</p>}
       {category && <p className={`${corner} right-5 top-6 text-right md:right-10 md:top-9`}>{category}</p>}
-      {client   && <p className={`${corner} bottom-6 left-5 md:bottom-9 md:left-10`}>Client: {client}</p>}
-      {services && <p className={`${corner} bottom-6 right-5 max-w-[46%] text-right md:bottom-9 md:right-10`}>{services}</p>}
+      <div className="absolute bottom-6 left-5 right-5 z-20 flex flex-col gap-1.5 md:bottom-9 md:left-10 md:right-10 md:flex-row md:items-end md:justify-between md:gap-6">
+        {client   && <p className={`${corner} static`}>Client: {client}</p>}
+        {services && <p className={`${corner} static md:max-w-[46%] md:text-right`}>{services}</p>}
+      </div>
 
       {/* Centered name */}
       <motion.p
@@ -80,15 +89,8 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
         {title}
       </motion.p>
 
-      {/* Scroll cue */}
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.3, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 text-white/50"
-      >
-        <motion.span animate={prefersReduced ? undefined : { y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.8 }} className="block text-lg">↓</motion.span>
-      </motion.span>
+      {/* No scroll cue. The reader is looking at a photograph of a stand at
+          full frame; they know the page continues. */}
     </section>
   )
 }

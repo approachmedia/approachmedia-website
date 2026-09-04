@@ -6,6 +6,7 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
+import IndexFlow from '@/components/portfolio/IndexFlow'
 
 import { SITE_URL } from '@/lib/site-url'
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
@@ -51,33 +52,35 @@ export default async function PortfolioIndexPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Project index ── */}
-      <main className="max-w-7xl mx-auto px-4 py-20 space-y-16">
+      <IndexFlow>
 
         {/* Header */}
-        <header className="max-w-3xl">
-          <p className="text-xs font-bold text-green-400 uppercase tracking-[0.3em] mb-3">Project Index</p>
-          <h1 className="text-4xl md:text-6xl font-display font-black uppercase text-white leading-none mb-5">
+        <header className="max-w-3xl" data-sc-act="flow">
+          <p className="text-xs font-bold text-green-400 uppercase tracking-[0.3em] mb-3" data-sc-in>Project Index</p>
+          <h1 className="text-4xl md:text-6xl font-display font-black uppercase text-white leading-none mb-5" data-sc-in>
             Every Stall.<br />
             <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Every Story.</span>
           </h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-slate-400 text-lg" data-sc-in>
             {projects.length}+ projects built across India — from minimalist 9 sqm inline stands to 300 sqm double-decker pavilions.
           </p>
         </header>
 
-        {/* Filter bar */}
-        <FilterBar industries={industries} stallTypes={stallTypes} />
+        {/* Filter bar: the index's nav, held so the collection can be jumped */}
+        <div className="pfx__nav">
+          <FilterBar industries={industries} stallTypes={stallTypes} />
+        </div>
 
         {/* Featured projects */}
         {featured.length > 0 && (
-          <section>
-            <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-6">Featured Projects</h2>
+          <section data-sc-act="flow">
+            <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-6" data-sc-in>Featured Projects</h2>
             <PortfolioGrid projects={featured} />
           </section>
         )}
 
         {/* All projects */}
-        <section>
+        <section data-sc-act="flow">
           {featured.length > 0 && (
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">All Projects</h2>
           )}
@@ -89,7 +92,7 @@ export default async function PortfolioIndexPage() {
         </section>
 
         {/* ── CTA ── */}
-        <section className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900 via-slate-950 to-black px-8 py-16 text-center md:py-24">
+        <section data-sc-act="flow" className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900 via-slate-950 to-black px-8 py-16 text-center md:py-24">
           <div
             className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rotate-12 border-2 border-blue-500/20"
             style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
@@ -109,7 +112,7 @@ export default async function PortfolioIndexPage() {
           </Link>
         </section>
 
-      </main>
+      </IndexFlow>
     </>
   )
 }

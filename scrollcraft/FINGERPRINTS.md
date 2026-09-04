@@ -28,6 +28,7 @@ changes only grammar and world will fail it.
 
 | Build | Grammar | Nav treatment | Hero device | Act-sequence shape | Close pattern | Signature move | World | Port |
 |---|---|---|---|---|---|---|---|---|
+| portfolio-case-study (project pages + /portfolio index) | gallery / catalog | index of objects that jumps: the filter bar held at the top of the collection | object one, photographed and already labelled: the stand at full frame with its four corner labels, no title treatment, no scrub, no cue | stagger·parallax·reveal-up·parallax·stagger·parallax·stagger·pin·stagger·reveal-left, 10 sections, ~13vh | inquiry plate typeset as one more label in the same schema, beside the standing tally | the contact sheet develops: the pinned gallery opens as a dim contact sheet and each frame rises to full plate, takes its real caption and settles back brighter, until the sheet is fully exposed | photographic (the owner's own project photography, nothing generated) | Next.js /portfolio/[slug] + /portfolio |
 | city-chapters (15 city landing pages) | chaptered editorial | site header plus a sticky chapter folio that reports the chapter being read | title page: type on the ground, no media above the fold | kinetic·reveal·scrub·parallax·rail·flow·pan·[untouched]·flow·pin·flow·reveal, 11 chapters, ~22vh | colophon masthead plate, the ask set beside running text and held | the plan: the seven process steps draw a stall out of an empty plot, then pack it away again | photographic (owner's own show-floor footage) plus a vector plan | Next.js shared CityPageTemplate |
 
 *(empty: your first build has nothing to clear, so build whatever the interview
@@ -45,6 +46,10 @@ as a constraint, so writing them down is the whole point.
 - **chaptered editorial** with a **chapter folio** as the running head, the **title-page hero** (type only, no media above
   the fold), the **colophon masthead close**, and the signature move **"the plan draws itself"** (a build sequence that
   constructs an object from a page's own numbered steps and then reverses it). The 10-12 chapter band is claimed.
+- **gallery / catalog** with the **held filter bar as the object index**, the **object-one hero** (the first
+  photograph, labelled in its corners, with no separate title treatment), the **inquiry plate close** set in the
+  page's own label schema, and the signature move **"the contact sheet develops"** (a pinned collection that
+  exposes its own frames one at a time and keeps them exposed). The ~13vh at 10 sections band is claimed.
 - Note: the `about-walkin` row below sits under "Worked example" rather than in the table above. It is a real build of
   this project's, not an illustration, and the gate was run against it.
 

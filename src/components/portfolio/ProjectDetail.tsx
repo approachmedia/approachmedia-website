@@ -3,44 +3,55 @@ import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import CaseStudyHero from './CaseStudyHero'
 import BrandMark from './BrandMark'
-import { Reveal, EditorialImage } from './Reveal'
-import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
+import { EditorialPlate } from './Plate'
+import ContactSheet, { type GalleryItem } from './ContactSheet'
+import CaseStudyFlow from './CaseStudyFlow'
+import './case-study.css'
 
-// ─── Palette — the site's original black scheme, per client direction ───
-const INK      = 'hsl(0 0% 96%)'      // primary text
-const INK_SOFT = 'hsl(220 10% 62%)'   // muted text
-const INK_FADE = 'hsl(220 10% 45%)'   // labels
-const LINE     = 'hsl(222 18% 14%)'   // borders
-const CARD     = 'hsl(222 28% 8%)'    // cards
+/**
+ * The project page, in the gallery / catalog grammar: objects in a walkable
+ * collection, labelled with fact rather than pitch.
+ *
+ * Every string on this page is unchanged. What changed is the markup around
+ * them. The page was styled entirely with inline React style objects, which
+ * cannot carry a media query, so it had no mobile layout at all: the Project
+ * Details card was crushed to about 110px on a phone with its values running
+ * off the screen, and the 180px label rail pushed the service cards half out
+ * of the viewport. Styles now live in case-study.css, where they can collapse.
+ *
+ * Scroll devices are annotated here and driven by the engine, mounted once by
+ * CaseStudyFlow on the article root. The gallery is the peak and is the one
+ * pinned section on the page.
+ */
 
 // ── Helpers ────────────────────────────────────────────────────
 
 function FactRow({ label, value }: { label: string; value: string | number }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '16px', padding: '10px 0', borderBottom: `1px solid ${LINE}` }}>
-      <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: INK_FADE, flexShrink: 0 }}>{label}</span>
-      <span style={{ fontSize: '0.88rem', fontWeight: 600, color: INK, textAlign: 'right' }}>{value}</span>
+    <div className="cs__fact" data-sc-in>
+      <dt>{label}</dt>
+      <dd>{value}</dd>
     </div>
   )
 }
 
 function ServiceCard({ label }: { label: string }) {
   return (
-    <div style={{ padding: '16px 20px', background: CARD, border: `1px solid ${LINE}`, borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'hsl(110 55% 50%)', flexShrink: 0 }} />
-      <span style={{ fontSize: '0.88rem', fontWeight: 500, color: INK }}>{label}</span>
+    <div className="cs__card" data-sc-in>
+      <i aria-hidden="true" />
+      <span>{label}</span>
     </div>
   )
 }
 
 function NarrativeBlock({ num, heading, body }: { num: string; heading: string; body: string }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '14px' }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
-        <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(230 70% 65%)', flexShrink: 0 }}>{num}</span>
-        <h3 style={{ fontSize: 'clamp(1.15rem, 2.5vw, 1.5rem)', fontWeight: 700, color: INK, lineHeight: 1.2 }}>{heading}</h3>
+    <div className="cs__block" data-sc-in>
+      <div className="cs__blockhead">
+        <span className="cs__num">{num}</span>
+        <h3>{heading}</h3>
       </div>
-      <p style={{ fontSize: '0.95rem', color: INK_SOFT, lineHeight: 1.85, paddingLeft: '32px' }}>{body}</p>
+      <p>{body}</p>
     </div>
   )
 }
@@ -97,7 +108,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
 
   // Editorial breaks: first 3 gallery images woven between sections (all WIDE
   // ratios so logos/footers in the photos never crop); the rest join the
-  // natural-ratio masonry gallery.
+  // contact sheet.
   const editorialImgs   = galleryImages.slice(0, 3)
   const remainingItems: GalleryItem[] = [...galleryImages.slice(3), ...renders].map(m => ({
     id: m.id,
@@ -117,12 +128,9 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
     : null
 
   return (
-    <article>
+    <CaseStudyFlow>
 
-      {/* ═══════════════════════════════════════════════════════
-          HERO — dark, image + name + brand mark; on scroll a
-          light-filled shape expands and hands over to the light zone
-          ═══════════════════════════════════════════════════════ */}
+      {/* ═══ HERO — object one: the stand itself, already labelled ═══ */}
       {hero && (
         <CaseStudyHero
           title={project.client?.name ?? project.title}
@@ -135,377 +143,310 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
         />
       )}
 
-      {/* ═══════════════════════════════════════════════════════
-          CONTENT — original black scheme throughout
-          ═══════════════════════════════════════════════════════ */}
       <div>
 
-        {/* ── INTRO: breadcrumb + title left, facts right ── */}
-        <section style={{ borderBottom: `1px solid ${LINE}` }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '56px 24px 56px' }}>
+        {/* ── INTRO: title left, the specimen card right. The facts arrive
+               one row at a time rather than as a block. ── */}
+        <section data-sc-act="flow">
+          <div className="cs__wrap cs__wrap--intro">
 
-            <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-              <ol style={{ display: 'flex', alignItems: 'center', gap: '8px', listStyle: 'none', padding: 0, margin: 0 }}>
-                <li><Link href="/" style={{ fontSize: '0.78rem', color: INK_FADE, textDecoration: 'none' }}>Home</Link></li>
-                <li style={{ color: LINE, fontSize: '0.78rem' }}>/</li>
-                <li><Link href="/portfolio" style={{ fontSize: '0.78rem', color: INK_FADE, textDecoration: 'none' }}>Portfolio</Link></li>
+            <nav aria-label="Breadcrumb" className="cs__crumbs">
+              <ol>
+                <li><Link href="/">Home</Link></li>
+                <li className="sep">/</li>
+                <li><Link href="/portfolio">Portfolio</Link></li>
                 {primaryIndustry && (
                   <>
-                    <li style={{ color: LINE, fontSize: '0.78rem' }}>/</li>
+                    <li className="sep">/</li>
                     <li>
-                      <Link href={`/portfolio/industry/${primaryIndustry.slug}`} style={{ fontSize: '0.78rem', color: INK_FADE, textDecoration: 'none' }}>
+                      <Link href={`/portfolio/industry/${primaryIndustry.slug}`}>
                         {primaryIndustry.name}
                       </Link>
                     </li>
                   </>
                 )}
-                <li style={{ color: LINE, fontSize: '0.78rem' }}>/</li>
-                <li style={{ fontSize: '0.78rem', color: INK_FADE, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px', opacity: 0.7 }}>
-                  {project.title}
-                </li>
+                <li className="sep">/</li>
+                <li className="cur">{project.title}</li>
               </ol>
             </nav>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(0, 1fr)', gap: '56px', alignItems: 'start' }}>
+            <div className="cs__split">
 
-              {/* Left — title block */}
-              <Reveal>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
+              <div data-sc-in>
+                <div className="cs__tags">
                   {primaryIndustry && (
-                    <Link href={`/portfolio/industry/${primaryIndustry.slug}`}
-                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(110 55% 50% / 0.1)', border: '1px solid hsl(110 55% 50% / 0.3)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(110 55% 50%)', textDecoration: 'none' }}>
+                    <Link href={`/portfolio/industry/${primaryIndustry.slug}`} className="cs__tag cs__tag--ind">
                       {primaryIndustry.name}
                     </Link>
                   )}
                   {allTypes.slice(0, 1).map(t => (
-                    <Link key={t.id} href={`/portfolio/type/${t.slug}`}
-                      style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(230 70% 65% / 0.1)', border: '1px solid hsl(230 70% 65% / 0.3)', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'hsl(230 70% 65%)', textDecoration: 'none' }}>
+                    <Link key={t.id} href={`/portfolio/type/${t.slug}`} className="cs__tag cs__tag--type">
                       {t.name}
                     </Link>
                   ))}
                   {awards.slice(0, 1).map((a, i) => (
-                    <span key={i} style={{ padding: '4px 12px', borderRadius: '999px', background: 'hsl(42 80% 55% / 0.1)', border: '1px solid hsl(42 80% 55% / 0.3)', fontSize: '0.7rem', fontWeight: 700, color: 'hsl(42 80% 60%)' }}>
-                      {a}
-                    </span>
+                    <span key={i} className="cs__tag cs__tag--award">{a}</span>
                   ))}
                 </div>
 
-                <h1 style={{
-                  fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
-                  fontWeight: 800,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1.08,
-                  marginBottom: '20px',
-                  background: 'linear-gradient(105deg, hsl(0 0% 98%) 0%, hsl(225 85% 70%) 42%, hsl(145 60% 55%) 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  color: 'transparent',
-                }}>
-                  {project.title}
-                </h1>
+                <h1 className="cs__title">{project.title}</h1>
 
                 {project.client && (
-                  <p style={{ fontSize: '1rem', color: INK_SOFT, marginBottom: '8px' }}>
-                    Client: <span style={{ color: INK, fontWeight: 600 }}>{project.client.name}</span>
+                  <p className="cs__client">
+                    Client: <b>{project.client.name}</b>
                   </p>
                 )}
 
-                <p style={{ fontSize: '1.05rem', color: INK_SOFT, lineHeight: 1.8, maxWidth: '560px', marginTop: '12px' }}>
-                  {descParas[0] ?? project.description}
-                </p>
-              </Reveal>
+                <p className="cs__lede">{descParas[0] ?? project.description}</p>
+              </div>
 
-              {/* Right — compact fact stack */}
-              <Reveal delay={0.15}>
-                <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: '14px', padding: '24px', marginTop: '4px' }}>
-                  <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: INK_FADE, marginBottom: '4px' }}>
-                    Project Details
-                  </p>
-                  {project.client     && <FactRow label="Client"     value={project.client.name} />}
-                  {primaryIndustry    && <FactRow label="Industry"   value={primaryIndustry.name} />}
-                  {ex                 && <FactRow label="Exhibition" value={ex.name} />}
-                  {(ex?.city ?? project.city) && (
-                    <FactRow label="Location" value={[ex?.city ?? project.city, ex?.country].filter(Boolean).join(', ')} />
-                  )}
-                  {project.buildYear  && <FactRow label="Year"       value={project.buildYear} />}
-                  {allTypes[0]        && <FactRow label="Type"       value={allTypes[0].name} />}
-                  {project.stallAreaSqm && <FactRow label="Stall Area" value={`${Number(project.stallAreaSqm)} sqm`} />}
-                  {project.stallHeightM && <FactRow label="Height"   value={`${Number(project.stallHeightM)} m`} />}
-                  {project.floors > 1   && <FactRow label="Floors"   value={`${project.floors}`} />}
-                  {project.designStyle  && <FactRow label="Style"    value={project.designStyle} />}
-                </div>
-              </Reveal>
+              <dl className="cs__facts" data-sc-stagger>
+                <h2>Project Details</h2>
+                {project.client     && <FactRow label="Client"     value={project.client.name} />}
+                {primaryIndustry    && <FactRow label="Industry"   value={primaryIndustry.name} />}
+                {ex                 && <FactRow label="Exhibition" value={ex.name} />}
+                {(ex?.city ?? project.city) && (
+                  <FactRow label="Location" value={[ex?.city ?? project.city, ex?.country].filter(Boolean).join(', ')} />
+                )}
+                {project.buildYear  && <FactRow label="Year"       value={project.buildYear} />}
+                {allTypes[0]        && <FactRow label="Type"       value={allTypes[0].name} />}
+                {project.stallAreaSqm && <FactRow label="Stall Area" value={`${Number(project.stallAreaSqm)} sqm`} />}
+                {project.stallHeightM && <FactRow label="Height"   value={`${Number(project.stallHeightM)} m`} />}
+                {project.floors > 1   && <FactRow label="Floors"   value={`${project.floors}`} />}
+                {project.designStyle  && <FactRow label="Style"    value={project.designStyle} />}
+              </dl>
             </div>
           </div>
         </section>
 
-        {/* ── EDITORIAL IMAGE 1: offset right, wide ratio ── */}
+        {/* ── PLATE 1: offset right, drifting up ── */}
         {editorialImgs[0] && (
-          <section style={{ borderBottom: `1px solid ${LINE}` }}>
-            <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '64px 24px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2.2fr)', gap: '24px', alignItems: 'end' }}>
-                <Reveal>
-                  <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: INK_FADE }}>
-                    {String(project.buildYear ?? '')} {ex?.name ? `· ${ex.name}` : ''}
-                  </p>
-                </Reveal>
-                <EditorialImage
+          <section data-sc-act="flow">
+            <div className="cs__wrap cs__wrap--wide">
+              <div className="cs__split cs__offset" style={{ gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2.2fr)', gap: '24px', alignItems: 'end' }}>
+                <p className="cs__eyebrow" data-sc-in>
+                  {String(project.buildYear ?? '')} {ex?.name ? `· ${ex.name}` : ''}
+                </p>
+                <EditorialPlate
                   src={editorialImgs[0].cdnUrl ?? editorialImgs[0].url}
                   alt={editorialImgs[0].altText}
                   caption={editorialImgs[0].caption}
-                  aspect="aspect-[16/9]"
+                  ratio="16 / 9"
+                  rate={1}
                 />
               </div>
             </div>
           </section>
         )}
 
-        {/* ── CONTEXT / BRIEF — with a quiet brand mark in the margin ── */}
-        <section style={{ borderBottom: `1px solid ${LINE}`, position: 'relative', overflow: 'hidden' }}>
-          <div aria-hidden style={{ position: 'absolute', right: '-90px', top: '50%', transform: 'translateY(-50%)', width: '340px', height: '306px', opacity: 0.55 }}>
+        {/* ── THE BRIEF: wipes up at the chapter boundary ── */}
+        <section className="cs__brief" data-sc-act="flow">
+          <div aria-hidden className="cs__mark">
             <BrandMark className="h-full w-full" stroke="hsl(222 18% 22%)" strokeWidth={0.8} />
           </div>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px', position: 'relative' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
-              <div style={{ paddingTop: '4px' }}>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: INK_FADE }}>Context</span>
+          <div className="cs__wrap" style={{ position: 'relative' }}>
+            <div className="cs__rail">
+              <div className="cs__railhead">
+                <span className="cs__eyebrow">Context</span>
               </div>
-              <Reveal>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: INK, marginBottom: '20px', lineHeight: 1.2 }}>
-                  The Brief
-                </h2>
-                <div style={{ display: 'grid', gap: '16px', maxWidth: '680px' }}>
+              <div data-sc-reveal="up">
+                <h2 className="cs__h2" style={{ marginBottom: '20px' }}>The Brief</h2>
+                <div className="cs__stack">
                   {(challengePara || contextPara) && (
-                    <p style={{ fontSize: '1rem', color: INK_SOFT, lineHeight: 1.85 }}>
-                      {challengePara || contextPara}
-                    </p>
+                    <p className="cs__body">{challengePara || contextPara}</p>
                   )}
                   {ex && (
-                    <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginTop: '8px', padding: '20px', background: CARD, border: `1px solid ${LINE}`, borderRadius: '10px' }}>
+                    <dl className="cs__meta">
                       <div>
-                        <p style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: INK_FADE, marginBottom: '4px' }}>Exhibition</p>
-                        <p style={{ fontSize: '0.88rem', fontWeight: 600, color: INK }}>{ex.name}</p>
+                        <dt>Exhibition</dt>
+                        <dd>{ex.name}</dd>
                       </div>
                       {ex.venueName && (
                         <div>
-                          <p style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: INK_FADE, marginBottom: '4px' }}>Venue</p>
-                          <p style={{ fontSize: '0.88rem', fontWeight: 600, color: INK }}>{ex.venueName}</p>
+                          <dt>Venue</dt>
+                          <dd>{ex.venueName}</dd>
                         </div>
                       )}
                       {ex.city && (
                         <div>
-                          <p style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: INK_FADE, marginBottom: '4px' }}>Location</p>
-                          <p style={{ fontSize: '0.88rem', fontWeight: 600, color: INK }}>
-                            {[ex.city, ex.state, ex.country].filter(Boolean).join(', ')}
-                          </p>
+                          <dt>Location</dt>
+                          <dd>{[ex.city, ex.state, ex.country].filter(Boolean).join(', ')}</dd>
                         </div>
                       )}
-                    </div>
+                    </dl>
                   )}
                 </div>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-
-        {/* ── EDITORIAL IMAGE 2: true edge-to-edge, extra wide ── */}
-        {editorialImgs[1] && (
-          <section style={{ borderBottom: `1px solid ${LINE}` }}>
-            <EditorialImage
-              src={editorialImgs[1].cdnUrl ?? editorialImgs[1].url}
-              alt={editorialImgs[1].altText}
-              aspect="aspect-[21/9]"
-            />
-          </section>
-        )}
-
-        {/* ── SERVICES ── */}
-        <section style={{ borderBottom: `1px solid ${LINE}` }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)', gap: '48px', alignItems: 'start' }}>
-              <div style={{ paddingTop: '4px' }}>
-                <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: INK_FADE }}>Services</span>
               </div>
-              <Reveal>
-                <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: INK, marginBottom: '28px', lineHeight: 1.2 }}>
-                  What We Delivered
-                </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
-                  {servicesList.map((s, i) => <ServiceCard key={i} label={s} />)}
-                </div>
-                {materials.length > 0 && (
-                  <div style={{ marginTop: '28px' }}>
-                    <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: INK_FADE, marginBottom: '12px' }}>
-                      Materials Used
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                      {materials.map((m, i) => (
-                        <span key={i} style={{ padding: '4px 12px', borderRadius: '6px', background: CARD, border: `1px solid ${LINE}`, fontSize: '0.78rem', color: INK_SOFT }}>
-                          {m}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ── EDITORIAL IMAGE 3: wide, centered ── */}
-        {editorialImgs[2] && (
-          <section style={{ borderBottom: `1px solid ${LINE}` }}>
-            <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '64px 24px' }}>
-              <EditorialImage
-                src={editorialImgs[2].cdnUrl ?? editorialImgs[2].url}
-                alt={editorialImgs[2].altText}
-                caption={editorialImgs[2].caption}
-                aspect="aspect-[16/9]"
+        {/* ── PLATE 2: full bleed, drifting the other way ── */}
+        {editorialImgs[1] && (
+          <section data-sc-act="flow">
+            <div className="cs__bleed">
+              <EditorialPlate
+                src={editorialImgs[1].cdnUrl ?? editorialImgs[1].url}
+                alt={editorialImgs[1].altText}
+                ratio="21 / 9"
+                rate={-1}
+                className="plate--bleed"
               />
             </div>
           </section>
         )}
 
-        {/* ── NARRATIVE: Challenge / Design / Outcome ── */}
-        <section style={{ borderBottom: `1px solid ${LINE}` }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '72px 24px' }}>
-            <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: INK_FADE, marginBottom: '48px' }}>
-              Case Study
-            </p>
-            <Reveal>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px' }}>
-                <NarrativeBlock
-                  num="01"
-                  heading="The Challenge"
-                  body={challengePara || `${project.client?.name ?? 'The client'} needed a stall that balanced strong brand visibility with a structured visitor experience — turning footfall into focused business conversations in a competitive exhibition environment.`}
-                />
-                <NarrativeBlock
-                  num="02"
-                  heading="What We Designed"
-                  body={designPara || `We developed a custom stall concept centred on clear visitor flow, structured product display, and a dedicated consultation zone — all within a premium finish that communicated brand quality at first glance.`}
-                />
-                <NarrativeBlock
-                  num="03"
-                  heading="Why It Worked"
-                  body={outcomePara || `The design balanced visual impact with practical usability. Every spatial decision — entrance positioning, display height, meeting alcoves — was made with the visitor journey and conversion in mind.`}
-                />
+        {/* ── WHAT WE DELIVERED: the list arrives row by row ── */}
+        <section data-sc-act="flow">
+          <div className="cs__wrap">
+            <div className="cs__rail">
+              <div className="cs__railhead">
+                <span className="cs__eyebrow">Services</span>
               </div>
-            </Reveal>
+              <div>
+                <h2 className="cs__h2" style={{ marginBottom: '28px' }} data-sc-in>What We Delivered</h2>
+                <div className="cs__cards" data-sc-stagger>
+                  {servicesList.map((s, i) => <ServiceCard key={i} label={s} />)}
+                </div>
+                {materials.length > 0 && (
+                  <div style={{ marginTop: '28px' }} data-sc-in>
+                    <p className="cs__sub">Materials Used</p>
+                    <div className="cs__chips">
+                      {materials.map((m, i) => (
+                        <span key={i} className="cs__chip">{m}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ── GALLERY (natural ratios — nothing cropped) ── */}
+        {/* ── PLATE 3: centred, drifting up ── */}
+        {editorialImgs[2] && (
+          <section data-sc-act="flow">
+            <div className="cs__wrap cs__wrap--wide">
+              <EditorialPlate
+                src={editorialImgs[2].cdnUrl ?? editorialImgs[2].url}
+                alt={editorialImgs[2].altText}
+                caption={editorialImgs[2].caption}
+                ratio="16 / 9"
+                rate={1}
+              />
+            </div>
+          </section>
+        )}
+
+        {/* ── CASE STUDY: the quiet section before the peak ── */}
+        <section data-sc-act="flow">
+          <div className="cs__wrap">
+            <p className="cs__eyebrow" style={{ marginBottom: '48px' }} data-sc-in>Case Study</p>
+            <div className="cs__blocks" data-sc-stagger>
+              <NarrativeBlock
+                num="01"
+                heading="The Challenge"
+                body={challengePara || `${project.client?.name ?? 'The client'} needed a stall that balanced strong brand visibility with a structured visitor experience — turning footfall into focused business conversations in a competitive exhibition environment.`}
+              />
+              <NarrativeBlock
+                num="02"
+                heading="What We Designed"
+                body={designPara || `We developed a custom stall concept centred on clear visitor flow, structured product display, and a dedicated consultation zone — all within a premium finish that communicated brand quality at first glance.`}
+              />
+              <NarrativeBlock
+                num="03"
+                heading="Why It Worked"
+                body={outcomePara || `The design balanced visual impact with practical usability. Every spatial decision — entrance positioning, display height, meeting alcoves — was made with the visitor journey and conversion in mind.`}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ── THE PEAK: the contact sheet develops ── */}
         {remainingItems.length > 0 && (
-          <section style={{ borderBottom: `1px solid ${LINE}` }}>
-            <div style={{ maxWidth: '1320px', margin: '0 auto', padding: '80px 24px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px', marginBottom: '36px', flexWrap: 'wrap' }}>
+          <section>
+            <div className="cs__wrap cs__wrap--gallery" style={{ paddingBottom: 0 }}>
+              <div className="cs__ghead">
                 <div>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: INK_FADE }}>Gallery</span>
-                  <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700, letterSpacing: '-0.02em', color: INK, marginTop: '10px', lineHeight: 1.15 }}>
-                    Inside the Build
-                  </h2>
+                  <span className="cs__eyebrow">Gallery</span>
+                  <h2>Inside the Build</h2>
                 </div>
-                <span style={{ fontSize: '0.8rem', color: INK_FADE }}>
+                <span className="cs__count">
                   {remainingItems.length} {remainingItems.length === 1 ? 'image' : 'images'} · click to enlarge
                 </span>
               </div>
+            </div>
 
-              <ParallaxGallery items={remainingItems} />
+            <ContactSheet items={remainingItems} />
 
-              {floorPlan && (
-                <div style={{ marginTop: '48px' }}>
-                  <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: INK_FADE, marginBottom: '20px' }}>
-                    Floor Plan
-                  </p>
-                  <figure style={{ position: 'relative', maxWidth: '640px', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden', background: CARD, border: `1px solid ${LINE}`, margin: 0 }}>
+            {floorPlan && (
+              <div className="cs__wrap cs__wrap--gallery" style={{ paddingTop: 0 }}>
+                <div className="cs__plan">
+                  <p className="cs__sub">Floor Plan</p>
+                  <figure className="cs__planfig">
                     <Image src={floorPlan.cdnUrl ?? floorPlan.url} alt={floorPlan.altText} fill sizes="640px" style={{ objectFit: 'contain', padding: '16px' }} />
                   </figure>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </section>
         )}
 
       </div>{/* end content zone */}
 
-      {/* ═══════════════════════════════════════════════════════
-          IMPACT — back to dark (bookend)
-          ═══════════════════════════════════════════════════════ */}
-      <section style={{ background: 'hsl(222 40% 4%)', borderBottom: '1px solid hsl(222 18% 10%)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(110 55% 50%)' }}>
-              Project Outcomes
-            </span>
-            <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.025em', color: 'hsl(0 0% 97%)', marginTop: '12px', lineHeight: 1.1 }}>
-              The Result
-            </h2>
+      {/* ═══ THE RESULT — dark bookend, held after the peak ═══ */}
+      <section className="cs__result" data-sc-act="flow">
+        <div className="cs__wrap" style={{ padding: '80px 24px' }}>
+          <div className="cs__resulthead" data-sc-in>
+            <span className="cs__eyebrow">Project Outcomes</span>
+            <h2>The Result</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2px', background: 'hsl(222 18% 10%)' }}>
+          <div className="cs__grid" data-sc-stagger>
             {impactItems.map((item, i) => (
-              <div key={i} style={{ background: 'hsl(222 40% 4%)', padding: '36px 28px', textAlign: 'center' }}>
-                <p style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: 800, letterSpacing: '-0.02em', color: 'hsl(0 0% 97%)', lineHeight: 1.1, marginBottom: '10px' }}>
-                  {item.value}
-                </p>
-                <p style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'hsl(220 10% 48%)' }}>
-                  {item.label}
-                </p>
+              <div key={i} className="cs__cell" data-sc-in>
+                <p>{item.value}</p>
+                <p>{item.label}</p>
               </div>
             ))}
           </div>
           {project.aiSummary && (
-            <div style={{ marginTop: '40px', maxWidth: '720px', margin: '40px auto 0', padding: '24px 28px', background: 'hsl(222 28% 7%)', border: '1px solid hsl(222 18% 14%)', borderRadius: '12px' }}>
-              <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'hsl(220 10% 45%)', marginBottom: '10px' }}>
-                Project Summary
-              </p>
-              <p style={{ fontSize: '0.92rem', color: 'hsl(220 10% 62%)', lineHeight: 1.8 }}>
-                {project.aiSummary}
-              </p>
+            <div className="cs__summary" data-sc-in>
+              <p>Project Summary</p>
+              <p>{project.aiSummary}</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════
-          CLOSING CTA — dark
-          ═══════════════════════════════════════════════════════ */}
-      <section>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)', gap: '56px', alignItems: 'center' }}>
+      {/* ═══ THE ASK — the only reveal-from-left on the page ═══ */}
+      <section data-sc-act="flow" style={{ borderBottom: 'none' }}>
+        <div className="cs__wrap" style={{ padding: '80px 24px' }}>
+          <div className="cs__ask" data-sc-reveal="left">
             <div>
-              <p style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'hsl(110 55% 50%)', marginBottom: '16px' }}>
-                Start Your Project
-              </p>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 800, letterSpacing: '-0.025em', color: 'hsl(0 0% 97%)', lineHeight: 1.1, marginBottom: '20px' }}>
-                Planning an exhibition presence that needs to look sharp and perform under pressure?
-              </h2>
-              <p style={{ fontSize: '1rem', color: 'hsl(220 10% 55%)', lineHeight: 1.8, maxWidth: '500px', marginBottom: '32px' }}>
+              <span className="cs__eyebrow">Start Your Project</span>
+              <h2>Planning an exhibition presence that needs to look sharp and perform under pressure?</h2>
+              <p>
                 Share your exhibition brief — stall size, show name, and brand requirements. We respond with a design concept within 72 hours.
               </p>
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                <Link href="/contact"
-                  style={{ display: 'inline-block', padding: '12px 28px', borderRadius: '999px', background: 'hsl(230 64% 52%)', color: 'white', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none', transition: 'background 0.2s' }}>
+              <div className="cs__acts">
+                <Link href="/contact" className="cs__btn cs__btn--go">
                   Request a Proposal &rarr;
                 </Link>
-                <Link href="/portfolio"
-                  style={{ display: 'inline-block', padding: '12px 28px', borderRadius: '999px', background: 'transparent', border: '1px solid hsl(222 18% 28%)', color: 'hsl(220 10% 70%)', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none' }}>
+                <Link href="/portfolio" className="cs__btn cs__btn--alt">
                   View More Projects
                 </Link>
               </div>
             </div>
-            <div style={{ display: 'grid', gap: '12px' }}>
+            <div className="cs__tally">
               {[
                 { num: '23+', label: 'Years of Experience' },
                 { num: '6000+', label: 'Exhibition Stalls Built' },
                 { num: '14+', label: 'Countries Delivered' },
                 { num: '9+', label: 'Industries Served' },
               ].map(({ num, label }) => (
-                <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', background: 'hsl(222 28% 8%)', border: '1px solid hsl(222 18% 15%)', borderRadius: '10px' }}>
-                  <span style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', background: 'linear-gradient(to right, hsl(230 70% 65%), hsl(110 55% 50%))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    {num}
-                  </span>
-                  <span style={{ fontSize: '0.78rem', color: 'hsl(220 10% 55%)', textAlign: 'right' }}>{label}</span>
+                <div key={label} className="cs__tallyrow">
+                  <b>{num}</b>
+                  <span>{label}</span>
                 </div>
               ))}
             </div>
@@ -513,6 +454,6 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
         </div>
       </section>
 
-    </article>
+    </CaseStudyFlow>
   )
 }

@@ -1,0 +1,38 @@
+/* ── Portfolio index ──────────────────────────────────────────────
+   Gallery / catalog, one level up: the objects are the projects. Cards
+   reveal as they enter, and the filter bar is the index's nav, held at the
+   top so the collection can be jumped around instead of only scrolled.
+
+   No typography here. The grid's type comes from Tailwind classes that were
+   already on it and is untouched. */
+
+.pfx [data-sc-in] {
+  opacity: 0; transform: translate3d(0, 22px, 0);
+  transition: opacity 760ms cubic-bezier(0.4, 0, 0.2, 1), transform 760ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pfx [data-sc-in].sc-in { opacity: 1; transform: none; }
+.pfx [data-sc-stagger] > * {
+  opacity: 0; transform: translate3d(0, 22px, 0);
+  transition: opacity 760ms cubic-bezier(0.4, 0, 0.2, 1), transform 760ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pfx [data-sc-stagger] > .sc-in { opacity: 1; transform: none; }
+
+/* The index's nav. The site header is sticky at 97px, so this sits under it
+   rather than over it. */
+.pfx__nav {
+  position: sticky; top: 97px; z-index: 30;
+  padding: 12px 0; margin: 0 -4px;
+  background: hsl(222 40% 4% / 0.88); backdrop-filter: blur(10px);
+  border-bottom: 1px solid hsl(222 18% 14%);
+}
+
+@media (max-width: 900px) {
+  .pfx__nav { top: 81px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pfx [data-sc-in], .pfx [data-sc-stagger] > * {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .pfx__nav { position: static; }
+}
