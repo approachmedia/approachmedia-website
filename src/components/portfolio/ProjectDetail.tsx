@@ -4,7 +4,7 @@ import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import CaseStudyHero from './CaseStudyHero'
 import BrandMark from './BrandMark'
 import { EditorialPlate } from './Plate'
-import ContactSheet, { type GalleryItem } from './ContactSheet'
+import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 import CaseStudyFlow from './CaseStudyFlow'
 import './case-study.css'
 
@@ -20,8 +20,8 @@ import './case-study.css'
  * of the viewport. Styles now live in case-study.css, where they can collapse.
  *
  * Scroll devices are annotated here and driven by the engine, mounted once by
- * CaseStudyFlow on the article root. The gallery is the peak and is the one
- * pinned section on the page.
+ * CaseStudyFlow on the article root. The gallery is the peak, and it carries
+ * its own motion (a sticky band of panning rows) rather than an engine act.
  */
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -108,7 +108,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
 
   // Editorial breaks: first 3 gallery images woven between sections (all WIDE
   // ratios so logos/footers in the photos never crop); the rest join the
-  // contact sheet.
+  // panning gallery.
   const editorialImgs   = galleryImages.slice(0, 3)
   const remainingItems: GalleryItem[] = [...galleryImages.slice(3), ...renders].map(m => ({
     id: m.id,
@@ -338,7 +338,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </section>
         )}
 
-        {/* ── CASE STUDY: the quiet section before the peak ── */}
+        {/* ── CASE STUDY: the quiet section before the gallery ── */}
         <section data-sc-act="flow">
           <div className="cs__wrap">
             <p className="cs__eyebrow" style={{ marginBottom: '48px' }} data-sc-in>Case Study</p>
@@ -362,10 +362,15 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </div>
         </section>
 
-        {/* ── THE PEAK: the contact sheet develops ── */}
+        {/* ── GALLERY: the owner's original showcase, restored ──
+             This was briefly a pinned contact sheet that developed frame by
+             frame. The owner compared the two on the live site and preferred
+             this one, so the panning rows are back exactly as they were: a
+             sticky band of two rows travelling in opposite directions on
+             desktop, a plain full-width stack on a phone, lightbox on click. */}
         {remainingItems.length > 0 && (
           <section>
-            <div className="cs__wrap cs__wrap--gallery" style={{ paddingBottom: 0 }}>
+            <div className="cs__wrap cs__wrap--gallery">
               <div className="cs__ghead">
                 <div>
                   <span className="cs__eyebrow">Gallery</span>
@@ -375,26 +380,24 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
                   {remainingItems.length} {remainingItems.length === 1 ? 'image' : 'images'} · click to enlarge
                 </span>
               </div>
-            </div>
 
-            <ContactSheet items={remainingItems} />
+              <ParallaxGallery items={remainingItems} />
 
-            {floorPlan && (
-              <div className="cs__wrap cs__wrap--gallery" style={{ paddingTop: 0 }}>
+              {floorPlan && (
                 <div className="cs__plan">
                   <p className="cs__sub">Floor Plan</p>
                   <figure className="cs__planfig">
                     <Image src={floorPlan.cdnUrl ?? floorPlan.url} alt={floorPlan.altText} fill sizes="640px" style={{ objectFit: 'contain', padding: '16px' }} />
                   </figure>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </section>
         )}
 
       </div>{/* end content zone */}
 
-      {/* ═══ THE RESULT — dark bookend, held after the peak ═══ */}
+      {/* ═══ THE RESULT — dark bookend, held after the gallery ═══ */}
       <section className="cs__result" data-sc-act="flow">
         <div className="cs__wrap" style={{ padding: '80px 24px' }}>
           <div className="cs__resulthead" data-sc-in>

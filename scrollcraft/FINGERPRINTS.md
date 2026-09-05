@@ -46,6 +46,11 @@ as a constraint, so writing them down is the whole point.
 - **chaptered editorial** with a **chapter folio** as the running head, the **title-page hero** (type only, no media above
   the fold), the **colophon masthead close**, and the signature move **"the plan draws itself"** (a build sequence that
   constructs an object from a page's own numbered steps and then reverses it). The 10-12 chapter band is claimed.
+- **Reverted:** the `portfolio-case-study` signature move ("the contact sheet develops") is NO LONGER on the site.
+  The owner compared it against the previous panning gallery on the live pages and preferred the older one, so the
+  pinned contact sheet was removed and the sticky panning rows restored. The row stays in the table because the
+  grammar, nav, hero and close it claims are all still shipping; only the signature move was withdrawn. A later build
+  may reuse "the contact sheet develops", since nothing occupies that space now.
 - **gallery / catalog** with the **held filter bar as the object index**, the **object-one hero** (the first
   photograph, labelled in its corners, with no separate title treatment), the **inquiry plate close** set in the
   page's own label schema, and the signature move **"the contact sheet develops"** (a pinned collection that
