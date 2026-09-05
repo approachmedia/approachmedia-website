@@ -107,7 +107,7 @@ export default function LpLeadForm({
         {/* Spam fields the route already checks. */}
         <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
           <label htmlFor={HONEYPOT_FIELD}>Company website</label>
-          <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" />
+          <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" />
         </div>
         <input type="hidden" name={TIMESTAMP_FIELD} value={renderedAt} />
 
