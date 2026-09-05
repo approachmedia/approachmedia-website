@@ -4,6 +4,7 @@ import './globals.css'
 import './legacy.css'
 import SiteChrome from '@/components/site/SiteChrome'
 import SmoothScroll from '@/components/site/SmoothScroll'
+import { GtmHead, GtmNoScript } from '@/components/site/Gtm'
 
 import { SITE_URL } from '@/lib/site-url'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -57,6 +58,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             own alternates.canonical would replace the whole alternates
             object and silently drop the feed link. */}
         <link rel="alternate" type="application/rss+xml" title="Approach Media Blog" href="/feed.xml" />
+        <GtmHead />
+        <GtmNoScript />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
       </body>

@@ -4,6 +4,7 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { ORG_NAME, ORG_EMAIL, ORG_PHONES, ORG_ADDRESS } from '@/lib/seo/organization'
+import { GTM_ID } from '@/components/site/Gtm'
 
 /**
  * Privacy policy.
@@ -159,11 +160,23 @@ export default function PrivacyPolicyPage() {
                 written to a database or attached to your enquiry. Our hosting provider also keeps standard
                 server logs, described in section 05.
               </p>
-              <p>
-                <strong>What we do not collect.</strong> This website runs no analytics, no tag manager, no
-                advertising or conversion pixel, no session recording and no cross-site tracking of any kind.
-                We do not buy personal data, and we do not build advertising profiles.
-              </p>
+              {GTM_ID ? (
+                <p>
+                  <strong>Measurement and advertising.</strong> This website loads Google Tag Manager, through
+                  which Google Analytics and Google Ads conversion measurement run. These record how you reached
+                  the site and what you did on it (pages viewed, a form submitted, a phone or WhatsApp button
+                  pressed) and may set cookies in your browser for that purpose. If you arrived from a Google
+                  advertisement, the click identifier Google attaches to the link is recorded with any enquiry
+                  you send, so we can tell which advertisement led to it. We do not run session recording, and
+                  we do not buy personal data or build advertising profiles of our own.
+                </p>
+              ) : (
+                <p>
+                  <strong>What we do not collect.</strong> This website runs no analytics, no tag manager, no
+                  advertising or conversion pixel, no session recording and no cross-site tracking of any kind.
+                  We do not buy personal data, and we do not build advertising profiles.
+                </p>
+              )}
             </Section>
 
             <Section id="why" n="03" title="Why we use it, and on what basis">
@@ -208,13 +221,24 @@ export default function PrivacyPolicyPage() {
             </Section>
 
             <Section id="cookies" n="05" title="Cookies, logs and other technologies">
-              <p>
-                <strong>Cookies.</strong> This website does not set advertising, analytics or tracking
-                cookies, and there is no cookie banner because there is nothing to consent to. The only
-                cookie the site issues is a sign-in cookie called <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[0.85em]">admin_auth</code>,
-                and it is set only when a member of our staff signs in to the private admin area. Browsing
-                the public site does not place a cookie on your device.
-              </p>
+              {GTM_ID ? (
+                <p>
+                  <strong>Cookies.</strong> Google Tag Manager, Google Analytics and Google Ads may set cookies
+                  in your browser to measure visits and advertising conversions, as described in section 02.
+                  You can block or clear these through your browser settings, and Google describes its own
+                  handling at <a href="https://policies.google.com/technologies/cookies">policies.google.com</a>.
+                  Separately, the site issues one sign-in cookie called <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[0.85em]">admin_auth</code>,
+                  set only when a member of our staff signs in to the private admin area.
+                </p>
+              ) : (
+                <p>
+                  <strong>Cookies.</strong> This website does not set advertising, analytics or tracking
+                  cookies, and there is no cookie banner because there is nothing to consent to. The only
+                  cookie the site issues is a sign-in cookie called <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[0.85em]">admin_auth</code>,
+                  and it is set only when a member of our staff signs in to the private admin area. Browsing
+                  the public site does not place a cookie on your device.
+                </p>
+              )}
               <p>
                 <strong>Local browser storage.</strong> Some pages remember small display preferences in
                 your own browser, such as a filter you selected. That stays on your device, is not sent to

@@ -11,8 +11,11 @@ import LegacyScripts from './LegacyScripts'
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isAdmin = pathname.startsWith('/admin')
+  // Google Ads landing pages carry their own minimal header and footer: no
+  // site nav to leak the click into, no footer link grid. Spec §0.4.
+  const isLanding = pathname.startsWith('/lp/') || pathname === '/lp' || pathname === '/thank-you'
 
-  if (isAdmin) return <>{children}</>
+  if (isAdmin || isLanding) return <>{children}</>
 
   return (
     <div className="flex flex-col min-h-screen">

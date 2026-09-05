@@ -54,12 +54,47 @@ export async function POST(req: NextRequest) {
 
     // Genuine validation errors are reported, so a real person who mistypes
     // an address is told about it rather than silently ignored.
-    if (!d.name || !d.company || !d.email) {
+    //
+    // The Google Ads landing pages ask for a phone number instead of an
+    // email (five fields, thumb-sized, a 30-second form), so for those a
+    // valid phone stands in for the email. Everything else stays the same.
+    const isLandingLead = d.source === 'google-ads-lp'
+    if (!d.name || !d.company) {
       return NextResponse.json({ ok: false, error: 'Name, company and email are required.' }, { status: 400 })
     }
-    if (!EMAIL_RE.test(d.email)) {
-      return NextResponse.json({ ok: false, error: 'That email address does not look right.' }, { status: 400 })
+    if (isLandingLead) {
+      if (!d.phone || !/^\+[1-9]\d{7,14}$/.test(d.phone)) {
+        return NextResponse.json({ ok: false, error: 'A valid phone number is required.' }, { status: 400 })
+      }
+      if (d.email && !EMAIL_RE.test(d.email)) {
+        return NextResponse.json({ ok: false, error: 'That email address does not look right.' }, { status: 400 })
+      }
+    } else {
+      if (!d.email) {
+        return NextResponse.json({ ok: false, error: 'Name, company and email are required.' }, { status: 400 })
+      }
+      if (!EMAIL_RE.test(d.email)) {
+        return NextResponse.json({ ok: false, error: 'That email address does not look right.' }, { status: 400 })
+      }
     }
+
+    // Attribution from the landing pages, printed in the email so it can be
+    // carried into the CRM by hand or by a later import. Only the keys that
+    // arrived are shown.
+    const attribution = isLandingLead ? [
+      ['Source',        d.source],
+      ['Landing page',  d.landing_path],
+      ['Service',       d.service],
+      ['Show (URL)',    d.show_param],
+      ['GCLID',         d.gclid],
+      ['UTM source',    d.utm_source],
+      ['UTM medium',    d.utm_medium],
+      ['UTM campaign',  d.utm_campaign],
+      ['UTM term',      d.utm_term],
+      ['UTM content',   d.utm_content],
+      ['Variant',       d.page_variant],
+      ['Referrer',      d.referrer],
+    ].filter(([, v]) => v) as [string, string][] : []
 
     // Stall size is typed now. The fallback is for a page still open in
     // somebody's browser from before the change, which would post the old
@@ -130,6 +165,17 @@ export async function POST(req: NextRequest) {
           </table>
         </td></tr>
 
+        <!-- Attribution (landing-page leads only) -->
+        ${attribution.length ? `
+        <tr><td style="padding:20px 32px 0">
+          <p style="margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:#4ade80">Google Ads Attribution</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f1117;border:1px solid #ffffff1a;border-radius:8px">
+            <tbody>
+              ${attribution.map(([k, v]) => row(k, v)).join('')}
+            </tbody>
+          </table>
+        </td></tr>` : ''}
+
         <!-- Message -->
         ${d.message ? `
         <tr><td style="padding:20px 32px 0">
@@ -156,10 +202,10 @@ export async function POST(req: NextRequest) {
     const { error } = await resend.emails.send({
       from: FROM,
       to:   TO,
-      replyTo: d.email,
+      ...(d.email ? { replyTo: d.email } : {}),
       // Newlines stripped: a subject is a mail header, and a header that can
       // carry a line break can carry a second header.
-      subject: `Exhibition Enquiry — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
+      subject: `${isLandingLead ? 'Google Ads Lead' : 'Exhibition Enquiry'} — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
       html,
       ...(attachment ? { attachments: [attachment] } : {}),
     })
