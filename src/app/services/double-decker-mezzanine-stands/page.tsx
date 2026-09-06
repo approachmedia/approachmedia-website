@@ -232,20 +232,20 @@ export default function DoubleDeckerMezzanineStandsPage() {
               <Image src={`${CDN}/decker-gallery-4.jpg`} alt="Large double-decker exhibition stand with full upper lounge"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">ACETECH Delhi · 96 sqm Double Decker</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">Vibrant Gujarat · 196 sqm Double Decker</p>
                 <p className="mt-1 font-display text-xl text-foreground">Two-storey landmark build</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
-              <Image src={`${CDN}/decker-gallery-2.jpg`} alt="Upper lounge VIP meeting room at GITEX Dubai"
+              <Image src={`${CDN}/decker-upper-lounge.jpg`} alt="Upper lounge VIP meeting room at REI Delhi"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
-                <p className="text-xs uppercase tracking-wider text-brand-green">GITEX Dubai · Upper Lounge</p>
+                <p className="text-xs uppercase tracking-wider text-brand-green">REI - Delhi - Upper Lounge</p>
                 <p className="mt-1 font-display text-xl text-foreground">Private VIP hospitality floor</p>
               </div>
             </div>
             <div className="md:col-span-5 group relative overflow-hidden rounded-3xl border border-white/15" style={{ minHeight: '250px' }}>
-              <Image src={`${CDN}/decker-gallery-3.jpg`} alt="Mezzanine meeting suite at Auto Expo"
+              <Image src={`${CDN}/decker-meeting-suite.jpg`} alt="Mezzanine meeting suite at Auto Expo"
                 fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6">
                 <p className="text-xs uppercase tracking-wider text-brand-green">Auto Expo · Mezzanine Meeting Suite</p>
