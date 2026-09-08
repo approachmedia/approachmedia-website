@@ -60,6 +60,21 @@ export function ProcessStand({ steps }: { steps: ProcessStep[] }) {
     if (items.length === 0) return
     const vr = vis.getBoundingClientRect()
     const isStacked = vr.width > r.clientWidth * 0.8
+
+    // Centre the drawing in the screen below the header. Measured rather than
+    // written in CSS because its height is whichever is smaller of the column
+    // width and the viewport, so no single calc() is right at every size.
+    //
+    // Published as a custom property, not by writing style.top: the stacked
+    // layout sets its own `top` through the React style prop, and writing to
+    // style.top from here wiped it, which stopped the mobile bar sticking and
+    // froze the stage list on step 01.
+    if (!isStacked) {
+      const hdr = parseFloat(getComputedStyle(r).getPropertyValue('--hdr')) || 97
+      const slack = Math.max(0, (window.innerHeight - hdr - vr.height) / 2)
+      vis.style.setProperty('--ps-top', `${Math.round(hdr + slack)}px`)
+    }
+
     const line = isStacked ? vr.bottom + window.innerHeight * 0.10 : window.innerHeight * 0.55
     let a = 0
     items.forEach((el, i) => { if (el.getBoundingClientRect().top < line) a = i })
@@ -149,8 +164,22 @@ export function ProcessStand({ steps }: { steps: ProcessStep[] }) {
       <div className="ps__grid">
         <div ref={visRef} className="ps__sticky" style={stacked
           ? { position: 'sticky', top: 'var(--hdr, 97px)', zIndex: 2, alignSelf: 'start', background: 'var(--ground, #0B0D12)', padding: '10px 0 14px', boxShadow: '0 24px 24px -8px var(--ground, #0B0D12)', boxSizing: 'border-box' }
-          : { position: 'sticky', top: 'calc(var(--hdr, 97px) + clamp(12px,3vh,40px))', alignSelf: 'start' }}>
-          <div style={{ position: 'relative', width: stacked ? 'min(100%, calc(30vh * 1.11))' : 'min(100%, calc(52vh * 1.11))', aspectRatio: '800 / 720', margin: '0 auto', containerType: 'inline-size' }}>
+          : {
+            // Held in the MIDDLE of the screen rather than hard under the nav.
+            // The exact offset is measured and set in compute(), because it
+            // depends on the drawing's rendered height, which is capped by the
+            // column width on wide screens and by the viewport on short ones.
+            // The box stays content-height on purpose: a full-height sticky
+            // box has no room left to travel inside its grid area, so the
+            // drawing would not hold at all.
+            position: 'sticky',
+            top: 'var(--ps-top, calc(var(--hdr, 97px) + 8vh))',
+            alignSelf: 'start',
+          }}>
+          {/* Sized by width, with the aspect ratio setting the height, so the
+              vh figure is effectively the drawing's height. Centring freed
+              vertical room, so it takes a little more of it. */}
+          <div style={{ position: 'relative', width: stacked ? 'min(100%, calc(30vh * 1.11))' : 'min(100%, calc(56vh * 1.11))', aspectRatio: '800 / 720', margin: '0 auto', containerType: 'inline-size' }}>
             <svg viewBox="0 0 800 720" width="100%" height="100%" aria-hidden="true" style={{ display: 'block', overflow: 'visible' }}>
               <defs>
                 <radialGradient id="psVig" cx="50%" cy="55%" r="60%"><stop offset="0" stopColor="#172F9D" stopOpacity=".22" /><stop offset="1" stopColor="#172F9D" stopOpacity="0" /></radialGradient>
@@ -435,7 +464,14 @@ export function ProcessStand({ steps }: { steps: ProcessStep[] }) {
           </div>
         </div>
 
-        <ol className="ps__list">
+        {/* Trailing room below the last stage, on the wide layout only.
+            A sticky element can only hold while its column still has height
+            left to give. This column is 692px and the drawing is about 510px,
+            which bought 182px of hold against 611px of stage list: the stand
+            slid away under the header around stage 05, taking the truck
+            arrival with it. The extra room lets it hold to the end, and what
+            scrolls past beside it is the finished build rather than a gap. */}
+        <ol className="ps__list" style={stacked ? undefined : { paddingBottom: 'clamp(320px, 50vh, 540px)' }}>
           {steps.map((st, i) => {
             const open = i <= active || i === d
             const isCur = i === d
