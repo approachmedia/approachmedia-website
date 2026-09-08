@@ -1,7 +1,7 @@
 /* ── Portfolio index ──────────────────────────────────────────────
    Gallery / catalog, one level up: the objects are the projects. Cards
-   reveal as they enter, and the filter bar is the index's nav, held at the
-   top so the collection can be jumped around instead of only scrolled.
+   reveal as they enter. The filter bar is the index's nav and scrolls with
+   the page; see the note below for why it is not held at the top.
 
    No typography here. The grid's type comes from Tailwind classes that were
    already on it and is untouched. */
@@ -17,22 +17,16 @@
 }
 .pfx [data-sc-stagger] > .sc-in { opacity: 1; transform: none; }
 
-/* The index's nav. The site header is sticky at 97px, so this sits under it
-   rather than over it. */
-.pfx__nav {
-  position: sticky; top: 97px; z-index: 30;
-  padding: 12px 0; margin: 0 -4px;
-  background: hsl(222 40% 4% / 0.88); backdrop-filter: blur(10px);
-  border-bottom: 1px solid hsl(222 18% 14%);
-}
-
-@media (max-width: 900px) {
-  .pfx__nav { top: 81px; }
-}
+/* The filter bar scrolls away with the page.
+   It was briefly sticky, on the reasoning that a collection's index should
+   stay reachable. That was wrong for this particular index: the bar carries
+   about forty industry chips and fifteen stall types, so held at the top it
+   filled roughly half the screen and left barely a strip of the projects
+   underneath, which is the opposite of what an index is for. Reported by the
+   owner against /portfolio. */
 
 @media (prefers-reduced-motion: reduce) {
   .pfx [data-sc-in], .pfx [data-sc-stagger] > * {
     opacity: 1 !important; transform: none !important; transition: none !important;
   }
-  .pfx__nav { position: static; }
 }

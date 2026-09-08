@@ -66,10 +66,8 @@ export default async function PortfolioIndexPage() {
           </p>
         </header>
 
-        {/* Filter bar: the index's nav, held so the collection can be jumped */}
-        <div className="pfx__nav">
-          <FilterBar industries={industries} stallTypes={stallTypes} />
-        </div>
+        {/* Filter bar */}
+        <FilterBar industries={industries} stallTypes={stallTypes} />
 
         {/* Featured projects */}
         {featured.length > 0 && (
