@@ -4,7 +4,7 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { ORG_NAME, ORG_EMAIL, ORG_PHONES, ORG_ADDRESS } from '@/lib/seo/organization'
-import { GTM_ID } from '@/components/site/Gtm'
+
 
 /**
  * Privacy policy.
@@ -14,10 +14,13 @@ import { GTM_ID } from '@/components/site/Gtm'
  *
  *  · the only form that collects personal data is /contact, and it is emailed
  *    to info@approachmedia.in through Resend. It is not written to a database;
- *  · there is no analytics, tag manager, advertising pixel or session recorder
- *    anywhere in the app shell. There is no third-party script at all;
- *  · the only cookie the site sets is `admin_auth`, for staff signing in to
- *    the admin area. An ordinary visitor is never issued a cookie;
+ *  · GA4 (G-J52GL419KN) ships in site code via components/site/Ga.tsx, and
+ *    GTM (GTM-NN376CML) carries the Google Ads conversion tags. Both are
+ *    disclosed unconditionally: GA4 loads on the live site regardless of the
+ *    GTM container, so the old "no analytics at all" wording this page used
+ *    to fall back to could have been shown while GA4 was collecting;
+ *  · besides those, the site sets one cookie of its own, `admin_auth`, for
+ *    staff signing in to the admin area;
  *  · typefaces are compiled in by next/font at build time and served from this
  *    domain, so loading a page sends nothing to Google Fonts;
  *  · Google review avatars on the homepage are the one third-party asset a
@@ -160,23 +163,19 @@ export default function PrivacyPolicyPage() {
                 written to a database or attached to your enquiry. Our hosting provider also keeps standard
                 server logs, described in section 05.
               </p>
-              {GTM_ID ? (
-                <p>
-                  <strong>Measurement and advertising.</strong> This website loads Google Tag Manager, through
-                  which Google Analytics and Google Ads conversion measurement run. These record how you reached
-                  the site and what you did on it (pages viewed, a form submitted, a phone or WhatsApp button
-                  pressed) and may set cookies in your browser for that purpose. If you arrived from a Google
-                  advertisement, the click identifier Google attaches to the link is recorded with any enquiry
-                  you send, so we can tell which advertisement led to it. We do not run session recording, and
-                  we do not buy personal data or build advertising profiles of our own.
-                </p>
-              ) : (
-                <p>
-                  <strong>What we do not collect.</strong> This website runs no analytics, no tag manager, no
-                  advertising or conversion pixel, no session recording and no cross-site tracking of any kind.
-                  We do not buy personal data, and we do not build advertising profiles.
-                </p>
-              )}
+              {/* Always disclosed. GA4 ships in site code (components/site/Ga.tsx),
+                  so it runs on the live site whether or not a GTM container is
+                  configured; the old "no analytics at all" alternative here could
+                  have been shown while GA4 was in fact collecting. */}
+              <p>
+                  <strong>Measurement and advertising.</strong> This website loads Google Analytics, and Google
+                  Tag Manager for Google Ads conversion measurement. These record how you reached the site and
+                  what you did on it (pages viewed, a form submitted, a phone or WhatsApp button pressed) and may
+                  set cookies in your browser for that purpose. If you arrived from a Google advertisement, the
+                  click identifier Google attaches to the link is recorded with any enquiry you send, so we can
+                  tell which advertisement led to it. We do not run session recording, and we do not buy personal
+                  data or build advertising profiles of our own.
+              </p>
             </Section>
 
             <Section id="why" n="03" title="Why we use it, and on what basis">
@@ -221,24 +220,14 @@ export default function PrivacyPolicyPage() {
             </Section>
 
             <Section id="cookies" n="05" title="Cookies, logs and other technologies">
-              {GTM_ID ? (
-                <p>
-                  <strong>Cookies.</strong> Google Tag Manager, Google Analytics and Google Ads may set cookies
+              <p>
+                  <strong>Cookies.</strong> Google Analytics, Google Tag Manager and Google Ads may set cookies
                   in your browser to measure visits and advertising conversions, as described in section 02.
                   You can block or clear these through your browser settings, and Google describes its own
                   handling at <a href="https://policies.google.com/technologies/cookies">policies.google.com</a>.
                   Separately, the site issues one sign-in cookie called <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[0.85em]">admin_auth</code>,
                   set only when a member of our staff signs in to the private admin area.
-                </p>
-              ) : (
-                <p>
-                  <strong>Cookies.</strong> This website does not set advertising, analytics or tracking
-                  cookies, and there is no cookie banner because there is nothing to consent to. The only
-                  cookie the site issues is a sign-in cookie called <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[0.85em]">admin_auth</code>,
-                  and it is set only when a member of our staff signs in to the private admin area. Browsing
-                  the public site does not place a cookie on your device.
-                </p>
-              )}
+              </p>
               <p>
                 <strong>Local browser storage.</strong> Some pages remember small display preferences in
                 your own browser, such as a filter you selected. That stays on your device, is not sent to

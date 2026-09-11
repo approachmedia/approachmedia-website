@@ -5,6 +5,7 @@ import './legacy.css'
 import SiteChrome from '@/components/site/SiteChrome'
 import SmoothScroll from '@/components/site/SmoothScroll'
 import { GtmHead, GtmNoScript } from '@/components/site/Gtm'
+import { Ga } from '@/components/site/Ga'
 
 import { SITE_URL } from '@/lib/site-url'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -62,6 +63,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GtmNoScript />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
+        {/* After the page content, per the package's guidance. */}
+        <Ga />
       </body>
     </html>
   )
