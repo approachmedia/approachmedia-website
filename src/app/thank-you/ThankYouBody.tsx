@@ -5,14 +5,21 @@ import { WaLink } from '@/components/lp/LpLinks'
 import { TrackedLink } from '@/components/lp/LpTrackedLink'
 import { track } from '@/components/lp/lp-tracking'
 
-/** The buttons, plus the one-shot conversion event. */
-export default function ThankYouBody({ service, show, size }: { service: string; show: string; size: string }) {
+/**
+ * The buttons, plus the one-shot conversion event.
+ *
+ * `src` is what the landing-page-versus-home-page test is read on: the
+ * landing forms send src=lp, the main site's contact form sends src=website.
+ * It rides on the event rather than being read back off page_location, so the
+ * split is a plain GA4 dimension instead of a URL to parse.
+ */
+export default function ThankYouBody({ service, show, size, src, form }: { service: string; show: string; size: string; src: string; form: string }) {
   const fired = useRef(false)
   useEffect(() => {
     if (fired.current) return
     fired.current = true
-    track('thank_you_view', { service })
-  }, [service])
+    track('thank_you_view', { service, src, form })
+  }, [service, src, form])
 
   return (
     <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

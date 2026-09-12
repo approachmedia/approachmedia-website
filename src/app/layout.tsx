@@ -6,6 +6,8 @@ import SiteChrome from '@/components/site/SiteChrome'
 import SmoothScroll from '@/components/site/SmoothScroll'
 import { GtmHead, GtmNoScript } from '@/components/site/Gtm'
 import { Ga } from '@/components/site/Ga'
+import SiteClickTracking from '@/components/site/SiteClickTracking'
+import { LpParamsProvider } from '@/components/lp/lp-params'
 
 import { SITE_URL } from '@/lib/site-url'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -62,7 +64,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GtmHead />
         <GtmNoScript />
         <SmoothScroll />
-        <SiteChrome>{children}</SiteChrome>
+        {/* First-touch gclid / utm_* for every page, not just the landing
+            pages: an ad click that lands on the home page and converts from
+            /contact two pages later has to keep its attribution. */}
+        <LpParamsProvider>
+          <SiteChrome>{children}</SiteChrome>
+        </LpParamsProvider>
+        {/* One listener for every wa.me and tel: link on the site. */}
+        <SiteClickTracking />
         {/* After the page content, per the package's guidance. */}
         <Ga />
       </body>

@@ -1,13 +1,18 @@
 'use client'
 
 /**
- * URL parameters for the landing pages, read once on the client, persisted
- * in sessionStorage so they survive scroll, reload and the redirect to
- * /thank-you, and exposed through context to the hero, the form, the
- * WhatsApp links and the tracking calls.
+ * First-touch campaign attribution, for the WHOLE site.
  *
- * Spec §6: show, city, size, gclid, utm_*, kw, v. Nothing here breaks when
- * they are absent; every value defaults to an empty string.
+ * Read once on the client, persisted in sessionStorage, and exposed through
+ * context. Mounted in the root layout, so a visitor who lands on the home
+ * page from an ad and submits the contact form two pages later still carries
+ * the gclid that brought them: the values are only overwritten when a fresh
+ * landing arrives with new ones.
+ *
+ * It began as landing-page-only, which is why it lives under components/lp
+ * and still carries the landing pages' own params (show, city, size, kw, v)
+ * alongside gclid and the utm_* set. Nothing here breaks when any of them is
+ * absent; every value defaults to an empty string.
  */
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'

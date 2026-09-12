@@ -5,6 +5,11 @@
  * then letting the browser follow the href. tel: and wa.me are both primary
  * Google Ads conversions (spec §8), so every instance on the page goes
  * through here and carries its placement.
+ *
+ * Both anchors carry data-tracked so the site-wide listener in
+ * components/site/SiteClickTracking.tsx leaves them alone: these pushes
+ * carry a `placement` the global one cannot know, and two pushes for one
+ * click would inflate the conversion.
  */
 
 import { type ReactNode } from 'react'
@@ -29,6 +34,7 @@ export function WaLink({
       href={href}
       target="_blank"
       rel="noopener"
+      data-tracked="1"
       onClick={() => track('whatsapp_click', { placement })}
       className={cn('inline-flex items-center justify-center gap-2', className)}
       aria-label={iconOnly ? 'WhatsApp us' : undefined}
@@ -47,6 +53,7 @@ export function TelLink({
   return (
     <a
       href={`tel:${LP_PHONE_E164}`}
+      data-tracked="1"
       onClick={() => track('call_click', { placement })}
       className={cn('inline-flex items-center justify-center gap-2', className)}
       aria-label={iconOnly ? 'Call us' : undefined}

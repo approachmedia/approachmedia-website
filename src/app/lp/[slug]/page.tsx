@@ -5,7 +5,6 @@ import { stallFabrication } from '@/content/lp/stall-fabrication'
 import type { LandingPageConfig } from '@/content/lp/types'
 import { getGoogleRating } from '@/lib/google-rating'
 import { getPublishedProjects } from '@/lib/db/portfolio'
-import { LpParamsProvider } from '@/components/lp/lp-params'
 import { paramsFromSearch } from '@/components/lp/lp-params-shared'
 import LpHeader from '@/components/lp/LpHeader'
 import LpHero from '@/components/lp/LpHero'
@@ -93,7 +92,7 @@ export default async function LandingPage({ params, searchParams }: Props) {
   const [rating, projects] = await Promise.all([getGoogleRating(), pickProjects()])
 
   return (
-    <LpParamsProvider>
+    <>
       <LpView service={cfg.service} />
       <LpHeader />
       <main>
@@ -109,6 +108,6 @@ export default async function LandingPage({ params, searchParams }: Props) {
       </main>
       <LpFooter />
       <LpStickyBar />
-    </LpParamsProvider>
+    </>
   )
 }

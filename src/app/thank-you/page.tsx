@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { LpParamsProvider } from '@/components/lp/lp-params'
 import LpHeader from '@/components/lp/LpHeader'
 import { LpFooter } from '@/components/lp/LpSections'
 import ThankYouBody from './ThankYouBody'
@@ -22,9 +21,11 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
   const service = one('service').slice(0, 40)
   const show = one('show').replace(/<[^>]*>/g, '').slice(0, 60)
   const size = one('size').slice(0, 40)
+  const src = one('src').slice(0, 20)
+  const form = one('form').slice(0, 20)
 
   return (
-    <LpParamsProvider>
+    <>
       <LpHeader />
       <main className="container-wide flex min-h-[70vh] items-center py-16 md:py-24">
         <div className="mx-auto max-w-2xl text-center">
@@ -41,7 +42,7 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
             </dl>
           )}
 
-          <ThankYouBody service={service} show={show} size={size} />
+          <ThankYouBody service={service} show={show} size={size} src={src} form={form} />
 
           <p className="mt-10 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-foreground">Back to approachmedia.in</Link>
@@ -49,6 +50,6 @@ export default async function ThankYouPage({ searchParams }: { searchParams: Pro
         </div>
       </main>
       <LpFooter />
-    </LpParamsProvider>
+    </>
   )
 }

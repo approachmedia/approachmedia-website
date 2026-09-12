@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send, CheckCircle2, Paperclip, X } from 'lucide-react'
 import {
   ATTACHMENT_ACCEPT,
@@ -10,6 +11,7 @@ import {
   TIMESTAMP_FIELD,
   type AttachmentPayload,
 } from '@/lib/form-fields'
+import { useLpParams } from '@/components/lp/lp-params'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -196,6 +198,10 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
   const [plan,    setPlan]          = useState<File | null>(null)
   const [planError, setPlanError]   = useState('')
   const renderedAt                  = useRef<HTMLInputElement>(null)
+  const router                      = useRouter()
+  // First-touch campaign params, kept by the provider in the root layout.
+  // A visitor who landed from an ad on any page still carries them here.
+  const attr                        = useLpParams()
 
   // Checked here as well as in the route. The route is the one that counts —
   // this only saves the visitor from uploading 40 MB before being told.
@@ -253,6 +259,10 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
       form.reset()
       setPlan(null)
       setPlanError('')
+      // Google Ads reads the conversion off /thank-you, the same page the
+      // landing pages send to. Without this the whole main site was invisible
+      // to the campaign and the landing-page test could not be read fairly.
+      router.push('/thank-you?src=website&form=contact')
     } catch (err) {
       // The route reports genuine validation problems — a mistyped address,
       // a missing required field — so show those rather than burying them
@@ -304,6 +314,22 @@ export function ContactForm({ isProposal = false }: { isProposal?: boolean }) {
         />
       </div>
       <input ref={renderedAt} type="hidden" name={TIMESTAMP_FIELD} />
+
+      {/* Campaign attribution. Empty for organic visitors, in which case the
+          route leaves the lead's source alone. utm_content carries the Google
+          ad ID and is what separates landing-page leads from website leads
+          once they are in the inbox. */}
+      <input type="hidden" name="gclid"        value={attr.gclid} readOnly />
+      <input type="hidden" name="utm_source"   value={attr.utm_source} readOnly />
+      <input type="hidden" name="utm_medium"   value={attr.utm_medium} readOnly />
+      <input type="hidden" name="utm_campaign" value={attr.utm_campaign} readOnly />
+      <input type="hidden" name="utm_term"     value={attr.utm_term} readOnly />
+      <input type="hidden" name="utm_content"  value={attr.utm_content} readOnly />
+      <input type="hidden" name="landing_path" value={attr.landing_path} readOnly />
+      <input type="hidden" name="referrer"     value={attr.referrer} readOnly />
+      {(attr.gclid || attr.utm_source === 'google') && (
+        <input type="hidden" name="source" value="google-ads-website" readOnly />
+      )}
 
       {/* ── Contact info ── */}
       <p className="text-xs uppercase tracking-[0.22em] text-brand-green">Contact information</p>

@@ -59,6 +59,10 @@ export async function POST(req: NextRequest) {
     // email (five fields, thumb-sized, a 30-second form), so for those a
     // valid phone stands in for the email. Everything else stays the same.
     const isLandingLead = d.source === 'google-ads-lp'
+    // The main site's contact form now carries the same campaign fields.
+    // It still requires an email: only the landing pages trade that for a
+    // phone number, because their form is five fields and thumb-sized.
+    const isAttributed = isLandingLead || d.source === 'google-ads-website'
     if (!d.name || !d.company) {
       return NextResponse.json({ ok: false, error: 'Name, company and email are required.' }, { status: 400 })
     }
@@ -81,7 +85,7 @@ export async function POST(req: NextRequest) {
     // Attribution from the landing pages, printed in the email so it can be
     // carried into the CRM by hand or by a later import. Only the keys that
     // arrived are shown.
-    const attribution = isLandingLead ? [
+    const attribution = isAttributed ? [
       ['Source',        d.source],
       ['Landing page',  d.landing_path],
       ['Service',       d.service],
@@ -205,7 +209,7 @@ export async function POST(req: NextRequest) {
       ...(d.email ? { replyTo: d.email } : {}),
       // Newlines stripped: a subject is a mail header, and a header that can
       // carry a line break can carry a second header.
-      subject: `${isLandingLead ? 'Google Ads Lead' : 'Exhibition Enquiry'} — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
+      subject: `${isAttributed ? 'Google Ads Lead' : 'Exhibition Enquiry'} — ${subjectSafe(d.name)} · ${subjectSafe(d.exhibition || d.company)}`,
       html,
       ...(attachment ? { attachments: [attachment] } : {}),
     })
