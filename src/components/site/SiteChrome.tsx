@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation'
 import SiteHeader from './SiteHeader'
 import FooterReveal from './FooterReveal'
 import LegacyScripts from './LegacyScripts'
+import SiteContactBar from './SiteContactBar'
 
 /**
  * Wraps public pages with the site header + footer.
@@ -27,6 +28,10 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
           different when the reveal is switched off. */}
       <div className="relative z-10 flex-1 bg-background">{children}</div>
       <FooterReveal />
+      {/* Call and WhatsApp. Mounted here rather than in the root layout so it
+          inherits the same two exclusions as the header and footer: /admin has
+          its own chrome, and the landing pages carry LpStickyBar. */}
+      <SiteContactBar />
     </div>
   )
 }

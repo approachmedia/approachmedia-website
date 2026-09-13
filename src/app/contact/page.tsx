@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { ContactForm } from './ContactForm'
+import { SITE_WA_HREF } from '@/components/site/contact-links'
 
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
@@ -82,6 +83,12 @@ export default function ContactPage() {
                       </a>
                     ))}
                   </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
+                  <a href={SITE_WA_HREF} target="_blank" rel="noopener" className="hover:text-foreground transition-colors">
+                    WhatsApp us
+                  </a>
                 </li>
                 <li className="flex items-start gap-3">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />

@@ -18,6 +18,15 @@ RUN npm install
 ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 
+# The same trap caught the GTM container: the service variable was set, the
+# build never saw it, so every statically prerendered page shipped with no
+# Google Tag Manager while the dynamic ones had it. The ID is defaulted in
+# src/components/site/Gtm.tsx so a missing build arg can no longer untag the
+# site, but it is declared here too, so setting the variable on Railway
+# actually changes the build instead of being silently ignored.
+ARG NEXT_PUBLIC_GTM_ID
+ENV NEXT_PUBLIC_GTM_ID=$NEXT_PUBLIC_GTM_ID
+
 # Copy source and build
 COPY . .
 RUN npx prisma generate
