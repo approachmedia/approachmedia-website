@@ -61,6 +61,77 @@ const LEGACY_REDIRECTS: Record<string, string> = {
 }
 
 /**
+ * The display paths on the Google Ads responsive search ads.
+ *
+ * A display path is cosmetic: the ad shows "approachmedia.in/stall-design/
+ * quote" while the click goes to the real final URL. But some people read the
+ * ad and type what they saw, and every one of these paths 404s today.
+ *
+ * Targets are the page the path *describes*, not the ad's current final URL.
+ * Two reasons. Half the enabled ads point at "/" only because they are the
+ * home-page arm of the landing-page test, so mirroring today's final URLs
+ * would go stale the moment that test is decided. And a redirect to an
+ * unrelated page is a soft 404 to Google, which is exactly the trap the
+ * legacy map above is written to avoid: somebody typing "/stall-design/
+ * portfolio" wants the portfolio, not the home page.
+ *
+ * Pulled from the account (customer 9777016084) on 13 Sep 2026: 18 enabled
+ * and 9 paused ads across the four search campaigns. Paused ones are here
+ * too, because they have served before and cost nothing to keep. The bare
+ * first segments are not display paths in the account; they are here because
+ * somebody retyping from memory stops at the first part as often as not.
+ */
+const AD_DISPLAY_PATHS: Record<string, string> = {
+  // Brand
+  '/official':                 '/',
+  '/approach-media':           '/',
+  '/official/ahmedabad':       '/exhibition-stand-builders-in-ahmedabad',
+
+  // City intent
+  '/ahmedabad':                '/exhibition-stand-builders-in-ahmedabad',
+  '/ahmedabad/stall-design':   '/exhibition-stand-builders-in-ahmedabad',
+  '/ahmedabad/quote':          '/contact',
+  '/mumbai':                   '/exhibition-stall-designer-mumbai',
+  '/mumbai/stall-design':      '/exhibition-stall-designer-mumbai',
+  '/mumbai/quote':             '/contact',
+  '/delhi-ncr':                '/exhibition-stall-designer-delhi',
+  '/delhi-ncr/stall-design':   '/exhibition-stall-designer-delhi',
+  '/delhi-ncr/quote':          '/contact',
+
+  // Core intent — stall design
+  '/stall-design':             '/services/exhibition-stall-design',
+  '/stall-design/quote':       '/contact',
+  '/stall-design/free-3d':     '/contact',
+  '/stall-design/portfolio':   '/portfolio',
+
+  // Core intent — fabrication
+  '/fabrication':              '/services/custom-booth-fabrication',
+  '/fabrication/quote':        '/contact',
+  '/fabrication/fixed-quote':  '/contact',
+  '/fabrication/portfolio':    '/portfolio',
+
+  // Core intent — booth and trade show
+  '/booth-design':             '/services/exhibition-stall-design',
+  '/booth-design/quote':       '/contact',
+  '/booth-design/trade-show':  '/services/exhibition-stall-design',
+  '/booth-design/portfolio':   '/portfolio',
+
+  // Core intent — stand builders
+  '/stand-builders':           '/services/custom-booth-fabrication',
+  '/stand-builders/quote':     '/contact',
+  '/stand-builders/india':     '/services/custom-booth-fabrication',
+  '/stand-builders/portfolio': '/portfolio',
+
+  // Core intent — double decker. The only group where the ad's own final URL
+  // and the topical page are the same, so /quote goes there rather than to
+  // /contact: the service page carries the enquiry CTA and keeps the subject.
+  '/double-decker':            '/services/double-decker-mezzanine-stands',
+  '/double-decker/quote':      '/services/double-decker-mezzanine-stands',
+  '/double-decker/stands':     '/services/double-decker-mezzanine-stands',
+  '/double-decker/portfolio':  '/portfolio',
+}
+
+/**
  * Old WordPress trees that move wholesale. The events calendar carried the
  * Events Calendar plugin's query strings (`?tribe-bar-date=…`), which have no
  * equivalent here, so the query is dropped rather than carried to a page that
@@ -75,11 +146,19 @@ const LEGACY_PREFIXES: { prefix: string; target: string }[] = [
   { prefix: '/exhibitions',      target: '/expos' },
 ]
 
+function normalise(pathname: string) {
+  return pathname.toLowerCase().replace(/\/+$/, '') || '/'
+}
+
 function legacyTarget(pathname: string) {
-  const key = pathname.toLowerCase().replace(/\/+$/, '') || '/'
+  const key = normalise(pathname)
   if (LEGACY_REDIRECTS[key]) return LEGACY_REDIRECTS[key]
   const prefixed = LEGACY_PREFIXES.find(p => key === p.prefix || key.startsWith(`${p.prefix}/`))
   return prefixed?.target
+}
+
+function adDisplayTarget(pathname: string) {
+  return AD_DISPLAY_PATHS[normalise(pathname)]
 }
 
 /**
@@ -116,6 +195,19 @@ export function middleware(request: NextRequest) {
   const legacy = legacyTarget(trimmed)
   if (legacy) {
     return NextResponse.redirect(`${CANONICAL_ORIGIN}${legacy}`, 301)
+  }
+
+  // Ad display paths. Same one-hop reasoning as the legacy map: somebody
+  // retyping what they read in an ad types "approachmedia.in/..." without the
+  // www, and a next.config redirect would only fire after the host 301, so
+  // every one of these would cost two hops.
+  //
+  // The query string is carried, unlike the legacy branch: gclid and utm_* now
+  // drive attribution site-wide, and a hand-typed URL is the one case where
+  // they could ride in on a display path.
+  const adPath = adDisplayTarget(trimmed)
+  if (adPath) {
+    return NextResponse.redirect(`${CANONICAL_ORIGIN}${adPath}${search}`, 301)
   }
 
   // Only safe methods. Several HTTP clients silently downgrade POST to GET
