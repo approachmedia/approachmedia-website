@@ -349,6 +349,29 @@ export async function createClient(data: { name: string; industryId?: number; we
   })
 }
 
+/**
+ * A new industry, created from the Industry column on the admin table.
+ *
+ * Case-insensitively deduplicated rather than blindly created: "Ceramic
+ * Industry" typed twice with different capitalisation would otherwise become
+ * two categories with two public pages competing for the same term. The
+ * existing row is returned instead, so the caller can just select it.
+ */
+export async function createIndustry(name: string) {
+  const trimmed = name.trim()
+  const existing = await prisma.industry.findFirst({
+    where: { name: { equals: trimmed, mode: 'insensitive' } },
+  })
+  if (existing) return existing
+
+  const base = slugify(trimmed)
+  let slug = base
+  for (let i = 2; await prisma.industry.findUnique({ where: { slug } }); i++) {
+    slug = `${base}-${i}`
+  }
+  return prisma.industry.create({ data: { name: trimmed, slug } })
+}
+
 export async function createExhibition(data: { name: string; city?: string; venueName?: string; startDate?: Date }) {
   let base = slugify(data.name)
   let slug = base
@@ -376,7 +399,12 @@ export async function getAdminProjectList() {
         isFeatured: true, buildYear: true, updatedAt: true,
         client:     { select: { name: true } },
         exhibition: { select: { name: true } },
-        industries: { where: { isPrimary: true }, select: { industryId: true } },
+        // Every industry, not just the primary one. The table used to read
+        // isPrimary only, so a project in two categories looked like it was
+        // in one — and the Industry cell then saved that single value back
+        // over the pair. 54 of the links on the current data belong to
+        // projects with two.
+        industries: { select: { industryId: true, isPrimary: true } },
         stallTypes: { where: { isPrimary: true }, select: { stallTypeId: true } },
         media: {
           take: 1,
@@ -403,7 +431,10 @@ export async function getAdminProjectList() {
       buildYear: p.buildYear,
       client: p.client,
       exhibition: p.exhibition,
-      industryId:  p.industries[0]?.industryId  ?? null,
+      // Primary first, so the table can mark it without a second lookup.
+      industryIds: [...p.industries]
+        .sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary))
+        .map(i => i.industryId),
       stallTypeId: p.stallTypes[0]?.stallTypeId ?? null,
       thumbnail,
       thumbnailAlt: m?.altText ?? p.title,

@@ -4,8 +4,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import FilterCombo from './FilterCombo'
-
-type Option = { id: number; name: string }
+import IndustryCell, { type Option } from './IndustryCell'
 
 type Project = {
   id:           number
@@ -15,7 +14,8 @@ type Project = {
   buildYear:    number | null
   client:       { name: string } | null
   exhibition:   { name: string } | null
-  industryId:   number | null
+  /** Every category the project is in, primary first. */
+  industryIds:  number[]
   stallTypeId:  number | null
   thumbnail:    string | null
   thumbnailAlt: string
@@ -23,15 +23,18 @@ type Project = {
 
 // ── Inline auto-saving searchable dropdown ────────────────────────────────────
 // Type-to-filter combobox; saves immediately on pick via
-// PATCH /api/admin/portfolio/[id]. `field` picks which relation to update
-// (industryIds | stallTypeIds). The panel is position:fixed so the table's
+// PATCH /api/admin/portfolio/[id]. The panel is position:fixed so the table's
 // overflow container can't clip it.
+//
+// Stall type only, now that Industry has its own multi-value cell. This one
+// sends the whole array and so replaces what is there, which is right here: a
+// stand is 1, 2, 3 or 4 side open, never two of them at once.
 
 function InlineSelect({
   projectId, field, value, options, placeholder,
 }: {
   projectId:   number
-  field:       'industryIds' | 'stallTypeIds'
+  field:       'stallTypeIds'
   value:       number | null
   options:     Option[]
   placeholder: string
@@ -182,6 +185,13 @@ export default function AdminProjectTable({
   stallTypeOptions: Option[]
 }) {
   const router                    = useRouter()
+  // Held in state, not read straight from props: creating a category in one
+  // row has to put it in every other row's list without a page reload.
+  const [industries, setIndustries] = useState<Option[]>(industryOptions)
+  useEffect(() => { setIndustries(industryOptions) }, [industryOptions])
+  const addIndustry = (o: Option) => setIndustries(prev =>
+    prev.some(p => p.id === o.id) ? prev : [...prev, o].sort((a, b) => a.name.localeCompare(b.name)))
+
   const [selected, setSelected]   = useState<Set<number>>(new Set())
   const [deleting, startDelete]   = useTransition()
   const [confirmBulk, setConfirm] = useState(false)
@@ -192,10 +202,13 @@ export default function AdminProjectTable({
   const [filterYear,       setFilterYear]       = useState('')
   const [filterIndustry,   setFilterIndustry]   = useState('')
 
-  const industryName = useMemo(() => {
-    const m = new Map(industryOptions.map(o => [o.id, o.name]))
-    return (id: number | null) => (id ? m.get(id) ?? '' : '')
-  }, [industryOptions])
+  // Matches ANY of a project's categories, not just the primary one. With two
+  // categories now visible in the cell, filtering on the primary alone would
+  // hide rows that plainly carry the chip being filtered for.
+  const hasIndustry = useMemo(() => {
+    const m = new Map(industries.map(o => [o.id, o.name]))
+    return (ids: number[], name: string) => ids.some(id => m.get(id) === name)
+  }, [industries])
 
   // Unique option lists derived from the full project list
   const clientOptions = [...new Set(
@@ -210,7 +223,7 @@ export default function AdminProjectTable({
     projects.map(p => p.buildYear).filter((y): y is number => y !== null)
   )].sort((a, b) => b - a).map(String)
 
-  const industryFilterOptions = industryOptions.map(o => o.name).sort()
+  const industryFilterOptions = industries.map(o => o.name).sort()
 
   const anyFilter = Boolean(filterClient || filterExhibition || filterYear || filterIndustry)
 
@@ -219,7 +232,7 @@ export default function AdminProjectTable({
     if (filterClient     && p.client?.name     !== filterClient)      return false
     if (filterExhibition && p.exhibition?.name !== filterExhibition)  return false
     if (filterYear       && String(p.buildYear) !== filterYear)       return false
-    if (filterIndustry   && industryName(p.industryId) !== filterIndustry) return false
+    if (filterIndustry   && !hasIndustry(p.industryIds, filterIndustry)) return false
     return true
   })
 
@@ -396,12 +409,11 @@ export default function AdminProjectTable({
                 </td>
                 <td className="px-4 py-3 text-slate-400">{p.client?.name ?? '—'}</td>
                 <td className="px-4 py-3">
-                  <InlineSelect
+                  <IndustryCell
                     projectId={p.id}
-                    field="industryIds"
-                    value={p.industryId}
-                    options={industryOptions}
-                    placeholder="Select industry"
+                    value={p.industryIds}
+                    options={industries}
+                    onCreated={addIndustry}
                   />
                 </td>
                 <td className="px-4 py-3">
