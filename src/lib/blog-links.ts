@@ -206,6 +206,31 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: 'a custom build is needed', href: '/services/custom-booth-fabrication' },
     { anchor: 'Ask your stall partner',   href: '/services/exhibition-stall-design' },
   ],
+
+  // ── Batch 10: four more of the owner's evergreens ─────────
+  // Same rule as Batches 8 and 9, and every anchor below was checked to occur
+  // verbatim in its own body before being registered — one candidate
+  // ("double-decker structures" on the layout post) turned out to belong to a
+  // different draft and was replaced rather than guessed at.
+  'immersive-experiential-exhibition-stall-design': [
+    { anchor: 'immersive and experiential design', href: '/services/immersive-brand-experience' },
+    { anchor: 'Test the technology',               href: '/services/av-technology-integration' },
+  ],
+  'india-exhibition-industry-growth-2026': [
+    { anchor: 'Plan a year-round exhibition calendar', href: '/tradeshow-calendar' },
+    // Live since 12 Aug, and the post this line is describing.
+    { anchor: 'Use reusable or hybrid stalls',         href: '/blog/custom-vs-modular-exhibition-stands-india' },
+  ],
+  'exhibition-stall-layout-visitor-journey': [
+    // Publishes 28 Sep, a week before this post, so the link resolves. The
+    // injector skips an unpublished blog target in any case.
+    { anchor: 'Venue height and structure rules', href: '/blog/stand-design-approval-process-india' },
+    { anchor: 'Product displays and live demos',  href: '/services/av-technology-integration' },
+  ],
+  'phygital-exhibition-experience-india': [
+    { anchor: 'Touchscreens and product configurators', href: '/services/av-technology-integration' },
+    { anchor: 'Add the show to your website',           href: '/tradeshow-calendar' },
+  ],
 }
 
 /**
