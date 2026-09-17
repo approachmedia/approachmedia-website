@@ -253,6 +253,16 @@ html { scrollbar-width: thin; scrollbar-color: hsl(222 12% 32%) transparent; }
 .blog-prose p { margin: 0 0 1.15rem; }
 .blog-prose ul { margin: 0 0 1.15rem; padding-left: 1.25rem; list-style: disc; }
 .blog-prose li { margin-bottom: 0.5rem; }
+/* GFM task lists. The sustainability post ends on a "- [ ]" checklist, and
+   without this each row renders as a bullet AND a checkbox. Marker off, box
+   aligned to the first line of text; the boxes stay disabled, as marked
+   renders them, because this is a checklist to read, not a form. */
+.blog-prose li:has(> input[type='checkbox']) { list-style: none; margin-left: -1.25rem; }
+.blog-prose li > input[type='checkbox'] {
+  margin-right: 0.6rem;
+  vertical-align: baseline;
+  accent-color: hsl(var(--brand-green));
+}
 .blog-prose strong { color: hsl(0 0% 92%); font-weight: 600; }
 .blog-prose em { color: hsl(220 10% 75%); }
 .blog-prose a {

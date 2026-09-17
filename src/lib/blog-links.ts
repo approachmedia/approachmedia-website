@@ -194,6 +194,18 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
     { anchor: 'Ask your stall designer', href: '/services/exhibition-stall-design' },
     { anchor: 'Quality fabrication',     href: '/services/custom-booth-fabrication' },
   ],
+
+  // ── Batch 9: the sustainability evergreen ─────────────────
+  // No link notes in the draft either, so the same rule as Batch 8: exact
+  // phrases already in the body, each pointing at the page or post it
+  // literally describes, and no copy written to carry a link. The modular
+  // cross-link is the useful one — that post argues this section's case at
+  // length and has been live since 12 August.
+  'sustainable-exhibition-stall-design-india': [
+    { anchor: 'Modular systems made of aluminium frames and fabric graphics', href: '/blog/custom-vs-modular-exhibition-stands-india' },
+    { anchor: 'a custom build is needed', href: '/services/custom-booth-fabrication' },
+    { anchor: 'Ask your stall partner',   href: '/services/exhibition-stall-design' },
+  ],
 }
 
 /**
