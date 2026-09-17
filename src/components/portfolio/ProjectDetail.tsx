@@ -6,6 +6,8 @@ import BrandMark from './BrandMark'
 import { EditorialPlate } from './Plate'
 import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 import CaseStudyFlow from './CaseStudyFlow'
+import { CASE_STUDY_BY_PROJECT } from '@/lib/case-study-posts'
+import { getPostBySlug } from '@/lib/blog'
 import './case-study.css'
 
 /**
@@ -59,6 +61,10 @@ function NarrativeBlock({ num, heading, body }: { num: string; heading: string; 
 // ── Main component ─────────────────────────────────────────────
 
 export default function ProjectDetail({ project }: { project: ProjectWithRelations }) {
+  const ref = CASE_STUDY_BY_PROJECT[project.slug]
+  // Resolved, not assumed: an unpublished or future-dated post is null here,
+  // so the badge can never point at a 404.
+  const caseStudy = ref && getPostBySlug(ref.post) ? ref : null
   const hero            = project.media.find(m => m.isHero) ?? project.media.find(m => m.mediaType === 'image')
   const galleryImages   = project.media.filter(m => m.mediaType === 'image' && m.id !== hero?.id)
   const renders         = project.media.filter(m => m.mediaType === 'render_3d')
@@ -420,6 +426,22 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           )}
         </div>
       </section>
+
+      {/* ═══ Back-link to the case study this stall belongs to ═══
+          Only for the projects a multi-stall case study actually writes up,
+          and only once that post has published: getPostBySlug returns null
+          for a future-dated one, so the eight iPHEX pages stay clean until
+          the post's own date arrives, with no second deploy. */}
+      {caseStudy && (
+        <section data-sc-act="flow" style={{ borderBottom: 'none' }}>
+          <div className="cs__wrap" style={{ padding: '0 24px 48px' }}>
+            <Link href={`/blog/${caseStudy.post}`} className="cs__caselink">
+              <span className="cs__eyebrow">Case study</span>
+              <span>{caseStudy.label}</span>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* ═══ THE ASK — the only reveal-from-left on the page ═══ */}
       <section data-sc-act="flow" style={{ borderBottom: 'none' }}>

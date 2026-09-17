@@ -168,6 +168,21 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
   'stand-design-approval-process-india': [
     { anchor: '100% mock-up tested before dispatch', href: '/services/custom-booth-fabrication' },
   ],
+
+  // ── Batch 7: the iPHEX 2026 delivery case study ───────────
+  // Its notes say "Check at build: /expos landing page for iPHEX — deep-link
+  // the show name if present." It is present in expo-pages.json as
+  // exhibition-stall-design-iphex-2026-delhi, so the show name is linked.
+  // The anchor lands inside the bold run in the opening paragraph, after the
+  // PharmaTech link on that line closes, so nothing nests.
+  //
+  // The two blog cross-links the post carries are authored in the body, so
+  // they are not repeated here. One of them, /blog/iphex-2026-exhibitor-guide,
+  // has no file in content/blog; unlinkUnpublished() renders it as plain text
+  // and it becomes a link by itself if that guide is ever published.
+  'iphex-2026-new-delhi-8-exhibition-stalls': [
+    { anchor: 'iPHEX 2026', href: '/expos/exhibition-stall-design-iphex-2026-delhi' },
+  ],
 }
 
 /**
@@ -228,6 +243,13 @@ export const RELATED_EXTRAS_BY_SLUG: Record<string, { anchor: string; href: stri
   'metec-wire-tube-india-2026-exhibitor-guide': [
     { anchor: 'Exhibition stall designer in Mumbai', href: '/exhibition-stall-designer-mumbai' },
   ],
+  // Batch 7. The iPHEX case study names the Delhi city page and the portfolio
+  // index for its Related block; the eight in-body links go to the individual
+  // project pages, the same split the PharmaTech case study uses.
+  'iphex-2026-new-delhi-8-exhibition-stalls': [
+    { anchor: 'Exhibition stall designer in Delhi', href: '/exhibition-stall-designer-delhi' },
+    { anchor: 'The full Approach Media portfolio', href: '/portfolio' },
+  ],
 }
 
 /** The Related block every post ends with: the other three posts plus the
@@ -264,6 +286,13 @@ export const POST_IMAGES: Record<string, { src: string; alt: string }> = {
   'pharmatech-expo-2026-gandhinagar-14-exhibition-stalls': {
     src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/pharmatech-expo-2026-gandhinagar/r-r-clean-room/r_r_clean_room_exhibition_stall_design_at_Pharmatech_Expo_Gandhinagar.webp',
     alt: '77 sqm three-side-open exhibition stall for RR CleanRoom Projects at PharmaTech Expo 2026, Gandhinagar, with cleanroom partition rooms built on the stand',
+  },
+  // The iPHEX 2026 case study: the set's largest build, and that project's
+  // own portfolio hero from the September import — a real photograph of the
+  // show the post is about.
+  'iphex-2026-new-delhi-8-exhibition-stalls': {
+    src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/iphex-2026-new-delhi/zeon-group-of-companies/zeon_group_of_companies_exhibition_stall_design_at_IPHEX_New_Delhi.webp',
+    alt: "Zeon Group's 44 sqm two-side-open exhibition stall at iPHEX 2026, Bharat Mandapam, with a white portal and an orange ceiling grid hung with country flags",
   },
   'exhibition-stall-design-cost-india': {
     src: `${CDN}/stall-gallery-1.jpg`,
