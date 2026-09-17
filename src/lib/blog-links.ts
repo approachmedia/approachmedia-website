@@ -183,6 +183,17 @@ export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
   'iphex-2026-new-delhi-8-exhibition-stalls': [
     { anchor: 'iPHEX 2026', href: '/expos/exhibition-stall-design-iphex-2026-delhi' },
   ],
+
+  // ── Batch 8: the AI evergreen ─────────────────────────────
+  // The draft arrived with no internal-link notes, so nothing here is
+  // transcribed from one. Both anchors are exact phrases already in the body,
+  // each pointing at the page that phrase literally describes; no body copy
+  // was written to carry a link. The closing section describes the Ahmedabad
+  // operation, and RELATED_EXTRA appends that page to every post already.
+  'ai-exhibition-stall-design-india-2026': [
+    { anchor: 'Ask your stall designer', href: '/services/exhibition-stall-design' },
+    { anchor: 'Quality fabrication',     href: '/services/custom-booth-fabrication' },
+  ],
 }
 
 /**
