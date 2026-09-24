@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowRight, Check } from 'lucide-react'
 import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES } from '@/content/industries'
+import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
@@ -171,6 +172,39 @@ export default async function IndustryEditorialPage({ params }: Props) {
           )}
         </div>
       </section>
+
+      {/* ── Video, only where a playlist has been supplied ── */}
+      {page.playlistId && (
+        <section className="border-b border-white/10">
+          <div className="container-wide py-16 md:py-24">
+            <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.2fr]">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+                  {page.name} Stands on Video
+                </h2>
+                <p className="mt-5 text-base leading-relaxed text-slate-300">
+                  Walkthroughs of stands we have built for this sector, so you can judge the
+                  finish, the lighting and the scale for yourself before we talk.
+                </p>
+                <a
+                  href={`https://www.youtube.com/playlist?list=${page.playlistId}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="mt-7 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Watch on YouTube
+                </a>
+              </div>
+              <PlaylistEmbed
+                playlistId={page.playlistId}
+                title={`${page.name} exhibition stalls by Approach Media`}
+                poster={projects[0]?.media[0]?.url}
+                posterAlt={projects[0]?.media[0]?.altText || ''}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Approach ── */}
       <section className="border-b border-white/10">

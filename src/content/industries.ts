@@ -38,6 +38,14 @@ export type IndustryPage = {
   answer: string
   cta: string
   closing: string
+  /**
+   * YouTube playlist for this sector, from the channel's own playlists page.
+   * Empty means the page renders no video section at all, so an unfilled one
+   * costs nothing and can never show an empty or broken player. Paste the
+   * list= value from the playlist URL, e.g.
+   * youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx -> "PLxxxxxxxxxxxxxxxx".
+   */
+  playlistId?: string
   /** Existing industry records this page draws its projects from. */
   sources: string[]
   /** Those names as slugs, which is what the database is queried on. */
