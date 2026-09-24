@@ -120,6 +120,43 @@ export async function getPublishedProjects(opts?: { industrySlug?: string; stall
 }
 
 /**
+ * Published projects across several industry records at once.
+ *
+ * The Industries pages each cover a sector that the database spells more than
+ * one way — Pharmaceuticals and Pharmaceutical Industry, Real Estate and
+ * Builder & Real Estate, the three food labels — so they need one query over
+ * a set of slugs rather than getPublishedProjects' single industrySlug.
+ * Slugs that do not exist simply match nothing.
+ */
+export async function getProjectsForIndustries(slugs: string[], limit = 6) {
+  if (slugs.length === 0) return []
+  const cdnBase = await getCdnBaseUrl()
+  const rows = await prisma.project.findMany({
+    where: {
+      status: 'published',
+      industries: { some: { industry: { slug: { in: slugs } } } },
+    },
+    include: {
+      client:     true,
+      exhibition: true,
+      media:      { where: { isHero: true }, take: 1 },
+      industries: { where: { isPrimary: true }, include: { industry: true } },
+      stallTypes: { where: { isPrimary: true }, include: { stallType: true } },
+    },
+    // Same order as the portfolio grid, so a sector page shows its newest and
+    // most substantial work first rather than an arbitrary slice.
+    orderBy: [
+      { buildYear:    { sort: 'desc', nulls: 'last' } },
+      { isFeatured:   'desc' },
+      { stallAreaSqm: { sort: 'desc', nulls: 'last' } },
+      { id: 'desc' },
+    ],
+    take: limit,
+  })
+  return rows.map(p => resolveMediaUrls(p, cdnBase))
+}
+
+/**
  * Clients we have built a large stall for, biggest first.
  *
  * Used by the homepage clientele marquee. Names are tidied for display —

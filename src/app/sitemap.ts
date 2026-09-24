@@ -6,6 +6,7 @@ import type { ExpoPageData } from '@/components/expo/types'
 import { SITE_URL } from '@/lib/site-url'
 import { BUILD_TIME } from '@/lib/seo/build-time'
 import { getAllPosts } from '@/lib/blog'
+import { INDUSTRY_PAGES } from '@/content/industries'
 export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -42,6 +43,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/expos`,             lastModified: BUILD_TIME, changeFrequency: 'weekly',  priority: 0.8 },
     { url: `${SITE_URL}/tradeshow-calendar`, lastModified: BUILD_TIME, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/privacy-policy`,    lastModified: BUILD_TIME, changeFrequency: 'yearly',  priority: 0.3 },
+  ]
+
+  // The Industries hub and its editorial pages. Source-controlled content, so
+  // BUILD_TIME is honest for them; the project strips they render come from
+  // the database but the pages themselves only change on deploy.
+  const industryHubPages: MetadataRoute.Sitemap = [
+    { url: `${SITE_URL}/industries`, lastModified: BUILD_TIME, changeFrequency: 'monthly' as const, priority: 0.8 },
+    ...INDUSTRY_PAGES.map(i => ({
+      url:             `${SITE_URL}/industries/${i.slug}`,
+      lastModified:    BUILD_TIME,
+      changeFrequency: 'monthly' as const,
+      priority:        0.7,
+    })),
   ]
 
   // Commercial landing pages. These are hand-built routes rather than dynamic
@@ -143,6 +157,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages, ...servicePages, ...cityPages, ...blogPages, ...countryPages,
-    ...expoPages, ...projectPages, ...industryPages, ...typePages,
+    ...expoPages, ...projectPages, ...industryPages, ...typePages, ...industryHubPages,
   ]
 }

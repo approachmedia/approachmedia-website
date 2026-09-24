@@ -22,6 +22,9 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: 'Portfolio',
     links: [
       { label: 'All Projects',          href: '/portfolio' },
+      // The Industries hub's only route in from the rest of the site. Without
+      // it the sixteen pages are reachable only from the sitemap.
+      { label: 'By Industry',           href: '/industries' },
       { label: 'Tradeshow Calendar',    href: '/tradeshow-calendar' },
       { label: 'Immersive Experience',  href: '/services/immersive-brand-experience' },
     ],
