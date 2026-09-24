@@ -44,6 +44,11 @@ export type IndustryPage = {
    * costs nothing and can never show an empty or broken player. Paste the
    * list= value from the playlist URL, e.g.
    * youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx -> "PLxxxxxxxxxxxxxxxx".
+   *
+   * Run through isLikelyPlaylistId() before it is used: of the first fifteen
+   * supplied, fourteen arrived cut to thirteen characters, which embeds
+   * cleanly and then tells the visitor the playlist does not exist. Short
+   * ones render nothing instead.
    */
   playlistId?: string
   /** Existing industry records this page draws its projects from. */
@@ -75,6 +80,8 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Yes. The brief can group developments by location, property type or brand. Clear display zones and a shared consultation area help visitors find the project that interests them.",
     cta: "Let’s Build a Space Around Your Next Development",
     closing: "Share your property exhibition, stall size and project presentation needs.",
+    // The only one of the fifteen supplied ids that arrived at full length.
+    playlistId: "PLwb-9hDSfdnBkE1CBami1DgBoRVoY3nOg",
     sources: ["Real Estate", "Builder & Real Estate"],
     sourceSlugs: ["real-estate", "builder-real-estate"],
   },
@@ -456,3 +463,17 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
 ]
 
 export const INDUSTRY_BY_SLUG = new Map(INDUSTRY_PAGES.map(i => [i.slug, i]))
+
+/**
+ * Is this long enough to be a real YouTube playlist id?
+ *
+ * A PL playlist id is 34 characters ("PL" plus 32); a channel-uploads id is
+ * 24; an auto-generated album id is 41. Nothing legitimate is short. This
+ * exists because fourteen of the first fifteen ids supplied were truncated to
+ * thirteen characters — a length that produces a perfectly valid-looking
+ * embed showing "This playlist does not exist". Eighteen is comfortably below
+ * every real format and comfortably above that failure.
+ */
+export function isLikelyPlaylistId(id: string | undefined): id is string {
+  return !!id && /^[A-Za-z0-9_-]{18,}$/.test(id)
+}

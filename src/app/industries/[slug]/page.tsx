@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowRight, Check } from 'lucide-react'
-import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES } from '@/content/industries'
+import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES, isLikelyPlaylistId } from '@/content/industries'
 import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { SITE_URL } from '@/lib/site-url'
@@ -174,7 +174,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
       </section>
 
       {/* ── Video, only where a playlist has been supplied ── */}
-      {page.playlistId && (
+      {isLikelyPlaylistId(page.playlistId) && (
         <section className="border-b border-white/10">
           <div className="container-wide py-16 md:py-24">
             <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.2fr]">
