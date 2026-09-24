@@ -28,28 +28,37 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
 
-const ITEMS = [
-  { label: 'Real Estate',          img: 'exhibition-stall-design-real-estate.jpg' },
-  { label: 'Pharma',               img: 'exhibition-stall-design-pharma.jpg' },
-  { label: 'Machinery',            img: 'exhibition-stall-design-machinery.jpg' },
-  { label: 'FMCG',                 img: 'exhibition-stall-design-fmcg.jpg' },
-  { label: 'Garment',              img: 'exhibition-stall-design-garment.jpg' },
-  { label: 'Healthcare',           img: 'exhibition-stall-design-healthcare.jpg' },
-  { label: 'Plastic',              img: 'exhibition-stall-design-plastic.jpg' },
-  { label: 'Printing & Packaging', img: 'exhibition-stall-design-printing-packaging.jpg' },
-  { label: 'Valves & Pumps',       img: 'exhibition-stall-design-valves-pumps-gears.jpg' },
-  { label: 'Renewable Energy',     img: 'exhibition-stall-design-renewable-energy.jpg' },
-  { label: 'Water',                img: 'exhibition-stall-design-water-industry.jpg' },
-  { label: 'Cosmetics',            img: 'exhibition-stall-design-cosmetics.jpg' },
-  { label: 'Doors & Windows',      img: 'exhibition-stall-design-doors-windows.jpg' },
-  { label: 'Battery',              img: 'exhibition-stall-design-battery.jpg' },
-  { label: 'Lighting',             img: 'exhibition-stall-design-lighting.jpg' },
-  { label: 'Events',               img: 'exhibition-stall-design-events.jpg' },
+/**
+ * `to` is the industry page each card opens. Two of the sixteen follow the
+ * content brief's own grouping rather than getting a page of their own:
+ * Doors & Windows sits under Building Materials, and Battery under Energy.
+ * Events has no page at all and is deliberately null — the brief keeps Events
+ * as a service or project type, not an industry — so its title stays plain
+ * text instead of pointing somewhere that does not exist.
+ */
+const ITEMS: { label: string; img: string; to: string | null }[] = [
+  { label: 'Real Estate',          img: 'exhibition-stall-design-real-estate.jpg',        to: 'real-estate' },
+  { label: 'Pharma',               img: 'exhibition-stall-design-pharma.jpg',             to: 'pharmaceuticals' },
+  { label: 'Machinery',            img: 'exhibition-stall-design-machinery.jpg',          to: 'machinery-engineering' },
+  { label: 'FMCG',                 img: 'exhibition-stall-design-fmcg.jpg',               to: 'food-beverage-fmcg' },
+  { label: 'Garment',              img: 'exhibition-stall-design-garment.jpg',            to: 'textiles-apparel' },
+  { label: 'Healthcare',           img: 'exhibition-stall-design-healthcare.jpg',         to: 'healthcare-medical-devices' },
+  { label: 'Plastic',              img: 'exhibition-stall-design-plastic.jpg',            to: 'plastics' },
+  { label: 'Printing & Packaging', img: 'exhibition-stall-design-printing-packaging.jpg', to: 'printing-packaging' },
+  { label: 'Valves & Pumps',       img: 'exhibition-stall-design-valves-pumps-gears.jpg', to: 'pumps-valves-gears' },
+  { label: 'Renewable Energy',     img: 'exhibition-stall-design-renewable-energy.jpg',   to: 'solar-renewable-energy' },
+  { label: 'Water',                img: 'exhibition-stall-design-water-industry.jpg',     to: 'water-treatment' },
+  { label: 'Cosmetics',            img: 'exhibition-stall-design-cosmetics.jpg',          to: 'cosmetics-personal-care' },
+  { label: 'Doors & Windows',      img: 'exhibition-stall-design-doors-windows.jpg',      to: 'architecture-building-materials' },
+  { label: 'Battery',              img: 'exhibition-stall-design-battery.jpg',            to: 'solar-renewable-energy' },
+  { label: 'Lighting',             img: 'exhibition-stall-design-lighting.jpg',           to: 'electrical-lighting' },
+  { label: 'Events',               img: 'exhibition-stall-design-events.jpg',             to: null },
 ]
 
 const N    = ITEMS.length
@@ -203,7 +212,22 @@ export function Industries() {
               transition={{ duration: 0.28 }}
               className="whitespace-nowrap font-display text-xl font-bold text-white md:text-2xl"
             >
-              {ITEMS[active].label}
+              {/* The centre title is the way into that industry's page. Only
+                  this element takes pointer events — the wrapper stays
+                  pointer-events-none so the orbit behind it still scrolls,
+                  and the cards themselves are not links, which would make
+                  every scroll over the wheel a tap target. */}
+              {ITEMS[active].to ? (
+                <Link
+                  href={`/industries/${ITEMS[active].to}`}
+                  className="pointer-events-auto inline-flex items-center gap-1.5 underline-offset-8 transition hover:text-brand-green hover:underline"
+                >
+                  {ITEMS[active].label}
+                  <ArrowRight className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                </Link>
+              ) : (
+                ITEMS[active].label
+              )}
             </motion.p>
           </AnimatePresence>
         </div>
@@ -216,7 +240,7 @@ export function Industries() {
             ))}
           </div>
           <Button asChild variant="hero" size="lg" className="pointer-events-auto">
-            <Link href="/portfolio">Explore by Industry</Link>
+            <Link href="/industries">Explore by Industry</Link>
           </Button>
         </div>
       </div>
