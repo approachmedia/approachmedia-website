@@ -28,6 +28,9 @@ const config: NextConfig = {
       { protocol: 'https', hostname: 'wordpress-1471738-5564673.cloudwaysapps.com' },
       // Cloudflare R2 public bucket — all project/venue media
       { protocol: 'https', hostname: 'pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev' },
+      // YouTube video stills for the industry pages' video grids. The channel
+      // is the owner's own, so these are Approach Media's own stands.
+      { protocol: 'https', hostname: 'i.ytimg.com' },
     ],
   },
   async redirects() {

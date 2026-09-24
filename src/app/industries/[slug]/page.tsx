@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { ArrowRight, Check } from 'lucide-react'
 import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES, isLikelyPlaylistId } from '@/content/industries'
 import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
+import { getVideosForPlaylists } from '@/lib/youtube'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
@@ -71,6 +72,12 @@ export default async function IndustryEditorialPage({ params }: Props) {
   // Only ids that could be ids at all. Nothing here can tell whether a real
   // id points at a real playlist, so that is left to the owner to spot-check.
   const playlists = (page.playlists ?? []).filter(pl => isLikelyPlaylistId(pl.id))
+
+  // Six per playlist. Empty whenever YOUTUBE_API_KEY is unset or the API is
+  // unhappy, in which case the section falls back to the playlist players.
+  const videos = playlists.length > 0
+    ? await getVideosForPlaylists(playlists.map(pl => pl.id), 6)
+    : []
 
   return (
     <main>
@@ -177,7 +184,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── Video, only where a playlist has been supplied ── */}
+      {/* ── Video ── */}
       {playlists.length > 0 && (
         <section className="border-b border-white/10">
           <div className="container-wide py-16 md:py-24">
@@ -188,24 +195,43 @@ export default async function IndustryEditorialPage({ params }: Props) {
               Walkthroughs of stands we have built for this sector, so you can judge the finish,
               the lighting and the scale for yourself before we talk.
             </p>
-            <div className={`mt-10 grid gap-6 ${playlists.length > 1 ? 'lg:grid-cols-2' : 'lg:max-w-4xl'}`}>
-              {playlists.map((pl, i) => (
-                <div key={pl.id + i}>
+
+            {videos.length > 0 ? (
+              /* The videos themselves, six per playlist. */
+              <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {videos.map(v => (
+                  <li key={v.id}>
+                    <PlaylistEmbed videoId={v.id} title={v.title} poster={v.thumb} posterAlt="" compact />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              /* No API key, or the API could not answer: the playlist itself,
+                 which needs neither. */
+              <div className={`mt-10 grid gap-6 ${playlists.length > 1 ? 'lg:grid-cols-2' : 'lg:max-w-4xl'}`}>
+                {playlists.map((pl, i) => (
                   <PlaylistEmbed
+                    key={pl.id + i}
                     playlistId={pl.id}
                     title={pl.label}
                     poster={projects[i]?.media[0]?.url ?? projects[0]?.media[0]?.url}
                     posterAlt={projects[i]?.media[0]?.altText ?? projects[0]?.media[0]?.altText ?? ''}
                   />
-                  <a
-                    href={`https://www.youtube.com/playlist?list=${pl.id}`}
-                    target="_blank"
-                    rel="noopener"
-                    className="mt-3 inline-block text-sm font-semibold text-brand-green transition hover:text-brand-green-glow"
-                  >
-                    Watch on YouTube
-                  </a>
-                </div>
+                ))}
+              </div>
+            )}
+
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+              {playlists.map((pl, i) => (
+                <a
+                  key={pl.id + i}
+                  href={`https://www.youtube.com/playlist?list=${pl.id}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-sm font-semibold text-brand-green transition hover:text-brand-green-glow"
+                >
+                  {playlists.length > 1 ? `${pl.label} on YouTube` : 'Watch the full playlist on YouTube'}
+                </a>
               ))}
             </div>
           </div>
