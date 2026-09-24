@@ -39,18 +39,21 @@ export type IndustryPage = {
   cta: string
   closing: string
   /**
-   * YouTube playlist for this sector, from the channel's own playlists page.
-   * Empty means the page renders no video section at all, so an unfilled one
-   * costs nothing and can never show an empty or broken player. Paste the
-   * list= value from the playlist URL, e.g.
-   * youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx -> "PLxxxxxxxxxxxxxxxx".
+   * YouTube playlists for this sector, from the channel's own playlists page.
+   * Absent or empty means the page renders no video section at all, so an
+   * unfilled sector costs nothing.
    *
-   * Run through isLikelyPlaylistId() before it is used: of the first fifteen
-   * supplied, fourteen arrived cut to thirteen characters, which embeds
-   * cleanly and then tells the visitor the playlist does not exist. Short
-   * ones render nothing instead.
+   * A page can carry more than one: Architecture & Building Materials covers
+   * hardware, ceramics tiles and ceramics machinery, which are three separate
+   * playlists on the channel.
+   *
+   * Ids are the `list=` value from the playlist URL. They come in two lengths
+   * on this channel — one 34-character "PL"+32 id and fourteen 13-character
+   * ones — and both are real. The short form was briefly mistaken here for a
+   * truncated copy; the share links settle it, since the `&si=` parameter
+   * follows the id intact.
    */
-  playlistId?: string
+  playlists?: { id: string; label: string }[]
   /** Existing industry records this page draws its projects from. */
   sources: string[]
   /** Those names as slugs, which is what the database is queried on. */
@@ -80,8 +83,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Yes. The brief can group developments by location, property type or brand. Clear display zones and a shared consultation area help visitors find the project that interests them.",
     cta: "Let’s Build a Space Around Your Next Development",
     closing: "Share your property exhibition, stall size and project presentation needs.",
-    // The only one of the fifteen supplied ids that arrived at full length.
-    playlistId: "PLwb-9hDSfdnBkE1CBami1DgBoRVoY3nOg",
+    playlists: [
+      { id: "PLwb-9hDSfdnBkE1CBami1DgBoRVoY3nOg", label: "Real Estate" },
+    ],
     sources: ["Real Estate", "Builder & Real Estate"],
     sourceSlugs: ["real-estate", "builder-real-estate"],
   },
@@ -107,6 +111,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Share your brand guidelines, approved product information, capability presentations and meeting requirements. Your team should approve all product claims and technical wording before graphics go into production.",
     cta: "Plan Your Next Pharma Exhibition Stall",
     closing: "Tell us about your event, product range and business meeting requirements.",
+    playlists: [
+      { id: "PLAMomwxKUIWk", label: "Pharma" },
+    ],
     sources: ["Pharmaceuticals", "Pharmaceutical Industry"],
     sourceSlugs: ["pharmaceuticals", "pharmaceutical-industry"],
   },
@@ -132,6 +139,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Include equipment dimensions, utility needs and the intended demonstration in the brief. These requirements should be reviewed against venue rules before the display layout and installation plan are finalised.",
     cta: "Create a Clearer Product Experience",
     closing: "Send your exhibition details and medical device display requirements.",
+    playlists: [
+      { id: "PLUKI3Ta53T80", label: "Healthcare, Medical & Surgical Equipment" },
+    ],
     sources: ["Healthcare"],
     sourceSlugs: ["healthcare"],
   },
@@ -157,6 +167,10 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Provide dimensions, weight, service connections, installation access and any operating clearances. Floor-loading limits, handling arrangements and demonstration permissions must be confirmed with the venue and relevant specialists.",
     cta: "Build Your Stall Around Your Equipment",
     closing: "Share your machine list, exhibition floor plan and demonstration brief.",
+    playlists: [
+      { id: "PLGB2tjkivEUE", label: "Engineering, Machine Manufacturers & Ancillary Suppliers" },
+      { id: "PLLYpCaUQavDU", label: "Ceramic Raw Material & Machinery" },
+    ],
     sources: ["Machine Manufacturers & Machine Tools", "Manufacturing", "Foundry and Steel Industry"],
     sourceSlugs: ["machine-manufacturers-machine-tools", "manufacturing", "foundry-and-steel-industry"],
   },
@@ -182,6 +196,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Sampling can be included in the brief, with serving, storage and queue space considered together. Food handling, refrigeration, water and waste requirements should be confirmed with your team and the organiser.",
     cta: "Give Your Product Range a Stronger Show Presence",
     closing: "Share your exhibition, product list and sampling requirements.",
+    playlists: [
+      { id: "PLc5QXiXx_qSM", label: "Food \u2014 Exporters, Brands, Machinery & Plants" },
+    ],
     sources: ["Food & Beverage", "Food Industry", "FMCG"],
     sourceSlugs: ["food-beverage", "food-industry", "fmcg"],
   },
@@ -207,6 +224,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Select the pieces that should lead the presentation, then organise supporting items by collection or category. Additional samples can be kept in storage for your team to bring into individual buyer discussions.",
     cta: "Build a Space for Your Next Collection",
     closing: "Tell us about your textile or apparel exhibition and the range you want to present.",
+    playlists: [
+      { id: "PLMlLtnl3qqm4", label: "Garment & Apparel" },
+    ],
     sources: ["Textile Industry", "Textiles & Apparel", "Garment, Cloth, Fashion Industry"],
     sourceSlugs: ["textile-industry", "textiles-apparel", "garment-cloth-fashion-industry"],
   },
@@ -232,6 +252,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "They can be considered in the concept when dimensions, weight and mounting details are available. Display supports and any powered exhibits require technical review before fabrication and installation.",
     cta: "Plan Your Next Energy Exhibition Presence",
     closing: "Share your event, product dimensions and presentation priorities.",
+    playlists: [
+      { id: "PLDJbvV2uV0Tg", label: "Solar & Renewable Energy" },
+    ],
     sources: ["Solar Industry", "Solar / Energy"],
     sourceSlugs: ["solar-industry", "solar-energy"],
   },
@@ -257,6 +280,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Include it in the initial brief. Water supply, drainage, electrical needs, spill management and organiser permissions need to be established before a working demonstration is included in the final plan.",
     cta: "Bring Your Water Solutions Into Focus",
     closing: "Tell us about your exhibition and the systems or components you want to showcase.",
+    playlists: [
+      { id: "PLcqJ0_Ld4aw4", label: "Industrial RO & Water Purification" },
+    ],
     sources: ["Water & Water Purification Industry"],
     sourceSlugs: ["water-water-purification-industry"],
   },
@@ -282,6 +308,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Yes. Plan the equipment footprint and access first, then use sample displays to explain what the process produces. Final positioning depends on the machine requirements and the venue’s rules.",
     cta: "Plan a Stall Around Your Plastics Business",
     closing: "Share your product range, equipment details and exhibition floor plan.",
+    playlists: [
+      { id: "PLConZcwuHJwU", label: "Plastic Machinery" },
+    ],
     sources: ["Plastic Industry"],
     sourceSlugs: ["plastic-industry"],
   },
@@ -307,6 +336,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Prioritise samples that show meaningful differences in format, material, application or finish. A focused selection with clear labels gives your team a useful starting point for more detailed discussions.",
     cta: "Give Your Print and Packaging Work Room to Stand Out",
     closing: "Send your exhibition brief and the sample range you want to display.",
+    playlists: [
+      { id: "PLT_RgNqMSftg", label: "Cosmetic & Packaging" },
+    ],
     sources: ["Printing and Packaging Industry"],
     sourceSlugs: ["printing-and-packaging-industry"],
   },
@@ -332,6 +364,10 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Working displays can be included in the brief. Dimensions, weight, fixing requirements and operating clearances should be reviewed so the display has the support and space it needs.",
     cta: "Build an Exhibition Space Around Your Materials",
     closing: "Share your product range, display samples and exhibition requirements.",
+    playlists: [
+      { id: "PLeURasR9qYSg", label: "Hardware, Doors & Windows, Glass, Lighting, Laminate & Wood" },
+      { id: "PLQRf0VS8DjBg", label: "Ceramic Tiles Manufacturing" },
+    ],
     sources: ["Architecture, Building materials, Art and Design", "Hardware, Kitchen and Bathroom Fittings Industry", "Wood Industry"],
     sourceSlugs: ["architecture-building-materials-art-and-design", "hardware-kitchen-and-bathroom-fittings-industry", "wood-industry"],
   },
@@ -357,6 +393,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Include the intended experience in the brief so the layout can allow for testers, supplies and staff access. Your team should define product handling procedures and approve any product claims used in the display.",
     cta: "Bring Your Beauty Brand to the Show Floor",
     closing: "Share your exhibition, collection and product presentation brief.",
+    playlists: [
+      { id: "PLT_RgNqMSftg", label: "Cosmetic & Packaging" },
+    ],
     sources: ["FMCG"],
     sourceSlugs: ["fmcg"],
   },
@@ -407,6 +446,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Provide the demonstration sequence, equipment dimensions, utility needs and the expected visitor interaction. Moving parts, operating clearances and technical responsibilities should be agreed before the design is finalised.",
     cta: "Turn Your Automation Story Into an Exhibition Experience",
     closing: "Send your event details and demonstration brief.",
+    playlists: [
+      { id: "PLfXfxTQjWQXQ", label: "Automation \u2014 Drives, Sensors, Motors, Gears & Touch Panels" },
+    ],
     sources: ["Automation Industry"],
     sourceSlugs: ["automation-industry"],
   },
@@ -432,6 +474,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Include fixture specifications, mounting needs and the effects you want visitors to compare. The display design should account for surrounding hall light, power provision and organiser requirements.",
     cta: "Plan Your Electrical or Lighting Exhibition Stall",
     closing: "Tell us about your event, product range and demonstration requirements.",
+    playlists: [
+      { id: "PLeURasR9qYSg", label: "Hardware, Doors & Windows, Glass, Lighting, Laminate & Wood" },
+    ],
     sources: ["Electrical Industry", "CCTV, TV, Wire and Cable Industry"],
     sourceSlugs: ["electrical-industry", "cctv-tv-wire-and-cable-industry"],
   },
@@ -457,6 +502,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     answer: "Product weight, dimensions, centre of gravity and handling requirements need to be shared at the start. Suitable supports, placement and venue loading limits must be reviewed before the display is built.",
     cta: "Create a Clearer Display for Your Industrial Products",
     closing: "Share your exhibition plan and the components you want buyers to explore.",
+    playlists: [
+      { id: "PLMzuH_LgNu34", label: "Chemical, Pump & Motor Manufacturing" },
+    ],
     sources: ["Pump Valves and Gears Industry"],
     sourceSlugs: ["pump-valves-and-gears-industry"],
   },
@@ -465,15 +513,18 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
 export const INDUSTRY_BY_SLUG = new Map(INDUSTRY_PAGES.map(i => [i.slug, i]))
 
 /**
- * Is this long enough to be a real YouTube playlist id?
+ * A shape check on a playlist id, not a length rule.
  *
- * A PL playlist id is 34 characters ("PL" plus 32); a channel-uploads id is
- * 24; an auto-generated album id is 41. Nothing legitimate is short. This
- * exists because fourteen of the first fifteen ids supplied were truncated to
- * thirteen characters — a length that produces a perfectly valid-looking
- * embed showing "This playlist does not exist". Eighteen is comfortably below
- * every real format and comfortably above that failure.
+ * An earlier version of this required eighteen characters, on the assumption
+ * that anything shorter had been truncated in the copy. That was wrong: this
+ * channel has both 34-character and 13-character playlist ids, and the share
+ * URLs prove the short ones are whole — `&si=` follows the id, so nothing was
+ * cut off. The floor would have hidden fourteen working playlists.
+ *
+ * So this only rejects what cannot be an id at all: empty, or characters
+ * outside the set YouTube uses. Whether a real id points at a real playlist
+ * is not knowable from here and is not guessed at.
  */
 export function isLikelyPlaylistId(id: string | undefined): id is string {
-  return !!id && /^[A-Za-z0-9_-]{18,}$/.test(id)
+  return !!id && /^[A-Za-z0-9_-]{10,60}$/.test(id)
 }

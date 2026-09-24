@@ -68,6 +68,10 @@ export default async function IndustryEditorialPage({ params }: Props) {
 
   const faqs = [{ q: page.faq, a: page.answer }]
 
+  // Only ids that could be ids at all. Nothing here can tell whether a real
+  // id points at a real playlist, so that is left to the owner to spot-check.
+  const playlists = (page.playlists ?? []).filter(pl => isLikelyPlaylistId(pl.id))
+
   return (
     <main>
       <JsonLd graph={[
@@ -174,33 +178,35 @@ export default async function IndustryEditorialPage({ params }: Props) {
       </section>
 
       {/* ── Video, only where a playlist has been supplied ── */}
-      {isLikelyPlaylistId(page.playlistId) && (
+      {playlists.length > 0 && (
         <section className="border-b border-white/10">
           <div className="container-wide py-16 md:py-24">
-            <div className="grid items-start gap-10 lg:grid-cols-[1fr_1.2fr]">
-              <div>
-                <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                  {page.name} Stands on Video
-                </h2>
-                <p className="mt-5 text-base leading-relaxed text-slate-300">
-                  Walkthroughs of stands we have built for this sector, so you can judge the
-                  finish, the lighting and the scale for yourself before we talk.
-                </p>
-                <a
-                  href={`https://www.youtube.com/playlist?list=${page.playlistId}`}
-                  target="_blank"
-                  rel="noopener"
-                  className="mt-7 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  Watch on YouTube
-                </a>
-              </div>
-              <PlaylistEmbed
-                playlistId={page.playlistId}
-                title={`${page.name} exhibition stalls by Approach Media`}
-                poster={projects[0]?.media[0]?.url}
-                posterAlt={projects[0]?.media[0]?.altText || ''}
-              />
+            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+              {page.name} Stands on Video
+            </h2>
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">
+              Walkthroughs of stands we have built for this sector, so you can judge the finish,
+              the lighting and the scale for yourself before we talk.
+            </p>
+            <div className={`mt-10 grid gap-6 ${playlists.length > 1 ? 'lg:grid-cols-2' : 'lg:max-w-4xl'}`}>
+              {playlists.map((pl, i) => (
+                <div key={pl.id + i}>
+                  <PlaylistEmbed
+                    playlistId={pl.id}
+                    title={pl.label}
+                    poster={projects[i]?.media[0]?.url ?? projects[0]?.media[0]?.url}
+                    posterAlt={projects[i]?.media[0]?.altText ?? projects[0]?.media[0]?.altText ?? ''}
+                  />
+                  <a
+                    href={`https://www.youtube.com/playlist?list=${pl.id}`}
+                    target="_blank"
+                    rel="noopener"
+                    className="mt-3 inline-block text-sm font-semibold text-brand-green transition hover:text-brand-green-glow"
+                  >
+                    Watch on YouTube
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
         </section>
