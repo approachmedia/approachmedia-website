@@ -45,6 +45,7 @@ const itemVariants = {
 const NAV = [
   { label: 'Home',         href: '/' },
   { label: 'Services',     href: '/services' },
+  { label: 'Industries',   href: '/industries' },
   { label: 'Portfolio',    href: '/portfolio' },
   { label: 'Expos 2026',   href: '/expos' },
   { label: 'Tradeshows',   href: '/tradeshow-calendar' },
@@ -97,7 +98,10 @@ export default function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-7 xl:flex" aria-label="Primary">
+        {/* gap-5 rather than gap-7: the desktop nav appears at xl (1280px) and
+            Industries makes nine items, which overflowed that width by 37px at
+            the old spacing. */}
+        <nav className="hidden items-center gap-5 xl:flex" aria-label="Primary">
           {NAV.map(item => (
             <Link
               key={item.href}
