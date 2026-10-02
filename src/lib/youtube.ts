@@ -83,8 +83,16 @@ export function getPlaylistVideos(playlistId: string, max = 6) {
   )()
 }
 
-/** Every playlist on one page, flattened and de-duplicated by video id. */
-export async function getVideosForPlaylists(ids: string[], perPlaylist = 6): Promise<PlaylistVideo[]> {
+/**
+ * Every playlist on one page, flattened and de-duplicated by video id.
+ *
+ * Returns nothing at all without a key, which is the normal state: the pages
+ * then render the owner's exported lists in src/content/sector-videos.ts.
+ * This exists so that setting a key later makes the pages follow the channel
+ * instead, with no further export.
+ */
+export async function getVideosForPlaylists(ids: string[], perPlaylist = 12): Promise<PlaylistVideo[]> {
+  if (!process.env.YOUTUBE_API_KEY) return []
   const lists = await Promise.all(ids.map(id => getPlaylistVideos(id, perPlaylist)))
   const seen = new Set<string>()
   return lists.flat().filter(v => (seen.has(v.id) ? false : (seen.add(v.id), true)))

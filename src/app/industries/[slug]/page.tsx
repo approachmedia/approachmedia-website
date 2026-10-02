@@ -5,6 +5,7 @@ import { ArrowRight, Check } from 'lucide-react'
 import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES, isLikelyPlaylistId } from '@/content/industries'
 import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
 import { getVideosForPlaylists } from '@/lib/youtube'
+import { SECTOR_VIDEOS } from '@/content/sector-videos'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
@@ -73,11 +74,22 @@ export default async function IndustryEditorialPage({ params }: Props) {
   // id points at a real playlist, so that is left to the owner to spot-check.
   const playlists = (page.playlists ?? []).filter(pl => isLikelyPlaylistId(pl.id))
 
-  // Six per playlist. Empty whenever YOUTUBE_API_KEY is unset or the API is
-  // unhappy, in which case the section falls back to the playlist players.
-  const videos = playlists.length > 0
-    ? await getVideosForPlaylists(playlists.map(pl => pl.id), 6)
+  // The owner's exported lists are the source. The API is consulted only when
+  // YOUTUBE_API_KEY is set, and then wins, so a channel that has moved on is
+  // not held to an export; without a key it returns nothing and costs nothing.
+  const MAX_TILES = 12
+  const exported = SECTOR_VIDEOS[page.slug] ?? []
+  const live = playlists.length > 0
+    ? await getVideosForPlaylists(playlists.map(pl => pl.id), MAX_TILES)
     : []
+  // Both sources normalised to the same shape; the exported rows carry no
+  // thumbnail, which is derivable from the video id.
+  const source: { id: string; title: string; thumb: string }[] =
+    live.length > 0
+      ? live
+      : exported.map(v => ({ ...v, thumb: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` }))
+  const videos = source.slice(0, MAX_TILES)
+  const more = source.length - videos.length
 
   return (
     <main>
@@ -197,14 +209,21 @@ export default async function IndustryEditorialPage({ params }: Props) {
             </p>
 
             {videos.length > 0 ? (
-              /* The videos themselves, six per playlist. */
-              <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {videos.map(v => (
-                  <li key={v.id}>
-                    <PlaylistEmbed videoId={v.id} title={v.title} poster={v.thumb} posterAlt="" compact />
-                  </li>
-                ))}
-              </ul>
+              /* The videos themselves. */
+              <>
+                <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {videos.map(v => (
+                    <li key={v.id}>
+                      <PlaylistEmbed videoId={v.id} title={v.title} poster={v.thumb} posterAlt="" compact />
+                    </li>
+                  ))}
+                </ul>
+                {more > 0 && (
+                  <p className="mt-6 text-sm text-slate-400">
+                    {more} more {more === 1 ? 'walkthrough' : 'walkthroughs'} in the full playlist.
+                  </p>
+                )}
+              </>
             ) : (
               /* No API key, or the API could not answer: the playlist itself,
                  which needs neither. */
