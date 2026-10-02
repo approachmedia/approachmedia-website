@@ -77,9 +77,12 @@
   * {
     @apply border-border;
   }
-  html {
-    scroll-behavior: smooth;
-  }
+  /* No scroll-behavior: smooth here. Lenis is the site's smooth scroller, and
+     this rule fought it: on a route change Next scrolls the window to the top,
+     and with smooth behaviour that became an animated crawl over the whole
+     page height — so clicking Next at the foot of a project page left you
+     still looking at the foot of the new one. Lenis's own docs say to remove
+     it. SmoothScroll resets Lenis on navigation. */
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, sans-serif;
