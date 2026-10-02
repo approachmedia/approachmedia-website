@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { ArrowRight, Check } from 'lucide-react'
 import { INDUSTRY_BY_SLUG, INDUSTRY_PAGES, isLikelyPlaylistId } from '@/content/industries'
 import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
+import VideoGrid from '@/components/industries/VideoGrid'
 import { getVideosForPlaylists } from '@/lib/youtube'
 import { SECTOR_VIDEOS } from '@/content/sector-videos'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
@@ -77,10 +78,10 @@ export default async function IndustryEditorialPage({ params }: Props) {
   // The owner's exported lists are the source. The API is consulted only when
   // YOUTUBE_API_KEY is set, and then wins, so a channel that has moved on is
   // not held to an export; without a key it returns nothing and costs nothing.
-  const MAX_TILES = 12
   const exported = SECTOR_VIDEOS[page.slug] ?? []
+  // 50 is the API's own page size, and above every playlist's current length.
   const live = playlists.length > 0
-    ? await getVideosForPlaylists(playlists.map(pl => pl.id), MAX_TILES)
+    ? await getVideosForPlaylists(playlists.map(pl => pl.id), 50)
     : []
   // Both sources normalised to the same shape; the exported rows carry no
   // thumbnail, which is derivable from the video id.
@@ -88,8 +89,9 @@ export default async function IndustryEditorialPage({ params }: Props) {
     live.length > 0
       ? live
       : exported.map(v => ({ ...v, thumb: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` }))
-  const videos = source.slice(0, MAX_TILES)
-  const more = source.length - videos.length
+  // Every video in the sector. VideoGrid folds the tail away past the first
+  // twelve rather than dropping any.
+  const videos = source
 
   return (
     <main>
@@ -209,21 +211,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
             </p>
 
             {videos.length > 0 ? (
-              /* The videos themselves. */
-              <>
-                <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {videos.map(v => (
-                    <li key={v.id}>
-                      <PlaylistEmbed videoId={v.id} title={v.title} poster={v.thumb} posterAlt="" compact />
-                    </li>
-                  ))}
-                </ul>
-                {more > 0 && (
-                  <p className="mt-6 text-sm text-slate-400">
-                    {more} more {more === 1 ? 'walkthrough' : 'walkthroughs'} in the full playlist.
-                  </p>
-                )}
-              </>
+              <VideoGrid videos={videos} />
             ) : (
               /* No API key, or the API could not answer: the playlist itself,
                  which needs neither. */
