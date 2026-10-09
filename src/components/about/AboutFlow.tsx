@@ -10,7 +10,8 @@
  * wheel), the stakes, walk inside (clip 2), the method, then the peak: the
  * install wall, where ten of the owner's own project photos fly in and
  * mortar into a grid like panels being installed while the tally runs to
- * 6,000. The close sits down in the stall's client lounge.
+ * 6,000. Then the client reviews, which answer the tally in other people's
+ * voices. The close sits down in the stall's client lounge.
  *
  * All figures are the site's existing claims. The wall photos are the ten
  * images the owner uploaded to R2 for the services and process sections,
@@ -23,6 +24,9 @@
  */
 
 import { useEffect, useRef } from 'react'
+
+import VideoGrid from '@/components/industries/VideoGrid'
+import type { ReviewVideo } from '@/lib/client-reviews'
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images'
 
@@ -50,7 +54,7 @@ const PROCESS: [string, string][] = [
   ['Dismantling and post-event wrap-up', 'Careful teardown, materials handled for reuse or storage.'],
 ]
 
-export function AboutFlow() {
+export function AboutFlow({ reviews = [] }: { reviews?: ReviewVideo[] }) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -183,7 +187,31 @@ export function AboutFlow() {
         </div>
       </section>
 
-      {/* 6 · RESOLVE: the lounge. Sit down. One line, one action. Holds. */}
+      {/* 6 · CORROBORATION: the tally above is our own claim. This is the same
+          claim in other people's voices, which is why it sits after the peak
+          and not before it. The grid holds all of them and folds the tail
+          away past twelve; nothing reaches YouTube until a tile is pressed.
+
+          scroll-mt-28: the header is fixed, so the home page's "All client
+          reviews" link would otherwise land with the eyebrow tucked
+          underneath it. Same offset the other anchored sections use. */}
+      {reviews.length > 0 && (
+        <section id="client-reviews" className="sc-section af-reviews scroll-mt-28" data-sc-act="flow" data-sc-drift="#0C1019" aria-label="Client reviews">
+          <div className="sc-wrap">
+            <div className="sc-stack" data-sc-in data-sc-stagger="60">
+              <p className="sc-eyebrow">Client reviews</p>
+              <h2 className="sc-display sc-display--md">In their words, on camera.</h2>
+              <p className="sc-body">
+                Clients talking about their stands at the show, filmed on the floor. No scripts and
+                no voiceover, so judge the work and the working relationship for yourself.
+              </p>
+            </div>
+            <VideoGrid videos={reviews} />
+          </div>
+        </section>
+      )}
+
+      {/* 7 · RESOLVE: the lounge. Sit down. One line, one action. Holds. */}
       <section className="sc-section af-close" data-sc-act="flow" data-sc-drift="#0A0D14" aria-label="Start yours">
         <div className="sc-wrap">
           <div className="af-close__grid">

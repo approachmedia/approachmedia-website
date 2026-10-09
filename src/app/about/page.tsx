@@ -4,6 +4,7 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { AboutFlow } from '@/components/about/AboutFlow'
+import { getClientReviewVideos } from '@/lib/client-reviews'
 
 import '@/styles/scrollcraft-engine.css'
 import './about-flow.css'
@@ -26,7 +27,12 @@ export const metadata: Metadata = {
  * scrollcraft engine only animates what is already on the page, so a crawler
  * or a JS-less visitor reads the full story top to bottom.
  */
-export default function AboutPage() {
+export default async function AboutPage() {
+  /* All twenty-two client reviews. Resolved here because AboutFlow is a client
+     component and the playlist read is server-only; the shape it receives is
+     plain data. */
+  const reviews = await getClientReviewVideos()
+
   return (
     <>
       <JsonLd graph={[
@@ -41,7 +47,7 @@ export default function AboutPage() {
         breadcrumb([{ name: 'About', path: '/about' }]),
       ]} />
 
-      <AboutFlow />
+      <AboutFlow reviews={reviews} />
     </>
   )
 }

@@ -127,7 +127,16 @@
   text-transform: uppercase; color: var(--sc-ink-soft); margin-top: 0.25rem;
 }
 
-/* ── act 6 · close ────────────────────────────────────── */
+/* ── act 6 · client reviews ───────────────────────────────
+   The tiles themselves are Tailwind (VideoGrid / PlaylistEmbed, shared with
+   the industry pages), so there is nothing to style here but the act's own
+   rhythm and the "Show all" button, which inherits a light-on-dark treatment
+   that reads too quiet against this act's drift colour. */
+.af-reviews { padding-top: calc(var(--sc-section) * 0.5); }
+.af-reviews .sc-stack { max-width: 56ch; }
+.af-reviews button { border-color: rgba(245,245,246,0.22); }
+
+/* ── act 7 · close ────────────────────────────────────── */
 .af-close { padding-bottom: var(--sc-6); }
 .af-close__grid {
   display: grid; gap: var(--sc-8); align-items: center;

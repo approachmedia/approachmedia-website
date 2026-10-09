@@ -239,9 +239,12 @@ export const SECTOR_VIDEOS: Record<string, SectorVideo[]> = {
 }
 
 /**
- * Client testimonials. Not an industry, so not on any sector page; held here
- * so the playlist is not lost while the owner decides where it belongs.
+ * Client testimonials. Not an industry, so on no sector page. The owner has
+ * placed these on the home page (a six-video row inside "Client voices") and
+ * on /about (all of them, as the act before the close).
  */
+export const TESTIMONIAL_PLAYLIST_ID = 'PLDhx4H8blbcY'
+
 export const TESTIMONIAL_VIDEOS: SectorVideo[] = [
   { id: "3DLofk-gNws", title: "Client Review - Nice Industries - Creative Stall Design WAPTAG" },
   { id: "5E38_FTUBRk", title: "Client Review - Cosmos - Stall Design WAPTAG" },

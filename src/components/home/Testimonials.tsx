@@ -9,6 +9,11 @@
  *   contendre-solar.png, univia.png, rayzon-solar.png
  */
 
+import { ArrowRight } from 'lucide-react'
+
+import PlaylistEmbed from '@/components/industries/PlaylistEmbed'
+import { getClientReviewVideos, pickHomeReviews } from '@/lib/client-reviews'
+
 import { GoogleReviews } from './GoogleReviews'
 import { TestimonialsStack } from './TestimonialsStack'
 
@@ -59,7 +64,13 @@ const testimonials = [
   },
 ]
 
-export function Testimonials() {
+export async function Testimonials() {
+  /* Six of the twenty-two client reviews from the channel. The full set is on
+     /about; six is what fits beside the written quotes without turning this
+     section into a video catalogue. Nothing contacts YouTube until a visitor
+     presses play: PlaylistEmbed is a facade. */
+  const reviews = pickHomeReviews(await getClientReviewVideos())
+
   return (
     <section className="bg-surface/40 py-20 md:py-28">
       <div className="container-wide">
@@ -76,6 +87,31 @@ export function Testimonials() {
         </div>
 
         <TestimonialsStack testimonials={testimonials} cdn={CDN} />
+
+        {reviews.length > 0 && (
+          <div className="mt-16 md:mt-20">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h3 className="font-display text-xl font-semibold text-foreground md:text-2xl">
+                Hear it from them
+              </h3>
+              <a
+                href="/about#client-reviews"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green transition hover:text-foreground"
+              >
+                All client reviews
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </a>
+            </div>
+
+            <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {reviews.map(v => (
+                <li key={v.id}>
+                  <PlaylistEmbed videoId={v.id} title={v.title} poster={v.thumb} posterAlt="" compact />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Live Google reviews — renders once GOOGLE_PLACES_API_KEY +
             GOOGLE_PLACE_ID are configured on Railway */}
