@@ -7,7 +7,7 @@ schema: ["BlogPosting", "FAQPage", "BreadcrumbList"]
 author: "Mehul — Director, Approach Media"
 authorBio: "Mehul is a Director at Approach Media Pvt Ltd, an exhibition stall design and fabrication company in Ahmedabad operating since 2002."
 status: "approved — publish"
-datePublished: "2026-10-13"
+datePublished: "2026-10-12"
 ogTitle: "Award-Winning Exhibition Stall Design — The Eleanor Case Study"
 ogDescription: "A Gold Award at Aluminium Bharat 2026, read as a design lesson: why thoughtful stall design helps buyers notice, understand and engage — and what exhibitors can apply from Eleanor's 110 sqm island stand."
 excerpt: "At Aluminium Bharat 2026, Eleanor Industries received the Gold Award for Best Stall Design & Execution for a stall designed and fabricated by Approach Media. This article reads that stand as a design lesson — what thoughtful exhibition design does for an exhibitor, and how to apply it."
