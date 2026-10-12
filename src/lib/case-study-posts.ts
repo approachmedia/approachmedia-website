@@ -36,6 +36,19 @@ const IPHEX = {
   label: 'One of 8 stalls we delivered at iPHEX 2026 — read the case study.',
 }
 
+/**
+ * Aluminium Bharat 2026. A single project rather than a set, and the label
+ * carries the award, because the portfolio row itself does not mention it:
+ * the import file was written before the award and the deploy importer is
+ * create-only, so the stored content cannot be changed by re-importing. Until
+ * someone edits that row in the admin, this badge is the only place the award
+ * appears on the project page.
+ */
+const ELEANOR_AWARD = {
+  post: 'award-winning-exhibition-stall-design-eleanor-aluminium-bharat-2026',
+  label: 'This stall won Gold for Best Stall Design & Execution at Aluminium Bharat 2026 — read the design case study.',
+}
+
 /** Project slug → the case study covering it. */
 export const CASE_STUDY_BY_PROJECT: Record<string, CaseStudyRef> = {
   // iPHEX 2026, Bharat Mandapam — the eight the post writes up.
@@ -68,4 +81,8 @@ export const CASE_STUDY_BY_PROJECT: Record<string, CaseStudyRef> = {
   'superpack-exhibition-stall-design-pharmatech-expo-gandhinagar-2026':            PHARMATECH,
   'trade-stone-exhibition-stall-design-pharmatech-expo-gandhinagar-2026':          PHARMATECH,
   'wexford-exhibition-stall-design-pharmatech-expo-gandhinagar-2026':              PHARMATECH,
+
+  // Aluminium Bharat 2026, Helipad Exhibition Centre — the September batch 2
+  // import. Slug as imported.
+  'eleanor-industries-exhibition-stall-design-aluminium-bharat-gandhinagar-2026':  ELEANOR_AWARD,
 }

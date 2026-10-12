@@ -24,6 +24,7 @@ export default async function AhmedabadCityPage() {
       // frontmatter and drops anything not yet published, so this list can
       // name a scheduled post without ever rendering a link to a 404.
       fromTheBlog={blogLinksFor([
+        'award-winning-exhibition-stall-design-eleanor-aluminium-bharat-2026',
         'helipad-exhibition-centre-gandhinagar-guide',
         'aluminium-bharat-2026-exhibitor-guide',
         'exhibition-stall-design-cost-india',

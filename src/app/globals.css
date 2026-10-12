@@ -282,6 +282,19 @@ html { scrollbar-width: thin; scrollbar-color: hsl(222 12% 32%) transparent; }
   margin: 0.4rem 0 1.5rem;
 }
 
+/* A captioned image inside a post. The portrait variant exists because
+   .blog-prose img fills the column, and the Eleanor award collage is 4:5 —
+   at the full 896px column that is over 1,100px tall, taller than most
+   screens. Capped and centred instead, with the ratio reserved so the text
+   below it does not jump when the image arrives. */
+.blog-figure { margin: 1.5rem 0; }
+.blog-figure--portrait { max-width: 26rem; margin-inline: auto; }
+.blog-figure--portrait img { aspect-ratio: 4 / 5; object-fit: cover; margin-bottom: 0.6rem; }
+.blog-prose figcaption {
+  font-size: 0.85rem; line-height: 1.55; color: hsl(220 10% 62%);
+  text-align: center; margin: 0;
+}
+
 /* Tables (the cost table in the India cost post) */
 .blog-prose table {
   width: 100%; margin: 1.5rem 0; border-collapse: collapse;

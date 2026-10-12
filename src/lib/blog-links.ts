@@ -342,6 +342,15 @@ export const POST_IMAGES: Record<string, { src: string; alt: string }> = {
     src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/iphex-2026-new-delhi/zeon-group-of-companies/zeon_group_of_companies_exhibition_stall_design_at_IPHEX_New_Delhi.webp',
     alt: "Zeon Group's 44 sqm two-side-open exhibition stall at iPHEX 2026, Bharat Mandapam, with a white portal and an orange ceiling grid hung with country flags",
   },
+  // The Eleanor award case study. The owner's pack names this hero
+  // explicitly: the stall photograph from the portfolio page, landscape, not
+  // the 4:5 award collage, which sits inline in the body instead. Same R2
+  // folder as that project's own portfolio hero, from the September batch 2
+  // import.
+  'award-winning-exhibition-stall-design-eleanor-aluminium-bharat-2026': {
+    src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/aluminium-bharat-2026/eleanor-industries/eleanor_industries_exhibition_stall_design_at_Aluminium_Bharat_Gandhinagar.webp',
+    alt: '110 sqm four-side-open exhibition stall for Eleanor Industries at Aluminium Bharat 2026, Gandhinagar, designed and fabricated by Approach Media',
+  },
   'exhibition-stall-design-cost-india': {
     src: `${CDN}/stall-gallery-1.jpg`,
     alt: 'Custom exhibition stall designed and fabricated by Approach Media, showing the finish level that moves cost within the per-sqm range',
