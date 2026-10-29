@@ -91,6 +91,8 @@ Approach Media Pvt. Ltd. is an Ahmedabad-based exhibition stall design and fabri
 
 **Planning your next exhibition?** [Talk to our team at approachmedia.in](/contact) and let's design a stall that works as hard as your sales team.
 
+**[Get your AI-ready stall concept and costing in 48 hours →](/contact)**
+
 ---
 
 ### Internal links used in this post

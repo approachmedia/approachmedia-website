@@ -96,6 +96,8 @@ Approach Media Pvt. Ltd. has designed and fabricated 6,000+ exhibition stalls si
 
 **Want a stall that's good for your brand and your budget?** [Get in touch at approachmedia.in](/contact).
 
+**[Get your sustainable stall concept and costing in 48 hours →](/contact)**
+
 ---
 
 ### Internal links used in this post

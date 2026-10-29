@@ -113,6 +113,8 @@ Since 2002, Approach Media Pvt. Ltd. has built 6,000+ exhibition stalls from our
 
 **Ready to create a stall people remember?** [Contact us at approachmedia.in](/contact).
 
+**[Get your immersive stall concept and costing in 48 hours →](/contact)**
+
 ---
 
 ### Internal links used in this post
