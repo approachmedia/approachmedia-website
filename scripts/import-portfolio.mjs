@@ -21,6 +21,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import prismaPkg from '@prisma/client'
+import { galleryAlt } from '../src/lib/gallery-alt.mjs'
 
 const { PrismaClient } = prismaPkg
 const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'data', 'portfolio-import')
@@ -98,7 +99,7 @@ async function importRow(prisma, row) {
           }] : []),
           ...galleryPaths.map((path, i) => ({
             mediaType: 'image', url: path,
-            altText: `${str(row.title)} — photo ${i + 2}`,
+            altText: galleryAlt(row, i + 1),
             isHero: false, displayOrder: i + 1,
           })),
         ],

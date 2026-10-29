@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
+import { galleryAlt } from '@/lib/gallery-alt.mjs'
 
 async function isAuthenticated() {
   const jar = await cookies()
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
       if (exists) {
         const mediaRows = [
           ...(heroPath ? [{ mediaType: 'image' as const, url: heroPath, altText: str(row.hero_image_alt) || str(row.title), caption: str(row.hero_image_caption) || null, isHero: true,  displayOrder: 0 }] : []),
-          ...galleryPaths.map((path, i) => ({ mediaType: 'image' as const, url: path, altText: `${str(row.title)} — photo ${i + 2}`, isHero: false, displayOrder: i + 1 })),
+          ...galleryPaths.map((path, i) => ({ mediaType: 'image' as const, url: path, altText: galleryAlt(row, i + 1), isHero: false, displayOrder: i + 1 })),
         ]
         if (mediaRows.length > 0) {
           await prisma.media.deleteMany({ where: { projectId: exists.id } })
@@ -165,7 +166,7 @@ export async function POST(request: NextRequest) {
               ...galleryPaths.map((path, i) => ({
                 mediaType:    'image' as const,
                 url:          path,
-                altText:      `${str(row.title)} — photo ${i + 2}`,
+                altText:      galleryAlt(row, i + 1),
                 isHero:       false,
                 displayOrder: i + 1,
               })),

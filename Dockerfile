@@ -43,4 +43,4 @@ EXPOSE 3000
 # data/portfolio-import/ runs once, ever, gated by a marker row in
 # app_config — deleted projects stay deleted on later deploys. It never
 # exits non-zero, so the healthcheck is unaffected.
-CMD ["sh", "-c", "npx prisma db push; node scripts/import-portfolio.mjs; exec npm start"]
+CMD ["sh", "-c", "npx prisma db push; node scripts/import-portfolio.mjs; node scripts/backfill-gallery-alt.mjs; exec npm start"]
