@@ -7,8 +7,8 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 export const metadata: Metadata = {
-  title: { absolute: "Exhibition Stall Design for Expos 2026 | India Shows" },
-  description: 'Browse 80+ upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
+  title: { absolute: "Exhibition Stall Design for Expos 2026–2027 | India Shows" },
+  description: 'Browse upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
   alternates: { canonical: `${SITE_URL}/expos` },
 }
 
@@ -29,9 +29,17 @@ const INDUSTRY_COLORS: Record<string, string> = {
 }
 
 export default function ExposIndexPage() {
+  // Year first, then month. Sorting on the month alone put January 2027
+  // above February 2026, which is how the list read the moment a second
+  // year was added to it.
   const expos = [...(expoData as ExpoPageData[])].sort(
-    (a, b) => (MONTH_ORDER[a.month] ?? 13) - (MONTH_ORDER[b.month] ?? 13),
+    (a, b) =>
+      Number(a.year) - Number(b.year) ||
+      (MONTH_ORDER[a.month] ?? 13) - (MONTH_ORDER[b.month] ?? 13),
   )
+
+  const years = [...new Set(expos.map(e => e.year))].sort()
+  const yearSpan = years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : years[0]
 
   const byMonth = expos.reduce<Record<string, ExpoPageData[]>>((acc, e) => {
     const key = `${e.monthName} ${e.year}`
@@ -48,14 +56,14 @@ export default function ExposIndexPage() {
         organizationNode(),
         {
           '@type': 'CollectionPage',
-          name: 'Exhibition stall design for 2026 expos',
+          name: `Exhibition stall design for ${yearSpan} expos`,
           description: 'Stall design and fabrication for upcoming expos across India and internationally.',
           url: `${SITE_URL}/expos`,
           publisher: { '@id': `${SITE_URL}#organization` },
         },
         {
           '@type': 'ItemList',
-          name: 'Expos we build at in 2026',
+          name: `Expos we build at in ${yearSpan}`,
           numberOfItems: expos.length,
           itemListElement: expos.map((e, i) => ({
             '@type': 'ListItem',
@@ -64,16 +72,16 @@ export default function ExposIndexPage() {
             url: `${SITE_URL}/expos/${e.slug}`,
           })),
         },
-        breadcrumb([{ name: 'Expos 2026', path: '/expos' }]),
+        breadcrumb([{ name: `Expos ${yearSpan}`, path: '/expos' }]),
       ]} />
 
       {/* HERO */}
       <section className="page-hero">
         <div className="container">
           <div className="page-hero-inner animate-in">
-            <span className="eyebrow-pill">Upcoming Expos 2026</span>
+            <span className="eyebrow-pill">Upcoming Expos {yearSpan}</span>
             <h1 style={{ fontSize: 'clamp(2rem,5vw,3.6rem)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.08, maxWidth: '800px', marginBottom: '22px' }}>
-              Exhibition Stall Design for <span className="highlight">Every Major Expo</span> in 2026
+              Exhibition Stall Design for <span className="highlight">Every Major Expo</span> in {yearSpan}
             </h1>
             <p style={{ fontSize: '1.05rem', color: 'var(--muted)', maxWidth: '580px', lineHeight: 1.8, marginBottom: '36px' }}>
               Approach Media designs and builds custom exhibition stalls for {expos.length}+ upcoming trade shows across India and internationally. Find your expo below and get a tailored quote.

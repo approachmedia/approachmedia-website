@@ -1,6 +1,7 @@
 import type { ExpoPageData } from './types'
 import Link from 'next/link'
 import { cityPageFor } from '@/lib/seo/city-links'
+import ExpoQuoteForm from './ExpoQuoteForm'
 import { SITE_URL } from '@/lib/site-url'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
@@ -315,39 +316,7 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
               Share your requirements — stall size, design reference, and booth objectives. We respond with a concept outline and quote within 48 hours.
             </p>
           </div>
-          <form
-            className="animate-in"
-            style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '16px', padding: '32px', display: 'grid', gap: '18px', maxWidth: '760px' }}
-          >
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-              <div><label className="field-label" style={{ marginBottom: '6px' }}>Name</label><input type="text" placeholder="Your name" className="field-input" /></div>
-              <div><label className="field-label" style={{ marginBottom: '6px' }}>Company</label><input type="text" placeholder="Company name" className="field-input" /></div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-              <div><label className="field-label" style={{ marginBottom: '6px' }}>Mobile</label><input type="tel" placeholder="+91 …" className="field-input" /></div>
-              <div><label className="field-label" style={{ marginBottom: '6px' }}>Email</label><input type="email" placeholder="you@company.com" className="field-input" /></div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-              <div>
-                <label className="field-label" style={{ marginBottom: '6px' }}>Expo Name</label>
-                <input type="text" defaultValue={data.title} className="field-input" readOnly style={{ opacity: 0.7 }} />
-              </div>
-              <div><label className="field-label" style={{ marginBottom: '6px' }}>Booth Size (sqm)</label><input type="text" placeholder="e.g. 36" className="field-input" /></div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-              <div>
-                <label className="field-label" style={{ marginBottom: '6px' }}>City</label>
-                <input type="text" defaultValue={data.city} className="field-input" readOnly style={{ opacity: 0.7 }} />
-              </div>
-              <div>
-                <label className="field-label" style={{ marginBottom: '6px' }}>Venue</label>
-                <input type="text" defaultValue={data.venue} className="field-input" readOnly style={{ opacity: 0.7 }} />
-              </div>
-            </div>
-            <div><label className="field-label" style={{ marginBottom: '6px' }}>Message / Brief</label><textarea rows={4} placeholder="Tell us about your brand, design references, and any specific requirements…" className="field-input" style={{ resize: 'vertical' }} /></div>
-            <button type="submit" className="btn btn-primary" style={{ justifySelf: 'start' }}>Request a Quote &rarr;</button>
-            <p style={{ fontSize: '0.8rem', color: 'hsl(220 10% 55%)' }}>Form layout only — wire to your CRM or email service when ready.</p>
-          </form>
+          <ExpoQuoteForm expo={data.title} city={data.city} venue={data.venue} />
         </div>
       </section>
 

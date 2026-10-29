@@ -47,7 +47,7 @@ const NAV = [
   { label: 'Services',     href: '/services' },
   { label: 'Industries',   href: '/industries' },
   { label: 'Portfolio',    href: '/portfolio' },
-  { label: 'Expos 2026',   href: '/expos' },
+  { label: 'Expos',        href: '/expos' },
   { label: 'Tradeshows',   href: '/tradeshow-calendar' },
   { label: 'Blog',         href: '/blog' },
   { label: 'Work With Us', href: '/work-with-us' },

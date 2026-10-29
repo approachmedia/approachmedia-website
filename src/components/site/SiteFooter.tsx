@@ -35,7 +35,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: 'About Us',     href: '/about' },
       { label: 'Blog',         href: '/blog' },
       { label: 'Work With Us', href: '/work-with-us' },
-      { label: 'Expos 2026',   href: '/expos' },
+      { label: 'Expos',        href: '/expos' },
       { label: 'Contact Us',   href: '/contact' },
     ],
   },
