@@ -8,6 +8,7 @@ import { getClientReviewVideos } from '@/lib/client-reviews'
 
 import '@/styles/scrollcraft-engine.css'
 import './about-flow.css'
+import { socialImage } from '@/lib/seo/social-image'
 
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design Company in India Since 2002" },
@@ -17,7 +18,9 @@ export const metadata: Metadata = {
     title: "Exhibition Stall Design Company in India Since 2002",
     description: 'Approach Media is an exhibition stall design and build company delivering custom, end-to-end exhibition spaces across India and 14+ countries since 2002.',
     url: `${SITE_URL}/about`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 /**

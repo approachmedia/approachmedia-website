@@ -4,6 +4,7 @@ import { INDUSTRY_PAGES } from '@/content/industries'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
+import { socialImage } from '@/lib/seo/social-image'
 
 /**
  * The Industries hub.
@@ -22,7 +23,9 @@ export const metadata = {
     title: 'Exhibition Stall Design by Industry | Approach Media',
     description: 'Explore exhibition stall design for your industry. Browse relevant projects, discover exhibition opportunities and plan your next stand with Approach Media.',
     url: `${SITE_URL}/industries`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 export default function IndustriesHub() {

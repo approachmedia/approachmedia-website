@@ -14,6 +14,7 @@ import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/double-decker-mezzanine-stands'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Double Decker & Mezzanine Stall Design | Approach Media" },
   description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
@@ -22,7 +23,9 @@ export const metadata = {
     title: "Double Decker & Mezzanine Stall Design | Approach Media",
     description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
     url: `${SITE_URL}/services/double-decker-mezzanine-stands`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'

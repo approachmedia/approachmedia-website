@@ -11,6 +11,7 @@ import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage } from '@/lib/seo/organization'
+import { socialImage } from '@/lib/seo/social-image'
 
 /**
  * One editorial page per industry, in the order the brief's README sets out:
@@ -47,7 +48,9 @@ export async function generateMetadata({ params }: Props) {
     title: { absolute: page.title },
     description: page.meta,
     alternates: { canonical: `${SITE_URL}/industries/${slug}` },
-    openGraph: { title: page.title, description: page.meta, url: `${SITE_URL}/industries/${slug}` },
+    openGraph: { title: page.title, description: page.meta, url: `${SITE_URL}/industries/${slug}`,
+      ...socialImage().openGraph },
+    twitter: socialImage().twitter,
   }
 }
 

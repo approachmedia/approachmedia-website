@@ -15,6 +15,7 @@ import '@/styles/scrollcraft-engine.css'
 import '@/styles/service-flow.css'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/custom-booth-fabrication'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Custom Booth Fabrication | Exhibition Stall Builders India" },
   description: "Custom booth fabrication and exhibition stall building across India. In-house workshop, millimetre tolerances, on-time handover. Get a fabrication quote.",
@@ -23,7 +24,9 @@ export const metadata = {
     title: "Custom Booth Fabrication | Exhibition Stall Builders India",
     description: "Custom booth fabrication and exhibition stall building across India. In-house workshop, millimetre tolerances, on-time handover. Get a fabrication quote.",
     url: `${SITE_URL}/services/custom-booth-fabrication`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'

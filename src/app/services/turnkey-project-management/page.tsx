@@ -18,6 +18,7 @@ import '@/styles/scrollcraft-engine.css'
 import '@/styles/service-flow.css'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/turnkey-project-management'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Turnkey Exhibition Project Management | India & Overseas" },
   description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
@@ -26,7 +27,9 @@ export const metadata = {
     title: "Turnkey Exhibition Project Management | India & Overseas",
     description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
     url: `${SITE_URL}/services/turnkey-project-management`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'

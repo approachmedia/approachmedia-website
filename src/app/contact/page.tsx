@@ -7,6 +7,7 @@ import { SITE_WA_HREF } from '@/components/site/contact-links'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
+import { socialImage } from '@/lib/seo/social-image'
 // Local part only — "+91 " is prefixed for display and stripped for the tel: link.
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
@@ -18,7 +19,9 @@ export const metadata: Metadata = {
     title: "Contact an Exhibition Stall Design Company | Ahmedabad",
     description: 'Get in touch with Approach Media for exhibition stall design and fabrication. Share your brief and our team will respond within 1 business day.',
     url: `${SITE_URL}/contact`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 export default function ContactPage() {

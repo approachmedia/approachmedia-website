@@ -17,6 +17,7 @@ import ServiceSchema from '@/components/seo/ServiceSchema'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/exhibition-stall-design'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs" },
   description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
@@ -25,7 +26,9 @@ export const metadata = {
     title: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs",
     description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
     url: `${SITE_URL}/services/exhibition-stall-design`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'

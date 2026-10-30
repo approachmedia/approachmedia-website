@@ -8,6 +8,7 @@ import { ProcessSteps, type ProcessStep } from '@/components/services/ProcessSte
 import { BorderBeam } from '@/components/motion/BorderBeam'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
   description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
@@ -16,7 +17,9 @@ export const metadata = {
     title: "Exhibition Stall Design & Fabrication Services | India",
     description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
     url: `${SITE_URL}/services`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 /**

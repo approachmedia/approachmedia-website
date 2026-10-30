@@ -9,6 +9,7 @@ import FilterBar from '@/components/portfolio/FilterBar'
 import IndexFlow from '@/components/portfolio/IndexFlow'
 
 import { SITE_URL } from '@/lib/site-url'
+import { socialImage } from '@/lib/seo/social-image'
 // force-dynamic: DATABASE_URL is not available during Docker build, only at runtime.
 // Data is cached for 5 minutes at the function level via unstable_cache below.
 export const dynamic = 'force-dynamic'
@@ -35,7 +36,9 @@ export const metadata: Metadata = {
     title: "Exhibition Stall Design Portfolio | 6000+ Stalls Built",
     description: '600+ custom exhibition stalls built across India.',
     url:         `${SITE_URL}/portfolio`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
   alternates: { canonical: `${SITE_URL}/portfolio` },
 }
 

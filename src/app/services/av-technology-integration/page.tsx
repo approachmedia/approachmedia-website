@@ -14,6 +14,7 @@ import ServiceSchema from '@/components/seo/ServiceSchema'
 import { AvWhyFlow, AvProcessFlow } from '@/components/services/AvFlow'
 import '@/styles/scrollcraft-engine.css'
 import '@/styles/service-flow.css'
+import { socialImage } from '@/lib/seo/social-image'
 export const metadata = {
   title: { absolute: "Exhibition Stand AV & Technology Integration | LED Walls" },
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
@@ -22,7 +23,9 @@ export const metadata = {
     title: "Exhibition Stand AV & Technology Integration | LED Walls",
     description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
     url: `${SITE_URL}/services/av-technology-integration`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'

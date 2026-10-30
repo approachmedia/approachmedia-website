@@ -6,6 +6,7 @@ import { POST_IMAGES } from '@/lib/blog-links'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
+import { socialImage } from '@/lib/seo/social-image'
 
 /**
  * Revalidated rather than force-static: posts publish on a date held in their
@@ -26,7 +27,9 @@ export const metadata: Metadata = {
     description:
       'Practical guides on exhibition stall design and fabrication in India — from the team behind 6000+ stalls.',
     url: `${SITE_URL}/blog`,
+    ...socialImage().openGraph,
   },
+  twitter: socialImage().twitter,
 }
 
 function formatDate(iso: string) {

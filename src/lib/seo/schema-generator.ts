@@ -1,4 +1,5 @@
 import type { Project, Client, Exhibition, Media, SeoMetadata, Industry, StallType } from '@prisma/client'
+import { socialImage } from './social-image'
 
 import { SITE_URL } from '@/lib/site-url'
 // ─────────────────────────────────────────────
@@ -233,6 +234,7 @@ export function generatePortfolioIndexSchema(projects: Pick<Project, 'title' | '
 export function generateProjectMetadata(project: ProjectWithRelations) {
   const seo     = project.seoMetadata
   const heroImg = project.media.find(m => m.isHero)
+  const social  = socialImage(heroImg?.cdnUrl ?? heroImg?.url, heroImg?.altText)
 
   return {
     title:       seo?.metaTitle       ?? project.title,
@@ -240,9 +242,13 @@ export function generateProjectMetadata(project: ProjectWithRelations) {
     openGraph: {
       title:       seo?.ogTitle       ?? seo?.metaTitle ?? project.title,
       description: seo?.ogDescription ?? seo?.metaDescription ?? undefined,
-      images:      heroImg ? [{ url: heroImg.cdnUrl ?? heroImg.url, alt: heroImg.altText }] : undefined,
       type:        'website' as const,
+      ...social.openGraph,
     },
+    // Without this the page keeps the root layout's twitter.images, so every
+    // project shared on X showed the site default rather than its own
+    // photograph. socialImage keeps the two in step by construction.
+    twitter: social.twitter,
     alternates: {
       canonical: seo?.canonicalUrl ?? `${SITE_URL}/portfolio/${project.slug}`,
     },
