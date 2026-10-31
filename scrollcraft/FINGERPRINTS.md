@@ -80,3 +80,4 @@ illustration only: those rows are somebody else's builds and they do **not**
 constrain yours.
 
 | about-walkin (approachmedia.in /about) | filmic one-shot | site's own fixed header: wordmark + one CTA | full-bleed scrub of real stall footage, greet kinetic lead headline | scrub·pin·scrub·flow·pin·flow, 6 acts, ~12.6vh | flow section that holds: framed lounge loop + CTA, no pin, no spotlight, no magnet | the install wall: portfolio tiles fly in and mortar into a grid from the peak act's --sc-p while the tally runs to 6,000 | photographic (owner's own footage + photos) | Next.js /about route |
+| gjaks-unveil-2026 | kinetic chapters | no nav, logo + one action only | pin + dot-print | 12 acts, silence before the peak at 7 to 8 | hold close | the scroll printer | editorial-kinetic, event footage | static, drop-in at /work/gjaks-unveil-2026/ |
