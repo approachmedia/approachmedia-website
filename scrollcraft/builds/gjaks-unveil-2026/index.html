@@ -60,7 +60,15 @@
              text-transform:uppercase; font-size:12px; color:var(--sc-accent) }
   .plate span { font-family:var(--sc-font-text); font-weight:500; font-size:12px;
                 color:var(--sc-ink-soft); line-height:1.5 }
-  .has-footage .plate { display:none }
+  /* Hidden only once the media for THIS slot has decoded, never globally. */
+  .shot-slot.is-live .plate { display:none }
+  .shot { opacity:0; transition:opacity .45s ease-out }
+  .shot-slot.is-live .shot { opacity:1 }
+  .film--empty video { display:none }
+  .film--empty::after { content:'Film slot: add its filename to MEDIA.film';
+    display:block; font-family:var(--am-font-mono); font-size:12px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--sc-ink-soft); border:1px dashed rgba(244,244,242,.26);
+    padding:38px 20px; max-width:min(1100px,100%); margin-inline:auto }
   .shot { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
           filter:contrast(1.08) saturate(1.12) brightness(1.02) }
   .vignette { position:absolute; inset:0; pointer-events:none;
@@ -87,15 +95,46 @@
   .gj-stage { position:relative; width:100%; height:100%; overflow:hidden }
   .center { display:grid; place-content:center; text-align:center }
 
-  /* 1 reveal */
-  .a1 { display:grid; place-content:center; gap:26px; justify-items:center; background:#0B0B0D }
-  .a1 .dot { width:clamp(58px,7vw,104px); aspect-ratio:1; border-radius:50%; background:var(--sc-accent);
-             opacity:clamp(0, calc(var(--sc-p,0) * 6), 1);
-             transform:scale(calc(.6 + min(1, var(--sc-p,0) * 4) * .4)) }
+  /* 1 reveal · the staged open: flicker, mark, glitch, wordmark
+     Each stage is driven from --sc-p by JS setting --s1..--s5 (0..1), so the
+     whole act scrubs backwards as cleanly as it runs forward. */
+  .a1 { display:grid; place-content:center; justify-items:center; gap:0; background:#0B0B0D;
+        position:relative; overflow:hidden }
+  .a1 .markbox { position:relative; display:grid; place-items:center;
+                 width:clamp(58px,7vw,104px); aspect-ratio:1;
+                 opacity:var(--s1,0);
+                 transform:scale(calc(.52 + var(--s2,0) * .48)) }
+  .a1 .markbox svg { width:100%; height:100%; display:block }
+  /* the disc alone first, the mark cut into it as stage 2 runs */
+  .a1 .markbox .cut { opacity:var(--s2,0) }
+  /* stage 3: a horizontal tear, two offset colour copies, no filters */
+  .a1 .glitch { position:absolute; inset:auto; display:grid; place-items:center }
+  .a1 .wordrow { position:relative; display:grid; place-items:center;
+                 margin-top:clamp(18px,3vw,38px) }
+  /* The solid word is the one in flow and sets the row's height; the three
+     others stack on top of it. A fixed height here was 16px, so the wordmark
+     overflowed its own row and the tagline printed across it. */
+  .a1 .wordrow .word { grid-area:1 / 1 }
   .a1 .word { font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
-              font-size:var(--am-display); letter-spacing:.04em; line-height:1;
-              opacity:clamp(0, calc(var(--sc-p,0) * 3 - .9), 1) }
-  .a1 .sub { opacity:clamp(0, calc(var(--sc-p,0) * 3 - 1.5), 1); color:var(--sc-ink-soft) }
+              font-size:var(--am-display); letter-spacing:.04em; line-height:1; margin:0;
+              opacity:var(--s4,0) }
+  .a1 .word.ghost { position:absolute; inset:0; display:grid; place-items:center;
+                    opacity:calc(var(--s3,0) * (1 - var(--s5,0)) * .85) }
+  .a1 .word.ghost--g { color:var(--sc-accent);
+                       transform:translateX(calc(var(--s3,0) * -0.16em)) scaleX(calc(1 + var(--s3,0) * .07)) }
+  .a1 .word.ghost--b { color:#3B57D8;
+                       transform:translateX(calc(var(--s3,0) * 0.16em)) scaleX(calc(1 - var(--s3,0) * .05)) }
+  .a1 .word.hollow { -webkit-text-stroke:2px var(--sc-ink); color:transparent;
+                     opacity:calc(var(--s4,0) * (1 - var(--s5,0))) }
+  .a1 .word.solid { opacity:calc(var(--s4,0) * var(--s5,0)) }
+  /* stage 5: three stripes wipe through and leave the solid wordmark */
+  .a1 .stripes { position:absolute; inset:0; display:grid; grid-template-rows:repeat(3,1fr);
+                 pointer-events:none; opacity:calc(var(--s5,0) * (1 - var(--s5,0)) * 4) }
+  .a1 .stripes b { display:block; transform:scaleX(var(--s5,0)); transform-origin:left }
+  .a1 .stripes b:nth-child(1){ background:var(--sc-accent) }
+  .a1 .stripes b:nth-child(2){ background:#0B0B0D }
+  .a1 .stripes b:nth-child(3){ background:var(--sc-surface) }
+  .a1 .sub { opacity:calc(max(0, var(--s5,0) - .55) / .45); color:var(--sc-ink-soft); margin-top:18px }
 
   /* 3 pan rail */
   .rail { display:flex; height:100%; width:300% }
@@ -219,9 +258,18 @@
   <!-- 1 · REVEAL · pin + bespoke · anticipation -->
   <section data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0B0B0D" aria-label="Approach Media">
     <div data-sc-stage>
-      <div class="gj-stage a1">
-        <span class="dot" aria-hidden="true"></span>
-        <p class="word">Approach</p>
+      <div class="gj-stage a1" id="act1">
+        <span class="markbox" aria-hidden="true">
+          <svg viewBox="-1 -1 2 2"><circle cx="0" cy="0" r="1" fill="#53B618"></circle>
+            <path class="cut" d="M 0.672 0.398 L 0.551 0.207 L -0.305 0.203 L 0.129 -0.457 L 0.008 -0.664 L -0.676 0.398 Z" fill="#F4F4F2"></path></svg>
+        </span>
+        <span class="stripes" aria-hidden="true"><b></b><b></b><b></b></span>
+        <div class="wordrow">
+          <p class="word ghost ghost--g" aria-hidden="true">Approach</p>
+          <p class="word ghost ghost--b" aria-hidden="true">Approach</p>
+          <p class="word hollow" aria-hidden="true">Approach</p>
+          <p class="word solid" id="a1word">Approach</p>
+        </div>
         <p class="gj-mono gj-mono--sm sub">Imagine · Create · Deliver</p>
       </div>
     </div>
@@ -332,11 +380,11 @@
   <section data-sc-act="pin" data-sc-span="1.4" aria-label="Touched, compared, asked">
     <div data-sc-stage>
       <div class="gj-stage">
-        <div class="cardlayer card--blue"  data-sc-cue="0 0.19 0"><h2 class="gj-h gj-h--xl">Touched.</h2></div>
+        <div class="cardlayer card--blue"  data-sc-cue="0 0.19 0"><h2 class="gj-h gj-h--xl" data-scramble>Touched.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.17 0.36"><figure class="shot-slot" data-shot="s20" data-cap="Hands on the fixtures" aria-hidden="true"></figure></div>
-        <div class="cardlayer card--green" data-sc-cue="0.34 0.53"><h2 class="gj-h gj-h--xl">Compared.</h2></div>
+        <div class="cardlayer card--green" data-sc-cue="0.34 0.53"><h2 class="gj-h gj-h--xl" data-scramble>Compared.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.51 0.70"><figure class="shot-slot" data-shot="s21" data-cap="Dealers comparing panels" aria-hidden="true"></figure></div>
-        <div class="cardlayer card--dark"  data-sc-cue="0.68 0.86"><h2 class="gj-h gj-h--xl">Asked.</h2></div>
+        <div class="cardlayer card--dark"  data-sc-cue="0.68 0.86"><h2 class="gj-h gj-h--xl" data-scramble>Asked.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.84 1 0.3 0"><figure class="shot-slot" data-shot="s22" data-cap="Asking at the product table" aria-hidden="true"></figure></div>
       </div>
     </div>
@@ -379,9 +427,7 @@
   <section class="film" aria-label="Watch the film">
     <div class="gj-wrap">
       <p class="gj-mono" style="color:var(--sc-ink);margin-bottom:22px">Watch the 95-second film</p>
-      <video id="film" controls preload="none" poster="gjaks/film-poster.jpg" playsinline>
-        <source src="gjaks/film.mp4" type="video/mp4">
-      </video>
+      <video id="film" controls preload="none" playsinline></video>
     </div>
   </section>
 
@@ -393,47 +439,95 @@
    GJAKS Unveil 2026 — page JS. The engine is untouched; everything
    here reads --sc-p, which the engine publishes on each act element.
 
-   FOOTAGE: flip to true once public/gjaks/ holds the clips named in
-   the flow document. Every slot below is already authored with its
-   real filename; while this is false the media attributes are never
-   written, so nothing requests a file that is not there and the
-   labelled plate shows instead.
+   ── THE ONLY THING TO EDIT ─────────────────────────────────────
+   Put each slot's real filename in MEDIA below, exactly as it is
+   spelled in the bucket, and the page uses it. A slot left as ''
+   keeps its labelled plate, so the page is never broken while the
+   list is half filled, and a name that turns out to be wrong falls
+   back to the plate too rather than showing a black rectangle.
+
+   Clips may be .mp4 or .webm; stills may be .jpg, .jpeg, .png or
+   .webp. The slot decides how it is used, not the extension:
+   scrub slots are driven by the wheel, the rest loop silently.
    ──────────────────────────────────────────────────────────────── */
-const FOOTAGE = false;
-const SHOT_DIR = 'gjaks/shots/';
+const MEDIA_BASE = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/Event/clips/';
+
+const MEDIA = {
+  s01:          '',   // arrival, golf-cart ride through the hills
+  s02:          '',   // outdoor product standees at the entrance
+  s03:          '',   // lobby arch and welcome standee
+  'photo-wall': '',   // GJAKS x MLUE 3D letters, the photo wall  (still)
+  s13:          '',   // long panel wall, tracking      (SCRUBS under the type)
+  s14:          '',   // morning wide of the finished space
+  s16:          '',   // ballroom wide, the room full   (SCRUBS, this is the peak)
+  s20:          '',   // hands on the fixtures
+  s21:          '',   // dealers comparing panels
+  s22:          '',   // asking at the product table
+  film:         '',   // the full 95-second film
+  'film-poster':'',   // its poster frame               (still)
+};
+
+/* Mobile variants, optional. Same keys, portrait crops. Anything missing
+   here just uses the desktop file. */
+const MEDIA_MOBILE = { s13: '', s16: '' };
+
+const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
 
 (function () {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── shot slots ─────────────────────────────────────────── */
+  /* ── shot slots ──────────────────────────────────────────────
+     The plate is always built first and only hidden once the media
+     for that slot has actually decoded. A 404, a typo in a filename
+     or a codec the browser will not take therefore leaves the
+     labelled plate on screen instead of a black hole. ─────────── */
+  const url = name => (/^https?:/i.test(name) ? name : MEDIA_BASE + name);
+
   document.querySelectorAll('.shot-slot').forEach(fig => {
     const id = fig.dataset.shot, cap = fig.dataset.cap || '';
-    if (FOOTAGE) {
-      const scrub = fig.dataset.scrub === '1';
-      const isImg = id === 'photo-wall';
-      if (isImg) {
-        const img = document.createElement('img');
-        img.className = 'shot'; img.src = SHOT_DIR + 'photo-wall.jpg'; img.alt = cap;
-        fig.appendChild(img);
-      } else {
-        const v = document.createElement('video');
-        v.className = 'shot'; v.muted = true; v.playsInline = true;
-        if (scrub) {
-          v.setAttribute('data-sc-scrub', '');
-          v.setAttribute('data-sc-src', SHOT_DIR + id + '.mp4');
-          v.setAttribute('data-sc-src-mobile', SHOT_DIR + id + '-m.mp4');
-        } else {
-          v.src = SHOT_DIR + id + '.mp4'; v.loop = true; v.autoplay = true;
-        }
-        fig.appendChild(v);
-      }
-      const vg = document.createElement('span'); vg.className = 'vignette'; fig.appendChild(vg);
+    fig.insertAdjacentHTML('beforeend',
+      '<div class="plate"><div><b>' + id + '</b><span>' + cap + '</span></div></div>');
+
+    const file = MEDIA[id];
+    if (!file) return;                       // slot not filled in yet
+
+    const ready = () => fig.classList.add('is-live');
+    let node;
+
+    if (IS_STILL.test(file)) {
+      node = document.createElement('img');
+      node.src = url(file); node.alt = cap; node.loading = 'lazy';
+      node.addEventListener('load', ready, { once: true });
     } else {
-      fig.insertAdjacentHTML('beforeend',
-        '<div class="plate"><div><b>' + id + '</b><span>' + cap + '</span></div></div>');
+      node = document.createElement('video');
+      node.muted = true; node.playsInline = true; node.preload = 'metadata';
+      const mob = MEDIA_MOBILE[id];
+      if (fig.dataset.scrub === '1') {
+        node.setAttribute('data-sc-scrub', '');
+        node.setAttribute('data-sc-src', url(file));
+        if (mob) node.setAttribute('data-sc-src-mobile', url(mob));
+      } else {
+        node.src = url(mob && innerWidth <= 640 ? mob : file);
+        node.loop = true; node.autoplay = true;
+      }
+      node.addEventListener('loadeddata', ready, { once: true });
     }
+    node.className = 'shot';
+    node.addEventListener('error', () => fig.classList.remove('is-live'), { once: true });
+    fig.appendChild(node);
+    fig.insertAdjacentHTML('beforeend', '<span class="vignette"></span>');
   });
-  document.documentElement.classList.toggle('has-footage', FOOTAGE);
+
+  /* the film, same rule */
+  const film = document.getElementById('film');
+  if (film) {
+    if (MEDIA.film) {
+      film.src = url(MEDIA.film);
+      if (MEDIA['film-poster']) film.poster = url(MEDIA['film-poster']);
+    } else {
+      film.closest('.film').classList.add('film--empty');
+    }
+  }
 
   /* ── the scroll printer ─────────────────────────────────────
      Split each marked line into letters, give every letter its index
@@ -468,6 +562,81 @@ const SHOT_DIR = 'gjaks/shots/';
     });
   });
   document.querySelectorAll('[data-spread]').forEach(el => split(el));
+
+  /* ── act 1, the staged open ─────────────────────────────────
+     Five stages cut out of one act's progress. Each is its own 0..1 so the
+     CSS above can drive opacity and transform from it, and scrubbing back
+     runs the whole thing in reverse rather than snapping. ──────────────── */
+  const act1 = document.getElementById('act1');
+  if (act1) {
+    const A = act1.closest('[data-sc-act]');
+    const stage = (p, from, to) => Math.max(0, Math.min(1, (p - from) / (to - from)));
+    const word = document.getElementById('a1word');
+    const LETTERS = word ? [...word.textContent] : [];
+    const GLYPHS = '#*/<>=+-_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    if (reduced) {
+      act1.style.setProperty('--s1', 1); act1.style.setProperty('--s2', 1);
+      act1.style.setProperty('--s3', 0); act1.style.setProperty('--s4', 1);
+      act1.style.setProperty('--s5', 1);
+    } else if (A && word) {
+      let frame = 0;
+      const paint = () => {
+        frame++;
+        const p = parseFloat(getComputedStyle(A).getPropertyValue('--sc-p')) || 0;
+        /* the dot flickers before it settles: a square wave on the first beat */
+        const s1raw = stage(p, 0, 0.16);
+        const flicker = s1raw < 1 && (frame >> 1) % 2 === 0 ? 0.25 : 1;
+        act1.style.setProperty('--s1', (s1raw * flicker).toFixed(3));
+        act1.style.setProperty('--s2', stage(p, 0.14, 0.34).toFixed(3));
+        act1.style.setProperty('--s3', stage(p, 0.32, 0.56).toFixed(3));
+        act1.style.setProperty('--s4', stage(p, 0.40, 0.62).toFixed(3));
+        const s5 = stage(p, 0.62, 0.92);
+        act1.style.setProperty('--s5', s5.toFixed(3));
+        /* the wordmark scrambles while the stripes wipe, settling left to right */
+        if (s5 > 0 && s5 < 1) {
+          word.textContent = LETTERS.map((ch, i) =>
+            (i + 1) / LETTERS.length <= s5 ? ch : GLYPHS[(frame * 7 + i * 13) % GLYPHS.length]
+          ).join('');
+        } else if (word.textContent !== 'Approach') {
+          word.textContent = 'Approach';
+        }
+        requestAnimationFrame(paint);
+      };
+      requestAnimationFrame(paint);
+    }
+  }
+
+  /* ── scramble-in, the brief's headline entrance ──────────────
+     Two random glyphs per letter then settle, left to right, half of them a
+     frame late. Runs once when the heading first reaches the viewport. ── */
+  function scrambleIn(el) {
+    const final = el.textContent;
+    const chars = [...final];
+    const GLYPHS = '#*/<>=+-_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let f = 0;
+    const total = chars.length * 2 + 14;
+    const run = () => {
+      f++;
+      const head = (f / total) * chars.length;
+      el.textContent = chars.map((ch, i) => {
+        if (ch === ' ') return ' ';
+        const late = i % 2 ? 1.4 : 0;
+        return i + late < head ? ch : GLYPHS[(f * 5 + i * 11) % GLYPHS.length];
+      }).join('');
+      if (f < total) requestAnimationFrame(run); else el.textContent = final;
+    };
+    requestAnimationFrame(run);
+  }
+  if (!reduced) {
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (!e.isIntersecting || e.target.dataset.scrambled) return;
+        e.target.dataset.scrambled = '1';
+        scrambleIn(e.target);
+      });
+    }, { threshold: 0.6 });
+    document.querySelectorAll('[data-scramble]').forEach(el => io.observe(el));
+  }
 
   /* ── act 7, the typewriter in the silence ───────────────── */
   const LINE = 'Then the doors opened.';
