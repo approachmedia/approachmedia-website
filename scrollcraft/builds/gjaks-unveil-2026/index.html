@@ -452,24 +452,48 @@
    ──────────────────────────────────────────────────────────────── */
 const MEDIA_BASE = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/Event/clips/';
 
+const STEM = 'gjaks-unveil-2026-approach-media-v2-1-';
+
+/* Filled in from the ten clips in the repo's clips/ folder, read on
+   31 Oct. Six of the ten carry the film's kinetic typography burnt into
+   the picture (APPROACH MEDIA, ONE VENUE., ONE EVENING., LIT TO BE SEEN,
+   EVERY FIXTURE., ONE BRAND. ONE ROOM.). Those exact words are what this
+   page prints as live type, so using those six would show every line
+   twice, once baked into the video and once animated over it. They are
+   left out and their slots keep the plate until clean exports exist.
+
+   The four below have no burnt-in type: only the venue's own signage,
+   which is real and belongs in shot. */
 const MEDIA = {
-  s01:          '',   // arrival, golf-cart ride through the hills
-  s02:          '',   // outdoor product standees at the entrance
-  s03:          '',   // lobby arch and welcome standee
-  'photo-wall': '',   // GJAKS x MLUE 3D letters, the photo wall  (still)
-  s13:          '',   // long panel wall, tracking      (SCRUBS under the type)
-  s14:          '',   // morning wide of the finished space
-  s16:          '',   // ballroom wide, the room full   (SCRUBS, this is the peak)
-  s20:          '',   // hands on the fixtures
-  s21:          '',   // dealers comparing panels
-  s22:          '',   // asking at the product table
-  film:         '',   // the full 95-second film
-  'film-poster':'',   // its poster frame               (still)
+  s01:          '',                  // arrival exterior         NO CLEAN CLIP
+  s02:          '',                  // outdoor standees         burnt-in "ONE VENUE."
+  s03:          STEM + '03.mp4',     // MLUE arch, rope barriers, lantern pedestals
+  'photo-wall': '',                  // GJAKS x MLUE 3D letters  NO CLIP SUPPLIED
+  s13:          STEM + '08.mp4',     // long product wall, dealers walking   SCRUBS
+  s14:          STEM + '04.mp4',     // niche wall and product table, room empty
+  s16:          '',                  // ballroom wide, THE PEAK  NO CLEAN CLIP
+  s20:          '',                  // hands on fixtures        no match
+  s21:          STEM + '01.mp4',     // dealers at the lit LED display wall
+  s22:          '',                  // asking at the table      no match
+  film:         '',                  // the full 95-second film  NOT SUPPLIED
+  'film-poster':'',
 };
 
-/* Mobile variants, optional. Same keys, portrait crops. Anything missing
-   here just uses the desktop file. */
-const MEDIA_MOBILE = { s13: '', s16: '' };
+/* The 720 cuts, used on phones. */
+const MEDIA_MOBILE = {
+  s03: STEM + '03-720.mp4',
+  s13: STEM + '08-720.mp4',
+  s14: STEM + '04-720.mp4',
+  s21: STEM + '01-720.mp4',
+};
+
+/* A still to hold the frame while the clip loads. */
+const MEDIA_POSTER = {
+  s03: STEM + '03-poster.jpg',
+  s13: STEM + '08-poster.jpg',
+  s14: STEM + '04-poster.jpg',
+  s21: STEM + '01-poster.jpg',
+};
 
 const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
 
@@ -501,6 +525,7 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
     } else {
       node = document.createElement('video');
       node.muted = true; node.playsInline = true; node.preload = 'metadata';
+      if (MEDIA_POSTER[id]) node.poster = url(MEDIA_POSTER[id]);
       const mob = MEDIA_MOBILE[id];
       if (fig.dataset.scrub === '1') {
         node.setAttribute('data-sc-scrub', '');
