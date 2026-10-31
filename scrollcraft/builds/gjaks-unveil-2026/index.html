@@ -34,6 +34,27 @@
              letter-spacing:.16em; font-size:var(--am-mono); margin:0 }
   .gj-mono--sm { font-size:clamp(11px,1.1vw,14px); letter-spacing:.2em }
   .on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6) }
+
+  /* A scrim for the band the type sits in, not for the whole frame.
+     Act 5 runs a tracking shot: lit panels, a cream floor and pale
+     jackets all travel under a line that is itself spreading sideways,
+     so the worst pixel under a letter measured 1.04:1 even though most
+     of the shot is a dark product wall. The gradient is weighted to the
+     left, where the lines are anchored, and has gone by 62% so the
+     right-hand half of the shot stays untouched; the mask feathers the
+     top and bottom edges so there is no visible rectangle. */
+  /* The spreading line crosses whatever the tracking shot happens to be
+     passing, so each letter carries its own ground: an offset shadow for
+     direction plus two tight blurs for separation. Not a zero-offset halo. */
+  .spread.on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.95), 0 0 14px rgba(0,0,0,.85) }
+
+  .band-scrim { position:relative }
+  .band-scrim::before {
+    content:""; position:absolute; inset:34% 0 30% 0; z-index:-1; pointer-events:none;
+    background:linear-gradient(90deg, rgba(0,0,0,.76) 0%, rgba(0,0,0,.62) 30%, rgba(0,0,0,.34) 58%, rgba(0,0,0,0) 80%);
+    -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+            mask-image:linear-gradient(180deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+  }
   .gj-wrap { width:min(1280px, 100% - 2 * clamp(20px,5vw,80px)); margin-inline:auto }
   /* The real heading for an act whose visible type is a repeated stack. The
      stack rows are aria-hidden; this is what a screen reader and a crawler
@@ -329,7 +350,7 @@
   <section data-sc-act="scrub" data-sc-span="1.4" data-sc-dwell="0.3" aria-label="Every fixture, every finish, every detail">
     <div data-sc-stage>
       <figure class="shot-slot" data-shot="s13" data-cap="Long panel wall, tracking shot (scrubs under the type)" data-scrub="1" aria-hidden="true"></figure>
-      <div class="gj-wrap" style="position:relative;z-index:4;display:grid;align-content:center;height:100%">
+      <div class="gj-wrap band-scrim" style="position:relative;z-index:4;display:grid;align-content:center;height:100%">
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0 0.34 0" aria-label="Every fixture.">Every fixture.</p>
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0.3 0.66" aria-label="Every finish.">Every finish.</p>
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0.62 1 0.3 0" aria-label="Every detail.">Every detail.</p>
@@ -465,34 +486,50 @@ const STEM = 'gjaks-unveil-2026-approach-media-v2-1-';
    The four below have no burnt-in type: only the venue's own signage,
    which is real and belongs in shot. */
 const MEDIA = {
-  s01:          '',                  // arrival exterior         NO CLEAN CLIP
-  s02:          '',                  // outdoor standees         burnt-in "ONE VENUE."
-  s03:          STEM + '03.mp4',     // MLUE arch, rope barriers, lantern pedestals
-  'photo-wall': '',                  // GJAKS x MLUE 3D letters  NO CLIP SUPPLIED
-  s13:          STEM + '08.mp4',     // long product wall, dealers walking   SCRUBS
-  s14:          STEM + '04.mp4',     // niche wall and product table, room empty
-  s16:          '',                  // ballroom wide, THE PEAK  NO CLEAN CLIP
-  s20:          '',                  // hands on fixtures        no match
-  s21:          STEM + '01.mp4',     // dealers at the lit LED display wall
-  s22:          '',                  // asking at the table      no match
-  film:         '',                  // the full 95-second film  NOT SUPPLIED
+  /* All ten clips placed, at the owner's instruction.
+
+     Six of the ten carry the film's kinetic typography burnt into the
+     picture. The first attempt paired those words with the matching line
+     on the page, on the theory that agreeing is better than arguing. A
+     screenshot killed that theory: matching words land in the same band
+     at the same moment, so the film's EVERY FIXTURE and the page's
+     "Every finish." printed straight through each other over a cream
+     table, measured at 1.01:1.
+
+     So the rule is positional, not semantic. Four acts print type over
+     the shot (s01 the title, s13 the three lines, s14 the ticker, s16
+     the peak columns) and those four take the only four clean clips.
+     The six that carry type go where the page prints nothing over them:
+     the three act-3 panels, whose captions sit clear of the type band,
+     and the three act-9 flashes, which carry no page type at all.
+     Within that, the scrub slots take the longest clean clips they can,
+     because a scrub maps the whole span onto the whole duration. */
+  s01:          STEM + '04.mp4',   // 2.08s  niche wall, room empty      clean   under the title
+  s02:          STEM + '07.mp4',   // 4.28s  outdoor standees            type: ONE VENUE.
+  s03:          STEM + '10.mp4',   // 4.28s  arch doorway, crowd         type: ONE EVENING.
+  'photo-wall': STEM + '02.mp4',   // 2.12s  resort exterior             type: APPROACH MEDIA
+  s13:          STEM + '08.mp4',   // 2.04s  long wall, dealers walking  clean   SCRUBS
+  s14:          STEM + '03.mp4',   // 2.08s  MLUE arch, lanterns         clean   under the ticker
+  s16:          STEM + '01.mp4',   // 3.20s  dealers at the lit display wall  clean  SCRUBS, the peak
+  s20:          STEM + '09.mp4',   // 2.08s  product table close         type: EVERY FIXTURE.
+  s21:          STEM + '05.mp4',   // 3.16s  dealers comparing panels    type: ONE BRAND. ONE ROOM.
+  s22:          STEM + '06.mp4',   // 5.00s  lit panel wall              type: LIT TO BE SEEN
+  film:         '',                // the 95-second film is not in the clips folder
   'film-poster':'',
 };
 
-/* The 720 cuts, used on phones. */
 const MEDIA_MOBILE = {
-  s03: STEM + '03-720.mp4',
-  s13: STEM + '08-720.mp4',
-  s14: STEM + '04-720.mp4',
-  s21: STEM + '01-720.mp4',
+  s01: STEM + '04-720.mp4',  s02: STEM + '07-720.mp4',  s03: STEM + '10-720.mp4',
+  'photo-wall': STEM + '02-720.mp4',
+  s13: STEM + '08-720.mp4',  s14: STEM + '03-720.mp4',  s16: STEM + '01-720.mp4',
+  s20: STEM + '09-720.mp4',  s21: STEM + '05-720.mp4',  s22: STEM + '06-720.mp4',
 };
 
-/* A still to hold the frame while the clip loads. */
 const MEDIA_POSTER = {
-  s03: STEM + '03-poster.jpg',
-  s13: STEM + '08-poster.jpg',
-  s14: STEM + '04-poster.jpg',
-  s21: STEM + '01-poster.jpg',
+  s01: STEM + '04-poster.jpg',  s02: STEM + '07-poster.jpg',  s03: STEM + '10-poster.jpg',
+  'photo-wall': STEM + '02-poster.jpg',
+  s13: STEM + '08-poster.jpg',  s14: STEM + '03-poster.jpg',  s16: STEM + '01-poster.jpg',
+  s20: STEM + '09-poster.jpg',  s21: STEM + '05-poster.jpg',  s22: STEM + '06-poster.jpg',
 };
 
 const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
