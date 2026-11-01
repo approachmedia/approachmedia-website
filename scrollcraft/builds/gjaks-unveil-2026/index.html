@@ -159,7 +159,9 @@
      overflowed its own row and the tagline printed across it. */
   .a1 .wordrow .word { grid-area:1 / 1 }
   .a1 .word { font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
-              font-size:var(--am-display); letter-spacing:.04em; line-height:1; margin:0;
+              /* same reason as the sweep: this word is drawn hollow partway
+                 through the open, and at .04em the strokes ran together */
+              font-size:var(--am-display); letter-spacing:.07em; line-height:1; margin:0;
               opacity:var(--s4,0) }
   .a1 .word.ghost { position:absolute; inset:0; display:grid; place-items:center;
                     opacity:calc(var(--s3,0) * (1 - var(--s5,0)) * .85) }
@@ -167,7 +169,8 @@
                        transform:translateX(calc(var(--s3,0) * -0.16em)) scaleX(calc(1 + var(--s3,0) * .07)) }
   .a1 .word.ghost--b { color:#3B57D8;
                        transform:translateX(calc(var(--s3,0) * 0.16em)) scaleX(calc(1 - var(--s3,0) * .05)) }
-  .a1 .word.hollow { -webkit-text-stroke:2px var(--sc-ink); color:transparent;
+  .a1 .word.hollow { -webkit-text-stroke:4px var(--sc-ink); color:#0B0B0D;
+                     paint-order:stroke fill;
                      opacity:calc(var(--s4,0) * (1 - var(--s5,0))) }
   .a1 .word.solid { opacity:calc(var(--s4,0) * var(--s5,0)) }
   /* stage 5: three stripes wipe through and leave the solid wordmark */
@@ -199,7 +202,7 @@
      staggered progress, --rowBase the resting opacity it fades toward. */
   .rowdrop p { margin:0; line-height:1; font-size:clamp(26px,3.4vw,58px);
                --rowBase:1;
-               opacity:calc(var(--rowBase) * var(--rp, 0));
+               opacity:calc(var(--rowBase) * var(--rp, 0) * var(--go, 1));
                transform:translateY(calc((2 - var(--ri, 2)) * 1em * (1 - var(--rp, 0)))) }
   .rowdrop p:nth-child(1),.rowdrop p:nth-child(5){ --rowBase:.18 }
   .rowdrop p:nth-child(2),.rowdrop p:nth-child(4){ --rowBase:.42 }
@@ -214,7 +217,8 @@
               text-align:center }
   .ticker p:nth-child(odd)  { transform:translateX(calc(var(--sc-p,0) * -20vw)) }
   .ticker p:nth-child(even) { transform:translateX(calc(var(--sc-p,0) * 20vw));
-                              -webkit-text-stroke:2px var(--sc-ink); color:transparent }
+                              -webkit-text-stroke:2px var(--sc-ink); color:transparent;
+                              letter-spacing:.04em }
   .ticker p:nth-child(5) { color:var(--sc-accent); -webkit-text-stroke:0 }
 
   /* 7 silence */
@@ -229,17 +233,25 @@
   .bar--t { top:0; transform-origin:top }
   .bar--b { bottom:0; transform-origin:bottom }
   .cols { position:absolute; inset:0; z-index:3; display:grid; align-content:center; justify-items:center; gap:.02em }
-  /* Two phases rather than one symmetric fade. The act opened AND closed
-     on "Dealers walked in.", because the always-solid line was in the
-     first group. Phase a carries the arrival and hands over to phase b,
-     which holds to the end, so the peak now resolves on "And stayed." */
-  .cols p { margin:0; opacity:var(--co, 0) }
+  /* Both lines of the peak are centre-out stacks, the same device as the
+     green card: a solid middle line with faded copies above and below
+     that travel out from it. The two stacks sit in the same grid cell so
+     the second replaces the first rather than stacking under it, and
+     phase a fades out as phase b arrives, so the act resolves on
+     "And stayed." --go is the group's own fade, inherited by its rows. */
+  .colstack { grid-area:1 / 1; width:100%; display:grid;
+              align-content:center; justify-items:center; text-align:center }
+  .cols .rowdrop p { font-size:clamp(28px,4.2vw,76px) }
 
   /* 10 outline sweep */
   .sweep { background:var(--am-white); color:#0B0B0D }
   .sweep .row { margin:0; font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
-                font-size:clamp(30px,4.4vw,74px); line-height:1; white-space:nowrap }
-  .sweep .row i { font-style:normal; -webkit-text-stroke:1.5px #0B0B0D; color:transparent;
+                font-size:clamp(30px,4.4vw,74px); line-height:1; white-space:nowrap;
+                letter-spacing:.055em }
+  .sweep .row i { font-style:normal;
+                  color:var(--am-white);            /* the card's own ground */
+                  -webkit-text-stroke:3px #0B0B0D;
+                  paint-order:stroke fill;
                   transition:color .18s linear, -webkit-text-stroke-color .18s linear }
   .sweep .row i.lit { color:#0B0B0D; -webkit-text-stroke-color:transparent }
 
@@ -294,8 +306,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .print i, .reveal i { opacity:1 !important }
-    .cols p[data-col="b"] { opacity:1 !important }
-    .cols p[data-col="a"] { opacity:0 !important }
+    .cols [data-col="a"] { opacity:0 !important }
     .rowdrop p { transform:none !important; opacity:var(--rowBase,1) !important }
     .printer-dot { display:none }
     .widen { letter-spacing:.06em }
@@ -434,11 +445,20 @@
       <span class="bar bar--b" aria-hidden="true"></span>
       <div class="cols">
         <h2 class="sr-only">Dealers walked in. And stayed.</h2>
-        <p class="gj-h on-shot" data-col="a" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot" data-col="a" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot keep" data-col="a" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot" data-col="b" aria-hidden="true">And stayed.</p>
-        <p class="gj-h on-shot keep" data-col="b" aria-hidden="true">And stayed.</p>
+        <div class="colstack rowdrop" data-col="a" data-stack="0.04 0.44" aria-hidden="true">
+          <p class="gj-h on-shot">Dealers walked in.</p>
+          <p class="gj-h on-shot">Dealers walked in.</p>
+          <p class="gj-h on-shot">Dealers walked in.</p>
+          <p class="gj-h on-shot">Dealers walked in.</p>
+          <p class="gj-h on-shot">Dealers walked in.</p>
+        </div>
+        <div class="colstack rowdrop" data-col="b" data-stack="0.54 0.95" aria-hidden="true">
+          <p class="gj-h on-shot">And stayed.</p>
+          <p class="gj-h on-shot">And stayed.</p>
+          <p class="gj-h on-shot">And stayed.</p>
+          <p class="gj-h on-shot">And stayed.</p>
+          <p class="gj-h on-shot">And stayed.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -749,14 +769,15 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
     const rows = [...box.children];
     const mid = (rows.length - 1) / 2;
     rows.forEach((r, i) => r.style.setProperty('--ri', i));
-    const [from, to] = cueWindow(box);
+    /* a stack inside an act with no cue of its own states its window */
+    const v = box.dataset.stack ? box.dataset.stack.trim().split(/\s+/).map(Number) : null;
+    const [from, to] = v && isFinite(v[0]) && isFinite(v[1]) ? v : cueWindow(box);
     return { rows, mid, act: box.closest('[data-sc-act]'), from, to };
   });
 
-  /* the peak's two phases: arrival, then the line it resolves on */
-  const colLines = [...document.querySelectorAll('.cols p[data-col]')].map(el => ({
-    el, phase: el.dataset.col, solid: el.classList.contains('keep'),
-    act: el.closest('[data-sc-act]'),
+  /* the peak's two phases: the arrival hands over to the line it ends on */
+  const colGroups = [...document.querySelectorAll('.cols [data-col]')].map(el => ({
+    el, phase: el.dataset.col, act: el.closest('[data-sc-act]'),
   }));
 
   if (!reduced) {
@@ -774,13 +795,12 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
         });
       });
 
-      colLines.forEach(c => {
-        const p = actP(c.act);
-        /* a hands over to b, and b never fades, so the act closes on it */
-        const o = c.phase === 'a'
-          ? ramp(p, 0.04, 0.16) * (1 - ramp(p, 0.46, 0.58))
-          : ramp(p, 0.54, 0.66);
-        c.el.style.setProperty('--co', (o * (c.solid ? 1 : 0.42)).toFixed(3));
+      colGroups.forEach(c => {
+        /* each stack fades itself IN through its own centre-out window;
+           this only takes the first group back out again, so the second
+           replaces it and then holds to the end of the act */
+        const o = c.phase === 'a' ? 1 - ramp(actP(c.act), 0.46, 0.58) : 1;
+        c.el.style.setProperty('--go', o.toFixed(3));
       });
 
       requestAnimationFrame(run);
