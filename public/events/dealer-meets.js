@@ -158,12 +158,35 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
       var mob = MEDIA_MOBILE[id];
       var file = (mob && innerWidth <= 640) ? mob : MEDIA[id];
       if (!file) return;
-      v.removeAttribute('data-sc-scrub');      // stop the engine driving a clip it never loaded
-      v.loop = true; v.muted = true; v.playsInline = true; v.preload = 'auto';
-      v.classList.add('sc-has-clip');
-      v.src = url(file);
-      var p = v.play();
-      if (p && p.catch) p.catch(function () {});
+      /* Swap in a brand new element rather than reusing this one. The
+         engine holds a reference to the original and its primeClip()
+         deliberately play()s then pause()s a scrub clip, which is how a
+         scrub is held still for the scroll to drive. That runs on every
+         click, pointerdown and touch, and its only guard is whether the
+         element has a src. Setting a src on the element the engine knows
+         about therefore handed it straight back to be paused, which is
+         why the act showed one frozen frame. The engine keeps the old
+         node, now detached, and pauses that instead. */
+      var fresh = document.createElement('video');
+      fresh.className = 'shot sc-has-clip';
+      fresh.muted = true; fresh.loop = true; fresh.autoplay = true;
+      fresh.playsInline = true; fresh.preload = 'auto';
+      fresh.setAttribute('muted', '');
+      fresh.setAttribute('playsinline', '');
+      fresh.setAttribute('loop', '');
+      fresh.setAttribute('autoplay', '');
+      if (MEDIA_POSTER[id]) fresh.poster = url(MEDIA_POSTER[id]);
+      fresh.addEventListener('loadeddata', function () { fig.classList.add('is-live'); }, { once: true });
+      fresh.addEventListener('error', function () { fig.classList.remove('is-live'); }, { once: true });
+      fresh.src = url(file);
+      v.replaceWith(fresh);
+      var pr = fresh.play();
+      if (pr && pr.catch) pr.catch(function () {
+        /* blocked before any interaction: start it on the first one */
+        var go = function () { fresh.play().catch(function () {}); };
+        addEventListener('pointerdown', go, { once: true });
+        addEventListener('touchstart', go, { once: true });
+      });
     });
   }, 6000);
 
@@ -400,10 +423,14 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
         frame++;
         const p = parseFloat(getComputedStyle(A).getPropertyValue('--sc-p')) || 0;
         /* the dot flickers before it settles: a square wave on the first beat */
+        /* The mark is already on screen when the act begins; the open
+           firms it up rather than fading it in from black. A visitor
+           landing here was otherwise looking at an empty screen and
+           concluding the page had not loaded. */
         const s1raw = stage(p, 0, 0.16);
-        const flicker = s1raw < 1 && (frame >> 1) % 2 === 0 ? 0.25 : 1;
-        act1.style.setProperty('--s1', (s1raw * flicker).toFixed(3));
-        act1.style.setProperty('--s2', stage(p, 0.14, 0.34).toFixed(3));
+        const flicker = s1raw < 1 && (frame >> 1) % 2 === 0 ? 0.82 : 1;
+        act1.style.setProperty('--s1', (0.6 + 0.4 * s1raw * flicker).toFixed(3));
+        act1.style.setProperty('--s2', (0.75 + 0.25 * stage(p, 0.14, 0.34)).toFixed(3));
         act1.style.setProperty('--s3', stage(p, 0.32, 0.56).toFixed(3));
         act1.style.setProperty('--s4', stage(p, 0.40, 0.62).toFixed(3));
         const s5 = stage(p, 0.62, 0.92);

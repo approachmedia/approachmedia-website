@@ -110,9 +110,10 @@
        justify-items:center; gap:0; background:#0B0B0D;
         position:relative; overflow:hidden } .gjaks .a1 .markbox { position:relative; display:grid; place-items:center;
                  width:clamp(58px,7vw,104px); aspect-ratio:1;
-                 opacity:var(--s1,0);
-                 transform:scale(calc(.52 + var(--s2,0) * .48)) } .gjaks .a1 .markbox svg { width:100%; height:100%; display:block }
-  /* the disc alone first, the mark cut into it as stage 2 runs */ .gjaks .a1 .markbox .cut { opacity:var(--s2,0) }
+                 opacity:var(--s1,.6);
+                 transform:scale(calc(.52 + var(--s2,.75) * .48)) } .gjaks .a1 .markbox svg { width:100%; height:100%; display:block }
+  /* Visible before a single frame of script has run. */
+  .gjaks .a1 .markbox .cut { opacity:var(--s2,.75) }
   /* stage 3: a horizontal tear, two offset colour copies, no filters */ .gjaks .a1 .glitch { position:absolute; inset:auto; display:grid; place-items:center } .gjaks .a1 .wordrow { position:relative; display:grid; place-items:center;
                  margin-top:clamp(18px,3vw,38px) }
   /* The solid word is the one in flow and sets the row's height; the three
