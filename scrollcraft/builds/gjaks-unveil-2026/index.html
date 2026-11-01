@@ -193,9 +193,16 @@
   .card--green { background:var(--sc-accent); color:var(--sc-accent-ink) }
   .fill2 { opacity:.3 }
   [data-sc-in].is-in .fill2 { opacity:1; transition:opacity .5s .35s ease-out }
-  .rowdrop p { margin:0; line-height:1; font-size:clamp(26px,3.4vw,58px) }
-  .rowdrop p:nth-child(1),.rowdrop p:nth-child(5){ opacity:.18 }
-  .rowdrop p:nth-child(2),.rowdrop p:nth-child(4){ opacity:.42 }
+  /* The stack opens from its middle line: every row starts sitting on
+     the centre row and fades up as it travels to its own line, the pair
+     nearest the middle first. --ri is the row's index, --rp its own
+     staggered progress, --rowBase the resting opacity it fades toward. */
+  .rowdrop p { margin:0; line-height:1; font-size:clamp(26px,3.4vw,58px);
+               --rowBase:1;
+               opacity:calc(var(--rowBase) * var(--rp, 0));
+               transform:translateY(calc((2 - var(--ri, 2)) * 1em * (1 - var(--rp, 0)))) }
+  .rowdrop p:nth-child(1),.rowdrop p:nth-child(5){ --rowBase:.18 }
+  .rowdrop p:nth-child(2),.rowdrop p:nth-child(4){ --rowBase:.42 }
 
   /* 6 stack ticker */
   .ticker { position:absolute; inset:0; display:grid; align-content:center; gap:.02em; overflow:hidden }
@@ -222,8 +229,11 @@
   .bar--t { top:0; transform-origin:top }
   .bar--b { bottom:0; transform-origin:bottom }
   .cols { position:absolute; inset:0; z-index:3; display:grid; align-content:center; justify-items:center; gap:.02em }
-  .cols p { margin:0; opacity:clamp(0, calc(1.25 - abs(var(--sc-p,0) - .5) * 4), 1) }
-  .cols p.keep { opacity:1 }
+  /* Two phases rather than one symmetric fade. The act opened AND closed
+     on "Dealers walked in.", because the always-solid line was in the
+     first group. Phase a carries the arrival and hands over to phase b,
+     which holds to the end, so the peak now resolves on "And stayed." */
+  .cols p { margin:0; opacity:var(--co, 0) }
 
   /* 10 outline sweep */
   .sweep { background:var(--am-white); color:#0B0B0D }
@@ -283,7 +293,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .print i, .reveal i, .cols p { opacity:1 !important }
+    .print i, .reveal i { opacity:1 !important }
+    .cols p[data-col="b"] { opacity:1 !important }
+    .cols p[data-col="a"] { opacity:0 !important }
+    .rowdrop p { transform:none !important; opacity:var(--rowBase,1) !important }
     .printer-dot { display:none }
     .widen { letter-spacing:.06em }
     .spread i { transform:none !important }
@@ -370,11 +383,11 @@
         <div class="cardlayer card--blue"  data-sc-cue="0 0.38 0"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="We imagined it.">We imagined <span class="fill2">it.</span></h2></div>
         <div class="cardlayer card--white" data-sc-cue="0.34 0.68"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="We built it.">We built <span class="fill2">it.</span></h2></div>
         <div class="cardlayer card--green rowdrop" data-sc-cue="0.64 1 0.3 0">
-          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
-          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
-          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
-          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
-          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
+          <p class="gj-h">A premium lighting experience</p>
+          <p class="gj-h">A premium lighting experience</p>
+          <p class="gj-h">A premium lighting experience</p>
+          <p class="gj-h">A premium lighting experience</p>
+          <p class="gj-h">A premium lighting experience</p>
         </div>
       </div>
     </div>
@@ -421,25 +434,25 @@
       <span class="bar bar--b" aria-hidden="true"></span>
       <div class="cols">
         <h2 class="sr-only">Dealers walked in. And stayed.</h2>
-        <p class="gj-h on-shot" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot keep" aria-hidden="true">Dealers walked in.</p>
-        <p class="gj-h on-shot" aria-hidden="true">And stayed.</p>
-        <p class="gj-h on-shot" aria-hidden="true">And stayed.</p>
+        <p class="gj-h on-shot" data-col="a" aria-hidden="true">Dealers walked in.</p>
+        <p class="gj-h on-shot" data-col="a" aria-hidden="true">Dealers walked in.</p>
+        <p class="gj-h on-shot keep" data-col="a" aria-hidden="true">Dealers walked in.</p>
+        <p class="gj-h on-shot" data-col="b" aria-hidden="true">And stayed.</p>
+        <p class="gj-h on-shot keep" data-col="b" aria-hidden="true">And stayed.</p>
       </div>
     </div>
   </section>
 
   <!-- 9 · TOUCHED · COMPARED · ASKED · pin + card flash · energy
        Same reason as act 4: one pinned frame, six cues, hard cuts. -->
-  <section data-sc-act="pin" data-sc-span="2.8" aria-label="Touched, compared, asked">
+  <section data-sc-act="pin" data-sc-span="4.5" aria-label="Touched, compared, asked">
     <div data-sc-stage>
       <div class="gj-stage">
-        <div class="cardlayer card--blue"  data-sc-cue="0 0.19 0"><h2 class="gj-h gj-h--xl" data-scramble>Touched.</h2></div>
+        <div class="cardlayer card--blue"  data-sc-cue="0 0.19 0"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="Touched.">Touched.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.17 0.36"><figure class="shot-slot" data-shot="s20" data-cap="Hands on the fixtures" aria-hidden="true"></figure></div>
-        <div class="cardlayer card--green" data-sc-cue="0.34 0.53"><h2 class="gj-h gj-h--xl" data-scramble>Compared.</h2></div>
+        <div class="cardlayer card--green" data-sc-cue="0.34 0.53"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="Compared.">Compared.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.51 0.70"><figure class="shot-slot" data-shot="s21" data-cap="Dealers comparing panels" aria-hidden="true"></figure></div>
-        <div class="cardlayer card--dark"  data-sc-cue="0.68 0.86"><h2 class="gj-h gj-h--xl" data-scramble>Asked.</h2></div>
+        <div class="cardlayer card--dark"  data-sc-cue="0.68 0.86"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="Asked.">Asked.</h2></div>
         <div class="cardlayer"             data-sc-cue="0.84 1 0.3 0"><figure class="shot-slot" data-shot="s22" data-cap="Asking at the product table" aria-hidden="true"></figure></div>
       </div>
     </div>
@@ -723,19 +736,59 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
     return { el, act: el.closest('[data-sc-act]'), from, to };
   });
 
-  if (revealed.length && !reduced) {
+  const ramp = (x, a, b) => Math.max(0, Math.min(1, (x - a) / Math.max(0.0001, b - a)));
+  const actP = act => (act ? parseFloat(getComputedStyle(act).getPropertyValue('--sc-p')) || 0 : 0);
+  const cueWindow = el => {
+    const cue = el.closest('[data-sc-cue]');
+    const v = (cue ? cue.getAttribute('data-sc-cue') : '0 1').trim().split(/\s+/).map(Number);
+    return [isFinite(v[0]) ? v[0] : 0, isFinite(v[1]) ? v[1] : 1];
+  };
+
+  /* the repeated stack that opens from its middle line outward */
+  const stacks = [...document.querySelectorAll('.rowdrop')].map(box => {
+    const rows = [...box.children];
+    const mid = (rows.length - 1) / 2;
+    rows.forEach((r, i) => r.style.setProperty('--ri', i));
+    const [from, to] = cueWindow(box);
+    return { rows, mid, act: box.closest('[data-sc-act]'), from, to };
+  });
+
+  /* the peak's two phases: arrival, then the line it resolves on */
+  const colLines = [...document.querySelectorAll('.cols p[data-col]')].map(el => ({
+    el, phase: el.dataset.col, solid: el.classList.contains('keep'),
+    act: el.closest('[data-sc-act]'),
+  }));
+
+  if (!reduced) {
     const run = () => {
       revealed.forEach(r => {
-        const p = r.act ? parseFloat(getComputedStyle(r.act).getPropertyValue('--sc-p')) || 0 : 0;
         const span = Math.max(0.001, (r.to - r.from) * 0.7);
-        const lp = Math.max(0, Math.min(1, (p - r.from) / span));
-        r.el.style.setProperty('--lp', lp.toFixed(4));
+        r.el.style.setProperty('--lp', ramp(actP(r.act), r.from, r.from + span).toFixed(4));
       });
+
+      stacks.forEach(s => {
+        const lp = ramp(actP(s.act), s.from, s.from + (s.to - s.from) * 0.8);
+        s.rows.forEach((row, i) => {
+          const d = Math.abs(i - s.mid);              // rings out from the centre
+          row.style.setProperty('--rp', ramp(lp, d * 0.22, d * 0.22 + 0.45).toFixed(4));
+        });
+      });
+
+      colLines.forEach(c => {
+        const p = actP(c.act);
+        /* a hands over to b, and b never fades, so the act closes on it */
+        const o = c.phase === 'a'
+          ? ramp(p, 0.04, 0.16) * (1 - ramp(p, 0.46, 0.58))
+          : ramp(p, 0.54, 0.66);
+        c.el.style.setProperty('--co', (o * (c.solid ? 1 : 0.42)).toFixed(3));
+      });
+
       requestAnimationFrame(run);
     };
     requestAnimationFrame(run);
   } else {
     revealed.forEach(r => r.el.style.setProperty('--lp', '1'));
+    stacks.forEach(s => s.rows.forEach(r => r.style.setProperty('--rp', '1')));
   }
 
   const fitted = [...document.querySelectorAll('[data-fit]')];
