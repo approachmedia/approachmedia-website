@@ -133,6 +133,40 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
     fig.insertAdjacentHTML('beforeend', '<span class="vignette"></span>');
   });
 
+  /* ── cross-origin fallback for the two scrubbing clips ───────
+     The engine loads a scrub clip by fetching it and turning it into a
+     blob, so that seeking does not depend on HTTP range support. A
+     cross-origin fetch needs the bucket to send Access-Control-Allow-
+     Origin; a plain <video src> does not. That is the whole difference
+     between these two slots and the other eight, and when the header is
+     missing the engine's fetch rejects into a silent catch and the act
+     sits on its labelled plate for the life of the page.
+
+     So if a scrub slot has not come alive a few seconds after mount,
+     stream the file straight into the element instead. The act loses its
+     scrub and plays as a muted loop like the rest, which is a great deal
+     better than a placeholder. The engine keeps a scrub clip at opacity 0
+     until it adds sc-has-clip, so the fallback adds it too.
+
+     The real fix is a CORS rule on the bucket; this is the safety net. */
+  setTimeout(function () {
+    document.querySelectorAll('.shot-slot[data-scrub="1"]').forEach(function (fig) {
+      if (fig.classList.contains('is-live')) return;
+      var v = fig.querySelector('video');
+      if (!v || v.src) return;                 // still loading, or already blobbed
+      var id = fig.dataset.shot;
+      var mob = MEDIA_MOBILE[id];
+      var file = (mob && innerWidth <= 640) ? mob : MEDIA[id];
+      if (!file) return;
+      v.removeAttribute('data-sc-scrub');      // stop the engine driving a clip it never loaded
+      v.loop = true; v.muted = true; v.playsInline = true; v.preload = 'auto';
+      v.classList.add('sc-has-clip');
+      v.src = url(file);
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    });
+  }, 6000);
+
   /* ── the scroll printer ─────────────────────────────────────
      Split each marked line into letters, give every letter its index
      and the line its length, and let CSS do the rest: a letter is
