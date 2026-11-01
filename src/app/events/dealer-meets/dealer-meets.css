@@ -133,7 +133,15 @@
   /* 3 pan rail */ .gjaks .rail { display:flex; height:100%; width:300% } .gjaks .rail > figure { position:relative; flex:1 0 33.3333%; margin:0; overflow:hidden } .gjaks .rail .cap { position:absolute; left:0; right:0; bottom:9vh; padding-inline:clamp(20px,5vw,80px) }
 
   /* 4 + 9 cards, stacked inside one pinned frame and cued in */ .gjaks .cardlayer { position:absolute; inset:0; display:grid; place-content:center;
-               grid-template-columns:minmax(0,1fr); text-align:center; padding:8vh 4vw } .gjaks .card--dark { background:#0B0B0D; color:var(--sc-ink) } .gjaks .card--blue { background:var(--sc-surface); color:var(--sc-ink) } .gjaks .card--white { background:var(--am-white); color:#0B0B0D } .gjaks .card--green { background:var(--sc-accent); color:var(--sc-accent-ink) } .gjaks .fill2 { opacity:.3 } .gjaks [data-sc-in].is-in .fill2 { opacity:1; transition:opacity .5s .35s ease-out }
+               grid-template-columns:minmax(0,1fr); text-align:center; padding:8vh 4vw } .gjaks .card--dark { background:#0B0B0D; color:var(--sc-ink) }
+  /* Each card above declares the colour its ground needs. A site-wide
+     heading rule was painting every h2 white regardless, which only
+     looked right on the blue and the dark card: "We built it." measured
+     1.10:1 on the white one and "Compared." 2.60:1 on the green. The
+     sibling <p> rows were never affected, which is why the green card's
+     stack read correctly while its heading did not. Inheriting puts each
+     heading back on the colour its own card chose. */
+  .gjaks .cardlayer h2 { color:inherit } .gjaks .card--blue { background:var(--sc-surface); color:var(--sc-ink) } .gjaks .card--white { background:var(--am-white); color:#0B0B0D } .gjaks .card--green { background:var(--sc-accent); color:var(--sc-accent-ink) } .gjaks .fill2 { opacity:.3 } .gjaks [data-sc-in].is-in .fill2 { opacity:1; transition:opacity .5s .35s ease-out }
   /* The stack opens from its middle line: every row starts sitting on
      the centre row and fades up as it travels to its own line, the pair
      nearest the middle first. --ri is the row's index, --rp its own
