@@ -42,10 +42,21 @@ const itemVariants = {
   closed: { y: 24, opacity: 0, transition: { y: { stiffness: 1000 } } },
 }
 
-const NAV = [
+type NavItem = { label: string; href: string; children?: { label: string; href: string }[] }
+
+/**
+ * Events is the only item with a submenu. It holds the event setup service
+ * lines; dealer meets is the first and two more are planned, so the parent
+ * points at the one page that exists rather than at an index with a single
+ * entry on it. Add the other two to `children` as they land.
+ */
+const NAV: NavItem[] = [
   { label: 'Home',         href: '/' },
   { label: 'Services',     href: '/services' },
   { label: 'Industries',   href: '/industries' },
+  { label: 'Events',       href: '/events/dealer-meets', children: [
+    { label: 'Dealer Meets', href: '/events/dealer-meets' },
+  ] },
   { label: 'Portfolio',    href: '/portfolio' },
   { label: 'Expos',        href: '/expos' },
   { label: 'Tradeshows',   href: '/tradeshow-calendar' },
@@ -53,6 +64,14 @@ const NAV = [
   { label: 'Work With Us', href: '/work-with-us' },
   { label: 'Contact',      href: '/contact' },
 ]
+
+function Chevron() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" className="ml-1 inline-block shrink-0">
+      <path d="M1.5 3.5 L5 7 L8.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 export default function SiteHeader() {
   const pathname = usePathname()
@@ -101,12 +120,47 @@ export default function SiteHeader() {
         {/* gap-5 rather than gap-7: the desktop nav appears at xl (1280px) and
             Industries makes nine items, which overflowed that width by 37px at
             the old spacing. */}
-        <nav className="hidden items-center gap-5 xl:flex" aria-label="Primary">
-          {NAV.map(item => (
+        <nav className="hidden items-center gap-4 xl:flex" aria-label="Primary">
+          {NAV.map(item => item.children ? (
+            /* Opens on hover and on keyboard focus. The panel stays in the
+               DOM and is hidden with opacity+invisible rather than display,
+               so focus can reach the links inside it; the pt-2 on the
+               wrapper bridges the gap so the pointer does not fall out of
+               the group on its way down to the panel. */
+            <div key={item.href} className="group relative">
+              <Link
+                href={item.href}
+                aria-haspopup="true"
+                className={`flex items-center whitespace-nowrap text-sm transition-colors ${
+                  isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {item.label}
+                <Chevron />
+              </Link>
+              <div className="invisible absolute left-0 top-full z-50 pt-3 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="min-w-[190px] rounded-lg border border-white/15 bg-background/95 p-1.5 shadow-xl backdrop-blur-xl">
+                  {item.children.map(child => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className={`block whitespace-nowrap rounded-md px-3 py-2 text-sm transition-colors ${
+                        isActive(child.href)
+                          ? 'font-semibold text-foreground'
+                          : 'text-muted-foreground hover:bg-white/10 hover:text-foreground'
+                      }`}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm transition-colors ${
+              className={`whitespace-nowrap text-sm transition-colors ${
                 isActive(item.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -164,6 +218,20 @@ export default function SiteHeader() {
                   >
                     {item.label}
                   </Link>
+                  {/* No hover on a phone, so the submenu is simply listed
+                      under its parent rather than hidden behind a tap. */}
+                  {item.children?.map(child => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      onClick={() => setOpen(false)}
+                      className={`block border-l border-white/15 py-2 pl-4 text-sm transition-colors ${
+                        isActive(child.href) ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
                 </motion.div>
               ))}
               <motion.div className="mt-3 flex flex-col gap-2" variants={itemVariants}>

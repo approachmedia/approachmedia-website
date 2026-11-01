@@ -1,0 +1,231 @@
+/* GJAKS Unveil 2026 — the dealer-meet page's own styling.
+ *
+ * Every selector is scoped under .gjaks. The standalone build used plenty
+ * of generic names (.row, .cap, .word, .close, .mark, .bar, .seo) and a
+ * Next route stylesheet is global once loaded, so unscoped they would have
+ * collided with the rest of the site the moment anyone navigated here.
+ *
+ * The engine's own CSS is not duplicated here: the page reuses the site's
+ * src/styles/scrollcraft-engine.css, the same engine CSS already scoped to
+ * .sc-scope for the About walk-in.
+ *
+ * Inter comes from the site's next/font. Only the mono ships locally,
+ * because the site has no monospace face and this design is built on one.
+ *
+ * Rules for the standalone build's fixed chrome and its film player are
+ * dropped: the site header does the first job and the second is gone.
+ */
+
+@font-face { font-family:'DejaVu Sans Mono'; src:url('/events/fonts/DejaVuSansMono-Bold.ttf') format('truetype'); font-weight:700; font-display:swap } .gjaks {
+    --sc-canvas:#0B0B0D; --sc-surface:#172F9D;
+    --sc-ink:#F4F4F2;    --sc-ink-soft:#A7AEBF;
+    --sc-accent:#53B618; --sc-accent-ink:#0B0B0D;
+    --am-white:#F4F4F2; --am-green-text:#3A860E; --am-grey:#4B5563;
+    --sc-font-display:var(--font-inter), "Inter", system-ui, sans-serif;
+    --sc-font-text:var(--font-inter), "Inter", system-ui, sans-serif;
+    --am-font-mono:"DejaVu Sans Mono", ui-monospace, monospace;
+    --am-display: clamp(64px, 8vw, 150px);
+    --am-head:    clamp(48px, 6vw, 112px);
+    --am-mono:    clamp(20px, 2.4vw, 44px);
+  }
+
+  /* ── type primitives ─────────────────────────────────────── */ .gjaks .gj-h { font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
+          letter-spacing:.02em; line-height:.95; font-size:var(--am-head); margin:0 } .gjaks .gj-h--xl { font-size:var(--am-display) } .gjaks .gj-mono { font-family:var(--am-font-mono); font-weight:700; text-transform:uppercase;
+             letter-spacing:.16em; font-size:var(--am-mono); margin:0 } .gjaks .gj-mono--sm { font-size:clamp(11px,1.1vw,14px); letter-spacing:.2em } .gjaks .on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6) }
+
+  /* The type in act 5 is anchored left over a moving tracking shot, so
+     the shot carries a left-weighted gradient the full height of the
+     stage. The previous version was a band inset inside the text column,
+     which read as a black rectangle floating in the middle of the frame
+     with hard edges. Full bleed, left to right, nothing to notice. */ .gjaks .scrim-left::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(90deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.66) 28%,
+                                      rgba(0,0,0,.26) 52%, rgba(0,0,0,0) 74%);
+  } .gjaks .spread.on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.95), 0 0 14px rgba(0,0,0,.85) } .gjaks .band-scrim { position:relative } .gjaks .band-scrim::before {
+    content:""; position:absolute; inset:34% 0 30% 0; z-index:-1; pointer-events:none;
+    background:linear-gradient(90deg, rgba(0,0,0,.76) 0%, rgba(0,0,0,.62) 30%, rgba(0,0,0,.34) 58%, rgba(0,0,0,0) 80%);
+    -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+            mask-image:linear-gradient(180deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+  } .gjaks .gj-wrap { width:min(1280px, 100% - 2 * clamp(20px,5vw,80px)); margin-inline:auto }
+  /* The real heading for an act whose visible type is a repeated stack. The
+     stack rows are aria-hidden; this is what a screen reader and a crawler
+     actually read, in document order. */ .gjaks .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+             clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0 }
+
+  /* ── the shot plate ──────────────────────────────────────────
+     Footage lives on the owner's Mac and is not in this build. Every slot
+     below is authored as the real <video>/<img> it will be, and a boot flag
+     strips the media attributes while FOOTAGE is false so nothing 404s. The
+     plate is what shows until then; it names the exact clip. ───────────── */
+  /* The label sits bottom-left, out of the way of the act's own copy: the
+     plate is scaffolding and must never compete with the type it sits behind. */ .gjaks .plate { position:absolute; inset:0;
+           background:
+             repeating-linear-gradient(45deg, rgba(255,255,255,.028) 0 12px, transparent 12px 24px),
+             #121318;
+           border:1px solid rgba(244,244,242,.14) } .gjaks .plate > div { position:absolute; left:clamp(16px,3vw,34px); bottom:clamp(16px,3vw,34px);
+                 display:grid; gap:4px; max-width:30ch; text-align:left;
+                 border-left:2px solid var(--sc-accent); padding-left:12px } .gjaks .plate b { font-family:var(--am-font-mono); font-weight:700; letter-spacing:.2em;
+             text-transform:uppercase; font-size:12px; color:var(--sc-accent) } .gjaks .plate span { font-family:var(--sc-font-text); font-weight:500; font-size:12px;
+                color:var(--sc-ink-soft); line-height:1.5 }
+  /* Hidden only once the media for THIS slot has decoded, never globally. */ .gjaks .shot-slot.is-live .plate { display:none } .gjaks .shot { opacity:0; transition:opacity .45s ease-out } .gjaks .shot-slot.is-live .shot { opacity:1 } .gjaks .shot { position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+          filter:contrast(1.08) saturate(1.12) brightness(1.02) } .gjaks .vignette { position:absolute; inset:0; pointer-events:none;
+              background:radial-gradient(ellipse 78% 78% at 50% 50%, transparent 46%, rgba(5,8,30,.55) 100%) }
+
+  /* ── the signature move: the scroll printer ──────────────────
+     --sc-p is published on the act element by the engine; the letters read it
+     through inheritance. Letter i appears once the dot has passed it, which
+     is p * n > i. Scrolling back un-prints, because it is the same sum. ── */
+  /* Splitting a line into one element per character suppresses the normal
+     break opportunity at its spaces: the box is constrained to 350px on a
+     phone and the glyphs still ran straight out of it on a single line. An
+     explicit <wbr> does not restore it either. overflow-wrap does, and it
+     still picks the space, so "GJAKS Unveil 2026" breaks after "Unveil"
+     rather than mid-word. */ .gjaks .print { position:relative; display:block; overflow-wrap:break-word } .gjaks .print i { font-style:normal; opacity:clamp(0, calc(var(--sc-p, 0) * var(--n) - var(--pi)), 1) }
+  /* The colour cards were static: the line simply faded in as a block.
+     These letters read off --lp, the line's progress through its OWN cue
+     window rather than the whole act, so three cards cued one after
+     another each print left to right in their own turn. */ .gjaks .reveal i { font-style:normal; opacity:clamp(0, calc(var(--lp, 0) * var(--n) - var(--pi)), 1) }
+  /* The dot is placed from the MEASURED position of the letter being
+     printed, not from a fraction of the line's width. Those two are only
+     the same in a monospace font: in Inter a G is nearly twice a 1, so a
+     linear sweep drifted off the reveal front and ended up sitting inside
+     the word. It carries a Y as well as an X, so a heading that wraps to
+     two or three lines on a phone still has the dot on the right line. */ .gjaks .printer-dot { position:absolute; left:0; top:0; width:14px; height:14px; border-radius:50%;
+                 background:var(--sc-accent); will-change:transform;
+                 transform:translate(calc(var(--dotx, 0px) - 7px), calc(var(--doty, 0px) - 7px)) } .gjaks .print[data-done="1"] .printer-dot { animation:gj-pulse .5s ease-out 1 }
+  @keyframes gj-pulse {
+    0%   { transform:translate(calc(var(--dotx,0px) - 7px), calc(var(--doty,0px) - 7px)) scale(1) }
+    45%  { transform:translate(calc(var(--dotx,0px) - 7px), calc(var(--doty,0px) - 7px)) scale(1.9) }
+    100% { transform:translate(calc(var(--dotx,0px) - 7px), calc(var(--doty,0px) - 7px)) scale(1) }
+  }
+
+  /* tracking-widen · spread-snap */ .gjaks .widen { letter-spacing:calc(var(--sc-p, 0) * .09em) } .gjaks .spread i { display:inline-block;
+              transform:translateX(calc((var(--pi) - (var(--n) - 1) / 2) * (1 - min(1, var(--sc-p,0) / .5)) * 2.2vw)) }
+
+  /* ── acts ────────────────────────────────────────────────── */ .gjaks .gj-stage { position:relative; width:100%; height:100%; overflow:hidden } .gjaks .center { display:grid; place-content:center; grid-template-columns:minmax(0,1fr); text-align:center }
+
+  /* 1 reveal · the staged open: flicker, mark, glitch, wordmark
+     Each stage is driven from --sc-p by JS setting --s1..--s5 (0..1), so the
+     whole act scrubs backwards as cleanly as it runs forward. */ .gjaks .a1 { display:grid; place-content:center; grid-template-columns:minmax(0,1fr);
+       justify-items:center; gap:0; background:#0B0B0D;
+        position:relative; overflow:hidden } .gjaks .a1 .markbox { position:relative; display:grid; place-items:center;
+                 width:clamp(58px,7vw,104px); aspect-ratio:1;
+                 opacity:var(--s1,0);
+                 transform:scale(calc(.52 + var(--s2,0) * .48)) } .gjaks .a1 .markbox svg { width:100%; height:100%; display:block }
+  /* the disc alone first, the mark cut into it as stage 2 runs */ .gjaks .a1 .markbox .cut { opacity:var(--s2,0) }
+  /* stage 3: a horizontal tear, two offset colour copies, no filters */ .gjaks .a1 .glitch { position:absolute; inset:auto; display:grid; place-items:center } .gjaks .a1 .wordrow { position:relative; display:grid; place-items:center;
+                 margin-top:clamp(18px,3vw,38px) }
+  /* The solid word is the one in flow and sets the row's height; the three
+     others stack on top of it. A fixed height here was 16px, so the wordmark
+     overflowed its own row and the tagline printed across it. */ .gjaks .a1 .wordrow .word { grid-area:1 / 1 } .gjaks .a1 .word { font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
+              /* same reason as the sweep: this word is drawn hollow partway
+                 through the open, and at .04em the strokes ran together */
+              font-size:var(--am-display); letter-spacing:.07em; line-height:1; margin:0;
+              opacity:var(--s4,0) } .gjaks .a1 .word.ghost { position:absolute; inset:0; display:grid; place-items:center;
+                    opacity:calc(var(--s3,0) * (1 - var(--s5,0)) * .85) } .gjaks .a1 .word.ghost--g { color:var(--sc-accent);
+                       transform:translateX(calc(var(--s3,0) * -0.16em)) scaleX(calc(1 + var(--s3,0) * .07)) } .gjaks .a1 .word.ghost--b { color:#3B57D8;
+                       transform:translateX(calc(var(--s3,0) * 0.16em)) scaleX(calc(1 - var(--s3,0) * .05)) } .gjaks .a1 .word.hollow { -webkit-text-stroke:4px var(--sc-ink); color:#0B0B0D;
+                     paint-order:stroke fill;
+                     opacity:calc(var(--s4,0) * (1 - var(--s5,0))) } .gjaks .a1 .word.solid { opacity:calc(var(--s4,0) * var(--s5,0)) }
+  /* stage 5: three stripes wipe through and leave the solid wordmark */ .gjaks .a1 .stripes { position:absolute; inset:0; display:grid; grid-template-rows:repeat(3,1fr);
+                 pointer-events:none; opacity:calc(var(--s5,0) * (1 - var(--s5,0)) * 4) } .gjaks .a1 .stripes b { display:block; transform:scaleX(var(--s5,0)); transform-origin:left } .gjaks .a1 .stripes b:nth-child(1) { background:var(--sc-accent) } .gjaks .a1 .stripes b:nth-child(2) { background:#0B0B0D } .gjaks .a1 .stripes b:nth-child(3) { background:var(--sc-surface) } .gjaks .a1 .sub { opacity:calc(max(0, var(--s5,0) - .55) / .45); color:var(--sc-ink-soft); margin-top:18px }
+
+  /* 3 pan rail */ .gjaks .rail { display:flex; height:100%; width:300% } .gjaks .rail > figure { position:relative; flex:1 0 33.3333%; margin:0; overflow:hidden } .gjaks .rail .cap { position:absolute; left:0; right:0; bottom:9vh; padding-inline:clamp(20px,5vw,80px) }
+
+  /* 4 + 9 cards, stacked inside one pinned frame and cued in */ .gjaks .cardlayer { position:absolute; inset:0; display:grid; place-content:center;
+               grid-template-columns:minmax(0,1fr); text-align:center; padding:8vh 4vw } .gjaks .card--dark { background:#0B0B0D; color:var(--sc-ink) } .gjaks .card--blue { background:var(--sc-surface); color:var(--sc-ink) } .gjaks .card--white { background:var(--am-white); color:#0B0B0D } .gjaks .card--green { background:var(--sc-accent); color:var(--sc-accent-ink) } .gjaks .fill2 { opacity:.3 } .gjaks [data-sc-in].is-in .fill2 { opacity:1; transition:opacity .5s .35s ease-out }
+  /* The stack opens from its middle line: every row starts sitting on
+     the centre row and fades up as it travels to its own line, the pair
+     nearest the middle first. --ri is the row's index, --rp its own
+     staggered progress, --rowBase the resting opacity it fades toward. */ .gjaks .rowdrop p { margin:0; line-height:1; font-size:clamp(26px,3.4vw,58px);
+               --rowBase:1;
+               opacity:calc(var(--rowBase) * var(--rp, 0) * var(--go, 1));
+               transform:translateY(calc((2 - var(--ri, 2)) * 1em * (1 - var(--rp, 0)))) } .gjaks .rowdrop p:nth-child(1), .gjaks .rowdrop p:nth-child(5) { --rowBase:.18 } .gjaks .rowdrop p:nth-child(2), .gjaks .rowdrop p:nth-child(4) { --rowBase:.42 }
+
+  /* 6 stack ticker */ .gjaks .ticker { position:absolute; inset:0; display:grid; align-content:center; gap:.02em; overflow:hidden }
+  /* Centred at rest, then the alternating rows pull apart left and
+     right as the act runs. They used to START 18vw apart, so the act
+     opened with the stack already shoved off the left edge. */ .gjaks .ticker p { margin:0; font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
+              font-size:clamp(38px,5.6vw,92px); line-height:.98; white-space:nowrap;
+              text-align:center } .gjaks .ticker p:nth-child(odd) { transform:translateX(calc(var(--sc-p,0) * -20vw)) } .gjaks .ticker p:nth-child(even) { transform:translateX(calc(var(--sc-p,0) * 20vw));
+                              -webkit-text-stroke:2px var(--sc-ink); color:transparent;
+                              letter-spacing:.04em } .gjaks .ticker p:nth-child(5) { color:var(--sc-accent); -webkit-text-stroke:0 }
+
+  /* 7 silence */ .gjaks .silence { display:grid; place-content:center; grid-template-columns:minmax(0,1fr); text-align:center } .gjaks .cursor { display:inline-block; width:.56em; height:1em; background:var(--sc-accent);
+            vertical-align:-.1em; margin-left:.1em; animation:gj-blink 1s steps(1) infinite }
+  @keyframes gj-blink { 50%{opacity:0} }
+
+  /* 8 letterbox */ .gjaks .bar { position:absolute; left:0; right:0; height:35%; background:#0B0B0D; z-index:2;
+         transform:scaleY(clamp(0, calc(1 - var(--sc-p,0) / .34), 1)) } .gjaks .bar--t { top:0; transform-origin:top } .gjaks .bar--b { bottom:0; transform-origin:bottom } .gjaks .cols { position:absolute; inset:0; z-index:3; display:grid; align-content:center; justify-items:center; gap:.02em }
+  /* Both lines of the peak are centre-out stacks, the same device as the
+     green card: a solid middle line with faded copies above and below
+     that travel out from it. The two stacks sit in the same grid cell so
+     the second replaces the first rather than stacking under it, and
+     phase a fades out as phase b arrives, so the act resolves on
+     "And stayed." --go is the group's own fade, inherited by its rows. */ .gjaks .colstack { grid-area:1 / 1; width:100%; display:grid;
+              align-content:center; justify-items:center; text-align:center } .gjaks .cols .rowdrop p { font-size:clamp(28px,4.2vw,76px) }
+
+  /* 10 outline sweep */ .gjaks .sweep { background:var(--am-white); color:#0B0B0D } .gjaks .sweep .row { margin:0; font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
+                font-size:clamp(30px,4.4vw,74px); line-height:1; white-space:nowrap;
+                letter-spacing:.055em } .gjaks .sweep .row i { font-style:normal;
+                  color:var(--am-white);            /* the card's own ground */
+                  -webkit-text-stroke:3px #0B0B0D;
+                  paint-order:stroke fill;
+                  transition:color .18s linear, -webkit-text-stroke-color .18s linear } .gjaks .sweep .row i.lit { color:#0B0B0D; -webkit-text-stroke-color:transparent }
+
+  /* 11 close */ .gjaks .close { background:#F8F9FA; color:#0B0B0D; min-height:88svh;
+           display:grid; place-content:center; grid-template-columns:minmax(0,1fr);
+           justify-items:center; gap:22px; text-align:center; padding:12vh 0 } .gjaks .close .mark { width:92px; height:92px; display:block; margin-inline:auto; transition:transform .3s ease-out } .gjaks .close .mark:hover { transform:scale(1.07) } .gjaks .cta { display:inline-block; background:var(--sc-accent); color:#0B0B0D; text-decoration:none;
+         font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase; letter-spacing:.04em;
+         font-size:clamp(16px,1.7vw,21px); padding:20px 34px; min-height:44px;
+         transition:transform .2s ease-out } .gjaks .cta:hover { transform:translateY(-2px) } .gjaks .seo { max-width:72ch; margin:52px auto 0; font-size:15px; line-height:1.75; color:var(--am-grey); text-align:left }
+
+  /* 12 film */
+
+  /* fixed chrome */
+  /* Same reason as the button: the disc is Approach green and act 4 ends on a
+     green card, where it disappeared into the background. */
+  /* Its own ground, because the page runs black, blue, green AND white and a
+     fixed button inherits none of them. White-on-white is how it read on the
+     close before this. */
+
+  @media (max-width: 640px) {
+    /* Floors that can actually shrink. The old ones bottomed out at 48px,
+       so on a 390px screen the title stayed 48px whatever happened. */ .gjaks { --am-display:clamp(34px,11.5vw,72px); --am-head:clamp(30px,9.5vw,60px); --am-mono:clamp(13px,3.6vw,20px) } .gjaks .gj-mono { letter-spacing:.1em } .gjaks .widen { letter-spacing:calc(var(--sc-p, 0) * .05em) }
+    /* half the sideways travel: a full spread is wider than a phone */ .gjaks .spread i { transform:translateX(calc((var(--pi) - (var(--n) - 1) / 2) * (1 - min(1, var(--sc-p,0) / .5)) * 1vw)) } .gjaks .bar { height:30% } .gjaks .ticker p { font-size:clamp(28px,8vw,44px) }
+  }
+
+  @media (prefers-reduced-motion: reduce) { .gjaks .print i, .gjaks .reveal i { opacity:1 !important } .gjaks .cols [data-col="a"] { opacity:0 !important } .gjaks .rowdrop p { transform:none !important; opacity:var(--rowBase,1) !important } .gjaks .printer-dot { display:none } .gjaks .widen { letter-spacing:.06em } .gjaks .spread i { transform:none !important } .gjaks .ticker p { transform:none !important } .gjaks .bar { transform:scaleY(0) !important } .gjaks .sweep .row i { color:#0B0B0D; -webkit-text-stroke-color:transparent } .gjaks .cursor { animation:none }
+  }
+
+/* ── the close: questions, then the one action ───────────────
+   Replaces the standalone build's "Designed & executed by" block, which
+   said on Approach Media's own site what the header already says. The
+   single call to action stays, because the page still needs one. */
+/* An explicit colour, because a site-wide heading rule paints h2 white
+   and this one sits on the near-white close: it measured 1.02:1. */
+.gjaks .faq-title {
+  color:#0B0B0D;
+  font-size:clamp(30px,3.6vw,56px);
+  text-align:center;
+  margin:0 0 clamp(28px,4vw,52px);
+}
+/* .close centres everything; a column of answers this long must not be. */
+.gjaks .faq { max-width:72ch; margin:0 auto; display:grid; gap:0; text-align:left }
+.gjaks .faq-item {
+  padding:clamp(20px,2.4vw,28px) 0;
+  border-top:1px solid rgba(11,11,13,.14);
+}
+.gjaks .faq-item:last-child { border-bottom:1px solid rgba(11,11,13,.14) }
+.gjaks .faq-q {
+  font-family:var(--sc-font-display); font-weight:800;
+  font-size:clamp(17px,1.5vw,21px); line-height:1.3;
+  color:#0B0B0D; margin:0 0 10px;
+}
+.gjaks .faq-a {
+  margin:0; font-family:var(--sc-font-text); font-weight:400;
+  font-size:clamp(15px,1.15vw,17px); line-height:1.75; color:var(--am-grey);
+}
+.gjaks .faq-cta { margin:clamp(36px,4.5vw,56px) 0 0; text-align:center }
+.gjaks .faq-credit { margin:26px 0 0; text-align:center; color:var(--am-grey) }
+.gjaks .close .seo { margin-top:44px }
