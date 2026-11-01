@@ -6,13 +6,14 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
 import DealerMeetsFlow from '@/components/events/DealerMeetsFlow'
+import { Faq, type FaqItem } from '@/components/home/Faq'
 
 import '@/styles/scrollcraft-engine.css'
 import './dealer-meets.css'
 
-const TITLE = 'Dealer Meet Design & Event Setup in India'
+const TITLE = 'Dealer Meet Planning & Event Setup in India'
 const DESC =
-  'Approach Media designs and builds dealer meets end to end: concept, fabrication, installation and dismantling. See GJAKS Unveil 2026, the dealer meet launching MLUE Premium Lighting.'
+  'Approach Media plans and sets up dealer meets end to end: theme, crowd flow, staging, activities and awards. See GJAKS Unveil 2026, the dealer meet launching MLUE Premium Lighting.'
 
 /* The event's own poster frame, from R2, so the share card is a real
    photograph of the build rather than the site default. */
@@ -33,36 +34,47 @@ export const metadata: Metadata = {
 }
 
 /**
- * Every answer below is drawn from what this site already publishes or from
- * what Approach Media actually built at GJAKS Unveil 2026. Nothing about
- * lead times, pricing, team size or capacity appears here, because none of
- * that is established anywhere and inventing it would put a claim on the
- * site that nobody can stand behind.
+ * Event work only: management, crowd flow, theme, setup, activities and
+ * awards. Nothing here frames this as exhibition or expo work.
+ *
+ * The answers describe how the work is approached and point at what was
+ * actually delivered at GJAKS Unveil 2026. No lead times, headcounts,
+ * guest capacities or prices appear, because none of those are established
+ * anywhere and inventing them would put a claim on the site that nobody
+ * can stand behind.
  */
-const FAQ: { q: string; a: string }[] = [
+const FAQ: FaqItem[] = [
   {
-    q: 'What does Approach Media handle at a dealer meet?',
-    a: 'The whole build. At GJAKS Unveil 2026 that meant the product experience zone, the MLUE arch and lantern alcove, the product niche wall, the pendant-light wall, the MLUE Café, the display tables, the lit GJAKS panel wall and the GJAKS × MLUE photo-op installation, from first concept through fabrication, on-site installation and dismantling after the event.',
+    q: 'Do you run the event, or only build the set?',
+    a: 'Both. GJAKS Unveil 2026 came to us as a dealer meet that had to land a product launch, and we took it from the first concept through to dismantling: the theme, the layout of the evening, everything built into the room, the install, and the floor on the night.',
   },
   {
-    q: 'Do you design and fabricate in-house, or subcontract it?',
-    a: 'In-house. Fabrication happens in our own 30,000 sq ft workshop, and the structure is assembled and tested there as a full-scale mock-up before anything is packed for site, so problems are found in the workshop rather than on the floor the night before.',
+    q: 'How do you plan the way guests move through the evening?',
+    a: 'Flow is decided before anything is built. At GJAKS the arch and welcome standee set the entrance, the product experience zone carried people through in one direction, and the MLUE Café and the photo-op installation gave the room places to stop, so guests spread out instead of collecting in one spot.',
   },
   {
-    q: 'Is this the same team that builds your exhibition stalls?',
-    a: 'Yes. Approach Media has been designing and building exhibition stalls since 2002, more than 6000 of them, across India and 14+ countries, and around 500 exhibitions a year. Full-scale event setup is a newer service line, run by the same design and production teams and out of the same workshop.',
+    q: 'Who decides the theme?',
+    a: 'You bring the occasion and the brand; we build the theme around it and carry it through every surface in the room. For GJAKS the evening existed to put MLUE Premium Lighting in front of dealers, so the theme was the product itself: lit panel walls, a lantern alcove, niche walls and display tables, all lighting.',
   },
   {
-    q: 'What does the process look like from our side?',
-    a: 'Seven stages: consultation and brief planning; concept and spatial design; engineering and technical detailing; fabrication and build; full-scale mock-up testing; logistics, installation and on-site execution; then dismantling and post-event wrap-up.',
+    q: 'How do you make sure the room is ready in time?',
+    a: 'The set is built and assembled in our own 30,000 sq ft workshop first, and tested there at full scale before anything is packed. On-site work is then assembly rather than problem-solving, which is what keeps a tight venue window realistic.',
   },
   {
-    q: 'Where do you work?',
-    a: 'We are based in Ahmedabad and work across India, and have delivered in 14+ countries.',
+    q: 'Can you build in activities and engagement zones?',
+    a: 'Yes, and they are planned into the layout rather than added at the end. At GJAKS that meant the GJAKS × MLUE photo-op installation, the product experience zone where dealers could handle the fixtures themselves, and the MLUE Café as somewhere to sit and talk.',
+  },
+  {
+    q: 'Do you handle award ceremonies and on-stage moments?',
+    a: 'Yes. Stage, backdrop, lighting, reveal moments and the order of the evening are all part of the setup we take on.',
+  },
+  {
+    q: 'What kinds of events do you take on?',
+    a: 'Dealer meets, product launches, award nights, conferences and brand evenings: events where the room itself has to do some of the work. Dealer meets is the first of our event services to go live here, with more to follow.',
   },
   {
     q: 'How do we start a conversation?',
-    a: 'Tell us the event, the venue, the date and roughly what you want the room to do. Use the contact form, or WhatsApp +91 94269 12602.',
+    a: 'Tell us the date, the venue, roughly how many people, and what the evening is meant to achieve. Use the contact form, or WhatsApp +91 94269 12602.',
   },
 ]
 
@@ -75,9 +87,9 @@ export default function DealerMeetsPage() {
           '@type': 'Service',
           '@id': `${SITE_URL}/events/dealer-meets#service`,
           name: 'Dealer Meet Design and Event Setup',
-          serviceType: 'Dealer meet design, fabrication and event setup',
+          serviceType: 'Dealer meet planning, event setup and management',
           provider: { '@id': `${SITE_URL}#organization` },
-          areaServed: ['India', 'UAE', 'Singapore'],
+          areaServed: 'India',
           url: `${SITE_URL}/events/dealer-meets`,
           description: DESC,
         },
@@ -98,35 +110,31 @@ export default function DealerMeetsPage() {
 
       <DealerMeetsFlow />
 
+      <Faq
+        items={FAQ}
+        id="dealer-meet-faq"
+        heading="Dealer meets, answered."
+        intro="Still have questions about the evening? Our team will walk you through it."
+      />
+
       <div className="gjaks">
         <section className="close" aria-label="Dealer meet services, questions and answers">
           <div className="gj-wrap">
-            <h2 className="gj-h faq-title">Dealer meets, answered</h2>
-
-            <dl className="faq">
-              {FAQ.map(item => (
-                <div className="faq-item" key={item.q}>
-                  <dt className="faq-q">{item.q}</dt>
-                  <dd className="faq-a">{item.a}</dd>
-                </div>
-              ))}
-            </dl>
-
             <p className="faq-cta">
               <Link className="cta" href="/contact">Plan your next event</Link>
             </p>
 
             <p className="gj-mono gj-mono--sm faq-credit">
-              GJAKS Unveil 2026 · MLUE Premium Lighting by GJAKS · Exhibition &amp; event build by Approach Media
+              GJAKS Unveil 2026 · MLUE Premium Lighting by GJAKS · Event setup by Approach Media
             </p>
 
             <p className="seo">
-              Approach Media designed and executed the complete event experience for GJAKS Unveil 2026,
-              the dealer meet launching MLUE Premium Lighting by GJAKS: the product experience zone, MLUE
-              arch and lantern alcove, product niche wall, pendant-light wall, MLUE Café, display tables,
-              the lit GJAKS panel wall and the GJAKS × MLUE photo-op installation, from concept and
-              fabrication to on-site installation and dismantling. Exhibition stall design and
-              fabrication, Ahmedabad, since 2002.
+              Approach Media planned and set up the complete event experience for GJAKS Unveil 2026, the
+              dealer meet launching MLUE Premium Lighting by GJAKS: the theme, the product experience
+              zone, the MLUE arch and lantern alcove, the product niche wall, the pendant-light wall, the
+              MLUE Café, the display tables, the lit GJAKS panel wall and the GJAKS × MLUE photo-op
+              installation, from concept and build through on-site installation, the running of the
+              evening and dismantling. Event setup and management, Ahmedabad.
             </p>
           </div>
         </section>

@@ -11,22 +11,39 @@ export const faqs = [
   { q: 'How do we get started?', a: "Share your exhibition details with us and we'll guide you through the next steps, from concept to execution." },
 ]
 
-export function Faq() {
+export type FaqItem = { q: string; a: string }
+
+/**
+ * The site's one FAQ block. Defaults to the exhibition questions on the home
+ * page; other pages pass their own set and headings so every FAQ on the site
+ * is the same object, rather than each page growing its own accordion.
+ */
+export function Faq({
+  items = faqs,
+  heading = 'Answers before you ask.',
+  intro = 'Still have questions? Our team will walk you through the process.',
+  id = 'faq',
+}: {
+  items?: FaqItem[]
+  heading?: string
+  intro?: string
+  id?: string
+} = {}) {
   return (
-    <section className="bg-surface/40 py-20 md:py-28" id="faq">
+    <section className="bg-surface/40 py-20 md:py-28" id={id}>
       <div className="container-narrow grid gap-10 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">FAQs</p>
           <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-foreground md:text-4xl">
-            Answers before you ask.
+            {heading}
           </h2>
           <p className="mt-4 text-sm text-muted-foreground">
-            Still have questions? Our team will walk you through the process.
+            {intro}
           </p>
         </div>
         <div className="md:col-span-8">
           <Accordion type="single" collapsible className="border-t border-white/10">
-            {faqs.map((f, i) => (
+            {items.map((f, i) => (
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
