@@ -35,17 +35,17 @@
   .gj-mono--sm { font-size:clamp(11px,1.1vw,14px); letter-spacing:.2em }
   .on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6) }
 
-  /* A scrim for the band the type sits in, not for the whole frame.
-     Act 5 runs a tracking shot: lit panels, a cream floor and pale
-     jackets all travel under a line that is itself spreading sideways,
-     so the worst pixel under a letter measured 1.04:1 even though most
-     of the shot is a dark product wall. The gradient is weighted to the
-     left, where the lines are anchored, and has gone by 62% so the
-     right-hand half of the shot stays untouched; the mask feathers the
-     top and bottom edges so there is no visible rectangle. */
-  /* The spreading line crosses whatever the tracking shot happens to be
-     passing, so each letter carries its own ground: an offset shadow for
-     direction plus two tight blurs for separation. Not a zero-offset halo. */
+  /* The type in act 5 is anchored left over a moving tracking shot, so
+     the shot carries a left-weighted gradient the full height of the
+     stage. The previous version was a band inset inside the text column,
+     which read as a black rectangle floating in the middle of the frame
+     with hard edges. Full bleed, left to right, nothing to notice. */
+  .scrim-left::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(90deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.66) 28%,
+                                      rgba(0,0,0,.26) 52%, rgba(0,0,0,0) 74%);
+  }
+
   .spread.on-shot { text-shadow:0 2px 26px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.95), 0 0 14px rgba(0,0,0,.85) }
 
   .band-scrim { position:relative }
@@ -107,6 +107,11 @@
      rather than mid-word. */
   .print { position:relative; display:block; overflow-wrap:break-word }
   .print i { font-style:normal; opacity:clamp(0, calc(var(--sc-p, 0) * var(--n) - var(--pi)), 1) }
+  /* The colour cards were static: the line simply faded in as a block.
+     These letters read off --lp, the line's progress through its OWN cue
+     window rather than the whole act, so three cards cued one after
+     another each print left to right in their own turn. */
+  .reveal i { font-style:normal; opacity:clamp(0, calc(var(--lp, 0) * var(--n) - var(--pi)), 1) }
   /* The dot is placed from the MEASURED position of the letter being
      printed, not from a fraction of the line's width. Those two are only
      the same in a monospace font: in Inter a G is nearly twice a 1, so a
@@ -194,10 +199,14 @@
 
   /* 6 stack ticker */
   .ticker { position:absolute; inset:0; display:grid; align-content:center; gap:.02em; overflow:hidden }
+  /* Centred at rest, then the alternating rows pull apart left and
+     right as the act runs. They used to START 18vw apart, so the act
+     opened with the stack already shoved off the left edge. */
   .ticker p { margin:0; font-family:var(--sc-font-display); font-weight:800; text-transform:uppercase;
-              font-size:clamp(38px,5.6vw,92px); line-height:.98; white-space:nowrap }
-  .ticker p:nth-child(odd)  { transform:translateX(calc(-18vw + var(--sc-p,0) * 26vw)) }
-  .ticker p:nth-child(even) { transform:translateX(calc(18vw - var(--sc-p,0) * 26vw));
+              font-size:clamp(38px,5.6vw,92px); line-height:.98; white-space:nowrap;
+              text-align:center }
+  .ticker p:nth-child(odd)  { transform:translateX(calc(var(--sc-p,0) * -20vw)) }
+  .ticker p:nth-child(even) { transform:translateX(calc(var(--sc-p,0) * 20vw));
                               -webkit-text-stroke:2px var(--sc-ink); color:transparent }
   .ticker p:nth-child(5) { color:var(--sc-accent); -webkit-text-stroke:0 }
 
@@ -274,7 +283,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .print i, .cols p { opacity:1 !important }
+    .print i, .reveal i, .cols p { opacity:1 !important }
     .printer-dot { display:none }
     .widen { letter-spacing:.06em }
     .spread i { transform:none !important }
@@ -358,14 +367,14 @@
   <section data-sc-act="pin" data-sc-span="2.8" aria-label="We imagined it, we built it">
     <div data-sc-stage>
       <div class="gj-stage">
-        <div class="cardlayer card--blue"  data-sc-cue="0 0.38 0"><h2 class="gj-h gj-h--xl">We imagined <span class="fill2">it.</span></h2></div>
-        <div class="cardlayer card--white" data-sc-cue="0.34 0.68"><h2 class="gj-h gj-h--xl">We built <span class="fill2">it.</span></h2></div>
+        <div class="cardlayer card--blue"  data-sc-cue="0 0.38 0"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="We imagined it.">We imagined <span class="fill2">it.</span></h2></div>
+        <div class="cardlayer card--white" data-sc-cue="0.34 0.68"><h2 class="gj-h gj-h--xl reveal" data-reveal aria-label="We built it.">We built <span class="fill2">it.</span></h2></div>
         <div class="cardlayer card--green rowdrop" data-sc-cue="0.64 1 0.3 0">
-          <p class="gj-h">A premium lighting experience</p>
-          <p class="gj-h">A premium lighting experience</p>
-          <p class="gj-h">A premium lighting experience</p>
-          <p class="gj-h">A premium lighting experience</p>
-          <p class="gj-h">A premium lighting experience</p>
+          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
+          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
+          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
+          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
+          <p class="gj-h reveal" data-reveal aria-label="A premium lighting experience">A premium lighting experience</p>
         </div>
       </div>
     </div>
@@ -374,8 +383,8 @@
   <!-- 5 · EXPERIENCE ZONE · scrub · appetite -->
   <section data-sc-act="scrub" data-sc-span="2.6" data-sc-dwell="0.3" aria-label="Every fixture, every finish, every detail">
     <div data-sc-stage>
-      <figure class="shot-slot" data-shot="s13" data-cap="Long panel wall, tracking shot (scrubs under the type)" data-scrub="1" aria-hidden="true"></figure>
-      <div class="gj-wrap band-scrim" style="position:relative;z-index:4;display:grid;align-content:center;height:100%">
+      <figure class="shot-slot scrim-left" data-shot="s13" data-cap="Long panel wall, tracking shot (scrubs under the type)" data-scrub="1" aria-hidden="true"></figure>
+      <div class="gj-wrap" style="position:relative;z-index:4;display:grid;align-content:center;height:100%">
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0 0.34 0" aria-label="Every fixture.">Every fixture.</p>
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0.3 0.66" aria-label="Every finish.">Every finish.</p>
         <p class="gj-mono spread on-shot" data-spread data-sc-cue="0.62 1 0.3 0" aria-label="Every detail.">Every detail.</p>
@@ -655,10 +664,19 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
      than wrapping, and under that it is allowed to wrap again. */
   function fitOneLine(el) {
     const min = parseFloat(el.dataset.fit) || 12;
+    /* The dot is absolutely positioned inside this element and translated
+       to wherever it last printed, which counts toward scrollWidth. Once
+       it had travelled to the end of the line, scrollWidth read 7px wider
+       than the column forever, so every later refit shrank the type again
+       and the title collapsed from 121px to 37px. Measure without it. */
+    const dot = el.querySelector('.printer-dot');
+    const dotDisplay = dot ? dot.style.display : null;
+    if (dot) dot.style.display = 'none';
     el.style.whiteSpace = 'nowrap';
     el.style.fontSize = '';
     const avail = el.parentElement && el.parentElement.clientWidth;
-    if (!avail) return;
+    if (!avail) { if (dot) dot.style.display = dotDisplay; return; }
+    const restore = () => { if (dot) dot.style.display = dotDisplay; };
     let fs = parseFloat(getComputedStyle(el).fontSize);
     for (let i = 0; i < 40 && el.scrollWidth > avail; i++) {
       const next = fs * Math.min(0.97, avail / el.scrollWidth);
@@ -667,6 +685,57 @@ const IS_STILL = /\.(jpe?g|png|webp|avif)(\?|$)/i;
     }
     /* still too wide at the floor: wrapping beats illegible */
     if (el.scrollWidth > avail + 1) el.style.whiteSpace = '';
+    restore();
+  }
+
+  /* ── left-to-right reveal on the colour cards ────────────────
+     Splits only the text, so a nested span such as the dimmed "it."
+     survives. Each line reads --lp, its progress through its own cue
+     window, and finishes inside the first 70% of that window so the
+     finished line is readable for the rest of it. */
+  function splitDeep(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const texts = []; let t;
+    while ((t = walker.nextNode())) texts.push(t);
+    let i = 0;
+    texts.forEach(node => {
+      const frag = document.createDocumentFragment();
+      [...node.textContent].forEach(ch => {
+        const g = document.createElement('i');
+        g.textContent = ch;
+        g.style.setProperty('--pi', i++);
+        g.setAttribute('aria-hidden', 'true');
+        frag.appendChild(g);
+      });
+      node.replaceWith(frag);
+    });
+    el.style.setProperty('--n', i);
+    return i;
+  }
+
+  const revealed = [...document.querySelectorAll('[data-reveal]')].map(el => {
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim());
+    splitDeep(el);
+    const cueEl = el.closest('[data-sc-cue]');
+    const nums = (cueEl ? cueEl.getAttribute('data-sc-cue') : '0 1').trim().split(/\s+/).map(Number);
+    const from = isFinite(nums[0]) ? nums[0] : 0;
+    const to   = isFinite(nums[1]) ? nums[1] : 1;
+    return { el, act: el.closest('[data-sc-act]'), from, to };
+  });
+
+  if (revealed.length && !reduced) {
+    const run = () => {
+      revealed.forEach(r => {
+        const p = r.act ? parseFloat(getComputedStyle(r.act).getPropertyValue('--sc-p')) || 0 : 0;
+        const span = Math.max(0.001, (r.to - r.from) * 0.7);
+        const lp = Math.max(0, Math.min(1, (p - r.from) / span));
+        r.el.style.setProperty('--lp', lp.toFixed(4));
+      });
+      requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
+  } else {
+    revealed.forEach(r => r.el.style.setProperty('--lp', '1'));
   }
 
   const fitted = [...document.querySelectorAll('[data-fit]')];
