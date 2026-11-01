@@ -258,3 +258,25 @@
   margin: 0;
   flex-shrink: 0;
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .plate figcaption { font-size: 0.875rem; }  /* was 9.92px */
+  .cs__eyebrow { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__facts h2 { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__meta dt { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__sub { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__num { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__summary p:first-child { font-size: 0.875rem; }  /* was 10.88px */
+  .cs__tag { font-size: 0.875rem; }  /* was 11.2px */
+  .cs__fact dt { font-size: 0.875rem; }  /* was 11.2px */
+  .cs__cell p:last-child { font-size: 0.875rem; }  /* was 11.52px */
+  .cs__crumbs a, .cs__crumbs li { font-size: 0.875rem; }  /* was 12.48px */
+  .cs__chip { font-size: 0.875rem; }  /* was 12.48px */
+  .cs__tallyrow span { font-size: 0.875rem; }  /* was 12.48px */
+  .cs__count { font-size: 0.875rem; }  /* was 12.8px */
+}

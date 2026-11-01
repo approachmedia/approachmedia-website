@@ -175,7 +175,7 @@ export default function WorkWithUsPage() {
             {INDUSTRIES.map((ind, i) => (
               <div key={i} className={`animate-in delay-${(i % 4) + 1}`} style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '10px', padding: '18px', display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <span style={{ fontSize: '1.4rem' }}>{ind.icon}</span>
-                <span style={{ fontSize: '0.85rem', color: 'hsl(0 0% 88%)', fontWeight: 500, lineHeight: 1.4 }}>{ind.label}</span>
+                <span className="text-sm" style={{ color: 'hsl(0 0% 88%)', fontWeight: 500, lineHeight: 1.4 }}>{ind.label}</span>
               </div>
             ))}
           </div>
@@ -200,11 +200,11 @@ export default function WorkWithUsPage() {
                 style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '10px', padding: '18px', display: 'block', textDecoration: 'none' }}
                 className="expo-card-link"
               >
-                <div style={{ fontSize: '0.7rem', color: 'hsl(230 70% 65%)', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+                <div className="text-xs" style={{ color: 'hsl(230 70% 65%)', fontWeight: 600, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
                   {expo.monthName} {expo.year} · {expo.city}
                 </div>
                 <div style={{ color: 'hsl(0 0% 92%)', fontSize: '0.92rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '6px' }}>{expo.title}</div>
-                <div style={{ color: 'hsl(220 10% 55%)', fontSize: '0.78rem' }}>{expo.venue}</div>
+                <div className="text-xs" style={{ color: 'hsl(220 10% 55%)' }}>{expo.venue}</div>
               </Link>
             ))}
           </div>
@@ -228,7 +228,7 @@ export default function WorkWithUsPage() {
               const target = cityPageFor(city)
               const chip: React.CSSProperties = {
                 background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)',
-                borderRadius: '8px', padding: '10px 14px', fontSize: '0.85rem',
+                borderRadius: '8px', padding: '10px 14px',
                 color: 'hsl(0 0% 82%)', textAlign: 'center', display: 'block',
               }
               return target ? (
@@ -237,7 +237,7 @@ export default function WorkWithUsPage() {
                   href={target.path}
                   title={`Exhibition stall design in ${city}`}
                   style={{ ...chip, textDecoration: 'none' }}
-                  className="city-chip"
+                  className="city-chip text-sm"
                 >
                   {city}
                 </Link>

@@ -573,3 +573,54 @@ h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700;
 @media (max-width: 600px) {
   .portfolio-placeholder-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .media-tag { font-size: 0.875rem; }  /* was 9.92px */
+  .hero-scroll span { font-size: 0.875rem; }  /* was 10.88px */
+  .eyebrow-pill { font-size: 0.875rem; }  /* was 10.88px */
+  .portfolio-tag { font-size: 0.875rem; }  /* was 11.2px */
+  .ex-month { font-size: 0.875rem; }  /* was 11.2px */
+  .wh-step-num { font-size: 0.875rem; }  /* was 11.2px */
+  .srv-card-number { font-size: 0.875rem; }  /* was 11.2px */
+  .hero-video-notice { font-size: 0.875rem; }  /* was 11.52px */
+  .ex-year { font-size: 0.875rem; }  /* was 11.52px */
+  .ex-industry { font-size: 0.875rem; }  /* was 11.52px */
+  .page-hero-eyebrow { font-size: 0.875rem; }  /* was 11.52px */
+  .mini-stat-label { font-size: 0.875rem; }  /* was 11.52px */
+  .media-frame .media-hint { font-size: 0.875rem; }  /* was 11.52px */
+  .section-label { font-size: 0.875rem; }  /* was 12px */
+  .client-logo-item { font-size: 0.875rem; }  /* was 12px */
+  .about-block h4 { font-size: 0.875rem; }  /* was 12px */
+  .vm-card h4 { font-size: 0.875rem; }  /* was 12px */
+  .stat-label { font-size: 0.875rem; }  /* was 12.48px */
+  .service-card p { font-size: 0.875rem; }  /* was 12.48px */
+  .tag { font-size: 0.875rem; }  /* was 12.48px */
+  .testimonial-company { font-size: 0.875rem; }  /* was 12.48px */
+  .footer-col h5 { font-size: 0.875rem; }  /* was 12.48px */
+  .intro-img-placeholder { font-size: 0.875rem; }  /* was 12.48px */
+  .ssb-label { font-size: 0.875rem; }  /* was 12.48px */
+  .portfolio-card-img .img-placeholder { font-size: 0.875rem; }  /* was 12.8px */
+  .page-hero-breadcrumb { font-size: 0.875rem; }  /* was 12.8px */
+  .btn-xs { font-size: 0.875rem; }  /* was 13.12px */
+  .clients-intro h2 { font-size: 0.875rem; }  /* was 13.12px */
+  .service-card-link { font-size: 0.875rem; }  /* was 13.12px */
+  .process-step p { font-size: 0.875rem; }  /* was 13.12px */
+  .portfolio-card-meta { font-size: 0.875rem; }  /* was 13.12px */
+  .footer-bottom p { font-size: 0.875rem; }  /* was 13.12px */
+  .footer-bottom-links a { font-size: 0.875rem; }  /* was 13.12px */
+  .ex-cta { font-size: 0.875rem; }  /* was 13.28px */
+  .approach-step-4 p { font-size: 0.875rem; }  /* was 13.28px */
+  .about-services-note { font-size: 0.875rem; }  /* was 13.6px */
+  .exhibition-details p { font-size: 0.875rem; }  /* was 13.6px */
+  .social-link { font-size: 0.875rem; }  /* was 13.6px */
+  .features-list li span { font-size: 0.875rem; }  /* was 13.6px */
+  .why-service-card p { font-size: 0.875rem; }  /* was 13.6px */
+  .wh-step p { font-size: 0.875rem; }  /* was 13.6px */
+  .feature-check-card .check { font-size: 0.875rem; }  /* was 13.6px */
+  .why4-card p { font-size: 0.875rem; }  /* was 13.6px */
+}

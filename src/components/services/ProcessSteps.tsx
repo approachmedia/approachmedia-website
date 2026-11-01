@@ -116,7 +116,7 @@ function StepDetail({ step }: { step: ProcessStep }) {
       </div>
 
       <ExpandCardBody className="p-6 md:p-8">
-        <p id={`process-panel-copy-${step.num}`} className="text-[15px] leading-relaxed text-foreground/85">
+        <p id={`process-panel-copy-${step.num}`} className="text-base md:text-[15px] leading-relaxed text-foreground/85">
           {step.copy}
         </p>
       </ExpandCardBody>

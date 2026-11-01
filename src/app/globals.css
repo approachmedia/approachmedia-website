@@ -353,3 +353,54 @@ html { scrollbar-width: thin; scrollbar-color: hsl(222 12% 32%) transparent; }
     animation: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile reading floor
+
+   The site is built on Tailwind's default type scale, which puts
+   body copy at 14px (text-sm) and a great deal of real content at
+   12px (text-xs). Measured on a 390px viewport across the home,
+   about, services, contact and work-with-us pages, 272 runs of
+   body-length text rendered below 16px against 168 at or above it.
+   At arm's length on a phone that is not comfortable reading.
+
+   Mobile guidance across both platforms lands in the same place:
+   around 16px for body copy, never below 14px for secondary text,
+   short all-caps labels the only thing that may go smaller, and at
+   least 16px for form fields because iOS zooms the page when a
+   focused field is smaller than that.
+
+   These rules lift the scale below the md breakpoint only, so the
+   desktop layout is untouched. Line heights are restated because
+   Tailwind couples them to the size, and keeping the old ones would
+   leave the larger text cramped.
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .text-xs   { font-size: 0.875rem;  line-height: 1.5; }   /* 12 -> 14 */
+  .text-sm   { font-size: 1rem;      line-height: 1.6; }   /* 14 -> 16 */
+  .text-base { font-size: 1.0625rem; line-height: 1.65; }  /* 16 -> 17 */
+
+  /* Anything a thumb has to hit clears the 44px minimum. */
+  nav a, nav button { min-height: 44px; display: flex; align-items: center; }
+
+  /* A focused field below 16px makes iOS zoom the whole page. */
+  input, select, textarea { font-size: 16px; }
+
+  /* The hand-written stylesheets predate the scale above and set their
+     own sizes in rem, several of them around 11 to 13px. These are the
+     ones carrying real reading content rather than a short label.
+     Each is prefixed with html so it outranks the route stylesheet that
+     declares it: those load after this file, so at equal specificity the
+     original would win and these rules would silently do nothing. */
+  html .af-process li p     { font-size: 1rem; line-height: 1.65; }  /* 14.7 -> 16 */
+  html .af-tally__big small { font-size: 0.875rem; }                 /* 12.8 -> 14 */
+  html .af-tally__label     { font-size: 0.875rem; }
+  html .stat-label          { font-size: 0.875rem; }                 /* 12.5 -> 14 */
+  html .mini-stat-label     { font-size: 0.875rem; }
+  html .btn                 { font-size: 1rem; }                     /* 15.2 -> 16 */
+  html .nav-cta .btn        { font-size: 1rem; }
+  /* These inherit a small size from a parent rather than declaring one,
+     so the generated floors in the other stylesheets never caught them. */
+  html .expo-card-link div  { font-size: 0.875rem; }
+  html .city-chip           { font-size: 0.875rem; }
+}

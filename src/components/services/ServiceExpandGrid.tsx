@@ -197,7 +197,7 @@ function ServiceDetail({ service }: { service: ServiceCard }) {
         </ExpandCardShared>
 
         <ExpandCardShared part="summary" as="div" layout="position" className="mt-3">
-          <p id={`service-panel-summary-${service.slug}`} className="text-[15px] leading-relaxed text-foreground/90">
+          <p id={`service-panel-summary-${service.slug}`} className="text-base md:text-[15px] leading-relaxed text-foreground/90">
             {service.summary}
           </p>
         </ExpandCardShared>

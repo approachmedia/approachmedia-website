@@ -213,3 +213,14 @@
 .gjaks .faq-cta { margin:0; text-align:center }
 .gjaks .faq-credit { margin:26px 0 0; text-align:center; color:var(--am-grey) }
 .gjaks .close .seo { margin-top:44px }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .gjaks .gj-mono--sm { font-size: 0.875rem; }  /* was 11px */
+  .gjaks .plate b { font-size: 0.875rem; }  /* was 12px */
+  .gjaks .plate span { font-size: 0.875rem; }  /* was 12px */
+}

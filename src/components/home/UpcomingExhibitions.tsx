@@ -62,7 +62,7 @@ export function UpcomingExhibitions() {
                     <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground md:text-sm">
                       <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {e.venue}</span>
                       <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {e.monthName} {e.year}</span>
-                      <span className="rounded-full border border-border/70 px-2 py-0.5 text-[11px] uppercase tracking-wider">
+                      <span className="rounded-full border border-border/70 px-2 py-0.5 text-xs uppercase tracking-wider">
                         {e.industryLabel.split(',')[0]}
                       </span>
                     </div>

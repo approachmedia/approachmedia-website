@@ -77,3 +77,15 @@
   .wwd__bg::before, .wwd__bg::after, .wwd h2 .g > span { animation: none; }
   .wwd .eyebrow, .wwd h2 .w > span, .wwd .sub, .wwd .panel, .wwd .lists { transition: none; }
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .wwd .list__title { font-size: 0.875rem; }  /* was 12px */
+  .wwd .eyebrow { font-size: 0.875rem; }  /* was 13px */
+  .wwd .tip a { font-size: 0.875rem; }  /* was 13px */
+  .wwd .legend { font-size: 0.875rem; }  /* was 13px */
+}

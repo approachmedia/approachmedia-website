@@ -184,3 +184,13 @@
   .af-wall figure { opacity: 1; transform: none; }
   .af-wall::after { background: rgba(10,13,20,0.6); }
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .af-tally__row span.af-lbl { font-size: 0.875rem; }  /* was 11.52px */
+  .af-close__media figcaption { font-size: 0.875rem; }  /* was 12px */
+}

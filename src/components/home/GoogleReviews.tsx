@@ -131,7 +131,7 @@ export async function GoogleReviews() {
                 <p className="text-sm font-medium text-foreground">{r.authorAttribution?.displayName ?? 'Google user'}</p>
                 <div className="mt-0.5 flex items-center gap-2">
                   <Stars n={r.rating} className="h-3 w-3" />
-                  <span className="text-[11px] text-muted-foreground">{r.relativePublishTimeDescription}</span>
+                  <span className="text-xs text-muted-foreground">{r.relativePublishTimeDescription}</span>
                 </div>
               </div>
             </div>

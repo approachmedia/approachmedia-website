@@ -177,7 +177,7 @@ export default function LpLeadForm({
           {loading ? 'Sending…' : button}
         </button>
 
-        <p className="text-[11px] leading-relaxed text-muted-foreground/80">{consent}</p>
+        <p className="text-xs leading-relaxed text-muted-foreground/80">{consent}</p>
       </form>
 
       <p className="mt-4 text-center text-xs text-muted-foreground">

@@ -109,3 +109,12 @@
   .wf-panel video { opacity: 0; }
   .wf-panel { background: var(--sc-surface) url('/services-flow/award-winning-stall-design-and-fabrication-agency-03-poster.webp') center / cover; }
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .wf-list p { font-size: 0.875rem; }  /* was 12.8px */
+}

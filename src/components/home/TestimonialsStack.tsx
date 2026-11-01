@@ -49,7 +49,7 @@ export function TestimonialsStack({ testimonials, cdn }: { testimonials: Testimo
                   />
                 </div>
 
-                <blockquote className="mt-5 flex-1 text-[15px] leading-relaxed text-foreground/90">
+                <blockquote className="mt-5 flex-1 text-base md:text-[15px] leading-relaxed text-foreground/90">
                   {`“${t.quote}”`}
                 </blockquote>
 

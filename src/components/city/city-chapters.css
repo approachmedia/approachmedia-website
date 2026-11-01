@@ -288,3 +288,25 @@
   .cty [data-sc-pan] > * { scroll-snap-align: center; }
   .ps [style*="animation"] { animation: none !important; }
 }
+
+/* Mobile reading floor (generated)
+   Every selector below declared type under 14px, which is the floor
+   for secondary text on a phone. Raised here rather than at the
+   original declaration so the desktop sizes stay exactly as they
+   were, and appended to this file so it outranks them on order. */
+@media (max-width: 767px) {
+  .cty-venue__badge { font-size: 0.875rem; }  /* was 9.92px */
+  .cty-venue__specs dt { font-size: 0.875rem; }  /* was 10.24px */
+  .cty-venue__lbl { font-size: 0.875rem; }  /* was 10.56px */
+  .cty-plate__cap b { font-size: 0.875rem; }  /* was 10.88px */
+  .cty-folio { font-size: 0.875rem; }  /* was 11.2px */
+  .cty-eyebrow { font-size: 0.875rem; }  /* was 11.2px */
+  .cty-title__city { font-size: 0.875rem; }  /* was 11.2px */
+  .cty-rail__tag { font-size: 0.875rem; }  /* was 11.2px */
+  .cty-note__n { font-size: 0.875rem; }  /* was 11.52px */
+  .cty-title__pills li { font-size: 0.875rem; }  /* was 12.8px */
+  .cty-plate__cap { font-size: 0.875rem; }  /* was 12.8px */
+  .cty-venue__addr { font-size: 0.875rem; }  /* was 12.8px */
+  .cty-rail__item p { font-size: 0.875rem; }  /* was 13.6px */
+  .cty-venue li { font-size: 0.875rem; }  /* was 13.76px */
+}
