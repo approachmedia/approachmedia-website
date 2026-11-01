@@ -40,6 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`,             lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/contact`,           lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE_URL}/work-with-us`,      lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE_URL}/events/dealer-meets`, lastModified: BUILD_TIME, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/expos`,             lastModified: BUILD_TIME, changeFrequency: 'weekly',  priority: 0.8 },
     { url: `${SITE_URL}/tradeshow-calendar`, lastModified: BUILD_TIME, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE_URL}/privacy-policy`,    lastModified: BUILD_TIME, changeFrequency: 'yearly',  priority: 0.3 },
