@@ -1,10 +1,11 @@
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { INDUSTRY_PAGES } from '@/content/industries'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
+import { getProjectsForIndustries } from '@/lib/db/portfolio'
+import { IndustriesVibe, type IndustryCard, type IndustryShot } from '@/components/industries/IndustriesVibe'
+import './industries-vibe.css'
 
 /**
  * The Industries hub.
@@ -13,7 +14,74 @@ import { socialImage } from '@/lib/seo/social-image'
  * which stays what it already is: a filtered, browsable project collection.
  * The brief's README asks for exactly that split, and each page here links
  * down into its filter page rather than replacing it.
+ *
+ * The page itself is IndustriesVibe, a motion-led layout. This file supplies
+ * its photographs, all of them ones the site already publishes:
+ *
+ *  · a cover per industry from the sixteen industry photographs on R2, the
+ *    set the home page's orbit wheel already shows. Two sectors have no
+ *    photograph in that set (Automotive & Components, Industrial
+ *    Automation) and take the hero of their newest published project
+ *    instead; with none, the card renders typographically.
+ *  · up to three real project heroes per sector, which the card cycles
+ *    through on hover and the process filmstrip runs.
+ *
+ * The database is optional here: if it cannot be reached the page still
+ * renders every word and every R2 cover, and only the project photographs
+ * are missing until the next revalidation.
  */
+
+export const revalidate = 3600
+
+const COVERS = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
+
+/** Industry page slug to its photograph in the R2 industries set. */
+const COVER_FILE: Record<string, string> = {
+  'real-estate':                     'exhibition-stall-design-real-estate.jpg',
+  'pharmaceuticals':                 'exhibition-stall-design-pharma.jpg',
+  'healthcare-medical-devices':      'exhibition-stall-design-healthcare.jpg',
+  'machinery-engineering':           'exhibition-stall-design-machinery.jpg',
+  'food-beverage-fmcg':              'exhibition-stall-design-fmcg.jpg',
+  'textiles-apparel':                'exhibition-stall-design-garment.jpg',
+  'solar-renewable-energy':          'exhibition-stall-design-renewable-energy.jpg',
+  'water-treatment':                 'exhibition-stall-design-water-industry.jpg',
+  'plastics':                        'exhibition-stall-design-plastic.jpg',
+  'printing-packaging':              'exhibition-stall-design-printing-packaging.jpg',
+  'architecture-building-materials': 'exhibition-stall-design-doors-windows.jpg',
+  'cosmetics-personal-care':         'exhibition-stall-design-cosmetics.jpg',
+  'electrical-lighting':             'exhibition-stall-design-lighting.jpg',
+  'pumps-valves-gears':              'exhibition-stall-design-valves-pumps-gears.jpg',
+}
+
+async function loadCards(): Promise<{ cards: IndustryCard[]; strip: IndustryShot[] }> {
+  const projects = await Promise.all(
+    INDUSTRY_PAGES.map(i => getProjectsForIndustries(i.sourceSlugs, 3).catch(() => [])),
+  )
+
+  const cards = INDUSTRY_PAGES.map((i, n): IndustryCard => {
+    const shots: IndustryShot[] = projects[n]
+      .map(p => p.media[0])
+      .filter(m => !!m?.url)
+      .map(m => ({ src: m!.url, alt: m!.altText }))
+    const file = COVER_FILE[i.slug]
+    const cover = file
+      ? { src: `${COVERS}/${file}`, alt: `${i.name} exhibition stall design` }
+      : shots[0] ?? null
+    return { name: i.name, slug: i.slug, tagline: i.tagline, cover, shots }
+  })
+
+  // One photograph per sector first, then the rest, so the filmstrip mixes
+  // industries instead of running three of the same sector in a row.
+  const seen = new Set<string>()
+  const strip: IndustryShot[] = []
+  for (let round = 0; round < 3; round++) {
+    for (const c of cards) {
+      const s = c.shots[round]
+      if (s && !seen.has(s.src)) { seen.add(s.src); strip.push(s) }
+    }
+  }
+  return { cards, strip: strip.slice(0, 14) }
+}
 
 export const metadata = {
   title: { absolute: 'Exhibition Stall Design by Industry | Approach Media' },
@@ -28,95 +96,15 @@ export const metadata = {
   twitter: socialImage().twitter,
 }
 
-export default function IndustriesHub() {
+export default async function IndustriesHub() {
+  const { cards, strip } = await loadCards()
   return (
     <main>
       <JsonLd graph={[
         organizationNode(),
         breadcrumb([{ name: 'Home', path: '/' }, { name: 'Industries', path: '/industries' }]),
       ]} />
-
-      {/* ── Hero ── */}
-      <section className="border-b border-white/10">
-        <div className="container-wide py-20 md:py-28">
-          <p className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-brand-green">Industries</p>
-          <h1 className="max-w-4xl font-display text-4xl font-black leading-[1.05] text-white md:text-6xl">
-            Exhibition Stall Design for Your Industry
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg font-semibold text-white/90">
-            Spaces shaped around what you sell and who you want to meet.
-          </p>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300">
-            A property buyer, an engineer and a retail distributor arrive at an exhibition with
-            different questions. Your stall should help answer them. Approach Media designs and
-            builds exhibition spaces around your products, audience and business objectives.
-          </p>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-300">
-            Explore your industry to see relevant work, understand the display possibilities and
-            start planning your next exhibition.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link href="#find-your-industry" className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
-              Explore Industries
-            </Link>
-            <Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
-              Request a Proposal
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── The sixteen ── */}
-      <section id="find-your-industry" className="border-b border-white/10 scroll-mt-28">
-        <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">Find Your Industry</h2>
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {INDUSTRY_PAGES.map(i => (
-              <li key={i.slug}>
-                <Link
-                  href={`/industries/${i.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border border-white/12 bg-surface/40 p-6 transition hover:border-brand-green/50 hover:bg-white/[0.05]"
-                >
-                  <h3 className="font-display text-lg font-semibold text-white">{i.name}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">{i.tagline}</p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
-                    Explore {i.name}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ── Process ── */}
-      <section className="border-b border-white/10">
-        <div className="container-wide py-16 md:py-24">
-          <h2 className="max-w-3xl font-display text-2xl font-bold text-white md:text-3xl">
-            From Industry Brief to Exhibition Space
-          </h2>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">
-            We bring concept design, fabrication and on-site execution into one coordinated
-            process. Your products, stall dimensions and exhibition requirements guide the layout,
-            while your brand shapes the look and feel.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Close ── */}
-      <section>
-        <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">Planning an Exhibition?</h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300">
-            Tell us where you are exhibiting and what you want visitors to experience. We will help
-            turn your brief into a practical exhibition-space plan.
-          </p>
-          <Link href="/contact" className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
-            Discuss Your Exhibition
-          </Link>
-        </div>
-      </section>
+      <IndustriesVibe cards={cards} strip={strip} />
     </main>
   )
 }
