@@ -1,6 +1,17 @@
 'use client'
+
+/**
+ * The portfolio's filters. Used many times a visit, so they do not animate
+ * in or stagger (choreography rule: no entrance motion on high-frequency
+ * UI); they only answer the pointer with a colour change and a press.
+ *
+ * On a phone each group is one swipeable row instead of a wall of forty
+ * wrapped chips, and the active chip is scrolled into view on load so a
+ * filter page opens showing what is selected.
+ */
+
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useEffect, useRef } from 'react'
 
 interface FilterBarProps {
   industries: { name: string; slug: string }[]
@@ -10,48 +21,41 @@ interface FilterBarProps {
 }
 
 export default function FilterBar({ industries, stallTypes, activeIndustry, activeType }: FilterBarProps) {
+  const root = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    root.current?.querySelectorAll<HTMLElement>('[aria-current="page"]').forEach(el => {
+      const row = el.parentElement
+      if (row && row.scrollWidth > row.clientWidth) {
+        row.scrollLeft = el.offsetLeft - row.clientWidth / 2 + el.clientWidth / 2
+      }
+    })
+  }, [])
+
+  const chip = (href: string, label: string, active: boolean, tone: 'green' | 'blue') => (
+    <Link
+      key={href}
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={`pfx-chipf ${active ? `is-active is-${tone}` : ''}`}
+    >
+      {label}
+    </Link>
+  )
+
   return (
-    <div className="space-y-4">
-      {/* Industry filters */}
+    <div ref={root} className="pfx-filters">
       <div>
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Industry</p>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/portfolio" className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
-            !activeIndustry && !activeType ? 'bg-blue-600 border-blue-500 text-white' : 'bg-slate-800 border-slate-600 text-slate-400 hover:text-white hover:border-slate-500'
-          }`}>All</Link>
-          {industries.map(ind => (
-            <Link
-              key={ind.slug}
-              href={`/portfolio/industry/${ind.slug}`}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
-                activeIndustry === ind.slug
-                  ? 'bg-green-600/80 border-green-500 text-white'
-                  : 'bg-slate-800 border-slate-600 text-slate-400 hover:text-white hover:border-slate-500'
-              }`}
-            >
-              {ind.name}
-            </Link>
-          ))}
+        <p className="pfx-label">Industry</p>
+        <div className="pfx-chiprow">
+          {chip('/portfolio', 'All', !activeIndustry && !activeType, 'blue')}
+          {industries.map(ind => chip(`/portfolio/industry/${ind.slug}`, ind.name, activeIndustry === ind.slug, 'green'))}
         </div>
       </div>
-
-      {/* Stall type filters */}
       <div>
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Stall Type</p>
-        <div className="flex flex-wrap gap-2">
-          {stallTypes.map(t => (
-            <Link
-              key={t.slug}
-              href={`/portfolio/type/${t.slug}`}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${
-                activeType === t.slug
-                  ? 'bg-blue-600/80 border-blue-500 text-white'
-                  : 'bg-slate-800 border-slate-600 text-slate-400 hover:text-white hover:border-slate-500'
-              }`}
-            >
-              {t.name}
-            </Link>
-          ))}
+        <p className="pfx-label">Stall Type</p>
+        <div className="pfx-chiprow">
+          {stallTypes.map(t => chip(`/portfolio/type/${t.slug}`, t.name, activeType === t.slug, 'blue'))}
         </div>
       </div>
     </div>

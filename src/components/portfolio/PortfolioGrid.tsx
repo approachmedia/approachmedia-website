@@ -1,16 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { ProjectCardData } from './ProjectCard'
+import GridMotion from './motion/GridMotion'
 
 /**
- * Portfolio index grid — the same editorial, staggered treatment as the
- * homepage "Featured Works" section: two columns, the right one starting
- * lower, with the ratio alternating down each column so the cards
- * interlock rather than lining up.
+ * Portfolio index grid: two staggered columns, the right one starting lower,
+ * with the ratio alternating down each column so the cards interlock. Below
+ * md it collapses to a single stack.
  *
- * Projects alternate left/right in order, so the newest work sits at the
- * top of both columns. Below md it collapses to a single stack, where
- * staggering would just read as broken spacing.
+ * The markup is server-rendered; GridMotion adds the reveal, the photograph
+ * parallax, the column shear and the cursor chip (see that file).
  */
 
 // Ratio cycles per column, matching FeaturedWorks on the homepage.
@@ -22,20 +21,20 @@ export default function PortfolioGrid({ projects }: { projects: ProjectCardData[
   const rightCards = projects.filter((_, i) => i % 2 === 1)
 
   return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
-      {/* Each column staggers its own objects in, so the two columns arrive
-          out of step with each other the way they already sit out of step. */}
-      <div className="flex flex-col gap-y-14" data-sc-stagger>
-        {leftCards.map((p, i) => (
-          <GridCard key={p.id} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
-        ))}
+    <GridMotion>
+      <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
+        <div className="flex flex-col gap-y-14">
+          {leftCards.map((p, i) => (
+            <GridCard key={p.id} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
+          ))}
+        </div>
+        <div className="flex flex-col gap-y-14 md:pt-28" data-shear>
+          {rightCards.map((p, i) => (
+            <GridCard key={p.id} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
+          ))}
+        </div>
       </div>
-      <div className="flex flex-col gap-y-14 md:pt-28" data-sc-stagger>
-        {rightCards.map((p, i) => (
-          <GridCard key={p.id} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
-        ))}
-      </div>
-    </div>
+    </GridMotion>
   )
 }
 
@@ -45,15 +44,15 @@ function GridCard({ project, ratio }: { project: ProjectCardData; ratio: string 
   const primaryType     = project.stallTypes.find(t => t.isPrimary)?.stallType
 
   return (
-    <Link href={`/portfolio/${project.slug}`} className="group block" data-sc-in>
-      <div className={`relative ${ratio} overflow-hidden rounded-md border border-white/10 bg-surface`}>
+    <Link href={`/portfolio/${project.slug}`} className="pfx-card group block">
+      <div className={`pfx-media relative ${ratio} overflow-hidden rounded-lg bg-surface`}>
         {hero ? (
           <Image
             src={hero.cdnUrl ?? hero.url}
             alt={hero.altText}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
@@ -62,35 +61,37 @@ function GridCard({ project, ratio }: { project: ProjectCardData; ratio: string 
         )}
 
         {project.isFeatured && (
-          <span className="absolute left-3 top-3 rounded-full border border-yellow-400/30 bg-yellow-400/10 px-2.5 py-1 text-xs font-semibold text-yellow-400 backdrop-blur">
+          <span className="pfx-badge absolute left-3 top-3 rounded-full border border-yellow-400/30 bg-black/50 px-2.5 py-1 text-xs font-semibold text-yellow-400 backdrop-blur">
             Featured
           </span>
         )}
         {primaryType && (
-          <span className="absolute right-3 top-3 rounded-full border border-slate-600 bg-slate-900/80 px-2.5 py-1 text-xs text-slate-300 backdrop-blur">
+          <span className="pfx-badge absolute right-3 top-3 rounded-full border border-white/15 bg-black/55 px-2.5 py-1 text-xs text-slate-200 backdrop-blur">
             {primaryType.name}
           </span>
         )}
       </div>
 
-      <p className="mt-5 flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-brand-green">
-        <span className="truncate">
-          <span className="mr-2">•</span>
-          {primaryIndustry?.name || 'Exhibition Design'}
-        </span>
-        {project.buildYear && (
-          <span className="shrink-0 font-normal tracking-normal text-slate-500">{project.buildYear}</span>
-        )}
-      </p>
+      <div className="pfx-card-copy">
+        <p className="mt-5 flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-brand-green">
+          <span className="truncate">
+            <span className="mr-2">•</span>
+            {primaryIndustry?.name || 'Exhibition Design'}
+          </span>
+          {project.buildYear && (
+            <span className="shrink-0 font-normal tracking-normal text-slate-500">{project.buildYear}</span>
+          )}
+        </p>
 
-      <h3 className="mt-2 line-clamp-2 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-brand-green-glow md:text-3xl">
-        {project.title}
-      </h3>
+        <h3 className="mt-2 line-clamp-2 font-display text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+          <span className="pfx-underline">{project.title}</span>
+        </h3>
 
-      <div className="mt-3 flex items-center gap-3 text-xs text-slate-400">
-        {project.stallAreaSqm && <span>{Number(project.stallAreaSqm)} sqm</span>}
-        {project.floors > 1 && <span>{project.floors} floors</span>}
-        {project.client && <span className="truncate">{project.client.name}</span>}
+        <div className="mt-3 flex items-center gap-3 text-xs text-slate-400">
+          {project.stallAreaSqm && <span>{Number(project.stallAreaSqm)} sqm</span>}
+          {project.floors > 1 && <span>{project.floors} floors</span>}
+          {project.client && <span className="truncate">{project.client.name}</span>}
+        </div>
       </div>
     </Link>
   )

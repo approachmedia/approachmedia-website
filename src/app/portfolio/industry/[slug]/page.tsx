@@ -4,6 +4,9 @@ import { prisma } from '@/lib/db/prisma'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
+import PortfolioHero from '@/components/portfolio/motion/PortfolioHero'
+import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
+import { heroPhotos } from '@/components/portfolio/motion/heroPhotos'
 
 import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
@@ -31,34 +34,39 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
   if (!industry) notFound()
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-16 space-y-12">
-      <header className="max-w-2xl">
-        <p className="text-xs font-bold text-green-400 uppercase tracking-widest mb-3">Portfolio — {industry.name}</p>
-        <h1 className="text-4xl font-display font-bold text-white mb-4">
-          {industry.name} Exhibition Stands
-        </h1>
-        <p className="text-slate-400">
+    <main className="pfx pb-24">
+      <ScrollProgress />
+      <PortfolioHero
+        eyebrow={`Portfolio — ${industry.name}`}
+        lines={[{ text: industry.name, accent: true }, { text: 'Exhibition Stands' }]}
+        photos={heroPhotos(projects)}
+      >
+        <p>
           {projects.length} project{projects.length !== 1 ? 's' : ''} in the {industry.name} sector.
         </p>
-      </header>
+      </PortfolioHero>
 
-      <FilterBar industries={industries} stallTypes={stallTypes} activeIndustry={slug} />
+      <div className="pfx-wrap mt-16">
+        <FilterBar industries={industries} stallTypes={stallTypes} activeIndustry={slug} />
+      </div>
 
-      {projects.length > 0 ? (
-        <PortfolioGrid projects={projects} />
-      ) : (
-        <p className="text-slate-500 text-center py-20">No published projects for this industry yet.</p>
-      )}
-      <p className="text-sm leading-relaxed text-slate-400">
-        Planning a stand in this sector? See our{' '}
-        <Link href="/services/exhibition-stall-design" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
-          {industry.name.toLowerCase()} exhibition stall design
-        </Link>{' '}
-        service, or browse{' '}
-        <Link href="/portfolio" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
-          every stall we have built
-        </Link>.
-      </p>
+      <section className="pfx-wrap mt-20">
+        {projects.length > 0 ? (
+          <PortfolioGrid projects={projects} />
+        ) : (
+          <p className="text-slate-500 text-center py-20">No published projects for this industry yet.</p>
+        )}
+        <p className="mt-20 text-sm leading-relaxed text-slate-400">
+          Planning a stand in this sector? See our{' '}
+          <Link href="/services/exhibition-stall-design" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
+            {industry.name.toLowerCase()} exhibition stall design
+          </Link>{' '}
+          service, or browse{' '}
+          <Link href="/portfolio" className="text-brand-green underline underline-offset-4 hover:text-brand-green-glow">
+            every stall we have built
+          </Link>.
+        </p>
+      </section>
     </main>
   )
 }

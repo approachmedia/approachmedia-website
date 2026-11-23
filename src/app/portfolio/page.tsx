@@ -6,7 +6,10 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
-import IndexFlow from '@/components/portfolio/IndexFlow'
+import PortfolioHero from '@/components/portfolio/motion/PortfolioHero'
+import FeaturedRail from '@/components/portfolio/motion/FeaturedRail'
+import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
+import { heroPhotos, railItems } from '@/components/portfolio/motion/heroPhotos'
 
 import { SITE_URL } from '@/lib/site-url'
 import { socialImage } from '@/lib/seo/social-image'
@@ -54,36 +57,37 @@ export default async function PortfolioIndexPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Project index ── */}
-      <IndexFlow>
+      <ScrollProgress />
 
-        {/* Header */}
-        <header className="max-w-3xl" data-sc-act="flow">
-          <p className="text-xs font-bold text-green-400 uppercase tracking-[0.3em] mb-3" data-sc-in>Project Index</p>
-          <h1 className="text-4xl md:text-6xl font-display font-black uppercase text-white leading-none mb-5" data-sc-in>
-            Every Stall.<br />
-            <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">Every Story.</span>
-          </h1>
-          <p className="text-slate-400 text-lg" data-sc-in>
+      {/* ── Project index ──
+           Hero with scroll-linked photo bands, the filters, featured work on
+           a pinned sideways rail, the full grid, and the close. Motion lives
+           in components/portfolio/motion; copy is unchanged. */}
+      <main className="pfx pb-24">
+
+        <PortfolioHero
+          eyebrow="Project Index"
+          lines={[{ text: 'Every Stall.' }, { text: 'Every Story.', accent: true }]}
+          photos={heroPhotos(projects)}
+        >
+          <p>
             {projects.length}+ projects built across India — from minimalist 9 sqm inline stands to 300 sqm double-decker pavilions.
           </p>
-        </header>
+        </PortfolioHero>
 
-        {/* Filter bar */}
-        <FilterBar industries={industries} stallTypes={stallTypes} />
+        <div className="pfx-wrap mt-16">
+          <FilterBar industries={industries} stallTypes={stallTypes} />
+        </div>
 
-        {/* Featured projects */}
         {featured.length > 0 && (
-          <section data-sc-act="flow">
-            <h2 className="text-sm font-bold text-yellow-400 uppercase tracking-widest mb-6" data-sc-in>Featured Projects</h2>
-            <PortfolioGrid projects={featured} />
-          </section>
+          <div className="mt-20">
+            <FeaturedRail heading="Featured Projects" items={railItems(featured)} />
+          </div>
         )}
 
-        {/* All projects */}
-        <section data-sc-act="flow">
+        <section className="pfx-wrap mt-20">
           {featured.length > 0 && (
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">All Projects</h2>
+            <h2 className="pfx-label mb-8">All Projects</h2>
           )}
           {rest.length > 0 ? (
             <PortfolioGrid projects={rest} />
@@ -93,27 +97,26 @@ export default async function PortfolioIndexPage() {
         </section>
 
         {/* ── CTA ── */}
-        <section data-sc-act="flow" className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-slate-900 via-slate-950 to-black px-8 py-16 text-center md:py-24">
-          <div
-            className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rotate-12 border-2 border-blue-500/20"
-            style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
-          />
-          <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full border-2 border-green-500/20" />
-          <h2 className="mx-auto max-w-2xl font-display text-3xl font-black uppercase leading-tight text-white md:text-5xl">
-            Plan Your Next Exhibition Stall
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-slate-400">
-            Tell us your event, your space and your goals — we&apos;ll design a stand that makes the aisle stop walking.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-10 inline-block rounded-full bg-gradient-to-r from-blue-500 to-green-500 px-10 py-4 text-sm font-bold uppercase tracking-widest text-white transition hover:opacity-90"
-          >
-            Book A Consultation
-          </Link>
+        <section className="pfx-wrap mt-28">
+          <div className="pfx-close">
+            <div className="pfx-close-inner px-8 py-16 text-center md:py-24">
+              <h2 className="mx-auto max-w-2xl font-display text-3xl font-black uppercase leading-tight text-white md:text-5xl">
+                Plan Your Next Exhibition Stall
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-slate-400">
+                Tell us your event, your space and your goals — we&apos;ll design a stand that makes the aisle stop walking.
+              </p>
+              <Link
+                href="/contact"
+                className="pfx-btn mt-10 inline-block rounded-full bg-gradient-to-r from-blue-500 to-green-500 px-10 py-4 text-sm font-bold uppercase tracking-widest text-white"
+              >
+                Book A Consultation
+              </Link>
+            </div>
+          </div>
         </section>
 
-      </IndexFlow>
+      </main>
     </>
   )
 }

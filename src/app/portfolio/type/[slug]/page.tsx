@@ -3,6 +3,9 @@ import { prisma } from '@/lib/db/prisma'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
+import PortfolioHero from '@/components/portfolio/motion/PortfolioHero'
+import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
+import { heroPhotos } from '@/components/portfolio/motion/heroPhotos'
 
 import { SITE_URL } from '@/lib/site-url'
 export const dynamic = 'force-dynamic'
@@ -30,24 +33,28 @@ export default async function StallTypePage({ params }: { params: Promise<{ slug
   if (!stallType) notFound()
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-16 space-y-12">
-      <header className="max-w-2xl">
-        <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Portfolio — {stallType.name}</p>
-        <h1 className="text-4xl font-display font-bold text-white mb-4">
-          {stallType.name} Projects
-        </h1>
-        {stallType.description && (
-          <p className="text-slate-400">{stallType.description}</p>
+    <main className="pfx pb-24">
+      <ScrollProgress />
+      <PortfolioHero
+        eyebrow={`Portfolio — ${stallType.name}`}
+        tone="blue"
+        lines={[{ text: stallType.name, accent: true }, { text: 'Projects' }]}
+        photos={heroPhotos(projects)}
+      >
+        {stallType.description && <p>{stallType.description}</p>}
+      </PortfolioHero>
+
+      <div className="pfx-wrap mt-16">
+        <FilterBar industries={industries} stallTypes={stallTypes} activeType={slug} />
+      </div>
+
+      <section className="pfx-wrap mt-20">
+        {projects.length > 0 ? (
+          <PortfolioGrid projects={projects} />
+        ) : (
+          <p className="text-slate-500 text-center py-20">No published projects for this stall type yet.</p>
         )}
-      </header>
-
-      <FilterBar industries={industries} stallTypes={stallTypes} activeType={slug} />
-
-      {projects.length > 0 ? (
-        <PortfolioGrid projects={projects} />
-      ) : (
-        <p className="text-slate-500 text-center py-20">No published projects for this stall type yet.</p>
-      )}
+      </section>
     </main>
   )
 }

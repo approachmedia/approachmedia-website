@@ -3,6 +3,7 @@ import { getProjectBySlug, getAdjacentProjects } from '@/lib/db/portfolio'
 import { generateProjectSchema, generateProjectMetadata } from '@/lib/seo/schema-generator'
 import ProjectDetail from '@/components/portfolio/ProjectDetail'
 import ProjectNav from '@/components/portfolio/ProjectNav'
+import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
 
 // ── ISR — rebuild each project page every 24 hours ────────────
 // On-demand revalidation via: fetch('/api/revalidate?slug=...')
@@ -50,6 +51,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <ScrollProgress />
       <ProjectDetail project={project} />
       <ProjectNav prev={prev} next={next} />
     </>
