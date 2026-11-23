@@ -31,11 +31,23 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
   const { scrollY } = useScroll()
   const imageY = useTransform(scrollY, [0, 900], ['0%', '12%'])
   const linesY = useTransform(scrollY, [0, 900], ['0%', '-6%'])
+  // As the page leaves the hero, the full-bleed photograph draws in to a
+  // rounded frame, so the page below appears to slide over a picture that is
+  // stepping back. Transform and clip only; tracks scroll directly.
+  const frameScale  = useTransform(scrollY, [0, 700], [1, 0.93])
+  const frameRadius = useTransform(scrollY, [0, 700], [0, 28])
 
-  const corner = 'absolute z-20 text-[10px] font-bold uppercase tracking-[0.25em] text-white/80 md:text-xs'
+  // The two bottom labels sit in a flex row, so they must not be absolutely
+  // positioned: with `absolute` on them both landed on the same spot and
+  // printed over each other.
+  const label  = 'z-20 text-[10px] font-bold uppercase tracking-[0.25em] text-white/80 md:text-xs'
+  const corner = `absolute ${label}`
 
   return (
-    <section className="relative flex h-[90vh] min-h-[540px] items-center justify-center overflow-hidden bg-black">
+    <motion.section
+      style={prefersReduced ? undefined : { scale: frameScale, borderRadius: frameRadius, transformOrigin: '50% 100%' }}
+      className="relative flex h-[90vh] min-h-[540px] items-center justify-center overflow-hidden bg-black"
+    >
 
       {/* Image — slow settle on load, gentle parallax on scroll */}
       <motion.div
@@ -75,8 +87,8 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
       {year     && <p className={`${corner} left-5 top-6 md:left-10 md:top-9`}>Year: {year}</p>}
       {category && <p className={`${corner} right-5 top-6 text-right md:right-10 md:top-9`}>{category}</p>}
       <div className="absolute bottom-6 left-5 right-5 z-20 flex flex-col gap-1.5 md:bottom-9 md:left-10 md:right-10 md:flex-row md:items-end md:justify-between md:gap-6">
-        {client   && <p className={`${corner} static`}>Client: {client}</p>}
-        {services && <p className={`${corner} static md:max-w-[46%] md:text-right`}>{services}</p>}
+        {client   && <p className={label}>Client: {client}</p>}
+        {services && <p className={`${label} md:max-w-[46%] md:text-right`}>{services}</p>}
       </div>
 
       {/* Centered name */}
@@ -91,6 +103,6 @@ export default function CaseStudyHero({ title, image, imageAlt, year, category, 
 
       {/* No scroll cue. The reader is looking at a photograph of a stand at
           full frame; they know the page continues. */}
-    </section>
+    </motion.section>
   )
 }

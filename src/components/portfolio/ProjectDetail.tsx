@@ -2,8 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import CaseStudyHero from './CaseStudyHero'
-import BrandMark from './BrandMark'
-import { EditorialPlate } from './Plate'
+import StoryChapters from './StoryChapters'
+import ScrollLit from './ScrollLit'
 import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
 import CaseStudyFlow from './CaseStudyFlow'
 import { CASE_STUDY_BY_PROJECT } from '@/lib/case-study-posts'
@@ -39,7 +39,7 @@ function FactRow({ label, value }: { label: string; value: string | number }) {
 
 function ServiceCard({ label }: { label: string }) {
   return (
-    <div className="cs__card" data-sc-in>
+    <div className="cs__card">
       <i aria-hidden="true" />
       <span>{label}</span>
     </div>
@@ -48,7 +48,7 @@ function ServiceCard({ label }: { label: string }) {
 
 function NarrativeBlock({ num, heading, body }: { num: string; heading: string; body: string }) {
   return (
-    <div className="cs__block" data-sc-in>
+    <div className="cs__block">
       <div className="cs__blockhead">
         <span className="cs__num">{num}</span>
         <h3>{heading}</h3>
@@ -225,146 +225,97 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </div>
         </section>
 
-        {/* ── PLATE 1: offset right, drifting up ── */}
-        {editorialImgs[0] && (
-          <section data-sc-act="flow">
-            <div className="cs__wrap cs__wrap--wide">
-              <div className="cs__split cs__offset" style={{ gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 2.2fr)', gap: '24px', alignItems: 'end' }}>
-                <p className="cs__eyebrow" data-sc-in>
-                  {String(project.buildYear ?? '')} {ex?.name ? `· ${ex.name}` : ''}
-                </p>
-                <EditorialPlate
-                  src={editorialImgs[0].cdnUrl ?? editorialImgs[0].url}
-                  alt={editorialImgs[0].altText}
-                  caption={editorialImgs[0].caption}
-                  ratio="16 / 9"
-                  rate={1}
-                />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── THE BRIEF: wipes up at the chapter boundary ── */}
-        <section className="cs__brief" data-sc-act="flow">
-          <div aria-hidden className="cs__mark">
-            <BrandMark className="h-full w-full" stroke="hsl(222 18% 22%)" strokeWidth={0.8} />
-          </div>
-          <div className="cs__wrap" style={{ position: 'relative' }}>
-            <div className="cs__rail">
-              <div className="cs__railhead">
-                <span className="cs__eyebrow">Context</span>
-              </div>
-              <div data-sc-reveal="up">
-                <h2 className="cs__h2" style={{ marginBottom: '20px' }}>The Brief</h2>
-                <div className="cs__stack">
-                  {(challengePara || contextPara) && (
-                    <p className="cs__body">{challengePara || contextPara}</p>
-                  )}
-                  {ex && (
-                    <dl className="cs__meta">
-                      <div>
-                        <dt>Exhibition</dt>
-                        <dd>{ex.name}</dd>
+        {/* ── THE STORY: a photograph holds in a sticky frame while the brief,
+               the delivery and the case study scroll past it; the frame
+               crossfades to the next photograph chapter by chapter. ── */}
+        <section className="cs__story">
+          <div className="cs__wrap cs__wrap--wide">
+            <StoryChapters
+              images={editorialImgs.map(m => ({ src: m.cdnUrl ?? m.url, alt: m.altText }))}
+              chapters={[
+                {
+                  id: 'brief',
+                  content: (
+                    <>
+                      <span className="cs__eyebrow">Context</span>
+                      <h2 className="cs__h2 story__h">The Brief</h2>
+                      <div className="cs__stack">
+                        {(challengePara || contextPara) && (
+                          <p className="cs__body">{challengePara || contextPara}</p>
+                        )}
+                        {ex && (
+                          <dl className="cs__meta">
+                            <div>
+                              <dt>Exhibition</dt>
+                              <dd>{ex.name}</dd>
+                            </div>
+                            {ex.venueName && (
+                              <div>
+                                <dt>Venue</dt>
+                                <dd>{ex.venueName}</dd>
+                              </div>
+                            )}
+                            {ex.city && (
+                              <div>
+                                <dt>Location</dt>
+                                <dd>{[ex.city, ex.state, ex.country].filter(Boolean).join(', ')}</dd>
+                              </div>
+                            )}
+                          </dl>
+                        )}
                       </div>
-                      {ex.venueName && (
-                        <div>
-                          <dt>Venue</dt>
-                          <dd>{ex.venueName}</dd>
+                    </>
+                  ),
+                },
+                {
+                  id: 'delivered',
+                  content: (
+                    <>
+                      <span className="cs__eyebrow">Services</span>
+                      <h2 className="cs__h2 story__h">What We Delivered</h2>
+                      <div className="cs__cards">
+                        {servicesList.map((s, i) => <ServiceCard key={i} label={s} />)}
+                      </div>
+                      {materials.length > 0 && (
+                        <div style={{ marginTop: '28px' }}>
+                          <p className="cs__sub">Materials Used</p>
+                          <div className="cs__chips">
+                            {materials.map((m, i) => (
+                              <span key={i} className="cs__chip">{m}</span>
+                            ))}
+                          </div>
                         </div>
                       )}
-                      {ex.city && (
-                        <div>
-                          <dt>Location</dt>
-                          <dd>{[ex.city, ex.state, ex.country].filter(Boolean).join(', ')}</dd>
-                        </div>
-                      )}
-                    </dl>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── PLATE 2: full bleed, drifting the other way ── */}
-        {editorialImgs[1] && (
-          <section data-sc-act="flow">
-            <div className="cs__bleed">
-              <EditorialPlate
-                src={editorialImgs[1].cdnUrl ?? editorialImgs[1].url}
-                alt={editorialImgs[1].altText}
-                ratio="21 / 9"
-                rate={-1}
-                className="plate--bleed"
-              />
-            </div>
-          </section>
-        )}
-
-        {/* ── WHAT WE DELIVERED: the list arrives row by row ── */}
-        <section data-sc-act="flow">
-          <div className="cs__wrap">
-            <div className="cs__rail">
-              <div className="cs__railhead">
-                <span className="cs__eyebrow">Services</span>
-              </div>
-              <div>
-                <h2 className="cs__h2" style={{ marginBottom: '28px' }} data-sc-in>What We Delivered</h2>
-                <div className="cs__cards" data-sc-stagger>
-                  {servicesList.map((s, i) => <ServiceCard key={i} label={s} />)}
-                </div>
-                {materials.length > 0 && (
-                  <div style={{ marginTop: '28px' }} data-sc-in>
-                    <p className="cs__sub">Materials Used</p>
-                    <div className="cs__chips">
-                      {materials.map((m, i) => (
-                        <span key={i} className="cs__chip">{m}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── PLATE 3: centred, drifting up ── */}
-        {editorialImgs[2] && (
-          <section data-sc-act="flow">
-            <div className="cs__wrap cs__wrap--wide">
-              <EditorialPlate
-                src={editorialImgs[2].cdnUrl ?? editorialImgs[2].url}
-                alt={editorialImgs[2].altText}
-                caption={editorialImgs[2].caption}
-                ratio="16 / 9"
-                rate={1}
-              />
-            </div>
-          </section>
-        )}
-
-        {/* ── CASE STUDY: the quiet section before the gallery ── */}
-        <section data-sc-act="flow">
-          <div className="cs__wrap">
-            <p className="cs__eyebrow" style={{ marginBottom: '48px' }} data-sc-in>Case Study</p>
-            <div className="cs__blocks" data-sc-stagger>
-              <NarrativeBlock
-                num="01"
-                heading="The Challenge"
-                body={challengePara || `${project.client?.name ?? 'The client'} needed a stall that balanced strong brand visibility with a structured visitor experience — turning footfall into focused business conversations in a competitive exhibition environment.`}
-              />
-              <NarrativeBlock
-                num="02"
-                heading="What We Designed"
-                body={designPara || `We developed a custom stall concept centred on clear visitor flow, structured product display, and a dedicated consultation zone — all within a premium finish that communicated brand quality at first glance.`}
-              />
-              <NarrativeBlock
-                num="03"
-                heading="Why It Worked"
-                body={outcomePara || `The design balanced visual impact with practical usability. Every spatial decision — entrance positioning, display height, meeting alcoves — was made with the visitor journey and conversion in mind.`}
-              />
-            </div>
+                    </>
+                  ),
+                },
+                {
+                  id: 'case-study',
+                  content: (
+                    <>
+                      <p className="cs__eyebrow">Case Study</p>
+                      <div className="cs__blocks story__blocks">
+                        <NarrativeBlock
+                          num="01"
+                          heading="The Challenge"
+                          body={challengePara || `${project.client?.name ?? 'The client'} needed a stall that balanced strong brand visibility with a structured visitor experience — turning footfall into focused business conversations in a competitive exhibition environment.`}
+                        />
+                        <NarrativeBlock
+                          num="02"
+                          heading="What We Designed"
+                          body={designPara || `We developed a custom stall concept centred on clear visitor flow, structured product display, and a dedicated consultation zone — all within a premium finish that communicated brand quality at first glance.`}
+                        />
+                        <NarrativeBlock
+                          num="03"
+                          heading="Why It Worked"
+                          body={outcomePara || `The design balanced visual impact with practical usability. Every spatial decision — entrance positioning, display height, meeting alcoves — was made with the visitor journey and conversion in mind.`}
+                        />
+                      </div>
+                    </>
+                  ),
+                },
+              ]}
+            />
           </div>
         </section>
 
@@ -421,7 +372,7 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           {project.aiSummary && (
             <div className="cs__summary" data-sc-in>
               <p>Project Summary</p>
-              <p>{project.aiSummary}</p>
+              <ScrollLit text={project.aiSummary} />
             </div>
           )}
         </div>

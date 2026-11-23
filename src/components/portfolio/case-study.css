@@ -280,3 +280,52 @@
   .cs__tallyrow span { font-size: 0.875rem; }  /* was 12.48px */
   .cs__count { font-size: 0.875rem; }  /* was 12.8px */
 }
+
+/* ── the story: sticky photograph, scrolling chapters ─────────────
+   Easing is the strong ease-out for anything entering; only transform
+   and opacity move. Hover motion is gated to real pointers. */
+.cs { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+
+.story { display: grid; grid-template-columns: minmax(0, 1.15fr) 2px minmax(0, 1fr); gap: 0 44px; align-items: start; }
+.story--solo { grid-template-columns: 2px minmax(0, 760px); }
+
+.story__stick { position: sticky; top: calc(var(--hdr) + 24px); height: calc(100vh - var(--hdr) - 48px); display: flex; align-items: center; }
+.story__frame { position: relative; width: 100%; aspect-ratio: 4 / 3; max-height: 100%; overflow: hidden; border-radius: 18px; background: var(--card); box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgb(0 0 0 / 0.8); }
+.story__frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity 500ms var(--ease-out), transform 900ms var(--ease-out);
+}
+.story__frame img.is-on { opacity: 1; transform: scale(1); }
+
+.story__rail { position: sticky; top: calc(var(--hdr) + 24px); height: calc(100vh - var(--hdr) - 48px); background: var(--line); border-radius: 2px; overflow: hidden; }
+.story__rail i { display: block; width: 100%; height: 100%; background: linear-gradient(180deg, var(--green), var(--blue)); transform-origin: 50% 0; }
+
+.story__chapter { min-height: 82vh; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; border-bottom: 0 !important; opacity: 0.32; transition: opacity 300ms var(--ease-out); }
+.story__chapter.is-on { opacity: 1; }
+.story__h { margin: 12px 0 20px; }
+.story__blocks { grid-template-columns: 1fr; gap: 36px; margin-top: 28px; }
+.story__inline { display: none; }
+
+/* a fact row and a service card answer the pointer, quietly */
+@media (hover: hover) and (pointer: fine) {
+  .cs__card { transition: transform 200ms var(--ease-out), border-color 200ms ease; }
+  .cs__card:hover { transform: translateY(-2px); border-color: hsl(110 55% 50% / 0.45); }
+  .cs__btn { transition: transform 160ms var(--ease-out); }
+  .cs__btn:hover { transform: translateY(-2px); }
+}
+.cs__btn:active { transform: scale(0.97); }
+
+.story--still .story__chapter { opacity: 1; }
+.story--still .story__frame img { transform: none; transition: opacity 300ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .story__chapter { opacity: 1; }
+  .story__frame img { transform: none; transition: opacity 300ms ease; }
+}
+
+@media (max-width: 900px) {
+  .story, .story--solo { display: block; }
+  .story__stick, .story__rail { display: none; }
+  .story__chapter { min-height: 0; opacity: 1; padding: 36px 0; }
+  .story__inline { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 14px; margin-bottom: 28px; }
+}
