@@ -329,3 +329,7 @@
   .story__chapter { min-height: 0; opacity: 1; padding: 36px 0; }
   .story__inline { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 14px; margin-bottom: 28px; }
 }
+
+/* ── gallery: the portal carousel stage ── */
+.cs__portal { height: calc(100svh - var(--hdr)); min-height: 480px; }
+@media (max-width: 900px) { .cs__portal { height: 72svh; min-height: 420px; } }

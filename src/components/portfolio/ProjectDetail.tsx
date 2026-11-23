@@ -4,7 +4,8 @@ import type { ProjectWithRelations } from '@/lib/seo/schema-generator'
 import CaseStudyHero from './CaseStudyHero'
 import StoryChapters from './StoryChapters'
 import ScrollLit from './ScrollLit'
-import ParallaxGallery, { type GalleryItem } from './ParallaxGallery'
+import PortalCarousel from '@/components/ui/portal-carousel'
+import type { GalleryItem } from './ParallaxGallery'
 import CaseStudyFlow from './CaseStudyFlow'
 import { CASE_STUDY_BY_PROJECT } from '@/lib/case-study-posts'
 import { getPostBySlug } from '@/lib/blog'
@@ -319,36 +320,41 @@ export default function ProjectDetail({ project }: { project: ProjectWithRelatio
           </div>
         </section>
 
-        {/* ── GALLERY: the owner's original showcase, restored ──
-             This was briefly a pinned contact sheet that developed frame by
-             frame. The owner compared the two on the live site and preferred
-             this one, so the panning rows are back exactly as they were: a
-             sticky band of two rows travelling in opposite directions on
-             desktop, a plain full-width stack on a phone, lightbox on click. */}
+        {/* ── GALLERY: the portal carousel ──
+             One photograph fills the stage. A small preview of the next one
+             follows the cursor (or parks bottom-right on a touch screen), and
+             a click or tap grows it out to fill the stage. This replaces the
+             two panning rows at the owner's request; ParallaxGallery.tsx is
+             kept in the repo in case the rows are wanted back. */}
         {remainingItems.length > 0 && (
           <section>
-            <div className="cs__wrap cs__wrap--gallery">
-              <div className="cs__ghead">
+            <div className="cs__wrap cs__wrap--gallery" style={{ paddingBottom: 36 }}>
+              <div className="cs__ghead" style={{ marginBottom: 0 }}>
                 <div>
                   <span className="cs__eyebrow">Gallery</span>
                   <h2>Inside the Build</h2>
                 </div>
                 <span className="cs__count">
-                  {remainingItems.length} {remainingItems.length === 1 ? 'image' : 'images'} · click to enlarge
+                  {remainingItems.length} {remainingItems.length === 1 ? 'image' : 'images'}
                 </span>
               </div>
+            </div>
 
-              <ParallaxGallery items={remainingItems} />
+            <PortalCarousel
+              className="cs__portal"
+              images={remainingItems.map(m => ({ src: m.src, alt: m.alt }))}
+            />
 
-              {floorPlan && (
+            {floorPlan && (
+              <div className="cs__wrap cs__wrap--gallery" style={{ paddingTop: 0 }}>
                 <div className="cs__plan">
                   <p className="cs__sub">Floor Plan</p>
                   <figure className="cs__planfig">
                     <Image src={floorPlan.cdnUrl ?? floorPlan.url} alt={floorPlan.altText} fill sizes="640px" style={{ objectFit: 'contain', padding: '16px' }} />
                   </figure>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </section>
         )}
 
