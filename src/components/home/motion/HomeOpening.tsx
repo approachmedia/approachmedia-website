@@ -58,7 +58,7 @@ export default function HomeOpening() {
     v.muted = true
     v.play().catch(finish)
 
-    const onTime = () => { if (v.duration && v.currentTime >= v.duration - 1.1) finish() }
+    const onTime = () => { if (v.duration && v.currentTime >= v.duration - 0.6) finish() }
     const stall = window.setTimeout(() => { if (v.currentTime === 0) finish() }, 4000)
     const skip = () => finish()
     const onKey = (e: KeyboardEvent) => { if (e.key !== 'Tab') finish() }
