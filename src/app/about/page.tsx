@@ -14,7 +14,10 @@ import { getPublishedProjects } from '@/lib/db/portfolio'
 
 // Hourly, so the polaroids pick up projects (the database is not reachable
 // while the image is built, which would otherwise freeze the page empty).
-export const revalidate = 3600
+// force-dynamic, like the home page: these photographs come from the
+// database, which the Docker build cannot reach, so a prerendered page was
+// baked with them missing (blank cards) until it revalidated.
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design Company in India Since 2002" },

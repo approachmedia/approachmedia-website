@@ -32,7 +32,10 @@ import './industries-vibe.css'
  * are missing until the next revalidation.
  */
 
-export const revalidate = 3600
+// force-dynamic, like the home page: these photographs come from the
+// database, which the Docker build cannot reach, so a prerendered page was
+// baked with them missing (blank cards) until it revalidated.
+export const dynamic = 'force-dynamic'
 
 const COVERS = INDUSTRY_COVER_CDN
 const COVER_FILE = INDUSTRY_COVER_FILE

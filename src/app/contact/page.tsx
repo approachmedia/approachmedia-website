@@ -15,7 +15,10 @@ import { getPublishedProjects } from '@/lib/db/portfolio'
 
 // Hourly, so the image trail picks up project photographs (the database is
 // not reachable while the image is built).
-export const revalidate = 3600
+// force-dynamic, like the home page: these photographs come from the
+// database, which the Docker build cannot reach, so a prerendered page was
+// baked with them missing (blank cards) until it revalidated.
+export const dynamic = 'force-dynamic'
 
 async function trailPhotos() {
   try {
