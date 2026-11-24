@@ -11,10 +11,10 @@
  * gesture rather than a blank. Back/forward skip the cover and only play the
  * uncover, so history navigation never waits.
  *
- * The first visit of a session also gets a short intro: the panel starts in
- * place (set before paint by an inline script, see IntroScript) and lifts
- * after the wordmark has drawn in. Without JavaScript neither runs, because
- * the panel is only visible under classes the scripts add.
+ * The first visit of a session also gets an intro (see Intro below), shown
+ * by classes an inline script sets before paint (see IntroScript). Without
+ * JavaScript neither runs, because both layers are only visible under
+ * classes the scripts add.
  *
  * Only plain left-clicks on same-origin links to a different path are taken
  * over; new tabs, downloads, hash jumps, modifier keys, external links and
@@ -30,10 +30,52 @@ const SAFETY_MS = 4000
 export function IntroScript() {
   // Runs before first paint, and drives the whole intro on its own timers so
   // it never waits on the JavaScript bundle: a slow connection gets the same
-  // 1.9s intro as a fast one. Skipped on the admin and the ad landing pages,
-  // which have no panel, and under reduced motion.
-  const js = `try{var p=location.pathname;if(!/^\\/(admin|lp|thank-you)/.test(p)&&!sessionStorage.getItem('am-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){sessionStorage.setItem('am-intro','1');var h=document.documentElement;h.classList.add('am-intro');setTimeout(function(){h.classList.add('am-intro-out')},1100);setTimeout(function(){h.classList.remove('am-intro','am-intro-out')},1950)}}catch(e){}`
+  // intro as a fast one. A click, tap or key press opens the curtain at once.
+  // Skipped on the admin and the ad landing pages, which have no intro, and
+  // under reduced motion.
+  const js = `try{var p=location.pathname;if(!/^\\/(admin|lp|thank-you)/.test(p)&&!sessionStorage.getItem('am-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){sessionStorage.setItem('am-intro','1');var h=document.documentElement,a,b,done=0;h.classList.add('am-intro');var out=function(){if(done)return;done=1;clearTimeout(a);h.classList.add('am-intro-out');b=setTimeout(function(){h.classList.remove('am-intro','am-intro-out')},950)};a=setTimeout(out,1500);var skip=function(){out();removeEventListener('pointerdown',skip);removeEventListener('keydown',skip)};addEventListener('pointerdown',skip);addEventListener('keydown',skip)}}catch(e){}`
   return <script dangerouslySetInnerHTML={{ __html: js }} />
+}
+
+/**
+ * The first-visit intro, drawn only while html.am-intro is set:
+ *
+ *   0.00  a hairline draws out from the centre of the screen
+ *   0.15  APPROACH rises out of it, centre letters first, each letter
+ *         converging from a wider spacing and coming into focus
+ *   0.55  Imagine · Create · Deliver, word by word; a fill runs the line
+ *   1.05  a light passes across the wordmark
+ *   1.50  the screen parts along the line, top half up and bottom half
+ *         down, as the wordmark dissolves into the light; the page behind
+ *         settles from a slight zoom and its own entrances start
+ *   2.45  gone
+ */
+function Intro() {
+  const word = 'APPROACH'.split('')
+  const mid = (word.length - 1) / 2
+  return (
+    <div className="am-in" aria-hidden="true">
+      <div className="am-in-half am-in-top" />
+      <div className="am-in-half am-in-bot" />
+      <div className="am-in-stage">
+        <div className="am-in-word">
+          {word.map((c, i) => (
+            <span key={i} className="am-in-m">
+              <i style={{ ['--o' as string]: Math.abs(i - mid), ['--x' as string]: i - mid, ['--i' as string]: i }}>{c}</i>
+            </span>
+          ))}
+        </div>
+        <div className="am-in-rule"><b /></div>
+        <div className="am-in-sub">
+          <span style={{ ['--i' as string]: 0 }}>Imagine</span>
+          <em style={{ ['--i' as string]: 1 }} />
+          <span style={{ ['--i' as string]: 2 }}>Create</span>
+          <em style={{ ['--i' as string]: 3 }} />
+          <span style={{ ['--i' as string]: 4 }}>Deliver</span>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function PageTransition() {
@@ -90,6 +132,8 @@ export default function PageTransition() {
   }, [pathname])
 
   return (
+    <>
+    <Intro />
     <div ref={panel} className="am-pt" aria-hidden="true">
       <div className="am-pt-edge" />
       <div className="am-pt-mark">
@@ -99,5 +143,6 @@ export default function PageTransition() {
         <span className="am-pt-sub">Imagine · Create · Deliver</span>
       </div>
     </div>
+    </>
   )
 }
