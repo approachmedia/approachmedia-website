@@ -1,0 +1,323 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#050814;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js","three/addons/":"./three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+/*
+ * The 3D part of the Approach Media opening, driven only by a time value so
+ * every frame is reproducible: window.renderAt(t) draws the frame at t
+ * seconds and returns it as a PNG data URL.
+ *
+ *   0.0 - 3.0  flight down a corridor of glowing panels (project photographs)
+ *   3.0 - 5.6  the corridor opens on the logo's own shapes, extruded; the
+ *              camera swoops low past them, faces filled with project
+ *              photographs that change as it passes, then turns to face them
+ *   5.6 - 7.8  frontal: the official reverse-white logo (the brand file,
+ *              unaltered) settles over the extruded shapes, lower lines and
+ *              all; a slow push
+ */
+import * as THREE from 'three'
+import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+import { Reflector } from 'three/addons/objects/Reflector.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+
+const Q = new URLSearchParams(location.search)
+const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 960)
+const ASPECT = W / H
+const LOOP = Q.get('mode') === 'loop'
+const P = 48, T = 12          // loop: corridor period (units) and cycle (s)
+const BLUE = new THREE.Color('#172F9D'), GREEN = new THREE.Color('#53B618'), DEEP = new THREE.Color('#0F1F63')
+
+// seeded random, so the corridor is the same every render
+let seed = 7
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
+const ease = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+const easeOut = t => 1 - Math.pow(1 - t, 3)
+const span = (t, a, b) => clamp((t - a) / (b - a))
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
+renderer.setPixelRatio(1)
+renderer.setSize(W, H)
+renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMappingExposure = 1.05
+renderer.outputColorSpace = THREE.SRGBColorSpace
+document.body.appendChild(renderer.domElement)
+
+const scene = new THREE.Scene()
+const BG = new THREE.Color('#050814')
+scene.background = BG
+scene.fog = new THREE.FogExp2(0x050814, 0.026)
+const pmrem = new THREE.PMREMGenerator(renderer)
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+scene.environmentIntensity = 0.9
+
+const camera = new THREE.PerspectiveCamera(ASPECT >= 1 ? 38 : 62, ASPECT, 0.1, 400)
+
+// lights: a cool key and brand rims
+scene.add(new THREE.AmbientLight(0x223366, 0.4))
+const key = new THREE.DirectionalLight(0xdfe7ff, 1.6); key.position.set(-8, 20, 30); scene.add(key)
+const rimB = new THREE.PointLight(0x3355ff, 160, 60, 2); rimB.position.set(-18, 6, 6); scene.add(rimB)
+const rimG = new THREE.PointLight(0x53b618, 140, 60, 2); rimG.position.set(18, 4, 6); scene.add(rimG)
+
+// textures
+const loader = new THREE.TextureLoader()
+const TEX = []
+const loadTex = src => new Promise(res => loader.load(src, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; res(t) }))
+
+// glossy floor: a mirror under a smoked layer
+const mirror = new Reflector(new THREE.PlaneGeometry(400, 400), { textureWidth: W * 0.5, textureHeight: H * 0.5, color: 0x8890a0 })
+mirror.rotation.x = -Math.PI / 2
+scene.add(mirror)
+const smoke = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0x050814, transparent: true, opacity: 0.78, roughness: 0.6, metalness: 0.2 }))
+smoke.rotation.x = -Math.PI / 2; smoke.position.y = 0.01
+scene.add(smoke)
+// floor light lines, for speed
+const lineMat = new THREE.MeshBasicMaterial({ color: 0x6f8cff, toneMapped: false, transparent: true, opacity: 0.55 })
+for (const x of [-4.2, 4.2]) {
+  const l = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 90), lineMat)
+  l.rotation.x = -Math.PI / 2; l.position.set(x, 0.02, 52); scene.add(l)
+}
+
+// corridor
+const panels = []
+const slabs = []
+function buildCorridor() {
+  let z = 80
+  let side = -1
+  while (z > 19) {
+    const w = 3.5 + rnd() * 4, h = 5 + rnd() * 9
+    const x = side * (6.2 + rnd() * 4.5)
+    const g = new THREE.Group()
+    const tex = TEX[Math.floor(rnd() * TEX.length)]
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, color: 0xbfc8e0 }))
+    face.position.z = 0.16
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w + 0.12, h + 0.12, 0.3), new THREE.MeshStandardMaterial({ color: 0x101522, metalness: 0.9, roughness: 0.3 }))
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(w + 0.5, h + 0.5), new THREE.MeshBasicMaterial({ color: rnd() > 0.5 ? 0x2b48ff : 0x53b618, toneMapped: false, transparent: true, opacity: 0.55 }))
+    glow.position.z = -0.2
+    g.add(glow, body, face)
+    g.position.set(x, h / 2 + 0.3 + rnd() * 1.2, z)
+    g.rotation.y = -side * (0.55 + rnd() * 0.35)
+    g.rotation.z = (rnd() - 0.5) * 0.08
+    scene.add(g)
+    panels.push({ g, face, baseY: g.position.y, baseX: x, side, phase: rnd() * 6 })
+    z -= 3.2 + rnd() * 2.6
+    side = -side
+  }
+  // a few overhead slabs
+  for (let i = 0; i < 6; i++) {
+    const w = 10 + rnd() * 8, d = 3 + rnd() * 3
+    const tex = TEX[Math.floor(rnd() * TEX.length)]
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, color: 0x8a94b4, side: THREE.DoubleSide }))
+    m.rotation.x = Math.PI / 2
+    m.position.set((rnd() - 0.5) * 6, 15 + rnd() * 3, 74 - i * 9)
+    scene.add(m)
+    slabs.push(m)
+  }
+}
+
+// loop mode: one corridor segment repeated, so travelling exactly one period
+// per cycle brings every frame back to the first
+function buildLoopCorridor() {
+  const seg = []
+  let z = 0, side = -1
+  while (z < P - 3.5) {
+    seg.push({ z, side, w: 3.5 + rnd() * 4, h: 5 + rnd() * 9, x: side * (6.2 + rnd() * 4.5), tex: Math.floor(rnd() * TEX.length),
+      lift: rnd() * 1.2, ry: 0.55 + rnd() * 0.35, rz: (rnd() - 0.5) * 0.08, glow: rnd() > 0.5 ? 0x2b48ff : 0x53b618, phase: Math.floor(rnd() * 4) })
+    z += 3.2 + rnd() * 2.6
+    side = -side
+  }
+  const slabSeg = [0, 1].map(i => ({ z: 8 + i * 24 + rnd() * 6, x: (rnd() - 0.5) * 6, y: 15 + rnd() * 3, w: 10 + rnd() * 8, d: 3 + rnd() * 3, tex: Math.floor(rnd() * TEX.length) }))
+  for (let k = 0; k < 5; k++) {
+    for (const q of seg) {
+      const g = new THREE.Group()
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(q.w, q.h), new THREE.MeshBasicMaterial({ map: TEX[q.tex], toneMapped: false, color: 0xbfc8e0 }))
+      face.position.z = 0.16
+      const body = new THREE.Mesh(new THREE.BoxGeometry(q.w + 0.12, q.h + 0.12, 0.3), new THREE.MeshStandardMaterial({ color: 0x101522, metalness: 0.9, roughness: 0.3 }))
+      const glow = new THREE.Mesh(new THREE.PlaneGeometry(q.w + 0.5, q.h + 0.5), new THREE.MeshBasicMaterial({ color: q.glow, toneMapped: false, transparent: true, opacity: 0.55 }))
+      glow.position.z = -0.2
+      g.add(glow, body, face)
+      g.position.set(q.x, q.h / 2 + 0.3 + q.lift, q.z + k * P)
+      g.rotation.y = -q.side * q.ry; g.rotation.z = q.rz
+      scene.add(g)
+      panels.push({ g, face, baseY: g.position.y, baseX: q.x, side: q.side, phase: q.phase })
+    }
+    for (const q of slabSeg) {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(q.w, q.d), new THREE.MeshBasicMaterial({ map: TEX[q.tex], toneMapped: false, color: 0x8a94b4, side: THREE.DoubleSide }))
+      m.rotation.x = Math.PI / 2
+      m.position.set(q.x, q.y, q.z + k * P)
+      scene.add(m)
+    }
+  }
+}
+
+// logo: the wordmark row of the official SVG, extruded
+const S = 0.1                    // svg units to world
+const LIFT = 6                   // baseline height above the floor
+const logo = new THREE.Group()
+logo.rotation.x = Math.PI         // svg y runs down; this flips it and keeps winding
+logo.position.set(-160.5 * S, 98 * S + LIFT, 0)
+logo.scale.setScalar(S)
+scene.add(logo)
+const letterMats = []
+let logoPlane
+async function buildLogo() {
+  const svgText = await (await fetch('./logo.svg')).text()
+  const data = new SVGLoader().parse(svgText)
+  const side = new THREE.MeshStandardMaterial({ color: 0xc9ced8, metalness: 1, roughness: 0.26, envMapIntensity: 1.3 })
+  for (const p of data.paths) {
+    for (const shape of SVGLoader.createShapes(p)) {
+      const pts = shape.getPoints()
+      const ys = pts.map(q => q.y), xs = pts.map(q => q.x)
+      const minY = Math.min(...ys), maxY = Math.max(...ys), minX = Math.min(...xs), maxX = Math.max(...xs)
+      if (maxY > 100) continue                  // only the wordmark row
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: 16, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 0.6, bevelSegments: 2, curveSegments: 8 })
+      const bw = maxX - minX, bh = maxY - minY
+      const k = letterMats.length
+      const mat = new THREE.MeshBasicMaterial({ map: TEX[k % TEX.length].clone(), toneMapped: false, color: 0xe8ecf6 })
+      // cover-fit the photograph to the shape's box
+      const img = mat.map.image, ia = img.width / img.height, sa = bw / bh
+      const rx = sa > ia ? 1 : sa / ia, ry = sa > ia ? ia / sa : 1
+      mat.map.repeat.set(rx / bw, -ry / bh)
+      mat.map.offset.set(-minX * rx / bw + (1 - rx) / 2, 1 + minY * ry / bh - (1 - ry) / 2)
+      mat.map.needsUpdate = true
+      letterMats.push({ mat, minX, minY, bw, bh, base: k })
+      logo.add(new THREE.Mesh(geo, [mat, side]))
+    }
+  }
+  // the official file itself, rasterised crisp, laid exactly over the fronts
+  const img = new Image()
+  img.src = './logo.svg'
+  await img.decode()
+  const cv = document.createElement('canvas'); cv.width = 321 * 8; cv.height = 143 * 8
+  cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height)
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8
+  logoPlane = new THREE.Mesh(new THREE.PlaneGeometry(321 * S, 143 * S), new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: 0, toneMapped: false, depthWrite: false, depthTest: false, fog: false }))
+  logoPlane.renderOrder = 10
+  logoPlane.position.set(0, LIFT + 98 * S - 71.5 * S, 0.05)
+  scene.add(logoPlane)
+}
+function setLetterTex(k, texIdx) {
+  const L = letterMats[k]
+  const src = TEX[texIdx % TEX.length]
+  if (L.mat.map.image === src.image) return
+  L.mat.map.image = src.image
+  L.mat.map.needsUpdate = true
+}
+
+// dust
+const dust = (() => {
+  const n = 900, pos = new Float32Array(n * 3)
+  for (let i = 0; i < n; i++) {
+    pos[i * 3] = (rnd() - 0.5) * 60; pos[i * 3 + 1] = rnd() * 22
+    // loop: five copies of one period of dust, so it repeats with the corridor
+    pos[i * 3 + 2] = LOOP ? (i % 180) / 180 * P + Math.floor(i / 180) * P : rnd() * 90 - 10
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+  const m = new THREE.PointsMaterial({ color: 0x9fb4ff, size: 0.07, transparent: true, opacity: 0.6, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending })
+  const p = new THREE.Points(g, m); scene.add(p); return p
+})()
+
+// post: bloom for the glow
+const composer = new EffectComposer(renderer)
+composer.setPixelRatio(1); composer.setSize(W, H)
+composer.addPass(new RenderPass(scene, camera))
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.55, 0.6, 0.82)
+composer.addPass(bloom)
+composer.addPass(new OutputPass())
+
+// frontal distance so the logo spans a set share of the frame width
+const LOGO_W = 321 * S
+const SHARE = ASPECT >= 1 ? 0.56 : 0.68
+const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * ASPECT)
+const D_FRONT = (LOGO_W / (2 * SHARE)) / Math.tan(hfov / 2)
+const CY = LIFT + 98 * S - 71.5 * S
+
+const camPath = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 3.2, 18),
+  new THREE.Vector3(-13, 1.5, 7),
+  new THREE.Vector3(1, 1.8, 5.2),
+  new THREE.Vector3(8, 5.5, D_FRONT * 0.55),
+  new THREE.Vector3(0, CY, D_FRONT),
+], false, 'centripetal')
+const tgtPath = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 7, 0),
+  new THREE.Vector3(-7, 8.5, 0),
+  new THREE.Vector3(7, 9.5, 0),
+  new THREE.Vector3(1, CY, 0),
+  new THREE.Vector3(0, CY, 0),
+], false, 'centripetal')
+
+function renderLoop(t) {
+  const u = t / T, w = 2 * Math.PI * u
+  const zc = 3.5 * P - P * u
+  camera.position.set(Math.sin(w) * 0.9, 3.3 + Math.sin(2 * w) * 0.22, zc)
+  camera.lookAt(camera.position.x * 0.3, 5.4, zc - 22)
+  camera.rotateZ(Math.sin(w) * 0.035)
+  camera.updateMatrixWorld()
+  for (const p of panels) p.g.position.y = p.baseY + Math.sin(2 * w + p.phase * 1.57) * 0.12
+  composer.render()
+  return renderer.domElement.toDataURL('image/png')
+}
+
+window.renderAt = (t) => {
+  if (LOOP) return renderLoop(t)
+  // camera
+  let roll = 0
+  if (t < 3) {
+    const e = ease(t / 3)
+    camera.position.set(Math.sin(t * 1.4) * 1.1, 3.2 + Math.sin(t * 0.9) * 0.35, 78 - 60 * e)
+    camera.lookAt(camera.position.x * 0.3, 5.5, camera.position.z - 22)
+    roll = Math.sin(t * 1.2) * 0.07
+  } else if (t < 5.6) {
+    const u = ease(span(t, 3, 5.6))
+    camera.position.copy(camPath.getPoint(u))
+    camera.lookAt(tgtPath.getPoint(u))
+    roll = Math.sin(u * Math.PI) * -0.09
+  } else {
+    const u = easeOut(span(t, 5.6, 7.8))
+    camera.position.set(0, CY, D_FRONT * (1 - 0.035 * u))
+    camera.lookAt(0, CY, 0)
+  }
+  camera.rotateZ(roll)
+  camera.updateMatrixWorld()
+
+  // corridor panels breathe a little, then part like doors as the camera
+  // leaves the corridor, clearing the way to the logo
+  const part = Math.pow(span(t, 2.7, 4.8), 2)
+  for (const p of panels) {
+    p.g.position.y = p.baseY + Math.sin(t * 1.3 + p.phase) * 0.12
+    p.g.position.x = p.baseX + p.side * part * 34
+  }
+  for (const m of slabs) m.position.y = 15 + part * 30
+
+  // letters: the photograph inside each changes as the camera passes
+  const step = Math.floor(t / 0.22)
+  letterMats.forEach((L, k) => setLetterTex(k, L.base + (t > 2.2 && t < 5.4 ? step + k * 3 : 0)))
+
+  // the official logo settles in
+  const fade = easeOut(span(t, 5.2, 6.3))
+  if (logoPlane) logoPlane.material.opacity = fade
+  for (const L of letterMats) L.mat.color.setScalar(0.92 * (1 - 0.9 * fade))
+  bloom.strength = 0.55 * (1 - fade)   // no glow on the final logo
+  dust.material.opacity = 0.6 * (1 - 0.6 * fade)
+  dust.position.z = -t * 0.6
+  rimB.intensity = 160 * (1 - 0.5 * fade); rimG.intensity = 140 * (1 - 0.5 * fade)
+
+  composer.render()
+  return renderer.domElement.toDataURL('image/png')
+}
+
+;(async () => {
+  for (let i = 1; i <= 16; i++) TEX.push(await loadTex(`./tex/t${String(i).padStart(2, '0')}.jpg`))
+  if (LOOP) buildLoopCorridor()
+  else { buildCorridor(); await buildLogo() }
+  window.ready = true
+})().catch(e => { window.failed = String(e && e.stack || e) })
+</script>
+</body></html>

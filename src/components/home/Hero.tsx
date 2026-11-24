@@ -3,7 +3,7 @@
 /**
  * The home page opening, rebuilt as a cinematic stage.
  *
- *  - A showreel of finished builds plays full-bleed behind the headline.
+ *  - A 3D corridor of project panels glides full-bleed behind the headline.
  *  - The headline rises word by word through masks on load (once): the
  *    lead first, then the accent in the brand gradient.
  *  - The pointer separates the layers: the lead, the accent and the clip
@@ -20,6 +20,7 @@ import Link from 'next/link'
 import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import CountUp from './motion/CountUp'
+import HomeOpening from './motion/HomeOpening'
 import './motion/home-motion.css'
 
 const HEADLINE_LEAD = 'Exhibition Stall Design & Fabrication —'
@@ -39,12 +40,12 @@ const metrics = [
 ]
 
 /**
- * The showreel: eleven of the owner's own build clips (the services-flow and
- * about-flow footage) cut to a 19-second loop, graded as one, with a slow
- * push on each shot and the last frame flowing back into the first, so the
- * loop has no seam. No audio, no burnt-in text. A portrait cut for phones.
+ * Behind the headline: a seamless 12-second cruise down a corridor of panels
+ * showing the owner's projects, rendered in 3D at full resolution (see
+ * scripts/opening). The opening film flies down the same corridor, so the
+ * page picks up where the film leaves off. A portrait render for phones.
  */
-const REEL = '/home-intro/exhibition-stall-design-showreel'
+const REEL = '/home-intro/approach-media-corridor'
 
 function Words({ text, start, className }: { text: string; start: number; className?: string }) {
   return (
@@ -132,6 +133,7 @@ export function Hero() {
 
   return (
     <>
+      <HomeOpening />
       <section ref={track} className="hx" data-no-reveal>
         <div className="hx-stage">
           <div ref={media} className="hx-media" aria-hidden="true">

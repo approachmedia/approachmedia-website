@@ -31,9 +31,12 @@ export function IntroScript() {
   // Runs before first paint, and drives the whole intro on its own timers so
   // it never waits on the JavaScript bundle: a slow connection gets the same
   // intro as a fast one. A click, tap or key press opens the curtain at once.
+  // On the home page the first visit gets the opening film instead (see
+  // HomeOpening), unless the connection asks to save data; a timer clears it
+  // regardless, should the film's script never arrive.
   // Skipped on the admin and the ad landing pages, which have no intro, and
   // under reduced motion.
-  const js = `try{var p=location.pathname;if(!/^\\/(admin|lp|thank-you)/.test(p)&&!sessionStorage.getItem('am-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){sessionStorage.setItem('am-intro','1');var h=document.documentElement,a,b,done=0;h.classList.add('am-intro');var out=function(){if(done)return;done=1;clearTimeout(a);h.classList.add('am-intro-out');b=setTimeout(function(){h.classList.remove('am-intro','am-intro-out')},950)};a=setTimeout(out,1500);var skip=function(){out();removeEventListener('pointerdown',skip);removeEventListener('keydown',skip)};addEventListener('pointerdown',skip);addEventListener('keydown',skip)}}catch(e){}`
+  const js = `try{var p=location.pathname;if(!/^\\/(admin|lp|thank-you)/.test(p)&&!sessionStorage.getItem('am-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){sessionStorage.setItem('am-intro','1');var h=document.documentElement,a,b,done=0;var c=navigator.connection;if(p==='/'&&!(c&&(c.saveData||/2g/.test(c.effectiveType||'')))){h.classList.add('am-opening');setTimeout(function(){h.classList.remove('am-opening','am-opening-out')},22000)}else{h.classList.add('am-intro');var out=function(){if(done)return;done=1;clearTimeout(a);h.classList.add('am-intro-out');b=setTimeout(function(){h.classList.remove('am-intro','am-intro-out')},950)};a=setTimeout(out,1500);var skip=function(){out();removeEventListener('pointerdown',skip);removeEventListener('keydown',skip)};addEventListener('pointerdown',skip);addEventListener('keydown',skip)}}}catch(e){}`
   return <script dangerouslySetInnerHTML={{ __html: js }} />
 }
 
