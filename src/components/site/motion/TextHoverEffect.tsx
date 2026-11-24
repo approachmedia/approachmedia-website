@@ -9,7 +9,9 @@
  *
  * Drawn in a 3000-unit coordinate space with the type at full size: in a
  * small viewBox the browser laid the outlines out at 72 units and enlarged
- * them about six times, which stepped the curves.
+ * them about six times, which stepped the curves. Strokes are a fixed
+ * width in screen pixels (non-scaling), so on a 1920 display the outline is
+ * an even 2px rather than a 1.2px line that breaks up between pixels.
  */
 
 import { useId, useRef, useState } from 'react'
@@ -61,23 +63,23 @@ export default function TextHoverEffect({ text, className }: { text: string; cla
         </mask>
       </defs>
       <text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="3"
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="2" vectorEffect="non-scaling-stroke"
         className="am-word fill-transparent stroke-white/25"
         style={{ opacity: hovered ? 0.7 : 0, transition: 'opacity 300ms ease' }}
       >
         {text}
       </text>
       <motion.text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="3"
-        className="am-word fill-transparent stroke-[hsl(110_55%_50%/0.55)]"
-        initial={reduce ? false : { strokeDashoffset: 10000, strokeDasharray: 10000 }}
-        animate={seen || reduce ? { strokeDashoffset: 0, strokeDasharray: 10000 } : undefined}
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="2" vectorEffect="non-scaling-stroke"
+        className="am-word fill-transparent stroke-[hsl(97_70%_50%/0.85)]"
+        initial={reduce ? false : { strokeDashoffset: 20000, strokeDasharray: 20000 }}
+        animate={seen || reduce ? { strokeDashoffset: 0, strokeDasharray: 20000 } : undefined}
         transition={{ duration: 3.2, ease: 'easeInOut' }}
       >
         {text}
       </motion.text>
       <text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="4.5"
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="2.5" vectorEffect="non-scaling-stroke"
         stroke={`url(#g${id})`} mask={`url(#m${id})`}
         className="am-word fill-transparent"
         style={{ opacity: hovered ? 1 : 0, transition: 'opacity 300ms ease' }}
