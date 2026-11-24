@@ -78,6 +78,9 @@
   .sw-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(6, minmax(0, 1fr)); }
 }
 
+/* ── flow ── */
+.sw-flow { height: clamp(380px, 46vw, 660px); }
+
 @media (prefers-reduced-motion: reduce) {
   .sw-tile img, .sw-cap, .sw-card .sw-tile { transition: none; }
   .sw-wall--dim .sw-tile img { filter: none; }

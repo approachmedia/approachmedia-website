@@ -12,6 +12,9 @@
  *   fan      a deck of photographs that fans open as it enters the screen
  *   lit      a dark wall of photographs; a light follows the pointer and
  *            shows them in colour (on touch screens it sweeps with the scroll)
+ *   flow     a cover flow: the centre photograph faces the visitor and the
+ *            rest lean away either side; drag, swipe, arrow keys or a click
+ *            move through it, and a click on the centre opens the project
  *
  * `variant="auto"` picks one from the page's path, so a template used by many
  * pages (cities, countries, expos) still varies page to page.
@@ -25,15 +28,19 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import { usePathname, useRouter } from 'next/navigation'
 import { ArrowUpRight } from 'lucide-react'
 import './showcase.css'
 
-type Item = { src: string; srcLg: string; alt: string; title: string; href: string }
-export type ShowcaseVariant = 'strip' | 'columns' | 'fan' | 'lit'
+// Only pages that show the cover flow download it.
+const CoverFlow = dynamic(() => import('@/components/ui/cover-flow').then(m => m.CoverFlow), { ssr: false })
 
-const ORDER: ShowcaseVariant[] = ['strip', 'columns', 'fan', 'lit']
-const NEED: Record<ShowcaseVariant, number> = { strip: 16, columns: 20, fan: 7, lit: 18 }
+type Item = { src: string; srcLg: string; alt: string; title: string; href: string }
+export type ShowcaseVariant = 'strip' | 'columns' | 'fan' | 'lit' | 'flow'
+
+const ORDER: ShowcaseVariant[] = ['strip', 'flow', 'columns', 'fan', 'lit']
+const NEED: Record<ShowcaseVariant, number> = { strip: 16, columns: 20, fan: 7, lit: 18, flow: 12 }
 
 let cache: Promise<Item[]> | null = null
 function load(): Promise<Item[]> {
@@ -80,6 +87,7 @@ export default function Showcase({
   ground?: 'plain' | 'band'
 }) {
   const pathname = usePathname()
+  const router = useRouter()
   const seed = hash(pathname)
   const kind: ShowcaseVariant = variant === 'auto' ? ORDER[seed % ORDER.length] : variant
   const root = useRef<HTMLElement>(null)
@@ -191,6 +199,38 @@ export default function Showcase({
               <Tile item={it} big />
             </div>
           ))}
+        </div>
+      )}
+
+      {kind === 'flow' && (
+        <div className="sw-flow">
+          {items && (
+            <CoverFlow
+              items={picks.filter((it): it is Item => !!it).map(it => {
+                // "Client: 18 sqm stall at Show 2026" reads as two caption
+                // lines; titles without a colon split before "Exhibition".
+                const m = it.title.match(/^(.+?)(?::\s*|\s+(?=Exhibition\b))(.+)$/)
+                return {
+                  title: m ? m[1] : it.title,
+                  subtitle: m ? m[2] : undefined,
+                  src: it.srcLg,
+                  alt: it.alt,
+                }
+              })}
+              defaultIndex={3}
+              autoplay
+              interval={4}
+              wheel={false}
+              showReflection
+              stageColor="#05080f"
+              pageColor="transparent"
+              accent="#53B618"
+              font="Inter, system-ui, sans-serif"
+              ariaLabel="Projects from the portfolio"
+              onSelect={i => { const it = picks[i]; if (it) router.push(it.href) }}
+              style={{ aspectRatio: 'auto' }}
+            />
+          )}
         </div>
       )}
 

@@ -306,7 +306,7 @@ export default function CustomBoothFabricationPage() {
           INLINE CTA BAND
       ══════════════════════════════════════════════════ */}
       {/* Real project photographs, moving with the scroll. */}
-      <Showcase variant="columns" eyebrow="Out of our workshop" />
+      <Showcase variant="flow" eyebrow="Out of our workshop" />
 
       <section className="border-y border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">

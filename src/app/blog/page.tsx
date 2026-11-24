@@ -146,7 +146,7 @@ export default function BlogIndexPage() {
         </TiltGrid>
       </section>
       {/* Real project photographs, moving with the scroll. */}
-      <Showcase variant="strip" ground="band" eyebrow="From the portfolio" />
+      <Showcase variant="flow" ground="band" eyebrow="From the portfolio" />
 
     </main>
   )

@@ -143,7 +143,7 @@ export default function TradeshowCalendarPage() {
       </section>
 
       {/* Real project photographs, moving with the scroll. */}
-      <Showcase variant="columns" eyebrow="Stands from recent shows" />
+      <Showcase variant="flow" eyebrow="Stands from recent shows" />
 
       {/* ── FAQ ──────────────────────────────────────────── */}
       <section className="section">
