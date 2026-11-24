@@ -80,6 +80,17 @@
 
 /* ── flow ── */
 .sw-flow { height: clamp(380px, 46vw, 660px); }
+.sw--flow { padding-bottom: 0; }
+.sw-flow-track { position: relative; }
+.sw-flow-pin {
+  --head: 81px; position: sticky; top: var(--head); height: calc(100svh - var(--head)); min-height: 420px;
+  display: flex; flex-direction: column; justify-content: center; gap: 1rem; padding-bottom: 1.5rem;
+}
+@media (min-width: 768px) { .sw-flow-pin { --head: 97px; } }
+.sw-flow-stage { height: min(100%, clamp(380px, 46vw, 700px)); flex: 0 1 auto; }
+.sw-flow-foot { flex: none; }
+.sw-flow-rail { display: block; height: 2px; max-width: 20rem; margin: 0 auto; border-radius: 2px; background: rgb(255 255 255 / 0.1); overflow: hidden; }
+.sw-flow-rail span { display: block; height: 100%; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, hsl(var(--brand-blue-glow)), hsl(var(--brand-green))); }
 
 @media (prefers-reduced-motion: reduce) {
   .sw-tile img, .sw-cap, .sw-card .sw-tile { transition: none; }

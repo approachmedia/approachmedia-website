@@ -202,36 +202,11 @@ export default function Showcase({
         </div>
       )}
 
-      {kind === 'flow' && (
-        <div className="sw-flow">
-          {items && (
-            <CoverFlow
-              items={picks.filter((it): it is Item => !!it).map(it => {
-                // "Client: 18 sqm stall at Show 2026" reads as two caption
-                // lines; titles without a colon split before "Exhibition".
-                const m = it.title.match(/^(.+?)(?::\s*|\s+(?=Exhibition\b))(.+)$/)
-                return {
-                  title: m ? m[1] : it.title,
-                  subtitle: m ? m[2] : undefined,
-                  src: it.srcLg,
-                  alt: it.alt,
-                }
-              })}
-              defaultIndex={3}
-              autoplay
-              interval={4}
-              wheel={false}
-              showReflection
-              stageColor="#05080f"
-              pageColor="transparent"
-              accent="#53B618"
-              font="Inter, system-ui, sans-serif"
-              ariaLabel="Projects from the portfolio"
-              onSelect={i => { const it = picks[i]; if (it) router.push(it.href) }}
-              style={{ aspectRatio: 'auto' }}
-            />
-          )}
-        </div>
+      {kind === 'flow' && items && (
+        <ScrollFlow
+          items={picks.filter((it): it is Item => !!it)}
+          onOpen={href => router.push(href)}
+        />
       )}
 
       {kind === 'lit' && (
@@ -251,5 +226,112 @@ export default function Showcase({
         </div>
       )}
     </section>
+  )
+}
+
+// ── the cover flow, driven by the scroll ──────────────────────
+
+/** vh of scroll per cover. */
+const VH_PER_COVER = 16
+
+/**
+ * The cover flow pinned under the header while the page scrolls past it: each
+ * stretch of scroll brings the next project to the centre, and scrolling back
+ * brings the previous one. Dragging, swiping, the arrow keys or a click on a
+ * side cover still work, and move the page to match, so the two never fight.
+ * A click on the centre cover opens the project. Under reduced motion it is
+ * not pinned and moves only on request.
+ */
+function ScrollFlow({ items, onOpen }: { items: Item[]; onOpen: (href: string) => void }) {
+  const track = useRef<HTMLDivElement>(null)
+  const pin = useRef<HTMLDivElement>(null)
+  const bar = useRef<HTMLSpanElement>(null)
+  const [index, setIndex] = useState(0)
+  const [still, setStill] = useState(false)
+  const idx = useRef(0)
+  const lockUntil = useRef(0)
+  const n = items.length
+
+  const covers = useMemo(() => items.map(it => {
+    // "Client: 18 sqm stall at Show 2026" reads as two caption lines; titles
+    // without a colon split before "exhibition".
+    const m = it.title.match(/^(.+?)(?::\s*|\s+(?=exhibition\b))(.+)$/i)
+    return { title: m ? m[1] : it.title, subtitle: m ? m[2] : undefined, src: it.srcLg, alt: it.alt }
+  }), [items])
+
+  // where the page has to be for cover i to sit in the centre
+  const geometry = () => {
+    const t = track.current, p = pin.current
+    if (!t || !p) return null
+    const head = parseFloat(getComputedStyle(p).top) || 0
+    const top = t.getBoundingClientRect().top + window.scrollY - head
+    const travel = Math.max(1, t.offsetHeight - p.offsetHeight)
+    return { top, travel }
+  }
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setStill(true); return }
+    let raf = 0
+    const apply = () => {
+      raf = 0
+      const g = geometry()
+      if (!g || n < 2) return
+      const p = Math.min(1, Math.max(0, (window.scrollY - g.top) / g.travel))
+      bar.current?.style.setProperty('transform', `scaleX(${p.toFixed(4)})`)
+      if (performance.now() < lockUntil.current) return
+      const i = Math.round(p * (n - 1))
+      if (i !== idx.current) { idx.current = i; setIndex(i) }
+    }
+    const kick = () => { if (!raf) raf = requestAnimationFrame(apply) }
+    window.addEventListener('scroll', kick, { passive: true })
+    window.addEventListener('resize', kick)
+    kick()
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('scroll', kick); window.removeEventListener('resize', kick) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [n])
+
+  // a drag, key or click chose a cover: take the page there
+  const choose = (i: number) => {
+    idx.current = i
+    setIndex(i)
+    if (still) return
+    const g = geometry()
+    if (!g) return
+    const to = g.top + (g.travel * i) / Math.max(1, n - 1)
+    lockUntil.current = performance.now() + 1400
+    const lenis = (window as Window & { __lenis?: { scrollTo: (y: number, o?: { duration?: number; onComplete?: () => void }) => void } }).__lenis
+    if (lenis) lenis.scrollTo(to, { duration: 1.1, onComplete: () => { lockUntil.current = 0 } })
+    else window.scrollTo({ top: to, behavior: 'smooth' })
+  }
+
+  const flow = (
+    <CoverFlow
+      items={covers}
+      index={index}
+      onIndexChange={choose}
+      loop={false}
+      wheel={false}
+      showReflection
+      stageColor="#05080f"
+      pageColor="transparent"
+      accent="#53B618"
+      font="Inter, system-ui, sans-serif"
+      ariaLabel="Projects from the portfolio"
+      onSelect={i => { const it = items[i]; if (it) onOpen(it.href) }}
+      style={{ aspectRatio: 'auto' }}
+    />
+  )
+
+  if (still) return <div className="sw-flow">{flow}</div>
+
+  return (
+    <div ref={track} className="sw-flow-track" style={{ height: `calc(100svh + ${(n - 1) * VH_PER_COVER}vh)` }}>
+      <div ref={pin} className="sw-flow-pin">
+        <div className="sw-flow-stage">{flow}</div>
+        <div className="container-wide sw-flow-foot" aria-hidden="true">
+          <span className="sw-flow-rail"><span ref={bar} /></span>
+        </div>
+      </div>
+    </div>
   )
 }

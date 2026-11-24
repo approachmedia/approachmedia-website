@@ -46,6 +46,8 @@ export default function SmoothScroll() {
     })
 
     lenisRef.current = lenis
+    // for components that scroll the page to a position (the cover flow)
+    ;(window as Window & { __lenis?: Lenis }).__lenis = lenis
 
     let rafId: number
     function raf(time: number) {
@@ -57,6 +59,7 @@ export default function SmoothScroll() {
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      delete (window as Window & { __lenis?: Lenis }).__lenis
       lenisRef.current = null
     }
   }, [])
