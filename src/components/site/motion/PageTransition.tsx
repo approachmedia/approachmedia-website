@@ -57,7 +57,7 @@ function Intro() {
   const word = 'APPROACH'.split('')
   const mid = (word.length - 1) / 2
   return (
-    <div className="am-in" aria-hidden="true">
+    <div className="am-intro-layer" aria-hidden="true">
       <div className="am-in-half am-in-top" />
       <div className="am-in-half am-in-bot" />
       <div className="am-in-stage">

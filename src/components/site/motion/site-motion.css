@@ -35,10 +35,12 @@
 @keyframes am-letter { from { opacity: 0; transform: translate3d(0, 0.6em, 0); } }
 
 /* ── first visit: the intro ──
+   (The container is .am-intro-layer, never .am-in: .am-in is the class the
+   scroll reveal adds to a shown heading or image, and sharing it hid them.)
    Shown only while html.am-intro is set (inline script, before paint). The
    halves are the curtain; the stage holds the wordmark on the seam. */
-.am-in { position: fixed; inset: 0; z-index: 210; pointer-events: none; display: none; }
-html.am-intro .am-in { display: block; pointer-events: auto; }
+.am-intro-layer { position: fixed; inset: 0; z-index: 210; pointer-events: none; display: none; }
+html.am-intro .am-intro-layer { display: block; pointer-events: auto; }
 /* The intro layer is rendered at the end of the page, so a streamed page can
    paint its hero before the browser reaches it. This cover exists the moment
    the head script sets the class, and hides under the layer once it arrives;
@@ -77,7 +79,7 @@ html.am-intro-out::before { display: none; }
 @keyframes am-in-dot { from { transform: scale(0); } }
 
 /* the curtain parts along the line */
-html.am-intro-out .am-in { pointer-events: none; }
+html.am-intro-out .am-intro-layer { pointer-events: none; }
 html.am-intro-out .am-in-top { transform: translate3d(0, -100%, 0); transition: transform 0.9s cubic-bezier(0.83, 0, 0.17, 1); }
 html.am-intro-out .am-in-bot { transform: translate3d(0, 100%, 0); transition: transform 0.9s cubic-bezier(0.83, 0, 0.17, 1); }
 html.am-intro-out .am-in-word { opacity: 0; transform: scale(1.06); filter: blur(10px); transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), filter 0.45s ease; }
@@ -177,8 +179,10 @@ html.am-opening .ho button.ho-skip, html.am-opening .ho .ho-gate *, html.am-open
 /* ── auto reveals (AutoReveal) ── */
 .am-rv-h { opacity: 0; transform: translate3d(0, 28px, 0); clip-path: inset(0 0 100% 0); transition: opacity 0.8s var(--am-ease-out), transform 0.9s var(--am-ease-out), clip-path 0.9s var(--am-ease-out); }
 .am-rv-h.am-in { opacity: 1; transform: none; clip-path: inset(0 0 -20% 0); }
-.am-rv-m { clip-path: inset(100% 0 0 0); scale: 1.08; transition: clip-path 1.1s var(--am-ease-out), scale 1.4s var(--am-ease-out); }
-.am-rv-m.am-in { clip-path: inset(0 0 0 0); scale: 1; }
+/* Images are never hidden: a missed reveal must not leave a blank card.
+   They only settle from a slight zoom as they arrive. */
+.am-rv-m { scale: 1.06; transition: scale 1.4s var(--am-ease-out); }
+.am-rv-m.am-in { scale: 1; }
 .am-now { transition: none !important; }
 @media (prefers-reduced-motion: reduce) { .am-rv-h, .am-rv-m { opacity: 1 !important; transform: none !important; clip-path: none !important; scale: 1 !important; } }
 

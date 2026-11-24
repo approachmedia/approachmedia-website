@@ -54,6 +54,10 @@ export default function AutoReveal() {
       if (pending.length === 0) window.removeEventListener('scroll', onScroll)
     }
     const onScroll = () => { if (!tick) tick = requestAnimationFrame(check) }
+    // A safety net for scrolling that fires no window scroll event (another
+    // scroll effect in control, a jump to an anchor, scroll restoration): the
+    // positions are re-checked every half second until nothing is pending.
+    const poll = window.setInterval(() => { if (pending.length) onScroll(); else window.clearInterval(poll) }, 500)
     const raf = requestAnimationFrame(() => {
       const heads = Array.from(root.querySelectorAll<HTMLElement>('h1, h2'))
         .filter(el => !el.closest(SKIP_INSIDE) && !el.classList.contains('sr-only') && el.offsetHeight > 0)
@@ -61,7 +65,11 @@ export default function AutoReveal() {
         .filter(el => !el.closest(SKIP_INSIDE) && el.getBoundingClientRect().width >= 160 && el.getBoundingClientRect().height >= 110)
       const vh = window.innerHeight
       const arm = (el: HTMLElement, cls: string) => {
-        if (el.classList.contains('am-rv-h') || el.classList.contains('am-rv-m')) return
+        if (el.classList.contains('am-rv-h') || el.classList.contains('am-rv-m')) {
+          // armed by an earlier run and not yet shown: keep watching it
+          if (!el.classList.contains('am-in')) pending.push(el)
+          return
+        }
         const r = el.getBoundingClientRect()
         el.classList.add(cls)
         if (r.top < vh * 0.9 && r.bottom > 0) el.classList.add('am-in', 'am-now')
@@ -71,7 +79,7 @@ export default function AutoReveal() {
       imgs.forEach(el => arm(el, 'am-rv-m'))
       if (pending.length) window.addEventListener('scroll', onScroll, { passive: true })
     })
-    return () => { cancelAnimationFrame(raf); cancelAnimationFrame(tick); window.removeEventListener('scroll', onScroll) }
+    return () => { cancelAnimationFrame(raf); cancelAnimationFrame(tick); window.clearInterval(poll); window.removeEventListener('scroll', onScroll) }
   }, [pathname])
 
   return null
