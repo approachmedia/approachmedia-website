@@ -24,6 +24,9 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 const FILM = '/home-intro/approach-media-opening'
+// Bumped whenever the film or its music is re-encoded, so browsers and the CDN
+// do not keep serving the old file from cache.
+const V = '?v=bass1'
 const LOGO = '/home-intro/approach-media-logo-white.svg'
 
 export default function HomeOpening() {
@@ -52,7 +55,7 @@ export default function HomeOpening() {
     // load the film behind the Enter screen: portrait cut on portrait screens
     const tall = window.innerHeight > window.innerWidth
     const webm = v.canPlayType('video/webm; codecs="vp9, opus"') !== ''
-    v.src = tall ? `${FILM}-m.mp4` : webm ? `${FILM}.webm` : `${FILM}.mp4`
+    v.src = (tall ? `${FILM}-m.mp4` : webm ? `${FILM}.webm` : `${FILM}.mp4`) + V
     v.preload = 'auto'
     v.load()
 

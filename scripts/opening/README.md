@@ -17,7 +17,7 @@ Every picture comes from the owner's own clips in `clips/` and the official bran
 2. **Act 2, the montage:** `build2d.py` part B.
 3. **Act 3:** the 3D corridor and logo (`scene.html`), then the colour logo on Soft White, held for 3 s (`PD=3.0 ./assemble2.sh ...`).
 
-The music is `compose-music-20s.py 2 <out.wav>`, the option-2 score re-timed to these cuts.
+The music is `compose-music-20s.py 2 <out.wav>`, the option-2 score re-timed to these cuts, with the bass lifted afterwards (low shelf `bass=g=6:f=110:w=0.6` plus `equalizer=f=55:t=q:w=1.1:g=3`, then the level set back to -15.2 LUFS and limited at -1 dB). That raises everything under 150 Hz by about 4 dB at the same overall loudness.
 
 `compose-music-anthem.py <A|B|C> <out.wav>` writes three studio-logo-fanfare alternatives on the same cut times (A: Grand Anthem in D major; B: Dark to Light, C minor to C major; C: Fanfare Rush in E major). All original melodies; none is quoted from an existing theme.
 
