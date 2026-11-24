@@ -8,6 +8,7 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage, ORG_LOGO, ORG_NAME } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import Showcase from '@/components/site/showcase/Showcase'
 
 /**
  * Published posts are prerendered at build time. A scheduled post is
@@ -153,6 +154,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </ul>
         </div>
       </article>
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="auto" ground="band" eyebrow="From the portfolio" />
+
     </main>
   )
 }

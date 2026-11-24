@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 import { SITE_URL } from '@/lib/site-url'
+import Showcase from '@/components/site/showcase/Showcase'
 // ── Shared data (same across all country pages) ───────────────
 
 const SHARED_SERVICES = [
@@ -581,6 +582,9 @@ export function CountryPageTemplate({
       {/* ══════════════════════════════════════════════════
           CTA
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="auto" ground="band" eyebrow="From the portfolio" />
+
       <section className="relative isolate overflow-hidden border-t border-white/10 py-24 md:py-32">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(var(--brand-blue-glow)/0.15),transparent_60%)]" />
         <AmbientVideo />

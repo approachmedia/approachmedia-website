@@ -19,6 +19,7 @@ import '@/styles/service-flow.css'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/turnkey-project-management'
 import { socialImage } from '@/lib/seo/social-image'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata = {
   title: { absolute: "Turnkey Exhibition Project Management | India & Overseas" },
   description: "Turnkey exhibition project management: design, fabrication, logistics, permissions and on-site handover under one team. 6000+ stalls in 14 countries.",
@@ -308,6 +309,9 @@ export default function TurnkeyProjectManagementPage() {
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="strip" eyebrow="Delivered end to end" />
+
       <section className="border-y border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-start gap-4">

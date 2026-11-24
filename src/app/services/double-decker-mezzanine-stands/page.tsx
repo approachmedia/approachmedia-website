@@ -17,6 +17,7 @@ import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/double-decker-mezzanine-stands'
 import { socialImage } from '@/lib/seo/social-image'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata = {
   title: { absolute: "Double Decker & Mezzanine Stall Design | Approach Media" },
   description: "Double decker and mezzanine exhibition stall design with certified load engineering. 23+ years, 6000+ stalls. Get a two-storey concept and costing.",
@@ -332,6 +333,9 @@ export default function DoubleDeckerMezzanineStandsPage() {
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="fan" eyebrow="From the portfolio" />
+
       <section className="border-y border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-start gap-4">

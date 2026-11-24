@@ -12,6 +12,7 @@ import ParticleFigure from '@/components/home/motion/ParticleFigure'
 import HeroMedia from '@/components/site/motion/HeroMedia'
 import ImageTrail from '@/components/contact/ImageTrail'
 import { getPublishedProjects } from '@/lib/db/portfolio'
+import Showcase from '@/components/site/showcase/Showcase'
 
 // Hourly, so the image trail picks up project photographs (the database is
 // not reachable while the image is built).
@@ -178,6 +179,9 @@ export default async function ContactPage() {
           </aside>
         </div>
       </section>
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="strip" ground="band" eyebrow="From the portfolio" />
+
     </>
   )
 }

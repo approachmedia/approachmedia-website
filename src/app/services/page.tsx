@@ -11,6 +11,7 @@ import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
 import ServicesDeck from '@/components/services/motion/ServicesDeck'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import Showcase from '@/components/site/showcase/Showcase'
 
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
@@ -199,6 +200,9 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="columns" ground="band" eyebrow="Built by this team" />
 
       {/* ═══ SECTION 6: CTA ════════════════════════════════════════════════ */}
       <section className="cta-section" id="cta" aria-labelledby="services-cta-heading">

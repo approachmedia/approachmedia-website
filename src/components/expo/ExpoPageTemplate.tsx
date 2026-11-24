@@ -4,6 +4,7 @@ import { cityPageFor } from '@/lib/seo/city-links'
 import ExpoQuoteForm from './ExpoQuoteForm'
 import { SITE_URL } from '@/lib/site-url'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import Showcase from '@/components/site/showcase/Showcase'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
   construction: [
@@ -324,6 +325,9 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
           <ExpoQuoteForm expo={data.title} city={data.city} venue={data.venue} />
         </div>
       </section>
+
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="auto" eyebrow="Stands from recent shows" />
 
       {/* ── FAQ ────────────────────────────────────────────────── */}
       <section className="section faq-section">

@@ -6,6 +6,7 @@ import { organizationNode, breadcrumb, faqPage } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 import YearZoomHero from '@/components/tradeshow/YearZoomHero'
 import '@/components/tradeshow/tradeshow-motion.css'
+import Showcase from '@/components/site/showcase/Showcase'
 
 // Visible on the page below, and mirrored into FAQPage markup. Google only
 // honours FAQ markup whose answers a visitor can actually read.
@@ -140,6 +141,9 @@ export default function TradeshowCalendarPage() {
           <TradeshowClient events={upcoming} initialMonth={currentMonth} />
         </div>
       </section>
+
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="columns" eyebrow="Stands from recent shows" />
 
       {/* ── FAQ ──────────────────────────────────────────── */}
       <section className="section">

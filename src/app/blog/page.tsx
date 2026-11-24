@@ -10,6 +10,7 @@ import { socialImage } from '@/lib/seo/social-image'
 import HeroMedia from '@/components/site/motion/HeroMedia'
 import TiltGrid from '@/components/blog/TiltGrid'
 import '@/components/blog/blog-motion.css'
+import Showcase from '@/components/site/showcase/Showcase'
 
 /**
  * Revalidated rather than force-static: posts publish on a date held in their
@@ -144,6 +145,9 @@ export default function BlogIndexPage() {
         </div>
         </TiltGrid>
       </section>
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="strip" ground="band" eyebrow="From the portfolio" />
+
     </main>
   )
 }

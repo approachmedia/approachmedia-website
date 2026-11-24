@@ -9,6 +9,7 @@ import HeroMedia from '@/components/site/motion/HeroMedia'
 import ExpoBoard from '@/components/expo/motion/ExpoBoard'
 import ExpoChapters from '@/components/expo/motion/ExpoChapters'
 import '@/components/expo/motion/expo-motion.css'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design for Expos 2026–2027 | India Shows" },
   description: 'Browse upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
@@ -160,6 +161,9 @@ export default function ExposIndexPage() {
           </div>
         </div>
       </section>
+
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="fan" ground="band" eyebrow="Stands from recent shows" />
 
       {/* CTA */}
       <section className="cta-section">

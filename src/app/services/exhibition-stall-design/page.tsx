@@ -18,6 +18,7 @@ import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from '../_content/exhibition-stall-design'
 import { socialImage } from '@/lib/seo/social-image'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata = {
   title: { absolute: "Exhibition Stall Design Services | 3D Concepts in 48 Hrs" },
   description: "Exhibition stall design services with 3D concepts in 48 hours. 23+ years, 6000+ stalls across 9 industries and 14 countries. Request your design brief.",
@@ -310,6 +311,9 @@ export default function ExhibitionStallDesignPage() {
       {/* ══════════════════════════════════════════════════
           INLINE CONVERSION BAND
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="strip" eyebrow="Designs that got built" />
+
       <section className="border-b border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-start gap-4">

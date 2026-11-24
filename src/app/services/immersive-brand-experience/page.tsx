@@ -15,6 +15,7 @@ import { sensoryLayers } from '../_content/immersive-brand-experience'
 import { SITE_URL } from '@/lib/site-url'
 import ServiceSchema from '@/components/seo/ServiceSchema'
 import { socialImage } from '@/lib/seo/social-image'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata = {
   title: { absolute: "Immersive Brand Experience Design | Exhibition Spaces" },
   description: 'Turn your exhibition stand into a sensory journey. We design immersive brand experiences — narrative, light, sound, material and interaction — that drive dwell time and qualified leads.',
@@ -316,6 +317,9 @@ export default function ImmersiveBrandExperiencePage() {
       {/* ══════════════════════════════════════════════════
           INLINE CONVERSION BAND
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="lit" eyebrow="From the portfolio" />
+
       <section className="border-y border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-start gap-4">

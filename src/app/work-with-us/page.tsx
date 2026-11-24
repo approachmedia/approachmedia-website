@@ -10,6 +10,7 @@ import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import HeroMedia from '@/components/site/motion/HeroMedia'
 import StackSteps from '@/components/work/StackSteps'
 import '@/components/work/work-motion.css'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -245,6 +246,9 @@ export default function WorkWithUsPage() {
           </div>
         </div>
       </section>
+
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="lit" eyebrow="What you would be building" />
 
       {/* ── CTA ────────────────────────────────────────────── */}
       <section className="cta-section">

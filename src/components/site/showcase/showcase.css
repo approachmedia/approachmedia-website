@@ -1,0 +1,85 @@
+/* Photo set pieces (Showcase). --p is scroll progress through the band,
+   --e the eased opening of the fan, --mx/--my the light on the wall. */
+.sw { --p: 0.5; --e: 0; --mx: 50%; --my: 45%; position: relative; padding: clamp(3.5rem, 8vw, 6.5rem) 0; overflow-x: clip; }
+.sw--band { border-block: 1px solid rgb(255 255 255 / 0.1); background: linear-gradient(180deg, hsl(222 28% 8% / 0.7), hsl(222 30% 6% / 0)); }
+.sw-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1.5rem; margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+.sw-eyebrow { margin: 0; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: hsl(var(--brand-green)); }
+.sw-more { flex: none; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; color: hsl(var(--brand-blue-glow)); white-space: nowrap; transition: gap 200ms ease, color 200ms ease; }
+.sw-more:hover { gap: 0.6rem; color: #fff; }
+.sw-more svg { width: 0.95rem; height: 0.95rem; }
+
+.sw-tile { position: relative; display: block; overflow: hidden; border-radius: 1rem; background: hsl(222 24% 11%); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08); isolation: isolate; }
+.sw-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms cubic-bezier(0.23, 1, 0.32, 1), filter 400ms ease; }
+.sw-tile--empty img, .sw-tile--empty .sw-cap { display: none; }
+.sw-tile--empty { background: linear-gradient(135deg, hsl(222 24% 12%), hsl(222 28% 8%)); }
+.sw-cap { position: absolute; inset: auto 0 0 0; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.75rem; padding: 2.5rem 1rem 0.9rem; font-size: 0.8125rem; font-weight: 600; line-height: 1.35; color: #fff; background: linear-gradient(0deg, rgb(5 8 15 / 0.92), transparent); opacity: 0; transform: translateY(8px); transition: opacity 300ms ease, transform 400ms cubic-bezier(0.23, 1, 0.32, 1); }
+.sw-cap span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sw-cap svg { flex: none; width: 1rem; height: 1rem; color: hsl(var(--brand-green)); }
+@media (hover: hover) {
+  .sw-tile:hover img { transform: scale(1.07); }
+  .sw-tile:hover .sw-cap { opacity: 1; transform: none; }
+}
+.sw-tile:focus-visible { outline: 2px solid hsl(var(--brand-green)); outline-offset: 3px; }
+.sw-tile:focus-visible .sw-cap { opacity: 1; transform: none; }
+
+/* ── strip ── */
+.sw-strip { display: grid; gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+.sw-row { display: flex; gap: clamp(0.75rem, 1.4vw, 1.25rem); width: max-content; will-change: transform; }
+.sw-row .sw-tile { flex: none; width: clamp(220px, 26vw, 420px); aspect-ratio: 4 / 3; }
+.sw-row--a { transform: translate3d(calc(-2% - var(--p) * 20%), 0, 0); }
+.sw-row--b { transform: translate3d(calc(-24% + var(--p) * 20%), 0, 0); }
+.sw-row--b .sw-tile { aspect-ratio: 16 / 10; }
+
+/* ── columns ── */
+.sw-cols {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  height: min(84vh, 760px); overflow: hidden; border-radius: 1.5rem;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+.sw-col { display: flex; flex-direction: column; gap: clamp(0.75rem, 1.4vw, 1.25rem); height: max-content; will-change: transform; }
+.sw-col .sw-tile { aspect-ratio: 3 / 4; }
+.sw-col--0 { transform: translate3d(0, calc(-6% - var(--p) * 22%), 0); }
+.sw-col--1 { transform: translate3d(0, calc(-34% + var(--p) * 22%), 0); }
+.sw-col--2 { transform: translate3d(0, calc(-2% - var(--p) * 30%), 0); }
+.sw-col--3 { transform: translate3d(0, calc(-30% + var(--p) * 18%), 0); }
+@media (max-width: 767px) {
+  .sw-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); height: 62vh; }
+  .sw-col--2, .sw-col--3 { display: none; }
+}
+
+/* ── fan ── */
+.sw-fan { position: relative; height: clamp(330px, 44vw, 600px); }
+.sw-card {
+  position: absolute; left: 50%; top: 50%; width: clamp(170px, 21vw, 330px); aspect-ratio: 3 / 4;
+  margin: calc(clamp(170px, 21vw, 330px) * -0.667) 0 0 calc(clamp(170px, 21vw, 330px) * -0.5);
+  transform: translate3d(calc(var(--i) * var(--e) * 12.5vw), calc(var(--a) * var(--e) * 1.5vw), 0) rotate(calc(var(--i) * var(--e) * 5deg));
+  will-change: transform;
+}
+.sw-card .sw-tile { width: 100%; height: 100%; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12), 0 30px 60px -30px rgb(0 0 0 / 0.9); transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1); }
+@media (hover: hover) {
+  .sw-card:hover { z-index: 20 !important; }
+  .sw-card:hover .sw-tile { transform: translateY(-18px) scale(1.05); }
+}
+@media (max-width: 767px) {
+  .sw-card { transform: translate3d(calc(var(--i) * var(--e) * 15vw), calc(var(--a) * var(--e) * 2.2vw), 0) rotate(calc(var(--i) * var(--e) * 6deg)); width: 46vw; margin: calc(46vw * -0.667) 0 0 -23vw; }
+  .sw-fan { height: 82vw; }
+}
+
+/* ── lit ── */
+.sw-lit { position: relative; height: clamp(380px, 52vw, 680px); overflow: hidden; border-radius: 1.5rem; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1); background: #05080f; }
+.sw-wall { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 6px; }
+.sw-wall .sw-tile { border-radius: 0.6rem; box-shadow: none; }
+.sw-wall--dim .sw-tile img { filter: grayscale(1) brightness(0.3) contrast(1.1); }
+.sw-wall--lit { pointer-events: none; -webkit-mask-image: radial-gradient(circle clamp(9rem, 17vw, 17rem) at var(--mx) var(--my), #000 35%, transparent 100%); mask-image: radial-gradient(circle clamp(9rem, 17vw, 17rem) at var(--mx) var(--my), #000 35%, transparent 100%); }
+.sw-beam { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(circle clamp(11rem, 21vw, 21rem) at var(--mx) var(--my), hsl(var(--brand-green) / 0.16), hsl(var(--brand-blue-glow) / 0.08) 45%, transparent 70%); }
+@media (max-width: 767px) {
+  .sw-lit { height: 120vw; }
+  .sw-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(6, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-tile img, .sw-cap, .sw-card .sw-tile { transition: none; }
+  .sw-wall--dim .sw-tile img { filter: none; }
+  .sw-wall--lit, .sw-beam { display: none; }
+}

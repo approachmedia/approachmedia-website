@@ -15,6 +15,7 @@ import { AvWhyFlow, AvProcessFlow } from '@/components/services/AvFlow'
 import '@/styles/scrollcraft-engine.css'
 import '@/styles/service-flow.css'
 import { socialImage } from '@/lib/seo/social-image'
+import Showcase from '@/components/site/showcase/Showcase'
 export const metadata = {
   title: { absolute: "Exhibition Stand AV & Technology Integration | LED Walls" },
   description: 'LED video walls, interactive screens, projection mapping and immersive sound integrated into your exhibition stall from day one — not bolted on after design.',
@@ -314,6 +315,9 @@ export default function AVTechnologyIntegrationPage() {
       {/* ══════════════════════════════════════════════════
           INLINE CTA BAND
       ══════════════════════════════════════════════════ */}
+      {/* Real project photographs, moving with the scroll. */}
+      <Showcase variant="lit" eyebrow="Stands we have built" />
+
       <section className="border-y border-white/15 bg-surface/40 py-14">
         <div className="container-wide flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-start gap-4">
