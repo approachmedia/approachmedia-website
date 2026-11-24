@@ -171,6 +171,8 @@ html.am-opening .ho button.ho-skip, html.am-opening .ho .ho-gate *, html.am-open
 
 /* ── footer wordmark ── */
 .am-word { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-weight: 800; font-size: 720px; text-rendering: geometricPrecision; }
+/* a soft glow on the outline smooths its edges on 1x screens */
+.am-footer .am-word { shape-rendering: geometricPrecision; filter: drop-shadow(0 0 4px hsl(97 70% 50% / 0.55)) drop-shadow(0 0 14px hsl(97 70% 45% / 0.25)); }
 
 @media (prefers-reduced-motion: reduce) {
   .am-pt, .am-cursor { display: none !important; }
