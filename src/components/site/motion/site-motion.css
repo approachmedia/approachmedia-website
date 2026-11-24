@@ -128,3 +128,22 @@ html.am-intro.am-intro-out body { overflow: auto; }
 /* ── expo pages: event overview (was an inline 2-column grid) ── */
 .am-expo-overview { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; align-items: start; }
 @media (max-width: 767px) { .am-expo-overview { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+
+/* two-column split that stacks on phones (replaces inline grids no media query could reach) */
+.am-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 56px; align-items: start; }
+@media (max-width: 767px) { .am-split { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+
+/* ── contact: image trail ── */
+.ct-trail { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.ct-trail-img {
+  position: absolute; width: clamp(140px, 16vw, 230px); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px;
+  box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.15);
+  translate: -50% -50%; transform: scale(0.5) rotate(var(--rot)); opacity: 0;
+  transition: transform 450ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms ease, translate 800ms cubic-bezier(0.55, 0, 1, 0.45);
+}
+.ct-trail-img.is-in { transform: scale(1) rotate(var(--rot)); opacity: 1; }
+.ct-trail-img.is-out { translate: -50% 40%; opacity: 0; transform: scale(0.85) rotate(calc(var(--rot) * 2)); transition: transform 700ms ease-in, opacity 700ms ease-in, translate 700ms ease-in; }
+
+/* tradeshow calendar rows */
+.am-ts-row { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 480px) { .am-ts-row { grid-template-columns: minmax(0, 1fr); gap: 8px; } }

@@ -236,15 +236,15 @@ function EventCard({ event }: { event: TradeshowEvent }) {
 
   return (
     <div
+      // Grid columns live in the am-ts-row class: inline '160px 1fr' let the
+      // second column grow to its content and ran 2px past a 390px phone, and
+      // inline styles cannot change at a breakpoint. am-spot adds the glow.
+      className="am-ts-row am-spot"
       style={{
         background: 'hsl(222 24% 9%)',
         border: '1px solid hsl(222 18% 18%)',
         borderRadius: '12px',
         padding: '18px 22px',
-        display: 'grid',
-        gridTemplateColumns: '160px 1fr',
-        gap: '16px',
-        alignItems: 'start',
         transition: 'border-color 0.15s',
       }}
       onMouseEnter={e => (e.currentTarget.style.borderColor = 'hsl(230 50% 40%)')}

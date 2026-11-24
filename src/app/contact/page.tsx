@@ -10,6 +10,21 @@ import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
 import ParticleFigure from '@/components/home/motion/ParticleFigure'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import ImageTrail from '@/components/contact/ImageTrail'
+import { getPublishedProjects } from '@/lib/db/portfolio'
+
+// Hourly, so the image trail picks up project photographs (the database is
+// not reachable while the image is built).
+export const revalidate = 3600
+
+async function trailPhotos() {
+  try {
+    const rows = await getPublishedProjects({ limit: 16 })
+    const out = rows.map(p => p.media[0]).filter(Boolean).map(m => m!.cdnUrl ?? m!.url)
+    if (out.length) return out
+  } catch { /* fall through */ }
+  return ['/home/project-1.jpg', '/home/project-2.jpg', '/home/project-3.jpg', '/home/hero-stall.jpg']
+}
 // Local part only — "+91 " is prefixed for display and stripped for the tel: link.
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
@@ -26,7 +41,8 @@ export const metadata: Metadata = {
   twitter: socialImage().twitter,
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const photos = await trailPhotos()
   return (
     <>
       <JsonLd graph={[
@@ -46,6 +62,8 @@ export default function ContactPage() {
       ══════════════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden border-b border-white/15 pb-20 pt-24 md:pb-24 md:pt-32">
         <HeroMedia />
+        {/* Move the mouse across the hero: it deals a trail of our stalls. */}
+        <ImageTrail images={photos} />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_60%_20%,hsl(var(--brand-blue-glow)/0.18),transparent_55%)]" />
         <div className="container-wide">
           <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get in touch</p>

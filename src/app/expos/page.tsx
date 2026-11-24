@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import expoData from '@/data/expo-pages.json'
 import type { ExpoPageData } from '@/components/expo/types'
 
@@ -7,6 +6,9 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import ExpoBoard from '@/components/expo/motion/ExpoBoard'
+import ExpoChapters from '@/components/expo/motion/ExpoChapters'
+import '@/components/expo/motion/expo-motion.css'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design for Expos 2026–2027 | India Shows" },
   description: 'Browse upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
@@ -28,6 +30,19 @@ const INDUSTRY_COLORS: Record<string, string> = {
   travel:        'hsl(25 80% 60%)',
   multiindustry: 'hsl(220 15% 65%)',
 }
+
+/** One of our own stall photographs per expo sector (the R2 industry set). */
+const SECTOR_PHOTO: Record<string, string> = {
+  construction:  'exhibition-stall-design-doors-windows.jpg',
+  engineering:   'exhibition-stall-design-machinery.jpg',
+  pharma:        'exhibition-stall-design-pharma.jpg',
+  food:          'exhibition-stall-design-fmcg.jpg',
+  textile:       'exhibition-stall-design-garment.jpg',
+  industrial:    'exhibition-stall-design-valves-pumps-gears.jpg',
+  travel:        'exhibition-stall-design-events.jpg',
+  multiindustry: 'exhibition-stall-design-events.jpg',
+}
+const PHOTO_CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
 
 export default function ExposIndexPage() {
   // Year first, then month. Sorting on the month alone put January 2027
@@ -92,6 +107,13 @@ export default function ExposIndexPage() {
               <a href="/contact" className="btn btn-primary">Get a Stall Design Quote &rarr;</a>
               <a href="#expo-list" className="btn btn-outline">Browse All Expos</a>
             </div>
+            {/* The next six shows on a departure board that flips into place. */}
+            <ExpoBoard rows={expos.slice(0, 6).map(e => ({
+              slug: e.slug,
+              when: `${e.monthName.slice(0, 3).toUpperCase()} ${e.year}`,
+              what: e.title,
+              where: e.city,
+            }))} />
           </div>
         </div>
       </section>
@@ -116,35 +138,26 @@ export default function ExposIndexPage() {
             <h2>Find Your Exhibition by Month</h2>
           </div>
 
-          {Object.entries(byMonth).map(([monthYear, monthExpos]) => (
-            <div key={monthYear} style={{ marginBottom: '56px' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'hsl(230 70% 65%)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid var(--border)' }}>
-                {monthYear}
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-                {monthExpos.map(expo => (
-                  <Link
-                    key={expo.slug}
-                    href={`/expos/${expo.slug}`}
-                    style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '12px', padding: '20px', display: 'block', transition: 'border-color 0.2s', textDecoration: 'none' }}
-                    className="expo-card-link"
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', gap: '8px' }}>
-                      <span style={{ fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: INDUSTRY_COLORS[expo.industry] ?? 'hsl(220 15% 65%)', flexShrink: 0 }}>
-                        {expo.industryLabel.split(',')[0]}
-                      </span>
-                      <span style={{ fontSize: '0.72rem', color: 'hsl(220 10% 50%)', textAlign: 'right' }}>{expo.city}</span>
-                    </div>
-                    <h4 style={{ color: 'hsl(0 0% 96%)', fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4, marginBottom: '8px' }}>{expo.title}</h4>
-                    <p style={{ color: 'hsl(220 10% 55%)', fontSize: '0.8rem', lineHeight: 1.5, marginBottom: '12px' }}>{expo.venue}</p>
-                    <span style={{ fontSize: '0.78rem', color: 'hsl(230 70% 65%)', fontWeight: 600 }}>
-                      View Stall Design Page &rarr;
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+          {/* Month chapters: the month fills as you scroll through its shows,
+              and a stall photograph from the show's sector follows the cursor. */}
+          <div className="exm">
+            <ExpoChapters chapters={Object.entries(byMonth).map(([monthYear, monthExpos]) => {
+              const [month, year] = monthYear.split(' ')
+              return {
+                month,
+                year,
+                expos: monthExpos.map(expo => ({
+                  slug: expo.slug,
+                  title: expo.title,
+                  venue: expo.venue,
+                  city: expo.city,
+                  tag: expo.industryLabel.split(',')[0],
+                  color: INDUSTRY_COLORS[expo.industry] ?? 'hsl(220 15% 65%)',
+                  image: `${PHOTO_CDN}/${SECTOR_PHOTO[expo.industry] ?? SECTOR_PHOTO.multiindustry}`,
+                })),
+              }
+            })} />
+          </div>
         </div>
       </section>
 

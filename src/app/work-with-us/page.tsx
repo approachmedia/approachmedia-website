@@ -8,6 +8,8 @@ import { cityPageFor } from '@/lib/seo/city-links'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import StackSteps from '@/components/work/StackSteps'
+import '@/components/work/work-motion.css'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -97,7 +99,7 @@ export default function WorkWithUsPage() {
       {/* ── WHAT WE DO ─────────────────────────────────────── */}
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.2fr)', gap: '56px', alignItems: 'start' }}>
+          <div className="am-split">
             <div className="animate-in">
               <span className="section-label">What We Do</span>
               <h2 style={{ marginBottom: '20px' }}>End-to-End Exhibition Stall Design and Build</h2>
@@ -154,15 +156,8 @@ export default function WorkWithUsPage() {
             <span className="section-label">How We Work</span>
             <h2>From Brief to Build in 6 Steps</h2>
           </div>
-          <div className="flow-grid">
-            {PROCESS.map((step, i) => (
-              <div key={i} className={`flow-card animate-in delay-${(i % 4) + 1}`}>
-                <span className="flow-num">{step.num}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </div>
-            ))}
-          </div>
+          {/* The six steps as cards that stack as you scroll, each with a build clip. */}
+          <StackSteps steps={PROCESS} />
         </div>
       </section>
 
@@ -175,7 +170,7 @@ export default function WorkWithUsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px' }}>
             {INDUSTRIES.map((ind, i) => (
-              <div key={i} className={`animate-in delay-${(i % 4) + 1}`} style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '10px', padding: '18px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <div key={i} className={`am-spot am-btn animate-in delay-${(i % 4) + 1}`} style={{ background: 'hsl(222 24% 9%)', border: '1px solid hsl(222 18% 18%)', borderRadius: '10px', padding: '18px', display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <span style={{ fontSize: '1.4rem' }}>{ind.icon}</span>
                 <span className="text-sm" style={{ color: 'hsl(0 0% 88%)', fontWeight: 500, lineHeight: 1.4 }}>{ind.label}</span>
               </div>

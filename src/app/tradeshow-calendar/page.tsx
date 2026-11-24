@@ -4,6 +4,8 @@ import eventsData from '@/data/tradeshow-events.json'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
+import YearZoomHero from '@/components/tradeshow/YearZoomHero'
+import '@/components/tradeshow/tradeshow-motion.css'
 
 // Visible on the page below, and mirrored into FAQPage markup. Google only
 // honours FAQ markup whose answers a visitor can actually read.
@@ -87,9 +89,9 @@ export default function TradeshowCalendarPage() {
   return (
     <main>
       <JsonLd graph={graph} />
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="section" style={{ paddingBottom: '0' }}>
-        <div className="container text-center">
+      {/* ── HERO: the year, with a build clip playing inside the numerals,
+             zooming until the clip fills the screen. ─────────── */}
+      <YearZoomHero year="2026">
           <span className="section-label">India Tradeshow Calendar</span>
           <h1>
             India Trade Show Calendar 2026 — <span className="highlight">Exhibition Dates, Venues and Cities</span>
@@ -98,8 +100,7 @@ export default function TradeshowCalendarPage() {
             Browse {upcoming.length}+ upcoming trade shows, exhibitions, and industry conferences
             across India. Filter by city, month, or industry to plan your exhibition calendar.
           </p>
-        </div>
-      </section>
+      </YearZoomHero>
 
       {/* ── CTA STRIP ────────────────────────────────────── */}
       <section style={{ paddingTop: '0', paddingBottom: '0' }}>

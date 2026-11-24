@@ -8,6 +8,8 @@ import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 import { socialImage } from '@/lib/seo/social-image'
 import HeroMedia from '@/components/site/motion/HeroMedia'
+import TiltGrid from '@/components/blog/TiltGrid'
+import '@/components/blog/blog-motion.css'
 
 /**
  * Revalidated rather than force-static: posts publish on a date held in their
@@ -84,15 +86,33 @@ export default function BlogIndexPage() {
       </section>
 
       <section className="container-wide py-14 md:py-20">
+        <TiltGrid>
+          {/* The newest illustrated post as a featured story; its photograph eases in as
+              the story crosses the screen. */}
+          {(() => {
+            // The newest post that has a photograph.
+            const lead = posts.find(p => POST_IMAGES[p.slug])
+            const image = lead ? POST_IMAGES[lead.slug] : undefined
+            if (!lead || !image) return null
+            return (
+              <Link href={`/blog/${lead.slug}`} className="bt-feature mb-10 md:mb-14">
+                <Image src={image.src} alt={image.alt} fill priority sizes="100vw" className="object-cover" />
+                <div className="bt-feature-shade" aria-hidden="true" />
+                <div className="bt-feature-copy">
+                  <span className="bt-feature-tag">Latest</span>
+                  <p className="mt-4 text-sm text-slate-300">{formatDate(lead.datePublished)} · {lead.author}</p>
+                  <h2 className="bt-feature-title">{lead.h1}</h2>
+                  <p className="mt-3 line-clamp-2 max-w-2xl text-base text-slate-300">{lead.metaDescription}</p>
+                </div>
+              </Link>
+            )
+          })()}
         <div className="grid gap-8 md:grid-cols-2">
-          {posts.map(p => {
+          {posts.filter(p => p !== posts.find(q => POST_IMAGES[q.slug])).map(p => {
             const image = POST_IMAGES[p.slug]
             return (
-              <Link
-                key={p.slug}
-                href={`/blog/${p.slug}`}
-                className="am-spot group overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50"
-              >
+              <Link key={p.slug} href={`/blog/${p.slug}`} className="bt-card group block">
+              <div className="bt-card-inner overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50">
                 {image ? (
                   <div className="relative aspect-[16/9] overflow-hidden">
                     <Image
@@ -117,10 +137,12 @@ export default function BlogIndexPage() {
                     {p.metaDescription}
                   </p>
                 </div>
+              </div>
               </Link>
             )
           })}
         </div>
+        </TiltGrid>
       </section>
     </main>
   )

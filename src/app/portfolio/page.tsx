@@ -6,10 +6,9 @@ import { prisma } from '@/lib/db/prisma'
 import { generatePortfolioIndexSchema } from '@/lib/seo/schema-generator'
 import PortfolioGrid from '@/components/portfolio/PortfolioGrid'
 import FilterBar from '@/components/portfolio/FilterBar'
-import PortfolioHero from '@/components/portfolio/motion/PortfolioHero'
-import FeaturedRail from '@/components/portfolio/motion/FeaturedRail'
+import ZoomMosaicHero from '@/components/portfolio/motion/ZoomMosaicHero'
 import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
-import { heroPhotos, railItems } from '@/components/portfolio/motion/heroPhotos'
+import { heroPhotos } from '@/components/portfolio/motion/heroPhotos'
 import StellarSection from '@/components/portfolio/motion/StellarSection'
 
 import { SITE_URL } from '@/lib/site-url'
@@ -66,24 +65,27 @@ export default async function PortfolioIndexPage() {
            in components/portfolio/motion; copy is unchanged. */}
       <main className="pfx pb-24">
 
-        <PortfolioHero
+        <ZoomMosaicHero
           eyebrow="Project Index"
           lines={[{ text: 'Every Stall.' }, { text: 'Every Story.', accent: true }]}
-          photos={heroPhotos(projects)}
+          photos={heroPhotos(projects).map(p => ({ src: p.src, alt: '' }))}
         >
           <p>
             {projects.length}+ projects built across India — from minimalist 9 sqm inline stands to 300 sqm double-decker pavilions.
           </p>
-        </PortfolioHero>
+        </ZoomMosaicHero>
 
         <div className="pfx-wrap mt-16">
           <FilterBar industries={industries} stallTypes={stallTypes} />
         </div>
 
+        {/* Featured projects: the same scrolling grid as the rest (the
+            sideways pinned rail was removed at the owner's request). */}
         {featured.length > 0 && (
-          <div className="mt-20">
-            <FeaturedRail heading="Featured Projects" items={railItems(featured)} />
-          </div>
+          <section className="pfx-wrap mt-20">
+            <h2 className="pfx-label pfx-label--gold mb-8">Featured Projects</h2>
+            <PortfolioGrid projects={featured} />
+          </section>
         )}
 
         <section className="pfx-wrap mt-20">

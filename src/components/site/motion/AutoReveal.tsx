@@ -39,10 +39,16 @@ export default function AutoReveal() {
     let tick = 0
     const check = () => {
       tick = 0
-      const line = window.innerHeight * 0.9
+      // At the very bottom of the page the last elements may never reach the
+      // 90% line, so anything on screen there is revealed outright.
+      const atEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4
+      const line = window.innerHeight * (atEnd ? 1 : 0.9)
       pending = pending.filter(el => {
         const r = el.getBoundingClientRect()
-        if (r.top < line && r.bottom > 0) { el.classList.add('am-in'); return false }
+        // On screen, already scrolled past (a stacked or pinned layer can be
+        // skipped over between frames), or collapsed to nothing: reveal, so
+        // nothing can stay clipped once it has had its chance.
+        if ((r.top < line && r.bottom > 0) || r.bottom <= 0 || r.height === 0) { el.classList.add('am-in'); return false }
         return el.isConnected
       })
       if (pending.length === 0) window.removeEventListener('scroll', onScroll)
