@@ -16,6 +16,8 @@
  * imported; the few device rules it needs are carried, scoped to `.cty`.
  */
 
+import HeroMedia from '@/components/site/motion/HeroMedia'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { loadEngine, canH264 } from '@/components/services/ServiceFlow'
@@ -156,6 +158,7 @@ export function CityChapters({ data, cap, sectorShots, calendar, portfolio, faq,
              kinetic on purpose: the engine's splitter rebuilds an element
              from its textContent, which would destroy the highlight span. ── */}
       <section className="cty-title" data-chapter={0} aria-label={`Exhibition stall design in ${City}`}>
+        <HeroMedia opacity={0.3} />
         <div data-sc-act="flow">
           <div className="cty__wrap">
             <div data-sc-in data-sc-stagger="90">
@@ -380,7 +383,8 @@ export function CityChapters({ data, cap, sectorShots, calendar, portfolio, faq,
       </Chapter>
 
       {/* ── COLOPHON. The close, wiped in from the left. ── */}
-      <section className="cty-ch cty-ch--b" aria-label="Start your project">
+      <section className="cty-ch cty-ch--b" aria-label="Start your project" style={{ position: 'relative', overflow: 'hidden', isolation: 'isolate' }}>
+        <AmbientVideo veil="left" />
         <div data-sc-act="flow">
           <div className="cty__wrap">
             <div className="cty-colo" data-sc-reveal="left" data-sc-reveal-at="0.04 0.42">{colophon}</div>

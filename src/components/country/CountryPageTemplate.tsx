@@ -1,3 +1,5 @@
+import HeroMedia from '@/components/site/motion/HeroMedia'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, CheckCircle2, Globe2, MapPin, Sparkles } from 'lucide-react'
@@ -172,6 +174,8 @@ export function CountryPageTemplate({
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,hsl(var(--brand-blue-glow)/0.25),transparent_60%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_75%,hsl(var(--brand-green)/0.08),transparent_50%)]" />
         </div>
+        {/* one of our own build clips, moving quietly behind the copy */}
+        <HeroMedia opacity={0.3} />
 
         {/* Subtle decorative stripes */}
         <div className="pointer-events-none absolute inset-y-0 left-0 -z-10 hidden w-[34%] md:block">
@@ -577,8 +581,9 @@ export function CountryPageTemplate({
       {/* ══════════════════════════════════════════════════
           CTA
       ══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-t border-white/10 py-24 md:py-32">
+      <section className="relative isolate overflow-hidden border-t border-white/10 py-24 md:py-32">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(var(--brand-blue-glow)/0.15),transparent_60%)]" />
+        <AmbientVideo />
         <div className="container-narrow text-center">
           <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get started</p>
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">

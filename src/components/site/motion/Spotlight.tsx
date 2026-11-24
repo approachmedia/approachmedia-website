@@ -7,6 +7,8 @@
  * the card. One listener for the document; cards opt in by class, so the
  * older hand-written pages pick it up without markup changes.
  *
+ * Each lit card also leans a few degrees toward the pointer.
+ *
  * Fine pointers only; nothing under reduced motion.
  */
 
@@ -27,10 +29,21 @@ export default function Spotlight() {
       const el = (e.target as HTMLElement).closest<HTMLElement>(SPOT_SELECTOR)
       if (lit && lit !== el) { lit.classList.remove('am-lit'); lit = null }
       if (!el) return
-      if (!el.classList.contains('am-spot-ready')) el.classList.add('am-spot-ready')
       const r = el.getBoundingClientRect()
+      if (!el.classList.contains('am-spot-ready')) {
+        el.classList.add('am-spot-ready')
+        // Lean toward the pointer too, unless something else already moves
+        // the card (an inline or animated transform), or it is too large for
+        // a tilt to read as anything but a wobble.
+        const cs = getComputedStyle(el)
+        if (!el.style.transform && cs.transform === 'none' && r.width < 720 && r.height < 720 && !el.closest('[data-no-tilt]')) el.classList.add('am-tilt')
+      }
       el.style.setProperty('--sx', `${e.clientX - r.left}px`)
       el.style.setProperty('--sy', `${e.clientY - r.top}px`)
+      if (el.classList.contains('am-tilt')) {
+        el.style.setProperty('--ry', `${(((e.clientX - r.left) / r.width - 0.5) * 7).toFixed(2)}deg`)
+        el.style.setProperty('--rx', `${(((e.clientY - r.top) / r.height - 0.5) * -7).toFixed(2)}deg`)
+      }
       if (lit !== el) { el.classList.add('am-lit'); lit = el }
     }
     document.addEventListener('pointermove', onMove, { passive: true })

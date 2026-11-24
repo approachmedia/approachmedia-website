@@ -101,7 +101,7 @@
 .cty-card p { font-size: 0.875rem; color: var(--body); line-height: 1.7; margin: 0; }
 
 /* ── title page ────────────────────────────────────────────── */
-.cty-title { background: var(--g-a); padding: 96px 0 72px; }
+.cty-title { position: relative; overflow: hidden; isolation: isolate; background: var(--g-a); padding: 96px 0 72px; }
 .cty-title__city {
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--green); margin: 0 0 20px; display: block;

@@ -9,6 +9,7 @@ import Cursor from './motion/Cursor'
 import Magnetic from './motion/Magnetic'
 import AutoReveal from './motion/AutoReveal'
 import Spotlight from './motion/Spotlight'
+import ScrollProgress from './motion/ScrollProgress'
 import './motion/site-motion.css'
 
 /**
@@ -45,6 +46,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <Magnetic />
       <AutoReveal />
       <Spotlight />
+      <ScrollProgress />
     </div>
   )
 }

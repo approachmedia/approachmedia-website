@@ -1,3 +1,5 @@
+import HeroMedia from '@/components/site/motion/HeroMedia'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -78,6 +80,7 @@ export default function ImmersiveBrandExperiencePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
+        <HeroMedia clip="exhibition-stall-av-technology-integration-02" opacity={0.38} />
 
         <div className="container-wide grid gap-10 py-24 md:grid-cols-12 md:py-36">
           <div className="md:col-span-7">
@@ -365,8 +368,9 @@ export default function ImmersiveBrandExperiencePage() {
       {/* ══════════════════════════════════════════════════
           FINAL CTA
       ══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden border-t border-white/15 py-24 md:py-32">
+      <section className="relative isolate overflow-hidden border-t border-white/15 py-24 md:py-32">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_0%,hsl(var(--brand-blue-glow)/0.15),transparent_60%)]" />
+        <AmbientVideo />
         <div className="container-narrow text-center">
           <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get started</p>
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
