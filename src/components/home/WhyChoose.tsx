@@ -25,7 +25,7 @@ export function WhyChoose() {
           {/* Style 10 (GlowCard): the border and wash follow the cursor across
               all four cards at once, the hue shifting along the row. */}
           {items.map(it => (
-            <GlowCard key={it.title} customSize glowColor="green" className="h-full !grid-rows-1 !p-7">
+            <GlowCard key={it.title} customSize glowColor="brand" className="h-full !grid-rows-1 !p-7">
               <div className="relative">
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand-blue/30 to-brand-green/20 ring-1 ring-brand-blue-glow/30">
                   <it.icon className="h-5 w-5 text-brand-green-glow" />

@@ -9,7 +9,7 @@ import React, { useEffect, useRef, ReactNode } from 'react';
 interface GlowCardProps {
   children: ReactNode;
   className?: string;
-  glowColor?: 'blue' | 'purple' | 'green' | 'red' | 'orange';
+  glowColor?: 'brand' | 'blue' | 'purple' | 'green' | 'red' | 'orange';
   size?: 'sm' | 'md' | 'lg';
   width?: string | number;
   height?: string | number;
@@ -17,6 +17,10 @@ interface GlowCardProps {
 }
 
 const glowColorMap = {
+  // Approach Green (#53B618, hue 97) at the left of the screen, through teal,
+  // to Approach Blue (#172F9D, hue 229) over the cards; the screen edge tops
+  // out at 242, still blue. Never reaches violet (from about 260).
+  brand: { base: 97, spread: 145 },
   blue: { base: 220, spread: 200 },
   purple: { base: 280, spread: 300 },
   green: { base: 120, spread: 200 },
