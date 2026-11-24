@@ -3,7 +3,7 @@
 /**
  * The home page opening, rebuilt as a cinematic stage.
  *
- *  - A finished build plays full-bleed behind the headline.
+ *  - A showreel of finished builds plays full-bleed behind the headline.
  *  - The headline rises word by word through masks on load (once): the
  *    lead first, then the accent in the brand gradient.
  *  - The pointer separates the layers: the lead, the accent and the clip
@@ -38,7 +38,13 @@ const metrics = [
   { v: '14+', l: 'Countries Delivered In' },
 ]
 
-const CLIP = 'custom-exhibition-stand-design-india-01'
+/**
+ * The showreel: eleven of the owner's own build clips (the services-flow and
+ * about-flow footage) cut to a 19-second loop, graded as one, with a slow
+ * push on each shot and the last frame flowing back into the first, so the
+ * loop has no seam. No audio, no burnt-in text. A portrait cut for phones.
+ */
+const REEL = '/home-intro/exhibition-stall-design-showreel'
 
 function Words({ text, start, className }: { text: string; start: number; className?: string }) {
   return (
@@ -129,10 +135,10 @@ export function Hero() {
       <section ref={track} className="hx" data-no-reveal>
         <div className="hx-stage">
           <div ref={media} className="hx-media" aria-hidden="true">
-            <video autoPlay muted loop playsInline preload="metadata" poster={`/services-flow/${CLIP}-poster.webp`}>
-              <source src={`/services-flow/${CLIP}-m.mp4`} type="video/mp4" media="(max-width: 767px)" />
-              <source src={`/services-flow/${CLIP}.webm`} type="video/webm" />
-              <source src={`/services-flow/${CLIP}.mp4`} type="video/mp4" />
+            <video autoPlay muted loop playsInline preload="metadata" poster={`${REEL}-poster.webp`}>
+              <source src={`${REEL}-m.mp4`} type="video/mp4" media="(max-width: 767px)" />
+              <source src={`${REEL}.webm`} type="video/webm" />
+              <source src={`${REEL}.mp4`} type="video/mp4" />
             </video>
             <div ref={veil} className="hx-veil" />
             <div className="hx-grain" />
