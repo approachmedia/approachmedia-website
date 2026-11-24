@@ -9,11 +9,12 @@ Every picture comes from the owner's own clips in `clips/` and the official bran
 
 ## Pieces
 
-- `lineart.py <W> <H> <outdir>` (OpenCV) draws the Imagine phase.
+- `blueprint.html` + `renderbp.js <W> <H> <outdir>` draw the Imagine phase, which opens the film. It is a design blueprint drafted live: a drafting grid, the logo's two wedges (exact outlines from the logo file, left blue, centre green) with dimension lines, then a stand plan in isometric whose frame rises. Encode the frames to `<outdir>/A.mp4`, which replaces the line-art version below.
+- `lineart.py <W> <H> <outdir>` (no longer used) (OpenCV) draws the Imagine phase.
   - Six close-ups, each traced as smooth anti-aliased lines over a brand duotone (blue to teal to green).
   - Drawn at twice the output size, into `<outdir>/la0..5.png`.
-- `build2d.py <W> <H> <outdir>` (ffmpeg) renders the two 2D phases from those drawings and the clips.
-  - **A, Imagine:** pushes into the drawings, cut on white flashes.
+- `build2d.py <W> <H> <outdir>` (ffmpeg) renders the 2D phases from the clips.
+  - **A, Imagine:** the old line-art version, now replaced by the blueprint.
   - **B, Create:** nine cuts under a moving blue and green wash, with the brand line and the real figures.
 - `scene.html` (three.js) is the 3D part. `window.renderAt(t)` returns one frame.
   - **Default mode:** the corridor flight, then the logo's own shapes extruded. Faces are filled with project photographs; the wedge sides are blue (left) and green (centre). The official colour logo settles over them.

@@ -1,0 +1,174 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#050814;overflow:hidden}canvas{display:block}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+/*
+ * The Imagine phase of the opening: a design blueprint drafted live.
+ * Driven only by time: window.renderAt(t) draws the frame at t seconds
+ * (0 to 3.72) and returns a PNG. Beats match the music's hits (every 0.6 s).
+ *
+ *   0.00  drafting grid fades up, a crosshair finds the centre, coordinates tick
+ *   0.60  construction lines sweep; the left wedge of the logo drafts in blue
+ *   1.20  the centre wedge drafts in green, dimension arrows read off its sides
+ *   1.80  a stall floor plan drafts beneath (stand outline, counter, meeting area)
+ *   2.40  an isometric wireframe of a stand frame rises off the plan
+ *   3.00  every line brightens and converges toward the centre (into the flash)
+ */
+const Q = new URLSearchParams(location.search)
+const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080), SS = 2
+const cv = document.getElementById('c'); cv.width = W * SS; cv.height = H * SS
+cv.style.width = W + 'px'; cv.style.height = H + 'px'
+const g = cv.getContext('2d'); g.scale(SS, SS)
+const BLUE = '#4a6cff', BLUE_D = '#172F9D', GREEN = '#6fd23a', INK = 'rgba(160,185,255,'
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
+const span = (t, a, b) => clamp((t - a) / (b - a))
+const ease = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+const easeOut = x => 1 - Math.pow(1 - x, 3)
+const PORTRAIT = H > W
+const U = Math.min(W, H) / 1080          // layout unit
+
+// draw a polyline partially (0..1 of its length)
+function path(pts, k, close) {
+  const P = close ? [...pts, pts[0]] : pts
+  const seg = []; let L = 0
+  for (let i = 1; i < P.length; i++) { const d = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); seg.push(d); L += d }
+  let rem = L * clamp(k)
+  g.beginPath(); g.moveTo(P[0][0], P[0][1])
+  for (let i = 1; i < P.length && rem > 0; i++) {
+    const d = seg[i - 1], f = Math.min(1, rem / d)
+    g.lineTo(P[i - 1][0] + (P[i][0] - P[i - 1][0]) * f, P[i - 1][1] + (P[i][1] - P[i - 1][1]) * f)
+    rem -= d
+  }
+  g.stroke()
+}
+function line(x1, y1, x2, y2, k = 1) { path([[x1, y1], [x2, y2]], k) }
+function glow(color, blur) { g.shadowColor = color; g.shadowBlur = blur }
+function text(s, x, y, size, color, align = 'left', alpha = 1) {
+  g.save(); g.globalAlpha *= alpha; g.fillStyle = color; g.font = `500 ${size}px "Inter", "Helvetica Neue", Arial, sans-serif`
+  g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); g.restore()
+}
+// dimension line with arrow ticks and a value
+function dim(x1, y1, x2, y2, label, k, color) {
+  if (k <= 0) return
+  g.save(); g.strokeStyle = color; g.lineWidth = 1.2 * U; g.globalAlpha *= 0.85
+  line(x1, y1, x2, y2, k)
+  const a = Math.atan2(y2 - y1, x2 - x1), s = 7 * U
+  for (const [px, py, dir] of [[x1, y1, 1], [x1 + (x2 - x1) * k, y1 + (y2 - y1) * k, -1]]) {
+    g.beginPath(); g.moveTo(px - Math.cos(a + 0.5) * s * dir * -1, py - Math.sin(a + 0.5) * s * dir * -1)
+    g.moveTo(px + Math.cos(a + Math.PI / 2) * s, py + Math.sin(a + Math.PI / 2) * s); g.lineTo(px - Math.cos(a + Math.PI / 2) * s, py - Math.sin(a + Math.PI / 2) * s); g.stroke()
+  }
+  if (k > 0.85) text(label, (x1 + x2) / 2 + Math.sin(a) * 18 * U, (y1 + y2) / 2 - Math.cos(a) * 18 * U, 15 * U, color, 'center', (k - 0.85) / 0.15)
+  g.restore()
+}
+
+// the logo's two wedges, in the logo's own proportions (svg units of the
+// 321x143 reverse-white file), placed and scaled on screen
+const WEDGE_L = [[35.728, 43.968], [45.542, 28.193], [90.597, 98.181], [0.933, 98.181], [11.416, 82.406], [60.486, 82.406]]
+const WEDGE_R = [[233.128, 19.308], [222.22, 0.952], [159.892, 98.327], [282.991, 98.327], [272.306, 81.538], [192.169, 81.538]]
+function wedgePts(pts, ox, oy, s) { return pts.map(([x, y]) => [ox + x * s, oy + y * s]) }
+
+window.renderAt = (t) => {
+  g.setTransform(SS, 0, 0, SS, 0, 0)
+  g.globalAlpha = 1; g.shadowBlur = 0
+  // ground
+  const bg = g.createRadialGradient(W / 2, H * 0.45, 0, W / 2, H * 0.45, Math.max(W, H) * 0.75)
+  bg.addColorStop(0, '#0d1638'); bg.addColorStop(1, '#03050d'); g.fillStyle = bg; g.fillRect(0, 0, W, H)
+
+  // converge at the end: everything scales toward the centre and brightens
+  const conv = ease(span(t, 3.05, 3.72))
+  g.save()
+  g.translate(W / 2, H / 2); g.scale(1 + conv * 0.35, 1 + conv * 0.35); g.translate(-W / 2, -H / 2)
+  // slow push all the way through
+  const push = 1 + 0.06 * (t / 3.72)
+  g.translate(W / 2, H / 2); g.scale(push, push); g.translate(-W / 2, -H / 2)
+
+  // grid
+  const gridA = easeOut(span(t, 0.0, 0.5))
+  const step = 48 * U
+  g.lineWidth = 1
+  for (let x = (W / 2) % step; x < W; x += step) {
+    const major = Math.round((x - W / 2) / step) % 4 === 0
+    g.strokeStyle = INK + (major ? 0.14 : 0.06) * gridA + ')'; line(x, 0, x, H)
+  }
+  for (let y = (H / 2) % step; y < H; y += step) {
+    const major = Math.round((y - H / 2) / step) % 4 === 0
+    g.strokeStyle = INK + (major ? 0.14 : 0.06) * gridA + ')'; line(0, y, W, y)
+  }
+  // crosshair finding the centre
+  const ch = easeOut(span(t, 0.1, 0.55))
+  const cx = W / 2 + (1 - ch) * W * 0.18, cy = H / 2 - (1 - ch) * H * 0.12
+  g.strokeStyle = INK + 0.55 * gridA + ')'; g.lineWidth = 1 * U
+  line(cx, 0, cx, H); line(0, cy, W, cy)
+  g.beginPath(); g.arc(cx, cy, 16 * U, 0, Math.PI * 2); g.stroke()
+  text(`X ${(cx / W * 1000).toFixed(1).padStart(6, '0')}   Y ${(cy / H * 1000).toFixed(1).padStart(6, '0')}`, cx + 26 * U, cy - 24 * U, 15 * U, 'rgba(180,200,255,0.85)', 'left', gridA * (1 - span(t, 0.9, 1.2)))
+
+  // the logo wedges, drafted
+  const s = (PORTRAIT ? 3.0 : 2.6) * U
+  const lw = 283 * s, ox = W / 2 - lw / 2, oy = H * (PORTRAIT ? 0.3 : 0.4) - 98 * s
+  const kL = ease(span(t, 0.6, 1.25)), kR = ease(span(t, 1.2, 1.85))
+  // construction lines sweeping across
+  const sweep = span(t, 0.55, 1.0)
+  if (sweep > 0 && sweep < 1) {
+    g.strokeStyle = 'rgba(160,185,255,0.35)'; g.lineWidth = 1 * U
+    const sx = W * sweep; line(sx, 0, sx, H)
+  }
+  g.lineJoin = 'miter'; g.lineCap = 'square'
+  g.save(); glow(BLUE, 14 * U); g.strokeStyle = BLUE; g.lineWidth = 2.4 * U
+  path(wedgePts(WEDGE_L, ox, oy, s), kL, true); g.restore()
+  if (kL > 0.98) { g.save(); g.globalAlpha = 0.16 * span(t, 1.25, 1.6); g.fillStyle = BLUE_D; g.beginPath(); wedgePts(WEDGE_L, ox, oy, s).forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fill(); g.restore() }
+  g.save(); glow(GREEN, 14 * U); g.strokeStyle = GREEN; g.lineWidth = 2.4 * U
+  path(wedgePts(WEDGE_R, ox, oy, s), kR, true); g.restore()
+  if (kR > 0.98) { g.save(); g.globalAlpha = 0.14 * span(t, 1.85, 2.2); g.fillStyle = '#53B618'; g.beginPath(); wedgePts(WEDGE_R, ox, oy, s).forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fill(); g.restore() }
+  // dimensions read off the wedges
+  const L = wedgePts(WEDGE_L, ox, oy, s), R = wedgePts(WEDGE_R, ox, oy, s)
+  dim(L[3][0], L[3][1] + 30 * U, L[2][0], L[2][1] + 30 * U, '90°  ·  2400', ease(span(t, 1.0, 1.4)), 'rgba(140,165,255,0.9)')
+  dim(R[2][0], R[2][1] + 30 * U, R[3][0], R[3][1] + 30 * U, '4800', ease(span(t, 1.6, 2.0)), 'rgba(150,230,120,0.9)')
+  dim(R[3][0] + 30 * U, R[1][1], R[3][0] + 30 * U, R[3][1], '3600', ease(span(t, 1.7, 2.1)), 'rgba(150,230,120,0.9)')
+
+  // the stand, in isometric: its floor plan drafts on the floor, then the frame rises
+  const iy = H * (PORTRAIT ? 0.66 : 0.75)
+  const iso = (x, y, z) => [W / 2 + (x - y) * 0.87 * U, iy + (x + y) * 0.5 * U - z * U]
+  const A = 190, B = 110
+  const kp = ease(span(t, 1.8, 2.3)), kp2 = ease(span(t, 2.0, 2.5)), ki = ease(span(t, 2.4, 3.0))
+  g.save(); g.lineJoin = 'round'; g.lineCap = 'round'
+  // floor outline
+  g.strokeStyle = 'rgba(205,220,255,0.9)'; g.lineWidth = 1.8 * U; glow('rgba(120,150,255,0.7)', 8 * U)
+  path([iso(-A, -B, 0), iso(A, -B, 0), iso(A, B, 0), iso(-A, B, 0)], kp, true)
+  // counter, meeting table, store room, entry, on the floor
+  g.lineWidth = 1.3 * U; g.strokeStyle = 'rgba(165,190,255,0.8)'
+  path([iso(-150, 40, 0), iso(-40, 40, 0), iso(-40, 75, 0), iso(-150, 75, 0)], kp2, true)
+  if (kp2 > 0) { g.beginPath(); const n = 40; for (let i = 0; i <= n * kp2; i++) { const a2 = (i / n) * Math.PI * 2, [x, y] = iso(70 + Math.cos(a2) * 34, 10 + Math.sin(a2) * 34, 0); i ? g.lineTo(x, y) : g.moveTo(x, y) } g.stroke() }
+  path([iso(120, -B, 0), iso(120, -30, 0), iso(A, -30, 0)], kp2)
+  g.setLineDash([5 * U, 6 * U]); path([iso(-20, B, 0), iso(60, B, 0)], kp2); g.setLineDash([])
+  // the frame rising
+  if (ki > 0) {
+    const h = 150 * ki
+    g.lineWidth = 1.8 * U; g.strokeStyle = 'rgba(232,240,255,0.95)'; glow('rgba(140,170,255,0.8)', 10 * U)
+    for (const [x, y] of [[-A, -B], [A, -B], [-A, B]]) line(...iso(x, y, 0), ...iso(x, y, h))
+    path([iso(-A, B, h), iso(-A, -B, h), iso(A, -B, h)], 1)
+    // back wall header in Approach Blue, side wall in Approach Green
+    g.lineWidth = 2.4 * U
+    g.strokeStyle = BLUE; glow(BLUE, 12 * U); path([iso(-A, -B, h), iso(A, -B, h), iso(A, -B, h - 34 * ki), iso(-A, -B, h - 34 * ki)], 1, true)
+    g.strokeStyle = GREEN; glow(GREEN, 12 * U); path([iso(-A, -B, 0), iso(-A, B, 0), iso(-A, B, h), iso(-A, -B, h)], 1, true)
+  }
+  g.restore()
+  text('STAND PLAN  ·  ISOMETRIC', W / 2, iso(A, B, 0)[1] + 34 * U, 14 * U, 'rgba(180,200,255,0.8)', 'center', span(t, 2.2, 2.5))
+  g.restore()
+
+  // scan line and vignette
+  const vg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.8)
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.55)'); g.fillStyle = vg; g.fillRect(0, 0, W, H)
+  // the converge brightens into the flash
+  if (conv > 0) { g.fillStyle = `rgba(235,242,255,${0.85 * Math.pow(conv, 2.2)})`; g.fillRect(0, 0, W, H) }
+  // fade in from black at the very start
+  const fin = span(t, 0, 0.45); if (fin < 1) { g.fillStyle = `rgba(0,0,0,${1 - fin})`; g.fillRect(0, 0, W, H) }
+
+  // downsample the 2x canvas to the output size
+  const out = document.createElement('canvas'); out.width = W; out.height = H
+  const o = out.getContext('2d'); o.imageSmoothingQuality = 'high'; o.drawImage(cv, 0, 0, W, H)
+  return out.toDataURL('image/png')
+}
+window.ready = true
+</script>
+</body></html>
