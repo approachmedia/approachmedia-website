@@ -71,7 +71,7 @@ import {
   ExpandCards,
   useExpandCard,
 } from '@/components/motion/ExpandCards'
-import { SERVICE_IMAGE_CDN, type ServiceCard } from '@/app/services/_content/service-cards'
+import { SERVICE_IMAGE_CDN, SERVICE_IMAGE_FALLBACK, type ServiceCard } from '@/app/services/_content/service-cards'
 
 /** One card, at the example's 400px and two steps down for narrower screens. */
 const CARD = 'w-[280px] sm:w-[340px] lg:w-[400px]'
@@ -105,6 +105,11 @@ function ServicePhoto({ service, className }: { service: ServiceCard; className:
         src={`${SERVICE_IMAGE_CDN}/${service.image}`}
         alt={`${service.title} — Approach Media`}
         loading="lazy"
+        onError={e => {
+          // bucket photo unavailable: use the local still, once
+          const fb = SERVICE_IMAGE_FALLBACK[service.image]
+          if (fb && !e.currentTarget.src.endsWith(fb)) e.currentTarget.src = fb
+        }}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
       {/* The home page's own wash, at the same strength, so the photo meets

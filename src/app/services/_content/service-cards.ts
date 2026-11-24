@@ -47,6 +47,20 @@ export interface ServiceCard {
 export const SERVICE_IMAGE_CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services'
 
 /**
+ * If a photograph cannot be loaded from the bucket, the card falls back to a
+ * still from the owner's own build footage, served with the site itself, so
+ * a card is never left blank.
+ */
+export const SERVICE_IMAGE_FALLBACK: Record<string, string> = {
+  'exhibition-stall-design.jpg':        '/services-flow/custom-exhibition-stand-design-india-01-poster.webp',
+  'custom-booth-fabrication.jpg':       '/services-flow/award-winning-stall-design-and-fabrication-agency-03-poster.webp',
+  'turnkey-project-management.jpg':     '/services-flow/custom-trade-show-booth-design-india-01-poster.webp',
+  'av-technology-integration.jpg':      '/services-flow/exhibition-stall-av-technology-integration-01-poster.webp',
+  'double-decker-mezzanine-stands.jpg': '/services-flow/award-winning-stall-design-and-fabrication-agency-01-poster.webp',
+  'immersive-brand-experience.jpg':     '/services-flow/exhibition-stall-av-technology-integration-02-poster.webp',
+}
+
+/**
  * The first block with a bullet list. Which block that is differs by service
  * — double-decker leads with prose and puts its list in the second — so it is
  * found rather than indexed.

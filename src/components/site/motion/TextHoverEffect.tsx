@@ -2,7 +2,7 @@
 
 /**
  * The footer's wordmark (style 13, "hover footer"): a huge outlined word that
- * draws its own outline in once, the first time it scrolls into view, and
+ * wipes its outline in once, the first time it scrolls into view, and
  * under the pointer reveals a brand-gradient stroke through a soft radial
  * mask that follows it. Decorative: aria-hidden, the brand name is already
  * in the footer as text and as the logo.
@@ -72,9 +72,12 @@ export default function TextHoverEffect({ text, className }: { text: string; cla
       <motion.text
         x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="2" vectorEffect="non-scaling-stroke"
         className="am-word fill-transparent stroke-[hsl(97_70%_50%/0.85)]"
-        initial={reduce ? false : { strokeDashoffset: 20000, strokeDasharray: 20000 }}
-        animate={seen || reduce ? { strokeDashoffset: 0, strokeDasharray: 20000 } : undefined}
-        transition={{ duration: 3.2, ease: 'easeInOut' }}
+        // A left-to-right wipe rather than a dashed draw-in: the end state is
+        // the plain, complete outline whatever the glyph lengths, so no
+        // stroke can be left undrawn.
+        initial={reduce ? false : { clipPath: 'inset(0 100% 0 0)' }}
+        animate={seen || reduce ? { clipPath: 'inset(0 0% 0 0)' } : undefined}
+        transition={{ duration: 2.2, ease: [0.77, 0, 0.175, 1] }}
       >
         {text}
       </motion.text>
