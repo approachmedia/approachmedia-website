@@ -88,9 +88,9 @@ def build_a():
 # ── B: Create ───────────────────────────────────────────────────────────
 # (clip, in-point, focus x, focus y, zoom, big outlined word, small line)
 B_SHOTS = [
-    ('custom-trade-show-booth-design-india-01.mp4', 1.0, 0.5, 0.5, 1.0, 'IMAGINE', ''),
-    ('custom-trade-show-booth-design-india-04.mp4', 1.2, 0.5, 0.5, 1.0, 'CREATE', ''),
-    ('technology1.mp4', 0.6, 0.55, 0.5, 1.0, 'DELIVER', ''),
+    ('custom-trade-show-booth-design-india-01.mp4', 1.0, 0.5, 0.5, 1.0, '', ''),
+    ('custom-trade-show-booth-design-india-04.mp4', 1.2, 0.5, 0.5, 1.0, '', ''),
+    ('technology1.mp4', 0.6, 0.55, 0.5, 1.0, '', ''),
     ('technology2.mp4', 0.5, 0.5, 0.45, 1.0, 'SINCE 2002', 'Exhibition stall design and fabrication'),
     ('pharma-exhibition-stall-design-02.mp4', 1.4, 0.5, 0.5, 1.0, '23+ YEARS', ''),
     ('indusfood-exhibition-stall-design-01.mp4', 1.0, 0.5, 0.5, 1.0, '6000+ STALLS', ''),
