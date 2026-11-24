@@ -19,6 +19,8 @@ Every picture comes from the owner's own clips in `clips/` and the official bran
 
 The music is `compose-music-20s.py 2 <out.wav>`, the option-2 score re-timed to these cuts.
 
+`compose-music-anthem.py <A|B|C> <out.wav>` writes three studio-logo-fanfare alternatives on the same cut times (A: Grand Anthem in D major; B: Dark to Light, C minor to C major; C: Fanfare Rush in E major). All original melodies; none is quoted from an existing theme.
+
 - `bp3d.html` (three.js) is the Imagine phase in use, rendered with `PAGE=bp3d.html SS=1.5 node render3d2.js <W> <H> <outdir> <times>`.
   - A design coming to life on a glowing drafting floor, timed to the music's hits.
   - A pen of light, throwing sparks, draws the logo's two wedges upright in the air (left blue, centre green), and they gain depth as monuments.
