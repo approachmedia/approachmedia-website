@@ -12,12 +12,12 @@
 import { useRef } from 'react'
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
   type MotionValue,
 } from 'framer-motion'
+import { useHydratedReducedMotion } from '@/components/motion/useHydratedReducedMotion'
 
 const steps = [
   { n: '01', t: 'Understanding goals',            d: 'We map your exhibition objectives, audience, and competitive context.' },
@@ -70,7 +70,7 @@ function StepRow({
 }
 
 export function Process() {
-  const prefersReduced = useReducedMotion()
+  const prefersReduced = useHydratedReducedMotion()
   const railRef = useRef<HTMLDivElement>(null)
 
   // Marker rides scroll progress through the list: falls from the label,

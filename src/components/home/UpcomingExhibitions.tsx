@@ -29,7 +29,7 @@ export function UpcomingExhibitions() {
   const events = getUpcomingExpos(15)
 
   return (
-    <section className="py-20 md:py-28">
+    <section className="overflow-x-clip py-20 md:py-28">
       <div className="container-wide">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
@@ -46,12 +46,12 @@ export function UpcomingExhibitions() {
           </Link>
         </div>
 
-        <ol className="mt-12 space-y-3">
+        <ol className="hx-expos mt-12 space-y-3">
           {events.map(e => (
-            <li key={e.slug} className="surface-card group rounded-2xl p-5 md:p-6">
+            <li key={e.slug} className="surface-card am-spot group rounded-2xl p-5 md:p-6">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-4 md:gap-6">
-                  <div className="rounded-xl border border-brand-blue-glow/30 bg-brand-blue/15 px-3.5 py-2.5 text-center">
+                  <div className="hx-chip rounded-xl border border-brand-blue-glow/30 bg-brand-blue/15 px-3.5 py-2.5 text-center">
                     <div className="font-display text-xs uppercase tracking-wider text-brand-green-glow">{e.monthName.slice(0, 3)}</div>
                     {/* Two digits — the badge is a compact date chip, and the
                         full year is already spelled out in the meta row below. */}

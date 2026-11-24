@@ -2,6 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getAllPosts } from '@/lib/blog'
 import { POST_IMAGES } from '@/lib/blog-links'
+import TiltGrid from '@/components/blog/TiltGrid'
+import '@/components/blog/blog-motion.css'
 
 /**
  * Three most recent blog posts on the homepage.
@@ -28,7 +30,7 @@ export function LatestPosts() {
   if (posts.length === 0) return null
 
   return (
-    <section className="border-t border-white/15 py-20 md:py-28">
+    <section className="overflow-x-clip border-t border-white/15 py-20 md:py-28">
       <div className="container-wide">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -46,6 +48,8 @@ export function LatestPosts() {
           </Link>
         </div>
 
+        {/* The cards swing in from alternating sides and lean toward the mouse. */}
+        <TiltGrid>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {posts.map(post => {
             const image = POST_IMAGES[post.slug]
@@ -53,8 +57,9 @@ export function LatestPosts() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50"
+                className="bt-card group block h-full"
               >
+                <div className="bt-card-inner flex flex-col overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50">
                 {image ? (
                   <div className="relative aspect-[16/9] overflow-hidden">
                     <Image
@@ -81,10 +86,12 @@ export function LatestPosts() {
                   </h3>
                   <span className="mt-4 text-sm font-medium text-brand-green">Read the guide →</span>
                 </div>
+                </div>
               </Link>
             )
           })}
         </div>
+        </TiltGrid>
       </div>
     </section>
   )

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import ParticleFigure from './motion/ParticleFigure'
+import ScrollLit from '@/components/portfolio/ScrollLit'
 
 export function About() {
   return (
@@ -14,12 +15,11 @@ export function About() {
 
         </div>
         <div className="md:col-span-7">
-          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-            Approach Media is an exhibition stall design-and-build company delivering projects in
-            India and internationally across diverse industries. We handle everything from concept
-            and spatial design to fabrication and on-site execution — so your team does not have to
-            manage multiple vendors under tight timelines.
-          </p>
+          {/* Lights up word by word as it scrolls through the screen. */}
+          <ScrollLit
+            className="text-lg leading-relaxed text-foreground md:text-2xl md:leading-snug"
+            text="Approach Media is an exhibition stall design-and-build company delivering projects in India and internationally across diverse industries. We handle everything from concept and spatial design to fabrication and on-site execution — so your team does not have to manage multiple vendors under tight timelines."
+          />
           <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
             Since <span className="font-medium text-foreground">2002</span>, we combine design
             thinking, industry insight, and execution precision to create spaces that perform in

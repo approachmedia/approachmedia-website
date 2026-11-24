@@ -24,7 +24,7 @@
  */
 
 import { Ticker } from 'motion-plus-react'
-import { useReducedMotion } from 'framer-motion'
+import { useHydratedReducedMotion } from '@/components/motion/useHydratedReducedMotion'
 
 /** Pixels per second. The old marquee ran at about 55; this is calmer. */
 const VELOCITY = 40
@@ -40,7 +40,7 @@ function ClientChip({ name }: { name: string }) {
 }
 
 export function ClientsTicker({ clients }: { clients: string[] }) {
-  const calm = !!useReducedMotion()
+  const calm = useHydratedReducedMotion()
 
   return (
     <>
