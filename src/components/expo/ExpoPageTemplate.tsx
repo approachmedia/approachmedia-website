@@ -5,6 +5,7 @@ import ExpoQuoteForm from './ExpoQuoteForm'
 import { SITE_URL } from '@/lib/site-url'
 import HeroMedia from '@/components/site/motion/HeroMedia'
 import Showcase from '@/components/site/showcase/Showcase'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
   construction: [
@@ -354,6 +355,7 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
 
       {/* ── BOTTOM CTA ─────────────────────────────────────────── */}
       <section className="cta-section">
+        <AmbientVideo />
         <div className="container">
           <h2>Ready to stand out at {data.title}?</h2>
           <p className="cta-sub">Custom stall design and fabrication, delivered end-to-end. Share your brief and get a proposal within 48 hours.</p>

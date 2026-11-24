@@ -34,24 +34,38 @@ export default function Cursor() {
       if (e.pointerType !== 'mouse') return
       p.tx = e.clientX; p.ty = e.clientY
       if (!shown) { p.x = p.tx; p.y = p.ty; shown = true; el.classList.add('is-on') }
-      const t = e.target as HTMLElement
+      classify(e.target as HTMLElement)
+      if (!raf) raf = requestAnimationFrame(tick)
+    }
+    // What is under the ring decides its state. Re-read on scroll too, so the
+    // label does not stay on "View" after the page has moved a photograph out
+    // from under a still pointer.
+    const classify = (t: HTMLElement | null) => {
+      if (!t) return
       const own = !!t.closest(OWN)
       const link = !own && !!t.closest('a, button, [role="button"], label, summary')
       const view = link && !!t.closest('a')?.querySelector('img, video')
       el.classList.toggle('is-hidden', own)
       el.classList.toggle('is-link', link && !view)
       el.classList.toggle('is-view', view)
-      if (!raf) raf = requestAnimationFrame(tick)
+    }
+    let sraf = 0
+    const onScroll = () => {
+      if (!shown || sraf) return
+      sraf = requestAnimationFrame(() => { sraf = 0; classify(document.elementFromPoint(p.tx, p.ty) as HTMLElement | null) })
     }
     const onLeave = () => { shown = false; el.classList.remove('is-on') }
     const onDown = () => el.classList.add('is-down')
     const onUp = () => el.classList.remove('is-down')
     document.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true })
     document.documentElement.addEventListener('pointerleave', onLeave)
     document.addEventListener('pointerdown', onDown)
     document.addEventListener('pointerup', onUp)
     return () => {
       cancelAnimationFrame(raf)
+      cancelAnimationFrame(sraf)
+      window.removeEventListener('scroll', onScroll)
       document.removeEventListener('pointermove', onMove)
       document.documentElement.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('pointerdown', onDown)

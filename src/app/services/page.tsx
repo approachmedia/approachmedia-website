@@ -12,6 +12,7 @@ import { socialImage } from '@/lib/seo/social-image'
 import ServicesDeck from '@/components/services/motion/ServicesDeck'
 import HeroMedia from '@/components/site/motion/HeroMedia'
 import Showcase from '@/components/site/showcase/Showcase'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
@@ -206,6 +207,7 @@ export default function ServicesPage() {
 
       {/* ═══ SECTION 6: CTA ════════════════════════════════════════════════ */}
       <section className="cta-section" id="cta" aria-labelledby="services-cta-heading">
+        <AmbientVideo />
         <div className="container">
           <h2 id="services-cta-heading">Have an exhibition coming up?</h2>
           <p className="cta-sub">Want to stand out in a high-traffic environment with an end-to-end partner who guarantees smooth coordination? Reach out — the sooner we connect, the more we can do for your brand.</p>

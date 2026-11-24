@@ -118,9 +118,15 @@ export default function Showcase({
     let on = false
     let hovering = false
     const m = { x: 50, y: 50, tx: 50, ty: 50 }
+    // scroll speed, smoothed: the tiles lean with it and settle when it stops
+    let lastY = window.scrollY, sv = 0
     const apply = () => {
       raf = 0
       if (!on) return
+      const y = window.scrollY
+      sv += (Math.max(-40, Math.min(40, y - lastY)) - sv) * 0.18
+      lastY = y
+      el.style.setProperty('--sv', sv.toFixed(3))
       const r = el.getBoundingClientRect()
       const vh = window.innerHeight
       const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)))
@@ -136,6 +142,7 @@ export default function Showcase({
         el.style.setProperty('--my', `${m.y.toFixed(2)}%`)
         if (Math.abs(m.tx - m.x) > 0.05 || Math.abs(m.ty - m.y) > 0.05) raf = requestAnimationFrame(apply)
       }
+      if (!raf && Math.abs(sv) > 0.02) raf = requestAnimationFrame(apply)
     }
     const kick = () => { if (!raf) raf = requestAnimationFrame(apply) }
     const io = new IntersectionObserver(es => { on = es.some(x => x.isIntersecting); if (on) kick() }, { rootMargin: '10% 0px' })

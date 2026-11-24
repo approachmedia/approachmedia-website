@@ -130,7 +130,7 @@ export function WhyChooseFlow() {
           <div className="wf-grid">
             <ol className="wf-list">
               {REASONS.map((r, i) => (
-                <li key={r.title} style={{ '--w': DOCK_START + i * DOCK_STEP, '--last': i === REASONS.length - 1 ? 1 : 0 } as React.CSSProperties}>
+                <li key={r.title} style={{ '--w': DOCK_START + i * DOCK_STEP, '--last': i === REASONS.length - 1 ? 1 : 0, '--first': i === 0 ? 1 : 0 } as React.CSSProperties}>
                   <span className="wf-icon"><r.icon aria-hidden="true" /></span>
                   <div>
                     <h3>{r.title}</h3>
@@ -145,7 +145,7 @@ export function WhyChooseFlow() {
                 <video
                   key={r.clip}
                   data-clip={r.clip}
-                  style={{ '--w': DOCK_START + i * DOCK_STEP, '--last': i === REASONS.length - 1 ? 1 : 0 } as React.CSSProperties}
+                  style={{ '--w': DOCK_START + i * DOCK_STEP, '--last': i === REASONS.length - 1 ? 1 : 0, '--first': i === 0 ? 1 : 0 } as React.CSSProperties}
                   poster={`${FLOW}/${r.clip}-poster.webp`}
                   muted loop playsInline preload="none"
                 />

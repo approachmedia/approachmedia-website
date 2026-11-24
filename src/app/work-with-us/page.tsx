@@ -11,6 +11,7 @@ import HeroMedia from '@/components/site/motion/HeroMedia'
 import StackSteps from '@/components/work/StackSteps'
 import '@/components/work/work-motion.css'
 import Showcase from '@/components/site/showcase/Showcase'
+import AmbientVideo from '@/components/site/motion/AmbientVideo'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -252,6 +253,7 @@ export default function WorkWithUsPage() {
 
       {/* ── CTA ────────────────────────────────────────────── */}
       <section className="cta-section">
+        <AmbientVideo />
         <div className="container">
           <h2>Ready to build your next exhibition stall?</h2>
           <p className="cta-sub">
