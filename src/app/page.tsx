@@ -13,6 +13,8 @@ import { UpcomingExhibitions } from '@/components/home/UpcomingExhibitions'
 import { LatestPosts } from '@/components/home/LatestPosts'
 import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
+import ShowreelBand from '@/components/home/motion/ShowreelBand'
+import { getPublishedProjects } from '@/lib/db/portfolio'
 
 import { SITE_URL } from '@/lib/site-url'
 // force-dynamic: FeaturedWorks reads from the DB, and DATABASE_URL is not
@@ -80,7 +82,23 @@ const jsonLd = {
   ],
 }
 
-export default function HomePage() {
+/** Real project photographs for the showreel band and the closing gallery. */
+async function homePhotos() {
+  try {
+    const rows = await getPublishedProjects({ limit: 24 })
+    return rows
+      .map(p => p.media[0])
+      .filter(Boolean)
+      .map(m => ({ src: m!.cdnUrl ?? m!.url, alt: m!.altText }))
+  } catch {
+    // No database: the three photographs that ship with the site.
+    return ['/home/project-1.jpg', '/home/project-2.jpg', '/home/project-3.jpg', '/home/hero-stall.jpg']
+      .map(src => ({ src, alt: 'Exhibition stall built by Approach Media' }))
+  }
+}
+
+export default async function HomePage() {
+  const photos = await homePhotos()
   return (
     <>
       <script
@@ -89,6 +107,7 @@ export default function HomePage() {
       />
       <main>
         <Hero />
+        <ShowreelBand images={photos} />
         <ClientsMarquee />
         <About />
         <ServicesGrid />
@@ -100,7 +119,7 @@ export default function HomePage() {
         <Testimonials />
         <UpcomingExhibitions />
         <LatestPosts />
-        <CtaBand />
+        <CtaBand images={photos} />
         <Faq />
       </main>
     </>

@@ -4,6 +4,10 @@ import SiteHeader from './SiteHeader'
 import FooterReveal from './FooterReveal'
 import LegacyScripts from './LegacyScripts'
 import SiteContactBar from './SiteContactBar'
+import PageTransition from './motion/PageTransition'
+import Cursor from './motion/Cursor'
+import Magnetic from './motion/Magnetic'
+import './motion/site-motion.css'
 
 /**
  * Wraps public pages with the site header + footer.
@@ -32,6 +36,11 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
           inherits the same two exclusions as the header and footer: /admin has
           its own chrome, and the landing pages carry LpStickyBar. */}
       <SiteContactBar />
+      {/* The site-wide motion layer: page transitions (with the first-visit
+          intro), the trailing cursor and magnetic buttons. */}
+      <PageTransition />
+      <Cursor />
+      <Magnetic />
     </div>
   )
 }

@@ -18,7 +18,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         hero: "bg-[image:var(--gradient-brand)] text-primary-foreground shadow-[var(--shadow-glow)] hover:shadow-[0_0_100px_-10px_hsl(var(--brand-blue-glow)/0.6)] hover:-translate-y-0.5",
         accent: "bg-brand-green text-accent-foreground hover:bg-brand-green-glow hover:-translate-y-0.5",
-        glass: "border border-white/15 bg-white/5 text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/30",
+        glass: "am-liquid border border-white/15 bg-white/5 text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/30",
         outlineBrand: "border border-brand-blue-glow/40 text-foreground hover:border-brand-blue-glow hover:bg-brand-blue-glow/10",
       },
       size: {
@@ -45,7 +45,9 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+    // Calls to action lean toward the pointer (components/site/motion/Magnetic).
+    const magnetic = variant === "hero" || variant === "accent" || variant === "glass" || variant === "outlineBrand" ? "" : undefined;
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} data-magnetic={magnetic} {...props} />;
   },
 );
 Button.displayName = "Button";

@@ -6,6 +6,7 @@ import { INDIAN_CITIES } from '@/data/cities'
 
 import { ORG_PROFILES } from '@/lib/seo/organization'
 import { LOGO_URL } from '@/lib/brand'
+import TextHoverEffect from './motion/TextHoverEffect'
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -46,10 +47,13 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
 export default function SiteFooter() {
   return (
     <footer
-      className="relative mt-20 border-t border-white/15"
+      className="am-footer relative mt-20 overflow-hidden border-t border-white/15"
       style={{ background: 'var(--gradient-footer)' }}
     >
-      <div className="container-wide py-16">
+      {/* Style 13 (hover footer): a soft radial wash behind everything, and
+          the giant wordmark under the columns. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(125% 125% at 50% 10%, transparent 50%, hsl(110 55% 50% / 0.10) 100%)' }} />
+      <div className="container-wide relative py-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
 
           {/* Brand */}
@@ -109,10 +113,16 @@ export default function SiteFooter() {
         </div>
       </div>
 
-      <div className="hairline-divider" />
+      {/* The wordmark. Wide screens only, as in the original: on a phone it
+          would be a band of outline too thin to read. */}
+      <div className="relative -mb-24 -mt-28 hidden h-[26rem] lg:flex">
+        <TextHoverEffect text="Approach" />
+      </div>
+
+      <div className="hairline-divider relative" />
 
       {/* Bottom bar */}
-      <div className="container-wide flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
+      <div className="container-wide relative flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
         <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Approach Media Pvt. Ltd. All rights reserved.</p>
         <div className="flex items-center gap-5 text-xs text-muted-foreground">
           <ScrambleLink href="/portfolio" className="transition hover:text-foreground">Portfolio</ScrambleLink>

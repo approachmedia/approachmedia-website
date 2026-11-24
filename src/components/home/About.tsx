@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import ParticleFigure from './motion/ParticleFigure'
 
 export function About() {
   return (
@@ -10,6 +11,7 @@ export function About() {
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl">
             Your trusted exhibition <span className="text-gradient-brand">stall designers.</span>
           </h2>
+
         </div>
         <div className="md:col-span-7">
           <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -32,6 +34,10 @@ export function About() {
           </Link>
         </div>
       </div>
+      {/* Style 14: the site's own figure (6000+ stalls) drawn in particles
+          that scatter under the cursor or a finger. Decorative; the number is
+          in the hero metrics as text. */}
+      <ParticleFigure text="6000+" className="container-wide mt-10 md:mt-6" />
     </section>
   )
 }

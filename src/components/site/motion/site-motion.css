@@ -1,0 +1,86 @@
+/* ── Site-wide motion layer ──────────────────────────────────────
+   Page transition panel, first-visit intro, trailing cursor, liquid glass
+   buttons and the footer wordmark. Every rule is prefixed am- so nothing here
+   can collide with a page's own styles. Easing: the strong ease-out for
+   entrances, a strong ease-in-out for the panel, which moves on screen. */
+
+:root {
+  --am-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --am-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* ── page transition panel ── */
+.am-pt {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none;
+  display: grid; place-items: center;
+  background:
+    radial-gradient(60rem 30rem at 50% 120%, hsl(var(--brand-green) / 0.18), transparent 60%),
+    radial-gradient(50rem 28rem at 50% -20%, hsl(var(--brand-blue-glow) / 0.22), transparent 60%),
+    hsl(222 32% 5%);
+  transform: translate3d(0, 100%, 0);
+  visibility: hidden;
+}
+.am-pt-edge { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, hsl(var(--brand-green)), hsl(var(--brand-blue-glow))); box-shadow: 0 0 24px hsl(var(--brand-green) / 0.8); }
+.am-pt.is-cover { visibility: visible; pointer-events: auto; transform: translate3d(0, 0, 0); transition: transform 380ms var(--am-ease-in-out); }
+.am-pt.is-out { visibility: visible; transform: translate3d(0, -100%, 0); transition: transform 560ms var(--am-ease-in-out); }
+.am-pt-mark { display: grid; justify-items: center; gap: 0.9rem; }
+.am-pt-word {
+  display: flex; gap: 0.06em;
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 800; font-size: clamp(2.2rem, 7vw, 5.5rem); letter-spacing: 0.04em; color: #fff;
+}
+.am-pt-word i { font-style: normal; display: inline-block; }
+.am-pt-sub { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.4em; text-transform: uppercase; color: hsl(var(--brand-green-glow)); }
+.am-pt.is-cover .am-pt-word i { animation: am-letter 520ms var(--am-ease-out) both; animation-delay: calc(var(--i) * 28ms + 120ms); }
+@keyframes am-letter { from { opacity: 0; transform: translate3d(0, 0.6em, 0); } }
+
+/* first visit: the panel starts in place (class set before paint) */
+html.am-intro .am-pt { visibility: visible; transform: none; pointer-events: auto; }
+html.am-intro .am-pt-word i { animation: am-letter 700ms var(--am-ease-out) both; animation-delay: calc(var(--i) * 55ms + 80ms); }
+html.am-intro .am-pt-sub { animation: am-fade 600ms var(--am-ease-out) 600ms both; }
+html.am-intro .am-pt-edge { transform-origin: 0 50%; animation: am-line 900ms var(--am-ease-in-out) 100ms both; }
+html.am-intro.am-intro-out .am-pt { transform: translate3d(0, -100%, 0); transition: transform 800ms var(--am-ease-in-out); }
+html.am-intro body { overflow: hidden; }
+html.am-intro.am-intro-out body { overflow: auto; }
+@keyframes am-fade { from { opacity: 0; } }
+@keyframes am-line { from { transform: scaleX(0); } }
+
+/* ── trailing cursor ── */
+.am-cursor {
+  position: fixed; left: 0; top: 0; z-index: 150; pointer-events: none;
+  width: 0; height: 0; opacity: 0; transition: opacity 200ms ease;
+}
+.am-cursor::before {
+  content: ''; position: absolute; left: -18px; top: -18px; width: 36px; height: 36px; border-radius: 999px;
+  border: 1.5px solid hsl(var(--brand-green-glow) / 0.85);
+  transition: transform 300ms var(--am-ease-out), background-color 250ms ease, border-color 250ms ease;
+}
+.am-cursor span {
+  position: absolute; left: 0; top: 0; transform: translate(-50%, -50%) scale(0.4); opacity: 0;
+  font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: hsl(var(--accent-foreground));
+  transition: transform 300ms var(--am-ease-out), opacity 200ms ease;
+}
+.am-cursor.is-on { opacity: 1; }
+.am-cursor.is-hidden { opacity: 0; }
+.am-cursor.is-link::before { transform: scale(1.6); background: hsl(var(--brand-green) / 0.12); }
+.am-cursor.is-view::before { transform: scale(2.4); background: hsl(var(--brand-green)); border-color: hsl(var(--brand-green)); }
+.am-cursor.is-view span { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.am-cursor.is-down::before { transform: scale(0.8); }
+
+/* ── liquid glass buttons (style 12) ── */
+.am-liquid { position: relative; isolation: isolate; }
+.am-liquid::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  box-shadow:
+    0 0 8px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08),
+    inset 3px 3px 0.5px -3.5px rgba(255,255,255,0.09), inset -3px -3px 0.5px -3.5px rgba(255,255,255,0.85),
+    inset 1px 1px 1px -0.5px rgba(255,255,255,0.6), inset -1px -1px 1px -0.5px rgba(255,255,255,0.6),
+    inset 0 0 6px 6px rgba(255,255,255,0.12), inset 0 0 2px 2px rgba(255,255,255,0.06), 0 0 12px rgba(0,0,0,0.15);
+}
+
+/* ── footer wordmark ── */
+.am-word { font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif; font-weight: 800; font-size: 4.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .am-pt, .am-cursor { display: none !important; }
+}

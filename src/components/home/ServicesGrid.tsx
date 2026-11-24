@@ -4,7 +4,7 @@ import { ServicesImageAccordion } from '@/components/ui/interactive-image-accord
 
 export function ServicesGrid() {
   return (
-    <section className="bg-surface/40 py-20 md:py-28" id="services">
+    <section className="overflow-x-clip bg-surface/40 py-20 md:py-28" id="services">
       <div className="container-wide">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">

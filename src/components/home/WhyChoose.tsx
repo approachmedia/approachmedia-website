@@ -1,5 +1,5 @@
 import { Compass, Workflow, Globe2, Timer } from 'lucide-react'
-import { BorderBeam } from '@/components/motion/BorderBeam'
+import { GlowCard } from '@/components/ui/spotlight-card'
 
 const items = [
   { icon: Compass,  title: 'Industry-Aware Designing', desc: 'Every industry communicates differently. We design each space to help you communicate your message instantly — layout, flow and interaction are intentional.' },
@@ -22,17 +22,18 @@ export function WhyChoose() {
           {/* radius 1rem matches rounded-2xl, so the beam traces the card's
               own corners rather than sitting off them. h-full keeps the cards
               equal height now that each sits inside a wrapper. */}
+          {/* Style 10 (GlowCard): the border and wash follow the cursor across
+              all four cards at once, the hue shifting along the row. */}
           {items.map(it => (
-            <BorderBeam key={it.title} radius="1rem">
-              <div className="surface-card group relative h-full overflow-hidden rounded-2xl p-7">
+            <GlowCard key={it.title} customSize glowColor="green" className="h-full !grid-rows-1 !p-7">
+              <div className="relative">
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-brand-blue/30 to-brand-green/20 ring-1 ring-brand-blue-glow/30">
                   <it.icon className="h-5 w-5 text-brand-green-glow" />
                 </div>
                 <h3 className="mt-5 font-display text-lg font-semibold text-foreground">{it.title}</h3>
                 <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{it.desc}</p>
-                <div className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-brand-blue-glow/10 blur-2xl transition-opacity group-hover:opacity-80" />
               </div>
-            </BorderBeam>
+            </GlowCard>
           ))}
         </div>
       </div>

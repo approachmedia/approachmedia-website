@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getPublishedProjects } from '@/lib/db/portfolio'
+import DominoWorks from './motion/DominoWorks'
+import GridMotion from '@/components/portfolio/motion/GridMotion'
 
 /**
  * Featured Works — editorial portfolio section (replaces the old
@@ -84,19 +86,28 @@ export async function FeaturedWorks() {
         </div>
       </div>
 
-      {/* ── Staggered grid: right column starts lower ── */}
+      {/* ── Style 9: the first five stand like dominoes and fall as the page
+             scrolls. They are the same projects as the top of the grid. ── */}
+      <div className="-mx-[6vw] mb-16 md:mb-24">
+        <DominoWorks items={works.slice(0, 5).map(w => ({ src: w.image, alt: w.title, title: w.title, href: w.slug ? `/portfolio/${w.slug}` : undefined }))} />
+      </div>
+
+      {/* ── Staggered grid: right column starts lower. GridMotion adds the
+             clip reveal, the photo parallax and the cursor chip. ── */}
+      <GridMotion>
       <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2">
         <div className="flex flex-col gap-y-14">
           {leftCards.map((p, i) => (
             <WorkCard key={p.slug ?? p.title} project={p} ratio={LEFT_RATIOS[i % LEFT_RATIOS.length]} />
           ))}
         </div>
-        <div className="flex flex-col gap-y-14 md:pt-28">
+        <div className="flex flex-col gap-y-14 md:pt-28" data-shear>
           {rightCards.map((p, i) => (
             <WorkCard key={p.slug ?? p.title} project={p} ratio={RIGHT_RATIOS[i % RIGHT_RATIOS.length]} />
           ))}
         </div>
       </div>
+      </GridMotion>
 
       {/* ── All Works footer ── */}
       <div className="mt-20 flex items-center justify-between gap-8 border-t border-white/10 pt-12 md:mt-28">
@@ -124,30 +135,32 @@ export async function FeaturedWorks() {
 function WorkCard({ project, ratio }: { project: Work; ratio: string }) {
   const content = (
     <>
-      <div className={`relative ${ratio} overflow-hidden rounded-md border border-white/10 bg-surface`}>
+      <div className={`pfx-media relative ${ratio} overflow-hidden rounded-lg bg-surface`}>
         <Image
           src={project.image}
           alt={`${project.title} — exhibition stall by Approach Media`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="object-cover"
         />
       </div>
 
+      <div className="pfx-card-copy">
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-brand-green">
         <span className="mr-2">•</span>
         {project.tag || 'Exhibition Design'}
       </p>
 
-      <h3 className="mt-2 font-display text-2xl font-semibold leading-tight text-foreground transition-colors group-hover:text-brand-green-glow md:text-3xl">
-        {project.title}
+      <h3 className="mt-2 font-display text-2xl font-semibold leading-tight text-foreground md:text-3xl">
+        <span className="pfx-underline">{project.title}</span>
       </h3>
+      </div>
     </>
   )
 
   return project.slug ? (
-    <Link href={`/portfolio/${project.slug}`} className="group block">{content}</Link>
+    <Link href={`/portfolio/${project.slug}`} className="pfx-card group block">{content}</Link>
   ) : (
-    <article className="group block">{content}</article>
+    <article className="pfx-card group block">{content}</article>
   )
 }
