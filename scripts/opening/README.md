@@ -7,7 +7,17 @@ How the files in `public/home-intro/` are made:
 
 Every picture comes from the owner's own clips in `clips/` and the official brand files: the logos and fonts in the Approach Media brand-guidelines skill. The music is an original composition.
 
-## Pieces
+## The film as it stands (about 20.3 s)
+
+1. **Act 1 (0–7.5 s), image then text, three times** (`act1.html`, rendered with `PAGE=act1.html DUR=7.5 node render2d.js <W> <H> <outdir>`):
+   - Each beat is a graded photograph of a build in a letterbox, then a hard cut to IMAGINE / CREATE / DELIVER.
+   - The word's letters are filled with that photograph.
+   - The stills are frames of `clips/award-winning-stall-design-and-fabrication-agency-03.mp4` at 1.0 s, `clips/custom-trade-show-booth-design-india-01.mp4` at 1.5 s and `clips/technology2.mp4` at 1.2 s, saved as `hero-imagine.png`, `hero-create.png` and `hero-deliver.png`.
+   - The words use Manrope ExtraBold from the brand kit.
+2. **Act 2, the montage:** `build2d.py` part B.
+3. **Act 3:** the 3D corridor and logo (`scene.html`), then the colour logo on Soft White, held for 3 s (`PD=3.0 ./assemble2.sh ...`).
+
+The music is `compose-music-20s.py 2 <out.wav>`, the option-2 score re-timed to these cuts.
 
 - `bp3d.html` (three.js) is the Imagine phase in use, rendered with `PAGE=bp3d.html SS=1.5 node render3d2.js <W> <H> <outdir> <times>`.
   - A design coming to life on a glowing drafting floor, timed to the music's hits.

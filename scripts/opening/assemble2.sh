@@ -6,7 +6,7 @@ D=$1; F=$2; PL=$3; W=$4; H=$5; OUT=$6
 A=$(ffprobe -v error -show_entries format=duration -of csv=p=0 $D/A.mp4)
 B=$(ffprobe -v error -show_entries format=duration -of csv=p=0 $D/B.mp4)
 NC=$(ls $F | wc -l); C=$(python3 -c "print($NC/24)")
-PD=2.4; NP=$(python3 -c "print(int($PD*24))")
+PD=${PD:-2.4}; NP=$(python3 -c "print(int($PD*24))")
 o1=$(python3 -c "print(round($A-0.15,4))")
 o2=$(python3 -c "print(round($A-0.15+$B-0.25,4))")
 o3=$(python3 -c "print(round($A-0.15+$B-0.25+$C-0.7,4))")
