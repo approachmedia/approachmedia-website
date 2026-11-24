@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:100vw;height:100vh;overflow:hidden}
+body{background:radial-gradient(ellipse 70% 60% at 50% 50%,#ffffff 0%,#F8F9FA 55%,#eceef2 100%)}
+img{position:absolute;display:block}
+</style></head><body><img id="l" src="logo-color.svg" alt=""><script>
+const q=new URLSearchParams(location.search), l=document.getElementById('l')
+// the official file, unaltered, placed over the rectangle the 3D logo ends in
+l.style.left=q.get('x')+'px'; l.style.top=(+q.get('y')+(+q.get('h'))/2-(+q.get('w'))/2.2375/2)+'px'; l.style.width=q.get('w')+'px'
+</script></body></html>

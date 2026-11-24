@@ -68,47 +68,35 @@ def lut(dark, light):
 
 
 def build_a():
+    """Pushes into the 4K line drawings made by lineart.py (in OUT/la*.png)."""
     args, fc = [], []
-    for i, (clip, t, fx, fy, z, (dk, lt, ln)) in enumerate(A_SHOTS):
-        sw, sh = probe(C + clip)
-        cw, ch, x, y = crop_for(sw, sh, fx, fy, z)
-        n = int(round(A_DUR * FPS))
-        args += ['-ss', str(t), '-i', C + clip]
-        push = f"1+0.10*on/{n}" if i % 2 == 0 else f"1.10-0.10*on/{n}"
-        fc.append(
-            f"[{i}:v]trim=end_frame=1,loop=loop={n}:size=1:start=0,setpts=N/{FPS}/TB,"
-            f"crop={cw}:{ch}:{x}:{y},hqdn3d=2:2:0:0,split[a{i}][b{i}];"
-            # lines found at source size and thickened, so they scale up bold
-            f"[a{i}]format=gray,edgedetect=low=0.05:high=0.16,dilation,format=rgb24,"
-            f"lutrgb=r='min(255,val*{ln[0]}/160)':g='min(255,val*{ln[1]}/160)':b='min(255,val*{ln[2]}/160)',"
-            f"scale={W*3//2}:{H*3//2}:flags=bicubic,format=gbrp[e{i}];"
-            f"[b{i}]format=gray,eq=contrast=1.35:brightness=-0.08,format=rgb24,{lut(dk, lt)},"
-            f"scale={W*3//2}:{H*3//2}:flags=lanczos,format=gbrp[d{i}];"
-            f"[d{i}][e{i}]blend=all_mode=screen,"
-            f"zoompan=z='{push}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS},"
-            f"noise=alls=9:allf=t,vignette=PI/4.5,format=yuv420p,setsar=1[A{i}]")
+    n = int(round(A_DUR * FPS))
+    for i in range(len(A_SHOTS)):
+        args += ['-loop', '1', '-framerate', str(FPS), '-t', f'{A_DUR + 0.1:.2f}', '-i', f'{OUT}/la{i}.png']
+        push = f"1+0.07*on/{n}" if i % 2 == 0 else f"1.07-0.07*on/{n}"
+        fc.append(f"[{i}:v]zoompan=z='{push}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS},"
+                  f"trim=end_frame={n},setpts=PTS-STARTPTS,format=yuv420p,setsar=1[A{i}]")
     prev, acc = 'A0', A_DUR
     for i in range(1, len(A_SHOTS)):
         fc.append(f"[{prev}][A{i}]xfade=transition=fadewhite:duration={A_FLASH}:offset={acc - A_FLASH:.3f}[ax{i}]")
         prev, acc = f'ax{i}', acc - A_FLASH + A_DUR
-    # open from black
     fc.append(f"[{prev}]fade=t=in:st=0:d=0.45[aout]")
-    run([*args, '-filter_complex', ';'.join(fc), '-map', '[aout]', '-an', '-c:v', 'libx264', '-crf', '12', '-preset', 'medium', '-pix_fmt', 'yuv420p', f'{OUT}/A.mp4'])
+    run([*args, '-filter_complex', ';'.join(fc), '-map', '[aout]', '-an', '-c:v', 'libx264', '-crf', '10', '-preset', 'medium', '-pix_fmt', 'yuv420p', f'{OUT}/A.mp4'])
     return acc
 
 
 # ── B: Create ───────────────────────────────────────────────────────────
 # (clip, in-point, focus x, focus y, zoom, big outlined word, small line)
 B_SHOTS = [
-    ('custom-trade-show-booth-design-india-01.mp4', 1.0, 0.5, 0.5, 1.15, 'IMAGINE', ''),
-    ('custom-trade-show-booth-design-india-04.mp4', 1.2, 0.5, 0.5, 1.15, 'CREATE', ''),
-    ('technology1.mp4', 0.6, 0.55, 0.5, 1.1, 'DELIVER', ''),
-    ('technology2.mp4', 0.5, 0.5, 0.45, 1.1, 'SINCE 2002', 'Exhibition stall design and fabrication'),
-    ('pharma-exhibition-stall-design-02.mp4', 1.4, 0.5, 0.5, 1.15, '23+ YEARS', ''),
-    ('indusfood-exhibition-stall-design-01.mp4', 1.0, 0.5, 0.5, 1.15, '6000+ STALLS', ''),
-    ('indusfood-exhibition-stall-design-02.mp4', 0.4, 0.5, 0.5, 1.15, '14+ COUNTRIES', ''),
-    ('award-winning-stall-design-and-fabrication-agency-02.mp4', 0.8, 0.5, 0.5, 1.12, '', ''),
-    ('custom-exhibition-stand-design-india-01.mp4', 1.6, 0.5, 0.5, 1.12, '', ''),
+    ('custom-trade-show-booth-design-india-01.mp4', 1.0, 0.5, 0.5, 1.0, 'IMAGINE', ''),
+    ('custom-trade-show-booth-design-india-04.mp4', 1.2, 0.5, 0.5, 1.0, 'CREATE', ''),
+    ('technology1.mp4', 0.6, 0.55, 0.5, 1.0, 'DELIVER', ''),
+    ('technology2.mp4', 0.5, 0.5, 0.45, 1.0, 'SINCE 2002', 'Exhibition stall design and fabrication'),
+    ('pharma-exhibition-stall-design-02.mp4', 1.4, 0.5, 0.5, 1.0, '23+ YEARS', ''),
+    ('indusfood-exhibition-stall-design-01.mp4', 1.0, 0.5, 0.5, 1.0, '6000+ STALLS', ''),
+    ('indusfood-exhibition-stall-design-02.mp4', 0.4, 0.5, 0.5, 1.0, '14+ COUNTRIES', ''),
+    ('award-winning-stall-design-and-fabrication-agency-02.mp4', 0.8, 0.5, 0.5, 1.0, '', ''),
+    ('custom-exhibition-stand-design-india-01.mp4', 1.6, 0.5, 0.5, 1.0, '', ''),
 ]
 B_DUR, B_X = 0.58, 0.1
 WASH = ['softlight', 'overlay', 'softlight']
@@ -133,7 +121,7 @@ def build_b():
         sw, sh = probe(C + clip)
         cw, ch, x, y = crop_for(sw, sh, fx, fy, z)
         d = 1 if i % 2 == 0 else -1
-        chain = (f"[{i}:v]fps={FPS},setpts=PTS-STARTPTS,crop={cw}:{ch}:{x}:{y},scale={W}:{H}:flags=lanczos,"
+        chain = (f"[{i}:v]fps={FPS},setpts=PTS-STARTPTS,crop={cw}:{ch}:{x}:{y},hqdn3d=1.5:1.5:2:2,scale={W}:{H}:flags=lanczos,unsharp=5:5:0.55:5:5:0,"
                  f"eq=contrast=1.12:saturation=1.15,format=gbrp[s{i}];"
                  f"[g{i}]trim=start={i*0.5}:duration={B_DUR+0.05},setpts=PTS-STARTPTS,format=gbrp[w{i}];"
                  f"[s{i}][w{i}]blend=all_mode={WASH[i%3]}:all_opacity=0.7,format=yuv420p")
@@ -145,14 +133,14 @@ def build_b():
         if small:
             chain += (f",drawtext=fontfile='{INTER}':text='{small.upper()}':fontsize={small_fs}:fontcolor=white@0.85:"
                       f"x='(w-tw)/2':y='(h+{fs})/2+{small_fs}'")
-        chain += f",noise=alls=6:allf=t,setsar=1[B{i}]"
+        chain += f",setsar=1[B{i}]"
         fc.append(chain)
     prev, acc = 'B0', B_DUR
     for i in range(1, n_in):
         tr = 'fade' if i % 3 else 'smoothleft'
         fc.append(f"[{prev}][B{i}]xfade=transition={tr}:duration={B_X}:offset={acc - B_X:.3f}[bx{i}]")
         prev, acc = f'bx{i}', acc - B_X + B_DUR
-    run([*args, '-filter_complex', ';'.join(fc), '-map', f'[{prev}]', '-an', '-c:v', 'libx264', '-crf', '12', '-preset', 'medium', '-pix_fmt', 'yuv420p', f'{OUT}/B.mp4'])
+    run([*args, '-filter_complex', ';'.join(fc), '-map', f'[{prev}]', '-an', '-c:v', 'libx264', '-crf', '10', '-preset', 'medium', '-pix_fmt', 'yuv420p', f'{OUT}/B.mp4'])
     return acc
 
 

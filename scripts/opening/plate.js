@@ -1,0 +1,10 @@
+const { chromium } = require('playwright')
+const [w, h, x, y, rw, rh, out] = process.argv.slice(2)
+;(async () => {
+  const b = await chromium.launch()
+  const p = await b.newPage({ viewport: { width: +w, height: +h }, deviceScaleFactor: 2 })
+  await p.goto(`http://localhost:4630/opening/plate.html?x=${x}&y=${y}&w=${rw}&h=${rh}`)
+  await p.waitForFunction(() => document.getElementById('l').complete)
+  await p.screenshot({ path: out })
+  await b.close()
+})()

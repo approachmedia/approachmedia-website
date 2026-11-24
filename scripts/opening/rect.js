@@ -1,0 +1,10 @@
+const { chromium } = require('playwright')
+const [w, h, t] = process.argv.slice(2)
+;(async () => {
+  const b = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
+  const p = await b.newPage({ viewport: { width: +w, height: +h } })
+  await p.goto(`http://localhost:4630/opening/scene.html?w=${w}&h=${h}&ss=1`)
+  await p.waitForFunction(() => window.ready || window.failed, null, { timeout: 120000 })
+  console.log(JSON.stringify(await p.evaluate(t => window.logoRect(t), +t)))
+  await b.close()
+})()
