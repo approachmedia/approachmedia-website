@@ -39,6 +39,12 @@
    halves are the curtain; the stage holds the wordmark on the seam. */
 .am-in { position: fixed; inset: 0; z-index: 210; pointer-events: none; display: none; }
 html.am-intro .am-in { display: block; pointer-events: auto; }
+/* The intro layer is rendered at the end of the page, so a streamed page can
+   paint its hero before the browser reaches it. This cover exists the moment
+   the head script sets the class, and hides under the layer once it arrives;
+   it steps aside as the curtain opens. */
+html.am-intro::before { content: ''; position: fixed; inset: 0; z-index: 205; background: hsl(222 34% 4.5%); }
+html.am-intro-out::before { display: none; }
 /* One continuous ground painted across both halves (each shows its own half
    of a double-height box), so the seam is invisible until it opens. */
 .am-in-half { position: absolute; left: 0; right: 0; height: 50.5%; will-change: transform;
