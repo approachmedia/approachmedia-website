@@ -11,7 +11,7 @@
  * small viewBox the browser laid the outlines out at 72 units and enlarged
  * them about six times, which stepped the curves. Strokes are a fixed
  * width in screen pixels (non-scaling), so on a 1920 display the outline is
- * an even 5px rather than a 1.2px line that breaks up between pixels.
+ * an even 4px rather than a 1.2px line that breaks up between pixels.
  */
 
 import { useId, useRef, useState } from 'react'
@@ -63,14 +63,14 @@ export default function TextHoverEffect({ text, className }: { text: string; cla
         </mask>
       </defs>
       <text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="5" vectorEffect="non-scaling-stroke"
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="4" vectorEffect="non-scaling-stroke"
         className="am-word fill-transparent stroke-white/25"
         style={{ opacity: hovered ? 0.7 : 0, transition: 'opacity 300ms ease' }}
       >
         {text}
       </text>
       <motion.text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="5" vectorEffect="non-scaling-stroke"
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="4" vectorEffect="non-scaling-stroke"
         className="am-word fill-transparent stroke-[hsl(97_70%_52%)]"
         // A left-to-right wipe rather than a dashed draw-in: the end state is
         // the plain, complete outline whatever the glyph lengths, so no
@@ -82,7 +82,7 @@ export default function TextHoverEffect({ text, className }: { text: string; cla
         {text}
       </motion.text>
       <text
-        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="5.5" vectorEffect="non-scaling-stroke"
+        x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" textRendering="geometricPrecision" strokeWidth="4.5" vectorEffect="non-scaling-stroke"
         stroke={`url(#g${id})`} mask={`url(#m${id})`}
         className="am-word fill-transparent"
         style={{ opacity: hovered ? 1 : 0, transition: 'opacity 300ms ease' }}
