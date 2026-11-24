@@ -82,7 +82,7 @@ export function Process() {
   const markerOpacity = useTransform(scrollYProgress, [0, 0.02, 0.93, 1], [0, 1, 1, 0])
 
   return (
-    <section className="bg-surface/40 py-20 md:py-28" id="process">
+    <section className="overflow-x-clip bg-surface/40 py-20 md:py-28" id="process">
       <div className="container-wide">
         <div className="grid gap-10 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-4">

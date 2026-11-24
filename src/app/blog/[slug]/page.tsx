@@ -7,6 +7,7 @@ import { POST_IMAGES, RELATED_EXTRA, RELATED_EXTRAS_BY_SLUG } from '@/lib/blog-l
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage, ORG_LOGO, ORG_NAME } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 
 /**
  * Published posts are prerendered at build time. A scheduled post is
@@ -97,6 +98,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       {/* ── Header ─────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden border-b border-white/15 pb-12 pt-24 md:pt-32">
+        <HeroMedia />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_60%_20%,hsl(var(--brand-blue-glow)/0.16),transparent_55%)]" />
         <div className="container-wide max-w-4xl">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">

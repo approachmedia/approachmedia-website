@@ -193,7 +193,8 @@ class Boundary extends Component<{ fallback: ReactNode; children: ReactNode }, {
 export default function InfiniteGallery({ images, speed = 1, visibleCount = 12, className = 'relative h-96 w-full', children }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const velocity = useRef(0);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false); // mounted once, then kept
+  const [onScreen, setOnScreen] = useState(false); // renders only while true
   const [webgl, setWebgl] = useState(true);
   const [reduce, setReduce] = useState(false);
 
@@ -209,7 +210,7 @@ export default function InfiniteGallery({ images, speed = 1, visibleCount = 12, 
   useEffect(() => {
     const el = box.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { rootMargin: '200px 0px' });
+    const io = new IntersectionObserver(([e]) => { setOnScreen(e.isIntersecting); if (e.isIntersecting) setVisible(true) }, { rootMargin: '200px 0px' });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -238,7 +239,9 @@ export default function InfiniteGallery({ images, speed = 1, visibleCount = 12, 
               camera={{ position: [0, 0, 0], fov: 55 }}
               dpr={[1, 1.75]}
               gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-              frameloop={reduce ? 'demand' : 'always'}
+              frameloop={reduce || !onScreen ? 'demand' : 'always'}
+              // A swipe over the gallery must keep scrolling the page.
+              style={{ touchAction: 'pan-y' }}
             >
               <Suspense fallback={null}>
                 <Scene images={usable} speed={speed} visibleCount={visibleCount} velocity={velocity} reduce={reduce} />

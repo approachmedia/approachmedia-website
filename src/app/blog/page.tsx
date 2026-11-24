@@ -7,6 +7,7 @@ import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { SITE_URL } from '@/lib/site-url'
 import { socialImage } from '@/lib/seo/social-image'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 
 /**
  * Revalidated rather than force-static: posts publish on a date held in their
@@ -68,6 +69,7 @@ export default function BlogIndexPage() {
       <JsonLd graph={graph} />
 
       <section className="relative isolate overflow-hidden border-b border-white/15 pb-16 pt-24 md:pt-32">
+        <HeroMedia />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_60%_20%,hsl(var(--brand-blue-glow)/0.16),transparent_55%)]" />
         <div className="container-wide">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">From the workshop floor</p>
@@ -89,7 +91,7 @@ export default function BlogIndexPage() {
               <Link
                 key={p.slug}
                 href={`/blog/${p.slug}`}
-                className="group overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50"
+                className="am-spot group overflow-hidden rounded-2xl border border-white/15 bg-surface/40 transition-colors hover:border-brand-blue-glow/50"
               >
                 {image ? (
                   <div className="relative aspect-[16/9] overflow-hidden">

@@ -9,6 +9,12 @@ import { getClientReviewVideos } from '@/lib/client-reviews'
 import '@/styles/scrollcraft-engine.css'
 import './about-flow.css'
 import { socialImage } from '@/lib/seo/social-image'
+import PolaroidWall from '@/components/about/motion/PolaroidWall'
+import { getPublishedProjects } from '@/lib/db/portfolio'
+
+// Hourly, so the polaroids pick up projects (the database is not reachable
+// while the image is built, which would otherwise freeze the page empty).
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design Company in India Since 2002" },
@@ -30,11 +36,26 @@ export const metadata: Metadata = {
  * scrollcraft engine only animates what is already on the page, so a crawler
  * or a JS-less visitor reads the full story top to bottom.
  */
+/** Recent stalls as polaroids: client, then show, city and year, from the records. */
+async function polaroids() {
+  try {
+    const rows = await getPublishedProjects({ limit: 10 })
+    return rows.filter(p => p.media[0]).map(p => ({
+      image: p.media[0].cdnUrl ?? p.media[0].url,
+      alt: p.media[0].altText,
+      title: p.client?.name ?? p.title,
+      caption: [p.exhibition?.name, p.exhibition?.city ?? p.city, p.buildYear].filter(Boolean).join(' · '),
+    }))
+  } catch {
+    return []
+  }
+}
+
 export default async function AboutPage() {
   /* All twenty-two client reviews. Resolved here because AboutFlow is a client
      component and the playlist read is server-only; the shape it receives is
      plain data. */
-  const reviews = await getClientReviewVideos()
+  const [reviews, slides] = await Promise.all([getClientReviewVideos(), polaroids()])
 
   return (
     <>
@@ -51,6 +72,11 @@ export default async function AboutPage() {
       ]} />
 
       <AboutFlow reviews={reviews} />
+
+      {/* Style 3: recent stalls as polaroids on a line. */}
+      <section aria-label="Stalls we have built" className="border-t border-white/10">
+        <PolaroidWall slides={slides} />
+      </section>
     </>
   )
 }

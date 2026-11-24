@@ -6,6 +6,7 @@ import type { ExpoPageData } from '@/components/expo/types'
 import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design for Expos 2026–2027 | India Shows" },
   description: 'Browse upcoming exhibitions and trade shows across India and international venues. Approach Media provides custom stall design, 3D booth concepts, and turnkey fabrication for every expo.',
@@ -77,6 +78,7 @@ export default function ExposIndexPage() {
 
       {/* HERO */}
       <section className="page-hero">
+        <HeroMedia />
         <div className="container">
           <div className="page-hero-inner animate-in">
             <span className="eyebrow-pill">Upcoming Expos {yearSpan}</span>

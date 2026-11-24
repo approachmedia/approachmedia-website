@@ -10,6 +10,7 @@ import PortfolioHero from '@/components/portfolio/motion/PortfolioHero'
 import FeaturedRail from '@/components/portfolio/motion/FeaturedRail'
 import ScrollProgress from '@/components/portfolio/motion/ScrollProgress'
 import { heroPhotos, railItems } from '@/components/portfolio/motion/heroPhotos'
+import StellarSection from '@/components/portfolio/motion/StellarSection'
 
 import { SITE_URL } from '@/lib/site-url'
 import { socialImage } from '@/lib/seo/social-image'
@@ -94,6 +95,17 @@ export default async function PortfolioIndexPage() {
           ) : (
             <p className="text-slate-500 text-center py-20">No projects published yet.</p>
           )}
+        </section>
+
+        {/* ── Style 6: the projects as cards on a sphere in a starfield. ── */}
+        <section className="pfx-wrap mt-28" aria-label="Projects in 3D">
+          <StellarSection cards={projects.filter(p => p.media[0]).slice(0, 24).map(p => ({
+            id: String(p.id),
+            imageUrl: p.media[0].cdnUrl ?? p.media[0].url,
+            alt: p.media[0].altText,
+            title: p.client?.name ?? p.title,
+            href: `/portfolio/${p.slug}`,
+          }))} />
         </section>
 
         {/* ── CTA ── */}

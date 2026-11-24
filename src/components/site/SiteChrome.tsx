@@ -7,6 +7,8 @@ import SiteContactBar from './SiteContactBar'
 import PageTransition from './motion/PageTransition'
 import Cursor from './motion/Cursor'
 import Magnetic from './motion/Magnetic'
+import AutoReveal from './motion/AutoReveal'
+import Spotlight from './motion/Spotlight'
 import './motion/site-motion.css'
 
 /**
@@ -30,7 +32,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
           and above it or the footer shows through every section. bg-background
           is the same colour the body already paints, so nothing looks
           different when the reveal is switched off. */}
-      <div className="relative z-10 flex-1 bg-background">{children}</div>
+      <div className="am-content relative z-10 flex-1 bg-background">{children}</div>
       <FooterReveal />
       {/* Call and WhatsApp. Mounted here rather than in the root layout so it
           inherits the same two exclusions as the header and footer: /admin has
@@ -41,6 +43,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <PageTransition />
       <Cursor />
       <Magnetic />
+      <AutoReveal />
+      <Spotlight />
     </div>
   )
 }

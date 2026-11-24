@@ -84,3 +84,47 @@ html.am-intro.am-intro-out body { overflow: auto; }
 @media (prefers-reduced-motion: reduce) {
   .am-pt, .am-cursor { display: none !important; }
 }
+
+/* ── auto reveals (AutoReveal) ── */
+.am-rv-h { opacity: 0; transform: translate3d(0, 28px, 0); clip-path: inset(0 0 100% 0); transition: opacity 0.8s var(--am-ease-out), transform 0.9s var(--am-ease-out), clip-path 0.9s var(--am-ease-out); }
+.am-rv-h.am-in { opacity: 1; transform: none; clip-path: inset(0 0 -20% 0); }
+.am-rv-m { clip-path: inset(100% 0 0 0); scale: 1.08; transition: clip-path 1.1s var(--am-ease-out), scale 1.4s var(--am-ease-out); }
+.am-rv-m.am-in { clip-path: inset(0 0 0 0); scale: 1; }
+.am-now { transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .am-rv-h, .am-rv-m { opacity: 1 !important; transform: none !important; clip-path: none !important; scale: 1 !important; } }
+
+/* ── card spotlight (Spotlight) ── */
+.am-spot-ready { position: relative; isolation: isolate; }
+.am-spot-ready::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+  opacity: 0; transition: opacity 300ms ease;
+  background: radial-gradient(22rem circle at var(--sx, 50%) var(--sy, 50%), hsl(var(--brand-green) / 0.13), transparent 45%);
+  box-shadow: inset 0 0 0 1px transparent;
+}
+.am-spot-ready::before {
+  content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; z-index: 2; padding: 1px;
+  background: radial-gradient(14rem circle at var(--sx, 50%) var(--sy, 50%), hsl(var(--brand-green-glow) / 0.9), transparent 55%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 300ms ease;
+}
+.am-lit::after, .am-lit::before { opacity: 1; }
+
+/* ── inner-page hero media (HeroMedia) ── */
+.am-hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.am-hero-media-layer { position: absolute; inset: -6% -4%; will-change: transform; transform: scale(1.08); }
+.am-hero-media-layer video { width: 100%; height: 100%; object-fit: cover; }
+.am-hero-media-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, hsl(222 30% 6% / 0.92) 0%, hsl(222 30% 6% / 0.7) 45%, hsl(222 30% 6% / 0.35) 100%),
+    linear-gradient(0deg, hsl(222 30% 6%) 0%, transparent 35%);
+}
+@media (max-width: 767px) { .am-hero-media-veil { background: linear-gradient(0deg, hsl(222 30% 6%) 0%, hsl(222 30% 6% / 0.78) 45%, hsl(222 30% 6% / 0.6) 100%); } }
+/* hero copy sits above the media layer (absolutely placed decorations keep
+   their own positioning) */
+.am-hero-media ~ :not(.absolute) { position: relative; z-index: 1; }
+
+/* ── expo pages: event overview (was an inline 2-column grid) ── */
+.am-expo-overview { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+@media (max-width: 767px) { .am-expo-overview { grid-template-columns: minmax(0, 1fr); gap: 28px; } }

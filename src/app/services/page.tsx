@@ -2,13 +2,16 @@ import { SITE_URL } from '@/lib/site-url'
 import ProseSection from '@/components/seo/ProseSection'
 import ServiceCityLinks from '@/components/seo/ServiceCityLinks'
 import { INTRO, BLOCKS } from './_content/services-hub'
-import { SERVICE_CARDS } from './_content/service-cards'
+import { SERVICE_CARDS, SERVICE_IMAGE_CDN } from './_content/service-cards'
 import { ServiceExpandGrid } from '@/components/services/ServiceExpandGrid'
 import { ProcessSteps, type ProcessStep } from '@/components/services/ProcessSteps'
 import { BorderBeam } from '@/components/motion/BorderBeam'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
+import ServicesDeck from '@/components/services/motion/ServicesDeck'
+import HeroMedia from '@/components/site/motion/HeroMedia'
+
 export const metadata = {
   title: { absolute: "Exhibition Stall Design & Fabrication Services | India" },
   description: "Exhibition stall design, custom booth fabrication, double-decker stands, AV integration and turnkey project management. 6000+ stalls across 14 countries.",
@@ -95,6 +98,7 @@ export default function ServicesPage() {
 
       {/* ═══ SECTION 1: PAGE HERO ══════════════════════════════════════════ */}
       <section className="page-hero" aria-labelledby="services-hero-heading">
+        <HeroMedia />
         <div className="container">
           <div className="page-hero-inner animate-in">
             <span className="section-label">Our Services</span>
@@ -112,6 +116,10 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ Style 7: the six service photographs as a tumble deck, falling
+             one by one as the page scrolls through this pinned stretch. ═══ */}
+      <ServicesDeck cards={SERVICE_CARDS.map(c => ({ src: `${SERVICE_IMAGE_CDN}/${c.image}`, alt: c.title }))} />
 
       {/* ═══ SECTION 2: SIX SERVICE CARDS (expand on tap) ════════════════ */}
       <section className="section" id="services-list" aria-labelledby="services-list-heading">

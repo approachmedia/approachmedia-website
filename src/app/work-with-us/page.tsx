@@ -7,6 +7,7 @@ import { SITE_URL } from '@/lib/site-url'
 import { cityPageFor } from '@/lib/seo/city-links'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 export const metadata: Metadata = {
   title: { absolute: "Exhibition Stall Design & Build Partner | Work With Us" },
   description: 'Partner with Approach Media for your next exhibition. We design, fabricate, and install custom exhibition stalls across India and internationally. See how we work and find your expo.',
@@ -63,6 +64,7 @@ export default function WorkWithUsPage() {
 
       {/* ── HERO ───────────────────────────────────────────── */}
       <section className="page-hero">
+        <HeroMedia />
         <div className="container">
           <div className="page-hero-inner animate-in">
             <span className="eyebrow-pill">Exhibition Stall Design Partner</span>

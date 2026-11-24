@@ -72,7 +72,7 @@ export async function Testimonials() {
   const reviews = pickHomeReviews(await getClientReviewVideos())
 
   return (
-    <section className="bg-surface/40 py-20 md:py-28">
+    <section className="overflow-x-clip bg-surface/40 py-20 md:py-28">
       <div className="container-wide">
         {/* Centred, unlike the left-aligned heading this section used to
             carry. The grid it replaced filled the row, so a left heading had

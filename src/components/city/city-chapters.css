@@ -256,8 +256,13 @@
   .cty { --hdr: 81px; }
   .cty-ch { padding: 64px 0; }
   .cty-title { padding: 80px 0 56px; }
-  .cty-spread, .cty-venue, .cty-build__stage, .cty-colo { grid-template-columns: 1fr; gap: 24px; }
+  /* minmax(0, 1fr), not 1fr: a bare 1fr track grows to its widest child, and
+     a photograph pushed the column to 404px on a 390px phone. */
+  .cty-spread, .cty-venue, .cty-build__stage, .cty-colo { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .cty-venue--flip .cty-venue__media { order: 0; }
+  /* A venue's button label is long ("Plan your stall at ..."); left nowrap it
+     ran 75px past a 390px phone. */
+  .cty-venue .btn { white-space: normal; max-width: 100%; text-align: center; height: auto; min-height: 44px; }
   .cty-run__row { grid-template-columns: 3rem 1fr; gap: 16px; }
   .cty-run__row > p { grid-column: 2; margin-top: 8px; }
   .cty-pair, .cty-pair:nth-child(even) { grid-template-columns: 1fr; gap: 10px; }

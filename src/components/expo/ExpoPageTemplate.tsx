@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { cityPageFor } from '@/lib/seo/city-links'
 import ExpoQuoteForm from './ExpoQuoteForm'
 import { SITE_URL } from '@/lib/site-url'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 
 const INDUSTRY_WHY: Record<string, { title: string; body: string }[]> = {
   construction: [
@@ -125,6 +126,7 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
 
       {/* ── HERO ───────────────────────────────────────────────── */}
       <section className="page-hero">
+        <HeroMedia />
         <div className="container">
           <div className="page-hero-inner animate-in">
             <span className="eyebrow-pill">{data.heroEyebrow}</span>
@@ -145,7 +147,10 @@ export default function ExpoPageTemplate({ data }: { data: ExpoPageData }) {
       {/* ── EVENT OVERVIEW ─────────────────────────────────────── */}
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: '48px', alignItems: 'start' }}>
+          {/* Was an inline two-column grid, which no media query can reach, so
+              phones got both columns and scrolled 93px sideways. The class
+              stacks them below 768px (site-motion.css). */}
+          <div className="am-expo-overview">
             <div className="animate-in">
               <span className="section-label">Event Overview</span>
               <h2 style={{ marginBottom: '18px' }}>About {data.title}</h2>

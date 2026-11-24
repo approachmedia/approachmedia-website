@@ -8,6 +8,8 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
+import ParticleFigure from '@/components/home/motion/ParticleFigure'
+import HeroMedia from '@/components/site/motion/HeroMedia'
 // Local part only — "+91 " is prefixed for display and stripped for the tel: link.
 const PHONE_NUMBERS = ['9426912602', '9898644327', '9427614395']
 
@@ -43,6 +45,7 @@ export default function ContactPage() {
           HERO
       ══════════════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden border-b border-white/15 pb-20 pt-24 md:pb-24 md:pt-32">
+        <HeroMedia />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_60%_20%,hsl(var(--brand-blue-glow)/0.18),transparent_55%)]" />
         <div className="container-wide">
           <p className="text-xs uppercase tracking-[0.28em] text-brand-green">Get in touch</p>
@@ -54,6 +57,8 @@ export default function ContactPage() {
             Have an upcoming show or a question for our team? Share a few details and we&apos;ll get back to you with the right next step.
           </p>
         </div>
+        {/* Style 14: the brand name in particles that scatter under the cursor. */}
+        <ParticleFigure text="APPROACH" className="container-wide mt-8" />
       </section>
 
       {/* ══════════════════════════════════════════════════

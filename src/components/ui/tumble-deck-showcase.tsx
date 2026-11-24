@@ -1,5 +1,12 @@
 "use client"
 
+// Style 7. One addition to the original: `scrollDriven`. The original
+// captured the wheel over the deck and called preventDefault, which stops the
+// page scrolling while the pointer is over it. With scrollDriven the deck is
+// placed inside a tall track (any ancestor marked data-td-track) and the
+// page's own scroll through that track sets the deck position, so the page
+// never stops; wheel and drag capture are switched off.
+
 import * as React from "react"
 import gsap from "gsap"
 
@@ -37,6 +44,8 @@ export type TumbleDeckShowcaseProps = {
   className?: string
   style?: React.CSSProperties
   ariaLabel?: string
+  /** Drive the deck from page scroll through the nearest [data-td-track] ancestor. */
+  scrollDriven?: boolean
 }
 
 // #region pose
@@ -101,6 +110,7 @@ export default function TumbleDeckShowcase({
   className,
   style,
   ariaLabel = "Website showcase",
+  scrollDriven = false,
 }: TumbleDeckShowcaseProps) {
   const rootRef = React.useRef<HTMLDivElement>(null)
   const sceneRef = React.useRef<HTMLDivElement>(null)
@@ -175,9 +185,39 @@ export default function TumbleDeckShowcase({
   // nearest whole card so nothing is left half-fallen. No autoplay.
   const api = React.useRef<{ step: (dir: 1 | -1) => void }>({ step: () => {} })
   const dragged = React.useRef(false)
+  // Page-scroll mode: position = progress through the track × the deck.
   React.useEffect(() => {
     const root = rootRef.current
-    if (!root || n === 0) return
+    if (!scrollDriven || !root || n === 0) return
+    const track = root.closest<HTMLElement>("[data-td-track]")
+    if (!track) return
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const s = state.current
+    let target = 0
+    let running = false
+    const follow = () => {
+      const dt = gsap.ticker.deltaRatio(60) / 60
+      s.pos += (target - s.pos) * (1 - Math.exp(-dt * 10))
+      if (Math.abs(target - s.pos) < 1e-3) { s.pos = target; gsap.ticker.remove(follow); running = false }
+      paint()
+    }
+    const onScroll = () => {
+      const r = track.getBoundingClientRect()
+      const travel = r.height - window.innerHeight
+      const p = travel > 0 ? Math.min(1, Math.max(0, -r.top / travel)) : 0
+      target = p * Math.max(0, n - 1)
+      if (reduce) target = Math.round(target)
+      if (reduce) { s.pos = target; paint() }
+      else if (!running) { running = true; gsap.ticker.add(follow) }
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => { window.removeEventListener("scroll", onScroll); gsap.ticker.remove(follow) }
+  }, [scrollDriven, n, paint])
+
+  React.useEffect(() => {
+    const root = rootRef.current
+    if (scrollDriven || !root || n === 0) return
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     const s = state.current
     let target = s.pos
@@ -274,7 +314,7 @@ export default function TumbleDeckShowcase({
       root.removeEventListener("pointerup", onUp)
       root.removeEventListener("pointercancel", onUp)
     }
-  }, [n, scrollPerCard, paint])
+  }, [n, scrollPerCard, paint, scrollDriven])
 
   const onKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " " || e.key === "Enter") {
@@ -295,9 +335,9 @@ export default function TumbleDeckShowcase({
       tabIndex={0}
       onKeyDown={onKey}
       onClick={() => {
-        if (!dragged.current) api.current.step(1)
+        if (!scrollDriven && !dragged.current) api.current.step(1)
       }}
-      className={["td-root relative w-full touch-none overflow-hidden outline-none select-none", className]
+      className={["td-root relative w-full overflow-hidden outline-none select-none", scrollDriven ? "" : "touch-none", className]
         .filter(Boolean)
         .join(" ")}
       style={{ height, background, ...style }}
