@@ -12,6 +12,12 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb, faqPage } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
+import { industryCover } from '@/content/industry-covers'
+import ScrollLit from '@/components/portfolio/ScrollLit'
+import SectorHero from '@/components/industries/detail/SectorHero'
+import ParallaxProjects from '@/components/industries/detail/ParallaxProjects'
+import CircleClose from '@/components/industries/detail/CircleClose'
+import '@/components/industries/detail/industry-detail.css'
 
 /**
  * One editorial page per industry, in the order the brief's README sets out:
@@ -96,8 +102,21 @@ export default async function IndustryEditorialPage({ params }: Props) {
   // twelve rather than dropping any.
   const videos = source
 
+  // Photographs, all the site's own: the sector's cover from the industries
+  // set, then the hero photograph of each published project in the sector.
+  const cover = industryCover(page.slug, page.name)
+  const projectShots = projects
+    .map(p => p.media[0])
+    .filter(m => !!m?.url)
+    .map(m => ({ src: m!.url, alt: m!.altText || `${page.name} exhibition stand by Approach Media` }))
+  const shots = [...(cover ? [cover] : []), ...projectShots]
+    .filter((s, i, a) => a.findIndex(o => o.src === s.src) === i)
+    .slice(0, 6)
+  const approachPhoto = projectShots[1] ?? projectShots[0] ?? cover
+  const closePhoto = projectShots[0] ?? cover
+
   return (
-    <main>
+    <main className="idx">
       <JsonLd graph={[
         organizationNode(),
         breadcrumb([
@@ -120,34 +139,30 @@ export default async function IndustryEditorialPage({ params }: Props) {
       </nav>
 
       {/* ── Hero ── */}
-      <section className="border-b border-white/10">
-        <div className="container-wide py-16 md:py-24">
-          <h1 className="max-w-4xl font-display text-3xl font-black leading-[1.08] text-white md:text-5xl">
-            {page.headline}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg font-semibold text-white/90">{page.tagline}</p>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">{page.intro}</p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
-              Request a Proposal
-            </Link>
-            <Link href={`/portfolio/industry/${page.sourceSlugs[0]}`} className="inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
-              View Projects
-            </Link>
-          </div>
+      <SectorHero name={page.name} headline={page.headline} shots={shots}>
+        <p className="mt-6 max-w-2xl text-lg font-semibold text-white/90">{page.tagline}</p>
+        <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">{page.intro}</p>
+        <div className="mt-9 flex flex-wrap gap-3">
+          <Link href="/contact" data-magnetic className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
+            Request a Proposal
+          </Link>
+          <Link href={`/portfolio/industry/${page.sourceSlugs[0]}`} data-magnetic className="am-liquid inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
+            View Projects
+          </Link>
         </div>
-      </section>
+      </SectorHero>
 
       {/* ── Selected projects ── */}
       <section className="border-b border-white/10">
         <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+          <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">
             Selected {page.name} Exhibition Projects
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-300">{page.gallery}</p>
 
           {projects.length > 0 ? (
             <>
+              <ParallaxProjects>
               <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {projects.map(p => {
                   const hero = p.media[0]
@@ -156,19 +171,19 @@ export default async function IndustryEditorialPage({ params }: Props) {
                   const caption = [p.client?.name, where].filter(Boolean).join(' at ')
                   return (
                     <li key={p.id}>
-                      <Link href={`/portfolio/${p.slug}`} className="group block overflow-hidden rounded-2xl border border-white/12 bg-surface/40 transition hover:border-brand-green/50">
-                        <div className="relative aspect-[4/3] bg-white/[0.04]">
+                      <Link href={`/portfolio/${p.slug}`} className="am-spot group block overflow-hidden rounded-2xl border border-white/12 bg-surface/40 transition hover:border-brand-green/50">
+                        <div className="idp-media relative aspect-[4/3] overflow-hidden bg-white/[0.04]">
                           {hero?.url && (
                             <Image
                               src={hero.url}
                               alt={hero.altText || `${p.client?.name ?? 'Approach Media'} exhibition stand at ${p.exhibition?.name ?? 'an exhibition'}`}
                               fill
                               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                             />
                           )}
                         </div>
-                        <div className="p-5">
+                        <div className="idp-copy p-5">
                           <p className="text-sm font-semibold text-white">{caption}{p.buildYear ? ` · ${p.buildYear}` : ''}</p>
                           {(p.stallAreaSqm || p.stallTypes[0]) && (
                             <p className="mt-1.5 text-xs text-slate-400">
@@ -185,7 +200,8 @@ export default async function IndustryEditorialPage({ params }: Props) {
                   )
                 })}
               </ul>
-              <Link href={`/portfolio/industry/${page.sourceSlugs[0]}`} className="mt-10 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
+              </ParallaxProjects>
+              <Link href={`/portfolio/industry/${page.sourceSlugs[0]}`} data-magnetic className="mt-10 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
                 View More Projects
               </Link>
             </>
@@ -205,7 +221,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
       {playlists.length > 0 && (
         <section className="border-b border-white/10">
           <div className="container-wide py-16 md:py-24">
-            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+            <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">
               {page.name} Stands on Video
             </h2>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">
@@ -251,20 +267,25 @@ export default async function IndustryEditorialPage({ params }: Props) {
       {/* ── Approach ── */}
       <section className="border-b border-white/10">
         <div className="container-wide py-16 md:py-24">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr]">
+          <div className={approachPhoto ? 'ida' : ''}>
+            {approachPhoto && (
+              <div className="ida-photo">
+                <Image src={approachPhoto.src} alt={approachPhoto.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+              </div>
+            )}
             <div>
-              <h2 className="font-display text-2xl font-bold text-white md:text-3xl">{page.h2}</h2>
-              <p className="mt-5 text-base leading-relaxed text-slate-300">{page.body}</p>
-            </div>
-            <div className="rounded-2xl border border-white/12 bg-surface/40 p-7">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-green">
+              <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">{page.h2}</h2>
+              {/* Lights up word by word as it scrolls through the screen. */}
+              <ScrollLit text={page.body} className="mt-5 text-lg leading-relaxed text-slate-200 md:text-xl" />
+              <p className="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-brand-green">
                 Display priorities we can discuss
               </p>
-              <ul className="mt-5 space-y-3.5">
+              <ul className="ida-list">
+                <span className="ida-line" aria-hidden="true"><i /></span>
                 {page.features.map(f => (
-                  <li key={f} className="flex gap-3 text-sm leading-relaxed text-slate-300">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" aria-hidden />
-                    <span>{f}</span>
+                  <li key={f} className="text-base leading-relaxed text-slate-300">
+                    <span className="ida-tick" aria-hidden="true"><Check className="h-4 w-4" /></span>
+                    <span className="pt-0.5">{f}</span>
                   </li>
                 ))}
               </ul>
@@ -276,7 +297,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
       {/* ── Exhibitions (historical only) ── */}
       <section className="border-b border-white/10">
         <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+          <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">
             Planning Your Next {page.name} Exhibition?
           </h2>
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">{page.event}</p>
@@ -286,10 +307,14 @@ export default async function IndustryEditorialPage({ params }: Props) {
               <p className="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-brand-green">
                 Exhibitions featured in our work
               </p>
-              <ul className="mt-5 flex flex-wrap gap-2.5">
-                {shows.map(s => (
-                  <li key={s.name} className="rounded-lg border border-white/12 bg-surface/40 px-4 py-2 text-sm text-slate-300">
-                    {s.name}{s.city ? <span className="text-slate-500"> · {s.city}</span> : null}
+              {/* A hand of tickets, fanning out as it arrives. */}
+              <ul className="ids">
+                {shows.map((s, i) => (
+                  <li key={s.name} style={{ '--k': ((shows.length - 1) / 2 - i) / Math.max(1, shows.length - 1) * 2 } as React.CSSProperties}>
+                    <span className="ids-stub" aria-hidden="true" />
+                    <span className="ids-name">
+                      {s.name}{s.city ? <span> · {s.city}</span> : null}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -297,7 +322,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
           )}
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/contact" className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
+            <Link href="/contact" data-magnetic className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
               Plan Your Stall
             </Link>
             <Link href="/tradeshow-calendar" className="inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
@@ -310,7 +335,7 @@ export default async function IndustryEditorialPage({ params }: Props) {
       {/* ── Shared service module ── */}
       <section className="border-b border-white/10">
         <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+          <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">
             One Team From Design to Delivery
           </h2>
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-slate-300">
@@ -318,20 +343,27 @@ export default async function IndustryEditorialPage({ params }: Props) {
             together. We begin with your brief, develop the concept and layout, and coordinate the
             build around the agreed exhibition requirements.
           </p>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* A line drawn across the four steps, each lighting as it passes. */}
+          <div className="isv">
+          <div className="isv-rail" aria-hidden="true">
+            <i />
+            {[0, 1, 2, 3].map(n => <b key={n} style={{ left: `${12.5 + n * 25}%`, '--n': n } as React.CSSProperties} />)}
+          </div>
+          <div className="isv-cards grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { t: 'Brief and space planning', c: 'Define the audience, products, meeting needs and stall layout.', href: '/services/exhibition-stall-design' },
               { t: 'Concept and 3D design',    c: 'Review the proposed space before moving into production.',      href: '/services/exhibition-stall-design' },
               { t: 'Fabrication and finishing', c: 'Translate the approved design into the physical stand.',        href: '/services/custom-booth-fabrication' },
               { t: 'Installation and dismantling', c: 'Coordinate the on-site build and post-exhibition removal within the agreed scope.', href: '/services/turnkey-project-management' },
-            ].map(s => (
-              <Link key={s.t} href={s.href} className="group rounded-2xl border border-white/12 bg-surface/40 p-6 transition hover:border-brand-green/50">
+            ].map((s, n) => (
+              <Link key={s.t} href={s.href} style={{ '--n': n } as React.CSSProperties} className="am-spot group rounded-2xl border border-white/12 bg-surface/40 p-6 transition hover:border-brand-green/50">
                 <h3 className="font-display text-base font-semibold text-white">{s.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{s.c}</p>
               </Link>
             ))}
           </div>
-          <Link href="/contact" className="mt-10 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
+          </div>
+          <Link href="/contact" data-magnetic className="mt-10 inline-flex h-12 items-center justify-center rounded-lg border border-white/20 bg-white/[0.06] px-7 text-sm font-semibold text-white transition hover:bg-white/10">
             Discuss Your Exhibition Brief
           </Link>
         </div>
@@ -340,10 +372,10 @@ export default async function IndustryEditorialPage({ params }: Props) {
       {/* ── FAQ ── */}
       <section className="border-b border-white/10">
         <div className="container-wide py-16 md:py-24">
-          <h2 className="font-display text-2xl font-bold text-white md:text-3xl">Frequently Asked Questions</h2>
+          <h2 className="idr-h font-display text-2xl font-bold text-white md:text-4xl">Frequently Asked Questions</h2>
           <div className="mt-8 max-w-3xl space-y-6">
             {faqs.map(f => (
-              <div key={f.q} className="rounded-2xl border border-white/12 bg-surface/40 p-7">
+              <div key={f.q} className="am-spot rounded-2xl border border-white/12 bg-surface/40 p-7">
                 <h3 className="font-display text-base font-semibold text-white">{f.q}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate-300">{f.a}</p>
               </div>
@@ -352,19 +384,17 @@ export default async function IndustryEditorialPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── Close ── */}
-      <section>
-        <div className="container-wide py-16 md:py-24">
-          <h2 className="max-w-3xl font-display text-2xl font-bold text-white md:text-3xl">{page.cta}</h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300">{page.closing}</p>
-          <Link href="/contact" className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
-            Request a Proposal
-          </Link>
-          <p className="mt-10 text-sm text-slate-500">
-            <Link href="/industries" className="hover:text-slate-300">← All industries</Link>
-          </p>
-        </div>
-      </section>
+      {/* ── Close: a project photograph opens from a circle beneath it ── */}
+      <CircleClose photo={closePhoto}>
+        <h2 className="max-w-3xl font-display text-3xl font-bold text-white md:text-5xl">{page.cta}</h2>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-200 md:text-lg">{page.closing}</p>
+        <Link href="/contact" data-magnetic className="mt-8 inline-flex h-12 items-center justify-center rounded-lg bg-brand-green px-7 text-sm font-semibold text-accent-foreground transition hover:bg-brand-green-glow">
+          Request a Proposal
+        </Link>
+        <p className="mt-10 text-sm text-slate-300">
+          <Link href="/industries" className="hover:text-white">← All industries</Link>
+        </p>
+      </CircleClose>
     </main>
   )
 }

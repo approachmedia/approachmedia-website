@@ -3,6 +3,7 @@ import { SITE_URL } from '@/lib/site-url'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationNode, breadcrumb } from '@/lib/seo/organization'
 import { socialImage } from '@/lib/seo/social-image'
+import { INDUSTRY_COVER_CDN, INDUSTRY_COVER_FILE } from '@/content/industry-covers'
 import { getProjectsForIndustries } from '@/lib/db/portfolio'
 import { IndustriesVibe, type IndustryCard, type IndustryShot } from '@/components/industries/IndustriesVibe'
 import './industries-vibe.css'
@@ -33,25 +34,8 @@ import './industries-vibe.css'
 
 export const revalidate = 3600
 
-const COVERS = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/industries'
-
-/** Industry page slug to its photograph in the R2 industries set. */
-const COVER_FILE: Record<string, string> = {
-  'real-estate':                     'exhibition-stall-design-real-estate.jpg',
-  'pharmaceuticals':                 'exhibition-stall-design-pharma.jpg',
-  'healthcare-medical-devices':      'exhibition-stall-design-healthcare.jpg',
-  'machinery-engineering':           'exhibition-stall-design-machinery.jpg',
-  'food-beverage-fmcg':              'exhibition-stall-design-fmcg.jpg',
-  'textiles-apparel':                'exhibition-stall-design-garment.jpg',
-  'solar-renewable-energy':          'exhibition-stall-design-renewable-energy.jpg',
-  'water-treatment':                 'exhibition-stall-design-water-industry.jpg',
-  'plastics':                        'exhibition-stall-design-plastic.jpg',
-  'printing-packaging':              'exhibition-stall-design-printing-packaging.jpg',
-  'architecture-building-materials': 'exhibition-stall-design-doors-windows.jpg',
-  'cosmetics-personal-care':         'exhibition-stall-design-cosmetics.jpg',
-  'electrical-lighting':             'exhibition-stall-design-lighting.jpg',
-  'pumps-valves-gears':              'exhibition-stall-design-valves-pumps-gears.jpg',
-}
+const COVERS = INDUSTRY_COVER_CDN
+const COVER_FILE = INDUSTRY_COVER_FILE
 
 async function loadCards(): Promise<{ cards: IndustryCard[]; strip: IndustryShot[] }> {
   const projects = await Promise.all(

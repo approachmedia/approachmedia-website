@@ -18,7 +18,7 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-const SKIP_ROUTES = [/^\/$/, /^\/portfolio/, /^\/industries\/?$/, /^\/events\//, /^\/admin/, /^\/lp\//, /^\/thank-you/]
+const SKIP_ROUTES = [/^\/$/, /^\/portfolio/, /^\/industries(\/|$)/, /^\/events\//, /^\/admin/, /^\/lp\//, /^\/thank-you/]
 const SKIP_INSIDE = '.iv, .pfx, .cs, .sc-scope, [data-sc-act], .gjaks, header, footer, nav, [data-no-reveal], [aria-roledescription="carousel"], .am-pt, form, details, table'
 
 export default function AutoReveal() {

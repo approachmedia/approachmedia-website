@@ -33,6 +33,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { useHydratedReducedMotion } from '@/components/motion/useHydratedReducedMotion'
 
 export type IndustryShot = { src: string; alt: string }
 export type IndustryCard = {
@@ -330,13 +331,13 @@ function Grid({ cards }: { cards: IndustryCard[] }) {
 const PROCESS =
   'We bring concept design, fabrication and on-site execution into one coordinated process. Your products, stall dimensions and exhibition requirements guide the layout, while your brand shapes the look and feel.'
 
-function LitWord({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.16, 1])
+function LitWord({ word, progress, range, still }: { word: string; progress: MotionValue<number>; range: [number, number]; still: boolean }) {
+  const opacity = useTransform(progress, range, still ? [1, 1] : [0.16, 1])
   return <motion.span style={{ opacity }}>{word} </motion.span>
 }
 
 function Process({ strip }: { strip: IndustryShot[] }) {
-  const reduce = useReducedMotion()
+  const reduce = useHydratedReducedMotion()
   const ref = useRef<HTMLParagraphElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'end 0.45'] })
   const words = PROCESS.split(' ')
@@ -347,11 +348,11 @@ function Process({ strip }: { strip: IndustryShot[] }) {
       <div className="container-wide py-20 md:py-28">
         <h2 className="iv-h2 max-w-3xl">From Industry Brief to Exhibition Space</h2>
         <p ref={ref} className="iv-lit">
-          {reduce
-            ? PROCESS
-            : words.map((w, i) => (
-                <LitWord key={i} word={w} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} />
-              ))}
+          {/* Same markup on server and client; reduced motion holds every
+              word at full strength (plain text here broke hydration). */}
+          {words.map((w, i) => (
+            <LitWord key={i} word={w} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]} still={!!reduce} />
+          ))}
         </p>
       </div>
       {strip.length > 0 && (
