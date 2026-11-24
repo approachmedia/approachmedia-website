@@ -9,7 +9,13 @@ Every picture comes from the owner's own clips in `clips/` and the official bran
 
 ## Pieces
 
-- `blueprint.html` + `renderbp.js <W> <H> <outdir>` draw the Imagine phase, which opens the film. It is a design blueprint drafted live: a drafting grid, the logo's two wedges (exact outlines from the logo file, left blue, centre green) with dimension lines, then a stand plan in isometric whose frame rises. Encode the frames to `<outdir>/A.mp4`, which replaces the line-art version below.
+- `bp3d.html` (three.js) is the Imagine phase in use, rendered with `PAGE=bp3d.html SS=1.5 node render3d2.js <W> <H> <outdir> <times>`.
+  - A design coming to life on a glowing drafting floor, timed to the music's hits.
+  - A pen of light, throwing sparks, draws the logo's two wedges upright in the air (left blue, centre green), and they gain depth as monuments.
+  - The stand's plan is drafted, then its frame builds itself.
+  - The camera swoops round to a frontal hero view and rushes into the flash.
+  - Encode the frames to `<outdir>/A.mp4`.
+- `blueprint.html` + `renderbp.js <W> <H> <outdir>` (the earlier flat version) draw the Imagine phase, which opens the film. It is a design blueprint drafted live: a drafting grid, the logo's two wedges (exact outlines from the logo file, left blue, centre green) with dimension lines, then a stand plan in isometric whose frame rises. Encode the frames to `<outdir>/A.mp4`, which replaces the line-art version below.
 - `lineart.py <W> <H> <outdir>` (no longer used) (OpenCV) draws the Imagine phase.
   - Six close-ups, each traced as smooth anti-aliased lines over a brand duotone (blue to teal to green).
   - Drawn at twice the output size, into `<outdir>/la0..5.png`.

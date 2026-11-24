@@ -1,0 +1,247 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#03050d;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./three/build/three.module.js","three/addons/":"./three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+/*
+ * The Imagine phase of the opening, in 3D: a design coming to life on a
+ * glowing drafting floor. Driven only by time: window.renderAt(t) returns
+ * the frame at t seconds (0 to 3.72). Beats land on the music's hits (0.6 s).
+ *
+ *   0.0  the camera hangs high over a dark drafting floor; the grid sweeps on
+ *        from the centre and a pulse ring races out across it
+ *   0.6  a pen of light traces the logo's left wedge onto the floor, in blue,
+ *        throwing sparks
+ *   1.2  it traces the centre wedge, in green; both rise into tall glowing
+ *        prisms as the camera swoops down and round
+ *   1.8  the stand's floor plan is drafted in front of them
+ *   2.4  the stand's frame builds itself: posts, beams, a blue header and a
+ *        green wall, translucent panels
+ *   3.0  the camera rushes forward through the glow into a white flash
+ * A pulse ring crosses the floor on every beat.
+ */
+import * as THREE from 'three'
+import { Line2 } from 'three/addons/lines/Line2.js'
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js'
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+
+const Q = new URLSearchParams(location.search)
+const SS = +(Q.get('ss') || 1)
+const W = +(Q.get('w') || 1920) * SS, H = +(Q.get('h') || 1080) * SS
+const PORTRAIT = H > W
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
+const span = (t, a, b) => clamp((t - a) / (b - a))
+const ease = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+const easeOut = x => 1 - Math.pow(1 - x, 3)
+let seed = 11
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
+renderer.setPixelRatio(1); renderer.setSize(W, H)
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0
+renderer.outputColorSpace = THREE.SRGBColorSpace
+document.body.appendChild(renderer.domElement)
+const scene = new THREE.Scene()
+scene.background = new THREE.Color('#03050d')
+scene.fog = new THREE.FogExp2(0x03050d, 0.022)
+const camera = new THREE.PerspectiveCamera(PORTRAIT ? 70 : 45, W / H, 0.1, 500)
+
+const BLUE = new THREE.Color('#3f63ff'), GREEN = new THREE.Color('#6fe03a'), WHITE = new THREE.Color('#dfe8ff')
+const lineMats = []
+function mat(color, width, opacity = 1) {
+  const m = new LineMaterial({ color, linewidth: width * SS, transparent: true, opacity, toneMapped: false, depthWrite: false, depthTest: false })
+  m.resolution.set(W, H); lineMats.push(m); return m
+}
+// a polyline drawn to fraction k of its length
+function partial(pts, k) {
+  const out = [pts[0]]; let L = 0; const seg = []
+  for (let i = 1; i < pts.length; i++) { const d = pts[i].distanceTo(pts[i - 1]); seg.push(d); L += d }
+  let rem = L * clamp(k)
+  for (let i = 1; i < pts.length && rem > 1e-6; i++) {
+    const f = Math.min(1, rem / seg[i - 1]); out.push(pts[i - 1].clone().lerp(pts[i], f)); rem -= seg[i - 1]
+  }
+  return out
+}
+function tipOf(pts, k) { const p = partial(pts, k); return p[p.length - 1] }
+class Stroke {
+  constructor(pts, material) { this.pts = pts; this.line = new Line2(new LineGeometry(), material); this.line.frustumCulled = false; this.line.renderOrder = 10; scene.add(this.line) }
+  set(k) {
+    if (k <= 0) { this.line.visible = false; return }
+    this.line.visible = true
+    let p = partial(this.pts, k); if (p.length < 2) p = [p[0], p[0].clone().add(new THREE.Vector3(1e-3, 0, 0))]
+    this.line.geometry.dispose(); this.line.geometry = new LineGeometry(); this.line.geometry.setPositions(p.flatMap(v => [v.x, v.y, v.z]))
+  }
+}
+
+// ── the drafting floor ──
+const grid = new THREE.Group(); scene.add(grid)
+const gridMinor = new THREE.GridHelper(200, 200, 0x2a3d8a, 0x1a2760); gridMinor.material.transparent = true; gridMinor.material.depthWrite = false
+const gridMajor = new THREE.GridHelper(200, 25, 0x4d6cff, 0x33489e); gridMajor.material.transparent = true; gridMajor.material.depthWrite = false; gridMajor.position.y = 0.002
+grid.add(gridMinor, gridMajor)
+// pulse rings, one per beat
+const rings = [0, 0.6, 1.2, 1.8, 2.4, 3.0].map(t0 => {
+  const m = new THREE.Mesh(new THREE.RingGeometry(0.97, 1, 128), new THREE.MeshBasicMaterial({ color: 0x8fa8ff, transparent: true, opacity: 0, side: THREE.DoubleSide, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }))
+  m.rotation.x = -Math.PI / 2; m.position.y = 0.01; scene.add(m); return { m, t0 }
+})
+// a soft glow pool under the work
+const pool = new THREE.Mesh(new THREE.CircleGeometry(60, 96), new THREE.MeshBasicMaterial({ color: 0x2b44c8, transparent: true, opacity: 0, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending }))
+pool.rotation.x = -Math.PI / 2; pool.position.y = 0.005; scene.add(pool)
+
+// ── the logo's two wedges (exact outlines from the logo file), standing upright
+// at the back like monuments; drawn in the air, then given depth ──
+const S = 0.12, OX = -141.96, ZW = -5, BASE = 98.33
+const P = (x, y, z = ZW) => new THREE.Vector3((x + OX) * S, (BASE - y) * S + 0.02, z)
+const WL = [[35.728, 43.968], [45.542, 28.193], [90.597, 98.181], [0.933, 98.181], [11.416, 82.406], [60.486, 82.406]]
+const WR = [[233.128, 19.308], [222.22, 0.952], [159.892, 98.327], [282.991, 98.327], [272.306, 81.538], [192.169, 81.538]]
+function wedge(pts2, color, depth) {
+  const front = [...pts2, pts2[0]].map(([x, y]) => P(x, y))
+  const g = { pts2, front, color, depth }
+  g.base = new Stroke(front, mat(color, 3.6))
+  g.top = new Stroke(front.map(v => v.clone()), mat(color, 2.2, 0.8))
+  g.posts = pts2.map(([x, y]) => new Stroke([P(x, y), P(x, y)], mat(color, 2, 0.8)))
+  const shape = new THREE.Shape(pts2.map(([x, y]) => new THREE.Vector2((x + OX) * S, (BASE - y) * S)))
+  g.solid = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: 1, bevelEnabled: false }), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0, toneMapped: false, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }))
+  scene.add(g.solid)
+  return g
+}
+const wedgeL = wedge(WL, BLUE, 3.2)
+const wedgeR = wedge(WR, GREEN, 3.2)
+function setWedge(g, kDraw, kRise) {
+  g.base.set(kDraw)
+  const d = g.depth * ease(kRise)
+  g.top.pts = g.pts2.concat([g.pts2[0]]).map(([x, y]) => P(x, y, ZW - d)); g.top.set(kRise > 0.02 ? 1 : 0)
+  g.posts.forEach((s, i) => { const [x, y] = g.pts2[i]; s.pts = [P(x, y), P(x, y, ZW - d)]; s.set(kRise > 0.02 ? 1 : 0) })
+  g.solid.position.z = ZW - d; g.solid.scale.z = Math.max(0.001, d)
+  g.solid.material.opacity = 0.09 * clamp(kRise * 2) + 0.04 * clamp(kDraw - 0.95) * 20 * (kRise > 0 ? 1 : 0)
+}
+
+// ── the stand: plan, then frame ──
+const SX = 0.5, SZ = 7.5, A = 5.25, B = 3.25, HT = 3.2
+const v = (x, y, z) => new THREE.Vector3(SX + x, y, SZ + z)
+const planStrokes = [
+  new Stroke([v(-A, .02, -B), v(A, .02, -B), v(A, .02, B), v(-A, .02, B), v(-A, .02, -B)], mat(WHITE, 2.6)),
+  new Stroke([v(-4, .02, 1.1), v(-1.1, .02, 1.1), v(-1.1, .02, 2), v(-4, .02, 2), v(-4, .02, 1.1)], mat(WHITE, 1.8, 0.8)),
+  new Stroke(Array.from({ length: 49 }, (_, i) => v(1.9 + Math.cos(i / 48 * Math.PI * 2) * 0.95, .02, 0.1 + Math.sin(i / 48 * Math.PI * 2) * 0.95)), mat(WHITE, 1.8, 0.8)),
+  new Stroke([v(3.3, .02, -B), v(3.3, .02, -0.9), v(A, .02, -0.9)], mat(WHITE, 1.8, 0.8)),
+]
+// the left posts are the green wall's edges, so only the right two are white
+const corners = [[A, -B], [A, B]]
+const postStrokes = corners.map(([x, z]) => new Stroke([v(x, 0, z), v(x, 0, z)], mat(WHITE, 2.6)))
+const topFrame = new Stroke([v(-A, HT, B), v(A, HT, B), v(A, HT, -B)], mat(WHITE, 2.6))
+const header = new Stroke([v(-A, HT, -B), v(A, HT, -B), v(A, HT - 0.8, -B), v(-A, HT - 0.8, -B), v(-A, HT, -B)], mat(BLUE, 4))
+const sideWall = new Stroke([v(-A, 0, -B), v(-A, 0, B), v(-A, HT, B), v(-A, HT, -B), v(-A, 0, -B)], mat(GREEN, 4))
+const panels = []
+for (const [geo, color, pos, rot] of [
+  [new THREE.PlaneGeometry(2 * A, HT), 0x3f63ff, v(0, HT / 2, -B), [0, 0, 0]],
+  [new THREE.PlaneGeometry(2 * B, HT), 0x6fe03a, v(-A, HT / 2, 0), [0, Math.PI / 2, 0]],
+]) {
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0, side: THREE.DoubleSide, toneMapped: false, depthWrite: false, blending: THREE.AdditiveBlending }))
+  m.position.copy(pos); m.rotation.set(...rot); scene.add(m); panels.push(m)
+}
+
+// ── the pen of light and its sparks ──
+const penTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.6)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c) })()
+const pen = new THREE.Sprite(new THREE.SpriteMaterial({ map: penTex, color: 0xffffff, transparent: true, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, fog: false }))
+pen.scale.setScalar(2.4); scene.add(pen)
+const NSP = 260
+const spGeo = new THREE.BufferGeometry(); spGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSP * 3), 3))
+const sparks = new THREE.Points(spGeo, new THREE.PointsMaterial({ map: penTex, size: 0.32, color: 0xffffff, transparent: true, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, fog: false }))
+scene.add(sparks)
+// each spark: born at time b along a path, flies off with a velocity
+const sparkSpec = Array.from({ length: NSP }, () => ({ b: rnd(), vx: (rnd() - .5) * 6, vy: rnd() * 5 + 1, vz: (rnd() - .5) * 6, life: 0.35 + rnd() * 0.35 }))
+function sparksAlong(pathPts, t0, t1, t, color) {
+  sparks.material.color.copy(color)
+  const pos = spGeo.attributes.position.array
+  for (let i = 0; i < NSP; i++) {
+    const s = sparkSpec[i], born = t0 + s.b * (t1 - t0), age = t - born
+    if (age < 0 || age > s.life) { pos[i * 3 + 1] = -100; continue }
+    const o = tipOf(pathPts, ease(s.b))
+    pos[i * 3] = o.x + s.vx * age; pos[i * 3 + 1] = o.y + s.vy * age - 9 * age * age; pos[i * 3 + 2] = o.z + s.vz * age
+  }
+  spGeo.attributes.position.needsUpdate = true
+}
+
+// dust in the air
+const dust = (() => {
+  const n = 700, p = new Float32Array(n * 3)
+  for (let i = 0; i < n; i++) { p[i * 3] = (rnd() - .5) * 70; p[i * 3 + 1] = rnd() * 18; p[i * 3 + 2] = (rnd() - .5) * 70 }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3))
+  const d = new THREE.Points(g, new THREE.PointsMaterial({ map: penTex, size: 0.12, color: 0x9fb4ff, transparent: true, opacity: 0.5, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending }))
+  scene.add(d); return d
+})()
+
+const composer = new EffectComposer(renderer)
+composer.setPixelRatio(1); composer.setSize(W, H)
+composer.addPass(new RenderPass(scene, camera))
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.9, 0.5, 0.42)
+composer.addPass(bloom); composer.addPass(new OutputPass())
+
+// camera: high over the floor, swooping down and round, then a rush forward
+const K = PORTRAIT ? 1.7 : 1
+const camPath = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(5, 11, 14 * K), new THREE.Vector3(-3, 8, 20 * K), new THREE.Vector3(-16, 6, 24 * K),
+  new THREE.Vector3(-10, 6.5, 31 * K), new THREE.Vector3(-2, 7.2, 34 * K), new THREE.Vector3(0, 6.6, 23 * K),
+], false, 'centripetal')
+const tgtPath = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-4, 4, -5), new THREE.Vector3(0, 5, -5), new THREE.Vector3(1, 4.5, -2),
+  new THREE.Vector3(0, 4.5, -2), new THREE.Vector3(0, 4.6, -4), new THREE.Vector3(0, 5, -6),
+], false, 'centripetal')
+
+window.renderAt = (t) => {
+  const u = ease(span(t, 0, 3.72))
+  camera.position.copy(camPath.getPoint(u)); camera.lookAt(tgtPath.getPoint(u))
+  camera.rotateZ(Math.sin(u * Math.PI) * -0.05)
+  camera.updateMatrixWorld()
+
+  // grid sweeps on from the centre, pulses on the beats
+  const gIn = easeOut(span(t, 0, 0.7))
+  grid.scale.setScalar(Math.max(0.001, gIn))
+  let beat = 0
+  for (const r of rings) { const a = t - r.t0; if (a >= 0 && a < 1.4) { r.m.scale.setScalar(1 + a * 38); r.m.material.opacity = 0.45 * Math.pow(1 - a / 1.4, 2) } else r.m.material.opacity = 0; if (a >= 0 && a < 0.25) beat = Math.max(beat, 1 - a / 0.25) }
+  gridMinor.material.opacity = 0.5 * gIn + 0.3 * beat
+  gridMajor.material.opacity = 0.6 * gIn + 0.35 * beat
+  pool.material.opacity = 0.05 * gIn + 0.04 * beat
+
+  // the wedges: traced, then rising
+  const kL = ease(span(t, 0.6, 1.2)), kR = ease(span(t, 1.2, 1.8))
+  setWedge(wedgeL, kL, span(t, 1.25, 2.0))
+  setWedge(wedgeR, kR, span(t, 1.85, 2.6))
+
+  // the stand plan and frame
+  const kp = ease(span(t, 1.8, 2.3)), kp2 = ease(span(t, 2.0, 2.45))
+  planStrokes[0].set(kp); planStrokes.slice(1).forEach(s => s.set(kp2))
+  const kf = ease(span(t, 2.4, 2.9))
+  postStrokes.forEach((s, i) => { const [x, z] = corners[i]; s.pts = [v(x, 0, z), v(x, HT * kf, z)]; s.set(kf > 0 ? 1 : 0) })
+  topFrame.set(ease(span(t, 2.75, 3.05)))
+  header.set(ease(span(t, 2.85, 3.15))); sideWall.set(ease(span(t, 2.8, 3.15)))
+  panels.forEach(m => { m.material.opacity = 0.05 * ease(span(t, 2.9, 3.3)) })
+
+  // the pen: which path is being drawn now
+  let active = null
+  if (t >= 0.6 && t < 1.2) active = [wedgeL.front, 0.6, 1.2, BLUE, kL]
+  else if (t >= 1.2 && t < 1.8) active = [wedgeR.front, 1.2, 1.8, GREEN, kR]
+  else if (t >= 1.8 && t < 2.3) active = [planStrokes[0].pts, 1.8, 2.3, WHITE, kp]
+  if (active) {
+    const [pts, a, b, c, k] = active
+    pen.visible = true; pen.position.copy(tipOf(pts, k)); if (pen.position.y < 0.3) pen.position.y = 0.3; pen.material.color.copy(c).lerp(WHITE, 0.4)
+    pen.scale.setScalar(2.4 + Math.sin(t * 60) * 0.3)
+    sparksAlong(pts, a, b, t, c)
+  } else { pen.visible = false; sparksAlong(wedgeL.front, -10, -9, t, BLUE) }
+
+  dust.rotation.y = t * 0.05
+  // the rush: glow builds into a white-out
+  const rush = span(t, 3.05, 3.72)
+  bloom.strength = 0.9 + beat * 0.5 + Math.pow(rush, 2) * 3
+  renderer.toneMappingExposure = 1 + Math.pow(rush, 3) * 6
+  scene.fog.density = 0.022 * (1 - rush * 0.6)
+  composer.render()
+  return renderer.domElement.toDataURL('image/png')
+}
+window.ready = true
+</script>
+</body></html>
