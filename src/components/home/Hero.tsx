@@ -6,7 +6,6 @@ import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StaggerReveal, STAGGER_WORD_CLASS, type StaggerSplit } from '@/components/motion/StaggerReveal'
 import { HeroFilings } from './HeroFilings'
-import HomeOpening from './motion/HomeOpening'
 
 // The headline, split at the point the brand gradient starts. Kept as
 // constants rather than inline JSX because the word index below is derived
@@ -106,8 +105,6 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24" style={{ background: 'var(--gradient-hero)' }}>
-      {/* The first-visit opening film behind the Enter screen (portalled to body). */}
-      <HomeOpening />
       {/* Hero visual — video-ready container */}
       <div className="absolute inset-0 -z-10">
         <Image
