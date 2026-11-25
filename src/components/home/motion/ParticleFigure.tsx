@@ -14,12 +14,13 @@ export default function ParticleFigure({ text, className }: { text: string; clas
       <CursorDrivenParticleTypography
         text={text}
         fontSize={200}
+        maxWidthRatio={0.24}
         fontFamily="'Space Grotesk', system-ui, sans-serif"
         particleDensity={4}
         particleSize={1.4}
         dispersionStrength={18}
         color="hsl(110, 60%, 55%)"
-        className="!min-h-[180px] md:!min-h-[260px]"
+        className="!h-[120px] !min-h-0 md:!h-[190px]"
       />
     </div>
   )

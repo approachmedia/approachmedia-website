@@ -34,10 +34,17 @@ export function About() {
           </Link>
         </div>
       </div>
-      {/* Style 14: the site's own figure (6000+ stalls) drawn in particles
-          that scatter under the cursor or a finger. Decorative; the number is
-          in the hero metrics as text. */}
-      <ParticleFigure text="6000+" className="container-wide mt-10 md:mt-6" />
+      {/* Style 14: the site's own figure drawn in particles that scatter
+          under the cursor or a finger, with what it counts written beneath. */}
+      <figure className="container-wide mt-12 md:mt-16">
+        <ParticleFigure text="6000+" />
+        <figcaption className="mt-2 text-center">
+          <span className="block text-sm font-semibold uppercase tracking-[0.22em] text-foreground md:text-base">
+            Exhibition stalls executed
+          </span>
+          <span className="mt-1.5 block text-sm text-muted-foreground">Since 2002, across 14+ countries</span>
+        </figcaption>
+      </figure>
     </section>
   )
 }

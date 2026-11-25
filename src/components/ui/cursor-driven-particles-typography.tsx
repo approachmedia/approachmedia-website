@@ -14,6 +14,8 @@ export interface CursorDrivenParticleTypographyProps {
   className?: string;
   text: string;
   fontSize?: number;
+  /** Cap on the font size as a share of the container width. */
+  maxWidthRatio?: number;
   fontFamily?: string;
   particleSize?: number;
   particleDensity?: number;
@@ -104,6 +106,7 @@ export function CursorDrivenParticleTypography({
   className,
   text,
   fontSize = 120,
+  maxWidthRatio = 0.15,
   fontFamily = "Inter, sans-serif",
   particleSize = 1.5,
   particleDensity = 6,
@@ -151,7 +154,7 @@ export function CursorDrivenParticleTypography({
 
       ctx.clearRect(0, 0, containerWidth, containerHeight);
 
-      const effectiveFontSize = Math.min(fontSize, containerWidth * 0.15);
+      const effectiveFontSize = Math.min(fontSize, containerWidth * maxWidthRatio);
       ctx.fillStyle = textColor;
       ctx.font = `bold ${effectiveFontSize}px ${fontFamily}`;
       ctx.textAlign = "center";
@@ -273,6 +276,7 @@ export function CursorDrivenParticleTypography({
   }, [
     text,
     fontSize,
+    maxWidthRatio,
     fontFamily,
     particleSize,
     particleDensity,
