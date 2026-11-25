@@ -1,7 +1,6 @@
 import { Hero } from '@/components/home/Hero'
 import { ClientsMarquee } from '@/components/home/ClientsMarquee'
 import { About } from '@/components/home/About'
-import { FeaturedWorks } from '@/components/home/FeaturedWorks'
 import { ServicesGrid } from '@/components/home/ServicesGrid'
 import { PresenceMap } from '@/components/home/PresenceMap'
 import '@/components/home/presence-map.css'
@@ -18,8 +17,8 @@ import OceanStatement from '@/components/home/motion/OceanStatement'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 
 import { SITE_URL } from '@/lib/site-url'
-// force-dynamic: FeaturedWorks reads from the DB, and DATABASE_URL is not
-// available during the Docker build — only at runtime.
+// force-dynamic: the showreel band reads project photos from the DB, and
+// DATABASE_URL is not available during the Docker build — only at runtime.
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
@@ -117,7 +116,6 @@ export default async function HomePage() {
         <Industries />
         <WhyChoose />
         <Process />
-        <FeaturedWorks />
         <Testimonials />
         <UpcomingExhibitions />
         <LatestPosts />
