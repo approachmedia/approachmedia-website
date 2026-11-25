@@ -14,7 +14,8 @@ const MIN_SQM = 70
 const MIN_TO_SHOW = 6
 
 export async function ClientsMarquee() {
-  const clientNames = await getMajorClients(MIN_SQM)
+  // A database blip hides this row rather than taking the whole home page down.
+  const clientNames = await getMajorClients(MIN_SQM).catch(() => [] as string[])
   if (clientNames.length < MIN_TO_SHOW) return null
 
   return (
