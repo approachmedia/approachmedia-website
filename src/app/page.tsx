@@ -15,7 +15,6 @@ import { CtaBand } from '@/components/home/CtaBand'
 import { Faq, faqs } from '@/components/home/Faq'
 import ShowreelBand from '@/components/home/motion/ShowreelBand'
 import OceanStatement from '@/components/home/motion/OceanStatement'
-import HueField from '@/components/home/motion/HueField'
 import { getPublishedProjects } from '@/lib/db/portfolio'
 
 import { SITE_URL } from '@/lib/site-url'
@@ -108,7 +107,6 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main>
-        <HueField />
         <Hero />
         <ShowreelBand images={photos} />
         <ClientsMarquee />

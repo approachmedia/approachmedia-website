@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef } from 'react'
+import './home-motion.css'
 
 const LINE = 'In an ocean of lookalikes, those who stand apart will survive.'
 const CLIP = 'award-winning-stall-design-and-fabrication-agency-02'
