@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { StaggerReveal, STAGGER_WORD_CLASS, type StaggerSplit } from '@/components/motion/StaggerReveal'
@@ -98,12 +99,6 @@ const metrics = [
 
 export function Hero() {
   const [idx, setIdx] = useState(0)
-  // Reduced motion: hold the hero video on its poster frame.
-  useEffect(() => {
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    document.querySelectorAll<HTMLVideoElement>('.hero-video').forEach(v => { v.pause(); v.removeAttribute('autoplay') })
-  }, [])
-
   useEffect(() => {
     const t = setInterval(() => setIdx(i => (i + 1) % taglines.length), 4200)
     return () => clearInterval(t)
@@ -115,23 +110,14 @@ export function Hero() {
       <HomeOpening />
       {/* Hero visual — video-ready container */}
       <div className="absolute inset-0 -z-10">
-        {/* A finished build in motion behind the headline, muted and looping.
-            The still is the poster, so the first paint is identical to before
-            and reduced motion keeps it (the video never plays there). */}
-        <video
-          className="hero-video absolute inset-0 h-full w-full object-cover opacity-40"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/services-flow/custom-exhibition-stand-design-india-01-poster.webp"
-          aria-hidden="true"
-        >
-          <source src="/services-flow/custom-exhibition-stand-design-india-01-m.mp4" type="video/mp4" media="(max-width: 767px)" />
-          <source src="/services-flow/custom-exhibition-stand-design-india-01.webm" type="video/webm" />
-          <source src="/services-flow/custom-exhibition-stand-design-india-01.mp4" type="video/mp4" />
-        </video>
+        <Image
+          src="/home/hero-stall.jpg"
+          alt="Premium custom exhibition stall built by Approach Media"
+          fill
+          sizes="100vw"
+          priority
+          className="object-cover opacity-35"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,hsl(var(--brand-blue-glow)/0.15),transparent_55%)]" />
       </div>

@@ -2,20 +2,13 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MagneticCta } from '@/components/motion/MagneticCta'
-import CtaGallery from './motion/CtaGallery'
-import type { GalleryImage } from '@/components/ui/3d-gallery-photography'
 
-export function CtaBand({ images = [] }: { images?: GalleryImage[] }) {
+export function CtaBand() {
   return (
-    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden py-20 md:py-28">
-      <div className="absolute inset-0 -z-20" style={{ background: 'var(--gradient-hero)' }} />
-      {/* Style 1: project photographs flying toward the viewer as the page
-          scrolls into the close. A veil keeps the copy readable over it. */}
-      <div className="absolute inset-0 -z-10">
-        <CtaGallery images={images} />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,hsl(222_30%_6%/0.78)_20%,hsl(222_30%_6%/0.35)_70%)]" />
-      </div>
-      <div className="container-narrow relative text-center">
+    <section className="relative overflow-hidden py-20 md:py-28">
+      <div className="absolute inset-0 -z-10" style={{ background: 'var(--gradient-hero)' }} />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_30%,hsl(var(--brand-blue-glow)/0.18),transparent_55%)]" />
+      <div className="container-narrow text-center">
         <h2 className="font-display text-3xl font-semibold leading-tight text-foreground md:text-5xl lg:text-6xl">
           Start building your <span className="text-gradient-brand">exhibition experience</span> today.
         </h2>

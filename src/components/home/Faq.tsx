@@ -30,7 +30,7 @@ export function Faq({
   id?: string
 } = {}) {
   return (
-    <section className="overflow-x-clip bg-surface/40 py-20 md:py-28" id={id}>
+    <section className="bg-surface/40 py-20 md:py-28" id={id}>
       <div className="container-narrow grid gap-10 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
           <p className="text-xs uppercase tracking-[0.22em] text-brand-green">FAQs</p>

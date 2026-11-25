@@ -121,7 +121,7 @@ export default async function HomePage() {
         <Testimonials />
         <UpcomingExhibitions />
         <LatestPosts />
-        <CtaBand images={photos} />
+        <CtaBand />
         <Faq />
       </main>
     </>
