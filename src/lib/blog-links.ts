@@ -17,6 +17,11 @@
 export type InternalLink = { anchor: string; href: string }
 
 export const INTERNAL_LINKS: Record<string, InternalLink[]> = {
+  'build-more-than-a-booth-acetech-orgatec-2026': [
+    { anchor: 'three stalls we designed and fabricated', href: '/portfolio' },
+    { anchor: 'designed backwards from a feeling',      href: '/services/exhibition-stall-design' },
+    { anchor: 'Tell us the show',                       href: '/contact' },
+  ],
   'exhibition-stall-design-cost-india': [
     { anchor: 'Custom exhibition stall design', href: '/services/exhibition-stall-design' },
     { anchor: 'fabrication',                    href: '/services/custom-booth-fabrication' },
