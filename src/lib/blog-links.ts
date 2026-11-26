@@ -333,6 +333,13 @@ const CDN = 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/images/services
  * one is a single entry here once the owner names a real project photo.
  */
 export const POST_IMAGES: Record<string, { src: string; alt: string }> = {
+  // "Don't Build a Booth" (1 Dec 2026): the INIT stand's own portfolio hero
+  // from the ACE Tech / ORGATEC batch, the film's third stall. The R2 upload
+  // of that batch has to land before the post publishes.
+  'build-more-than-a-booth-acetech-orgatec-2026': {
+    src: 'https://pub-3142dbc1bfbb47b191e0dca72e867a0f.r2.dev/2026/orgatec-india-mumbai/init/init_exhibition_stall_design_at_ORGATEC_India_Mumbai.webp',
+    alt: 'INIT 216 sqm island stand at ORGATEC India 2026, Jio World Convention Centre, Mumbai, with a blush perimeter wall and LED video wall',
+  },
   // The PharmaTech 2026 case study: hero named by the owner (the RR Clean
   // Room stand), a real project photo already serving as that project's
   // portfolio hero from the same R2 folder.
